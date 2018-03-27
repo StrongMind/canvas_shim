@@ -1,4 +1,5 @@
 module PipelineService
+  # This is a mock that matches the name of the object in canvas_lms
   class PipelineUserAPI
     def enrollment_json(enrollment, user, session)
       {user: {first_name: 'Test', last_name: 'User'}}
