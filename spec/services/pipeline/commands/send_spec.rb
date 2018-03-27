@@ -1,4 +1,10 @@
-
+module PipelineService
+  class PipelineUserAPI
+    def enrollment_json(enrollment, user, session)
+      {user: {first_name: 'Test', last_name: 'User'}}
+    end
+  end
+end
 
 describe PipelineService::Commands::Send do
   let(:enrollment)   { double('enrollment', id: 1) }
@@ -7,12 +13,7 @@ describe PipelineService::Commands::Send do
   let(:test_message) { double('message') }
 
   before do
-    @reset_domain = ENV['CANVAS_DOMAIN']
     ENV['CANVAS_DOMAIN'] = 'someschool.com'
-  end
-
-  after do
-    ENV['CANVAS_DOMAIN'] = @reset_domain
   end
 
   subject do
@@ -44,7 +45,10 @@ describe PipelineService::Commands::Send do
   end
 
   describe '#meta' do
-    let!(:meta) { subject.call.message.meta }
+    let!(:meta) do
+      command = subject.call
+      command.message.meta
+    end
 
     it 'has the domain name of the school' do
       expect(meta[:domain_name]).to eq 'someschool.com'
