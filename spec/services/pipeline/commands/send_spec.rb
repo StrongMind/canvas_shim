@@ -14,7 +14,12 @@ describe PipelineService::Commands::Send do
   let(:test_message) { double('message') }
 
   before do
+    ENV['PIPELINE_ENDPOINT'] = 'https://example.com'
+    ENV['PIPELINE_USER_NAME'] = 'example_user'
+    ENV['PIPELINE_PASSWORD'] = 'example_password'
     ENV['CANVAS_DOMAIN'] = 'someschool.com'
+
+    Delayed::Worker.delay_jobs = false
   end
 
   subject do

@@ -11,6 +11,9 @@ module PipelineService
         @username          = ENV['PIPELINE_USER_NAME']
         @password          = ENV['PIPELINE_PASSWORD']
         @domain_name       = ENV['CANVAS_DOMAIN']
+
+        raise 'Missing environment variables' unless @host && @username && @password && @domain_name
+        
         @enrollment        = args[:enrollment]
         @publisher         = args[:publisher] || PipelinePublisher
         @api_instance      = args[:message_api] || PipelinePublisher::MessagesApi.new
@@ -44,6 +47,7 @@ module PipelineService
       def post
         api_instance.messages_post(message)
       end
+      handle_asynchronously :post
 
       def serialize_enrollment
         serializer.new.enrollment_json(
