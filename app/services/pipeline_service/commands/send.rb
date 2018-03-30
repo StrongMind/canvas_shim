@@ -12,20 +12,22 @@ module PipelineService
         @password          = ENV['PIPELINE_PASSWORD']
         @domain_name       = ENV['CANVAS_DOMAIN']
 
-        raise 'Missing environment variables' unless @host && @username && @password && @domain_name
-        
-        @enrollment        = args[:enrollment]
-        @publisher         = args[:publisher] || PipelinePublisher
-        @api_instance      = args[:message_api] || PipelinePublisher::MessagesApi.new
-        @user              = args[:user]
-        @serializer        = PipelineUserAPI
-        @message_builder   = args[:message_builder] || publisher::Message
+        raise 'Missing environment variables' if config_missing?
+
+        @api_instance    = args[:message_api] || PipelinePublisher::MessagesApi.new
+        @publisher       = args[:publisher] || PipelinePublisher
+        @message_builder = args[:message_builder] || publisher::Message
+        @enrollment      = args[:enrollment]
+        @user            = args[:user]
+        @serializer      = PipelineUserAPI
+        @queue           = args[:queue] || false
       end
 
       def call
         configure
         @payload = serialize_enrollment
         @message = build_pipeline_message
+        @job     = build_job
         post
         self
       end
@@ -34,7 +36,18 @@ module PipelineService
 
       attr_reader :payload, :enrollment, :username, :password,
         :user, :api_instance, :payload, :publisher, :host,
-        :serializer, :domain_name, :message_builder
+        :serializer, :domain_name, :message_builder, :queue, :job
+
+      def config_missing?
+        !(@host && @username && @password && @domain_name)
+      end
+
+      def build_job
+        Jobs::PostEnrollmentJob.new(
+          api_instance: api_instance,
+          message: message
+        )
+      end
 
       def configure
         publisher.configure do |config|
@@ -45,9 +58,9 @@ module PipelineService
       end
 
       def post
-        api_instance.messages_post(message)
+        return job.perform unless queue
+        Delayed::Job.enqueue job
       end
-      handle_asynchronously :post
 
       def serialize_enrollment
         serializer.new.enrollment_json(
@@ -59,13 +72,13 @@ module PipelineService
 
       def build_pipeline_message
         message_builder.new(
-          noun:         MESSAGE_NAME,
-          meta:         {
-                          source: SOURCE,
-                          domain_name: domain_name
-                        },
-          identifiers:  { id: enrollment.id },
-          data:         payload
+          noun: MESSAGE_NAME,
+          meta: {
+            source: SOURCE,
+            domain_name: domain_name
+          },
+          identifiers: { id: enrollment.id },
+          data: payload
         )
       end
     end

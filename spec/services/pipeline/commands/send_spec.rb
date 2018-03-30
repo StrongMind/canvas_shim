@@ -19,14 +19,15 @@ describe PipelineService::Commands::Send do
     ENV['PIPELINE_PASSWORD'] = 'example_password'
     ENV['CANVAS_DOMAIN'] = 'someschool.com'
 
-    Delayed::Worker.delay_jobs = false
+    # Delayed::Worker.delay_jobs = false
   end
 
   subject do
     described_class.new(
       enrollment: enrollment,
       user: user,
-      message_api: api
+      message_api: api,
+      queue: false
     )
   end
 
