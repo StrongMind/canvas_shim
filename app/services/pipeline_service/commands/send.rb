@@ -1,7 +1,6 @@
 module PipelineService
   module Commands
     class Send
-      DEBUG_VERSION=1
       attr_reader :message
       MESSAGE_NAME = 'enrollment'
       SOURCE       = 'canvas'
