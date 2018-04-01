@@ -18,8 +18,6 @@ describe PipelineService::Commands::Send do
     ENV['PIPELINE_USER_NAME'] = 'example_user'
     ENV['PIPELINE_PASSWORD'] = 'example_password'
     ENV['CANVAS_DOMAIN'] = 'someschool.com'
-
-    # Delayed::Worker.delay_jobs = false
   end
 
   subject do
