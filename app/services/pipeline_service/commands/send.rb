@@ -16,9 +16,9 @@ module PipelineService
         @api_instance    = args[:message_api] || PipelinePublisher::MessagesApi.new
         @publisher       = args[:publisher] || PipelinePublisher
         @message_builder = args[:message_builder] || publisher::Message
+        @serializer      = args[:serializer] || Serializer.new
         @enrollment      = args[:enrollment]
         @user            = args[:user]
-        @serializer      = PipelineUserAPI
         @queue           = args[:queue] || false
       end
 
@@ -62,7 +62,7 @@ module PipelineService
       end
 
       def serialize_enrollment
-        serializer.new.enrollment_json(
+        serializer.enrollment_json(
           enrollment,
           user,
           {}

@@ -1,16 +1,10 @@
-module PipelineService
-  # This is a mock that matches the name of the object in canvas_lms
-  class PipelineUserAPI
-    def enrollment_json(enrollment, user, session)
-      {user: {first_name: 'Test', last_name: 'User'}}
-    end
-  end
-end
-
 describe PipelineService::Commands::Send do
   let(:enrollment)   { double('enrollment', id: 1) }
   let(:user)         { double('user') }
   let(:api)          { double('api', messages_post: nil) }
+  let(:serializer)   { double('serializer', enrollment_json: {
+    :user=>{:first_name=>"Test", :last_name=>"User"}})
+  }
   let(:test_message) { double('message') }
 
   before do
@@ -25,6 +19,7 @@ describe PipelineService::Commands::Send do
       enrollment: enrollment,
       user: user,
       message_api: api,
+      serializer: serializer,
       queue: false
     )
   end
