@@ -27,6 +27,7 @@ module PipelineService
         @payload = serialize_enrollment
         @message = build_pipeline_message
         @job     = build_job
+        # persist
         post
         self
       end
@@ -36,6 +37,11 @@ module PipelineService
       attr_reader :payload, :enrollment, :username, :password,
         :user, :api_instance, :payload, :publisher, :host,
         :serializer, :domain_name, :message_builder, :queue, :job
+
+      # def persist
+      #   byebug
+      #   HTTParty.post "https://lrs.strongmind.com/pipeline-watcher-staging", body: message
+      # end
 
       def config_missing?
         !(@host && @username && @password && @domain_name)
