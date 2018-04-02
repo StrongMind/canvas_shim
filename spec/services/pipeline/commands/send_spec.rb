@@ -1,3 +1,8 @@
+class HTTParty
+  def self.post(url, options={})
+  end
+end
+
 describe PipelineService::Commands::Send do
   let(:enrollment)   { double('enrollment', id: 1) }
   let(:user)         { double('user') }
@@ -31,6 +36,10 @@ describe PipelineService::Commands::Send do
 
     it 'sends a message to the pipeline' do
       expect(api).to receive(:messages_post).with(test_message)
+      subject.call
+    end
+
+    it 'removes empty fields before persisting' do
       subject.call
     end
   end

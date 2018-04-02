@@ -1,7 +1,10 @@
 module PipelineService
   module Commands
+
+
     class Send
       attr_reader :message
+      
       MESSAGE_NAME = 'enrollment'
       SOURCE       = 'canvas'
 
@@ -27,8 +30,8 @@ module PipelineService
         @payload = serialize_enrollment
         @message = build_pipeline_message
         @job     = build_job
-        # persist
         post
+        persist
         self
       end
 
@@ -38,13 +41,12 @@ module PipelineService
         :user, :api_instance, :payload, :publisher, :host,
         :serializer, :domain_name, :message_builder, :queue, :job
 
-      # def persist
-      #   byebug
-      #   HTTParty.post "https://lrs.strongmind.com/pipeline-watcher-staging", body: message
-      # end
+      def persist
+        HTTParty.post "https://lrs.strongmind.com/pipeline-watcher-staging", body: payload.delete_blank.to_json
+      end
 
       def config_missing?
-        !(@host && @username && @password && @domain_name)
+        [@host, @username, @password].any?(&:nil?)
       end
 
       def build_job
