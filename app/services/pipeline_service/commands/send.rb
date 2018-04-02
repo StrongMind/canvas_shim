@@ -4,7 +4,7 @@ module PipelineService
 
     class Send
       attr_reader :message
-      
+
       MESSAGE_NAME = 'enrollment'
       SOURCE       = 'canvas'
 
@@ -42,7 +42,12 @@ module PipelineService
         :serializer, :domain_name, :message_builder, :queue, :job
 
       def persist
-        HTTParty.post "https://lrs.strongmind.com/pipeline-watcher-staging", body: payload.delete_blank.to_json
+        HTTParty.post(
+          "https://lrs.strongmind.com/pipeline-watcher-staging",
+          body: HashWithIndifferentAccess.new(
+            JSON.parse(message.to_json)
+          ).delete_blank.to_json
+        )
       end
 
       def config_missing?
