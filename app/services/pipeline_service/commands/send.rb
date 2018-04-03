@@ -5,15 +5,14 @@ module PipelineService
     class Send
       attr_reader :message, :persisted_message
 
-      MESSAGE_NAME = 'enrollment'
-      SOURCE       = 'canvas'
+      NOUN   = 'course_enrollment'
+      SOURCE = 'canvas'
 
       def initialize(args)
         @host              = ENV['PIPELINE_ENDPOINT']
         @username          = ENV['PIPELINE_USER_NAME']
         @password          = ENV['PIPELINE_PASSWORD']
         @domain_name       = ENV['CANVAS_DOMAIN']
-
 
         raise 'Missing environment variables' if config_missing?
 
@@ -24,7 +23,7 @@ module PipelineService
         @enrollment      = args[:enrollment]
         @user            = args[:user]
         @queue           = args[:queue] || false
-        @message_type    = args[:message_type] || :upsert
+        @message_type    = args[:message_type] || :upserted
       end
 
       def call
@@ -48,7 +47,7 @@ module PipelineService
         @persisted_message = HashWithIndifferentAccess.new(
           JSON.parse(message.to_json)
         ).delete_blank.to_json
-        
+
         HTTParty.post(
           "https://lrs.strongmind.com/pipeline-watcher-staging",
           body: persisted_message
@@ -89,7 +88,7 @@ module PipelineService
 
       def build_pipeline_message
         message_builder.new(
-          noun: MESSAGE_NAME,
+          noun: NOUN,
           meta: {
             source: SOURCE,
             domain_name: domain_name
