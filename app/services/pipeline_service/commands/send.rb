@@ -3,7 +3,7 @@ module PipelineService
 
 
     class Send
-      attr_reader :message
+      attr_reader :message, :persisted_message
 
       MESSAGE_NAME = 'enrollment'
       SOURCE       = 'canvas'
@@ -14,6 +14,7 @@ module PipelineService
         @password          = ENV['PIPELINE_PASSWORD']
         @domain_name       = ENV['CANVAS_DOMAIN']
 
+
         raise 'Missing environment variables' if config_missing?
 
         @api_instance    = args[:message_api] || PipelinePublisher::MessagesApi.new
@@ -23,6 +24,7 @@ module PipelineService
         @enrollment      = args[:enrollment]
         @user            = args[:user]
         @queue           = args[:queue] || false
+        @message_type    = args[:message_type] || :upsert
       end
 
       def call
@@ -39,14 +41,17 @@ module PipelineService
 
       attr_reader :payload, :enrollment, :username, :password,
         :user, :api_instance, :payload, :publisher, :host,
-        :serializer, :domain_name, :message_builder, :queue, :job
+        :serializer, :domain_name, :message_builder, :queue, :job,
+        :message_type
 
       def persist
+        @persisted_message = HashWithIndifferentAccess.new(
+          JSON.parse(message.to_json)
+        ).delete_blank.to_json
+        
         HTTParty.post(
           "https://lrs.strongmind.com/pipeline-watcher-staging",
-          body: HashWithIndifferentAccess.new(
-            JSON.parse(message.to_json)
-          ).delete_blank.to_json
+          body: persisted_message
         )
       end
 
@@ -90,7 +95,7 @@ module PipelineService
             domain_name: domain_name
           },
           identifiers: { id: enrollment.id },
-          data: payload
+          data: message_type == :removed ? {} : payload
         )
       end
     end
