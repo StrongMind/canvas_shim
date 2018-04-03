@@ -1,11 +1,8 @@
 module PipelineService
   module Commands
-
-
     class Send
       attr_reader :message, :persisted_message
 
-      NOUN   = 'course_enrollment'
       SOURCE = 'canvas'
 
       def initialize(args)
@@ -20,7 +17,7 @@ module PipelineService
         @publisher       = args[:publisher] || PipelinePublisher
         @message_builder = args[:message_builder] || publisher::Message
         @serializer      = args[:serializer] || Serializer.new
-        @enrollment      = args[:enrollment]
+        @object      = args[:object]
         @user            = args[:user]
         @queue           = args[:queue] || false
         @message_type    = args[:message_type] || :upserted
@@ -28,7 +25,7 @@ module PipelineService
 
       def call
         configure
-        @payload = serialize_enrollment
+        @payload = serialize_object
         @message = build_pipeline_message
         @job     = build_job
         post
@@ -38,7 +35,7 @@ module PipelineService
 
       private
 
-      attr_reader :payload, :enrollment, :username, :password,
+      attr_reader :payload, :object, :username, :password,
         :user, :api_instance, :payload, :publisher, :host,
         :serializer, :domain_name, :message_builder, :queue, :job,
         :message_type
@@ -78,9 +75,9 @@ module PipelineService
         Delayed::Job.enqueue job
       end
 
-      def serialize_enrollment
-        serializer.enrollment_json(
-          enrollment,
+      def serialize_object
+        serializer.object_json(
+          object,
           user,
           {}
         )
@@ -88,12 +85,12 @@ module PipelineService
 
       def build_pipeline_message
         message_builder.new(
-          noun: NOUN,
+          noun: object.class.to_s.underscore,
           meta: {
             source: SOURCE,
             domain_name: domain_name
           },
-          identifiers: { id: enrollment.id },
+          identifiers: { id: object.id },
           data: message_type == :removed ? {} : payload
         )
       end

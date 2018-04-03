@@ -3,11 +3,15 @@ class HTTParty
   end
 end
 
+class CourseEnrollment
+  def id;1;end
+end
+
 describe PipelineService::Commands::Send do
-  let(:enrollment)   { double('enrollment', id: 1) }
+  let(:object)       { CourseEnrollment.new }
   let(:user)         { double('user') }
   let(:api)          { double('api', messages_post: nil) }
-  let(:serializer)   { double('serializer', enrollment_json: {
+  let(:serializer)   { double('serializer', object_json: {
     :user => { :first_name=>"Test", :last_name=>"User" }})
   }
   let(:test_message) { double('message') }
@@ -25,7 +29,7 @@ describe PipelineService::Commands::Send do
 
   def build(message_type: :upserted)
     described_class.new(
-      enrollment: enrollment,
+      object: object,
       user: user,
       message_api: api,
       serializer: serializer,
@@ -56,9 +60,22 @@ describe PipelineService::Commands::Send do
   end
 
   describe "#message" do
-    it 'shows the message that was sent' do
-      expect(subject.call.message.data).to eq(
-        { :user => { :first_name => "Test", :last_name => "User" }})
+    let(:message) { subject.call.message }
+
+    it 'has a noun' do
+      expect(message.noun).to eq('course_enrollment')
+    end
+
+    it 'has metadata' do
+      expect(message.meta).to eq({:source=>"canvas", :domain_name=>"someschool.com"})
+    end
+
+    it 'has data' do
+      expect(message.data).to be_present
+    end
+
+    it 'has identifiers' do
+      expect(message.identifiers).to eq :id => 1
     end
   end
 
