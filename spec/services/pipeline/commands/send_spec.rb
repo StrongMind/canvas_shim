@@ -12,8 +12,8 @@ describe PipelineService::Commands::Send do
   let(:user)         { double('user') }
   let(:api)          { double('api', messages_post: nil) }
   let(:serializer)   { double('serializer', call: {
-    :user => { :first_name=>"Test", :last_name=>"User" } } )
-  }
+    :id => 1, :first_name=>"Test", :last_name=>"User"
+  })}
   let(:test_message) { double('message') }
 
   before do

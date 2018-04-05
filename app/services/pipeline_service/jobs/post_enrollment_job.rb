@@ -1,18 +1,17 @@
 module PipelineService
   module Jobs
     class PostEnrollmentJob
-      def initialize(api_instance:, message: )
-        @api_instance  = api_instance
-        @message = message
+      def initialize(command: )
+        @command  = command
       end
 
       def perform
-        api_instance.messages_post(message)
+        command.call
       end
 
       private
 
-      attr_reader :api_instance, :message
+      attr_reader :command
     end
   end
 end

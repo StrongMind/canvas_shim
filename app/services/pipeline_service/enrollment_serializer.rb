@@ -1,7 +1,9 @@
 module PipelineService
+  # This ugly thing lets us call the canvas user api
   class EnrollmentSerializer
     include Api::V1::User
     attr_accessor :services_enabled, :context, :current_user, :params, :request
+    INCLUDE = [:user]
     def service_enabled?(service); @services_enabled.include? service; end
 
     def avatar_image_url(*args); "avatar_image_url(#{args.first})"; end
@@ -10,7 +12,7 @@ module PipelineService
 
     def course_user_url(course_id, user_id); ""; end
 
-    def initialize(object)
+    def initialize(object:)
       @domain_root_account = ::Account.default
       @params = {}
       @request = OpenStruct.new
@@ -19,7 +21,7 @@ module PipelineService
     end
 
     def call
-      self.enrollment_json(@object, @admin, {}, [:user])
+      self.enrollment_json(@object, @admin, {}, INCLUDE)
     end
   end
 end
