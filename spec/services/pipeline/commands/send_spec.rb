@@ -49,14 +49,6 @@ describe PipelineService::Commands::Send do
         subject.call
       end
     end
-
-    context 'delete' do
-      it 'sends a blank object if the message type is delete' do
-        expect(build_send_command(message_type: :removed).call.message.data).to eq(
-          { }
-        )
-      end
-    end
   end
 
   describe "#message" do

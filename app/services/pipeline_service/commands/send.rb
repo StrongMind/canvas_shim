@@ -1,5 +1,10 @@
 module PipelineService
   module Commands
+    # Send will serialize a canvas object into their API format and
+    # send to the pipeline
+    #
+    # Usage:
+    # Send.new(object: some_active_record_object).call
     class Send
       attr_reader :message, :persisted_message
 
@@ -7,17 +12,15 @@ module PipelineService
         @serializer = args[:serializer] || EnrollmentSerializer.new(object: object)
         @object     = args[:object]
         @client     = args[:client] || PipelineClient.new(
-          args.merge(object: serialize_object, noun_name: noun_name)
+          args.merge(
+            object: serializer.call,
+            noun_name: noun_name,
+            id: object.id
+          )
         )
       end
 
-      # Send.call will serialize a canvas object into their API format and
-      # send to the pipeline
-      #
-      # Usage:
-      # Send.new(object: some_active_record_object)
       def call
-        serialize_object
         post
         persist
         self
@@ -25,14 +28,7 @@ module PipelineService
 
       private
 
-      attr_reader :payload, :object, :username, :password,
-        :user, :api_instance, :payload, :publisher, :host,
-        :serializer, :domain_name, :message_builder, :queue, :job,
-        :message_type, :client
-
-        def serialize_object
-          @payload = serializer.call
-        end
+      attr_reader :object, :serializer, :client
 
       def persist
         @persisted_message = HashWithIndifferentAccess.new(

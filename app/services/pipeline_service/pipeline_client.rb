@@ -7,6 +7,7 @@ module PipelineService
     def initialize(args)
       @object            = args[:object]
       @noun_name         = args[:noun_name]
+      @id                = args[:id]
       @host              = ENV['PIPELINE_ENDPOINT']
       @username          = ENV['PIPELINE_USER_NAME']
       @password          = ENV['PIPELINE_PASSWORD']
@@ -29,8 +30,7 @@ module PipelineService
     private
 
     attr_reader :host, :username, :password, :domain_name, :publisher,
-      :api_instance, :payload, :serializer, :message_builder, :object,
-      :noun_name
+      :api_instance, :serializer, :message_builder, :object, :noun_name
 
     def post
       api_instance.messages_post(message)
@@ -44,7 +44,7 @@ module PipelineService
           domain_name: domain_name
         },
         identifiers: { id: object[:id] },
-        data: payload
+        data: object
       )
     end
 
