@@ -14,17 +14,18 @@ module PipelineService
         @serializer = args[:serializer] || EnrollmentSerializer.new(object: object)
         @client     = args[:client] || PipelineClient.new(config_client)
         @message_builder_class = args[:message_builder_class] || MessageBuilder
+        @logger     = args[:logger] || PipelineService::Logger
       end
 
       def call
         post
-        persist
+        log
         self
       end
 
       private
 
-      attr_reader :object, :serializer, :client, :args
+      attr_reader :object, :serializer, :client, :args, :logger
 
       def config_client
         args.merge(
@@ -34,15 +35,8 @@ module PipelineService
         )
       end
 
-      def persist
-        @persisted_message = HashWithIndifferentAccess.new(
-          JSON.parse(message.to_json)
-        ).delete_blank.to_json
-
-        HTTParty.post(
-          "https://lrs.strongmind.com/pipeline-watcher-staging",
-          body: persisted_message
-        )
+      def log
+        logger.log(message)
       end
 
       def post
