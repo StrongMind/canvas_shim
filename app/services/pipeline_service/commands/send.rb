@@ -6,12 +6,12 @@ module PipelineService
     # Usage:
     # Send.new(object: some_active_record_object).call
     class Send
-      attr_reader :message, :persisted_message
+      attr_reader :message, :persisted_message, :serializer
 
       def initialize(args)
         @args       = args
         @object     = args[:object]
-        @serializer = args[:serializer] || EnrollmentSerializer.new(object: object)
+        @serializer = args[:serializer] || get_serializer
         @client     = args[:client] || PipelineClient.new(config_client)
         @message_builder_class = args[:message_builder_class] || MessageBuilder
         @logger     = args[:logger] || PipelineService::Logger
@@ -25,7 +25,11 @@ module PipelineService
 
       private
 
-      attr_reader :object, :serializer, :client, :args, :logger
+      attr_reader :object, :client, :args, :logger
+
+      def get_serializer
+        object.pipeline_serializer.new(object: object)
+      end
 
       def config_client
         args.merge(

@@ -1,17 +1,28 @@
+class MockSerializer
+  def initialize(object)
+  end
+
+  def call
+  end
+end
+
 class MockEnrollment
   def id;1;end
+
+  def pipeline_serializer
+    MockSerializer
+  end
+
+  def intitialize(object:)
+  end
 end
 
 describe PipelineService::Commands::Send do
   let(:object)       { MockEnrollment.new }
   let(:user)         { double('user') }
   let(:api)          { double('api', messages_post: nil) }
-  let(:serializer) do
-    double(
-      'serializer',
-      call: { :id => 1, :first_name=>"Test", :last_name=>"User" }
-    )
-  end
+
+
   let(:test_message) { double('message') }
   let(:message_builder) { double('message_builder', build: test_message ) }
   let(:message_builder_class) { double('message_builder_class', new: message_builder) }
@@ -33,7 +44,6 @@ describe PipelineService::Commands::Send do
       object: object,
       user: user,
       message_api: api,
-      serializer: serializer,
       queue: false,
       message_type: message_type,
       message_builder_class: message_builder_class,
@@ -55,6 +65,10 @@ describe PipelineService::Commands::Send do
       it 'logs' do
         expect(logger).to receive(:log)
         subject.call
+      end
+
+      it 'looks up the serializer' do
+        expect(subject.call.serializer).to be_a(MockSerializer)
       end
     end
   end
