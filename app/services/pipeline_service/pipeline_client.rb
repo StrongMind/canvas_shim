@@ -41,15 +41,6 @@ module PipelineService
         id: id,
         data: object
       ).build
-      # @message = message_builder.new(
-      #   noun: noun_name,
-      #   meta: {
-      #     source: SOURCE,
-      #     domain_name: domain_name
-      #   },
-      #   identifiers: { id: object[:id] },
-      #   data: object
-      # )
     end
 
     def configure_publisher

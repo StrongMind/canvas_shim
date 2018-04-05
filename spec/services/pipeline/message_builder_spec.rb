@@ -1,16 +1,14 @@
 describe PipelineService::MessageBuilder do
   subject do described_class.new(
     id: 1,
-    noun_name: 'example',
-    object: object,
+    noun: 'example',
+    data: object,
     domain_name: 'someschool.com'
   )
   end
   let(:object) { double("object", id: 1) }
 
-  let(:message) do
-    subject.build
-  end
+  let(:message) { subject.build }
 
   describe "#message" do
     it 'has a noun' do

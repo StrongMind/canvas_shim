@@ -1,8 +1,3 @@
-class HTTParty
-  def self.post(url, options={})
-  end
-end
-
 class MockEnrollment
   def id;1;end
 end
@@ -20,6 +15,7 @@ describe PipelineService::Commands::Send do
   let(:test_message) { double('message') }
   let(:message_builder) { double('message_builder', build: test_message ) }
   let(:message_builder_class) { double('message_builder_class', new: message_builder) }
+  let(:logger) { double('logger', log: nil) }
 
   before do
     ENV['PIPELINE_ENDPOINT'] = 'https://example.com'
@@ -40,7 +36,8 @@ describe PipelineService::Commands::Send do
       serializer: serializer,
       queue: false,
       message_type: message_type,
-      message_builder_class: message_builder_class
+      message_builder_class: message_builder_class,
+      logger: logger
     )
   end
 
@@ -52,6 +49,11 @@ describe PipelineService::Commands::Send do
 
       it 'sends a message to the pipeline' do
         expect(api).to receive(:messages_post).with(test_message)
+        subject.call
+      end
+
+      it 'logs' do
+        expect(logger).to receive(:log)
         subject.call
       end
     end
