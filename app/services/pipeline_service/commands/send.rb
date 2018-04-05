@@ -13,6 +13,7 @@ module PipelineService
         @object     = args[:object]
         @serializer = args[:serializer] || EnrollmentSerializer.new(object: object)
         @client     = args[:client] || PipelineClient.new(config_client)
+        @message_builder_class = args[:message_builder_class] || MessageBuilder
       end
 
       def call

@@ -1,7 +1,5 @@
 module PipelineService
   class PipelineClient
-    SOURCE = 'canvas'
-
     attr_reader :message
 
     def initialize(args)
@@ -17,7 +15,7 @@ module PipelineService
 
       @publisher       = args[:publisher] || PipelinePublisher
       @api_instance    = args[:message_api] || PipelinePublisher::MessagesApi.new
-      @message_builder = args[:message_builder] || publisher::Message
+      @message_builder_class = args[:message_builder_class] || MessageBuilder
     end
 
     def call
@@ -30,22 +28,28 @@ module PipelineService
     private
 
     attr_reader :host, :username, :password, :domain_name, :publisher,
-      :api_instance, :serializer, :message_builder, :object, :noun_name
+      :api_instance, :serializer, :message_builder_class, :object, :noun_name, :id
 
     def post
       api_instance.messages_post(message)
     end
 
     def build_pipeline_message
-      @message = message_builder.new(
+      @message = message_builder_class.new(
         noun: noun_name,
-        meta: {
-          source: SOURCE,
-          domain_name: domain_name
-        },
-        identifiers: { id: object[:id] },
+        domain_name: domain_name,
+        id: id,
         data: object
-      )
+      ).build
+      # @message = message_builder.new(
+      #   noun: noun_name,
+      #   meta: {
+      #     source: SOURCE,
+      #     domain_name: domain_name
+      #   },
+      #   identifiers: { id: object[:id] },
+      #   data: object
+      # )
     end
 
     def configure_publisher

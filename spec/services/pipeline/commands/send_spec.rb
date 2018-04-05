@@ -11,10 +11,15 @@ describe PipelineService::Commands::Send do
   let(:object)       { MockEnrollment.new }
   let(:user)         { double('user') }
   let(:api)          { double('api', messages_post: nil) }
-  let(:serializer)   { double('serializer', call: {
-    :id => 1, :first_name=>"Test", :last_name=>"User"
-  })}
+  let(:serializer) do
+    double(
+      'serializer',
+      call: { :id => 1, :first_name=>"Test", :last_name=>"User" }
+    )
+  end
   let(:test_message) { double('message') }
+  let(:message_builder) { double('message_builder', build: test_message ) }
+  let(:message_builder_class) { double('message_builder_class', new: message_builder) }
 
   before do
     ENV['PIPELINE_ENDPOINT'] = 'https://example.com'
@@ -34,7 +39,8 @@ describe PipelineService::Commands::Send do
       message_api: api,
       serializer: serializer,
       queue: false,
-      message_type: message_type
+      message_type: message_type,
+      message_builder_class: message_builder_class
     )
   end
 
@@ -48,41 +54,6 @@ describe PipelineService::Commands::Send do
         expect(api).to receive(:messages_post).with(test_message)
         subject.call
       end
-    end
-  end
-
-  describe "#message" do
-    let(:message) { subject.call.message }
-
-    it 'has a noun' do
-      expect(message.noun).to eq('mock_enrollment')
-    end
-
-    it 'has metadata' do
-      expect(message.meta).to eq({:source=>"canvas", :domain_name=>"someschool.com"})
-    end
-
-    it 'has data' do
-      expect(message.data).to be_present
-    end
-
-    it 'has identifiers' do
-      expect(message.identifiers).to eq :id => 1
-    end
-  end
-
-  describe '#meta' do
-    let!(:meta) do
-      command = subject.call
-      command.message.meta
-    end
-
-    it 'has the domain name of the school' do
-      expect(meta[:domain_name]).to eq 'someschool.com'
-    end
-
-    it 'has the source of the app' do
-      expect(meta[:source]).to eq 'canvas'
     end
   end
 end
