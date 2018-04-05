@@ -1,6 +1,6 @@
 module PipelineService
   module Commands
-    # Send will serialize a canvas object into their API format and
+    # Serialize a canvas object into their API format and
     # send to the pipeline
     #
     # Usage:
