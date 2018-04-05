@@ -16,9 +16,8 @@ module PipelineService
         @api_instance    = args[:message_api] || PipelinePublisher::MessagesApi.new
         @publisher       = args[:publisher] || PipelinePublisher
         @message_builder = args[:message_builder] || publisher::Message
-        @serializer      = args[:serializer] || Serializer.new
-        @object      = args[:object]
-        @user            = args[:user]
+        @serializer      = args[:serializer] || EnrollmentSerializer.new
+        @object          = args[:object]
         @queue           = args[:queue] || false
         @message_type    = args[:message_type] || :upserted
       end
@@ -76,11 +75,7 @@ module PipelineService
       end
 
       def serialize_object
-        serializer.object_json(
-          object,
-          user,
-          {}
-        )
+        serializer.call(object)
       end
 
       def build_pipeline_message

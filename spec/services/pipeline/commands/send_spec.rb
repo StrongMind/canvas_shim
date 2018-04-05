@@ -3,16 +3,16 @@ class HTTParty
   end
 end
 
-class CourseEnrollment
+class MockEnrollment
   def id;1;end
 end
 
 describe PipelineService::Commands::Send do
-  let(:object)       { CourseEnrollment.new }
+  let(:object)       { MockEnrollment.new }
   let(:user)         { double('user') }
   let(:api)          { double('api', messages_post: nil) }
-  let(:serializer)   { double('serializer', object_json: {
-    :user => { :first_name=>"Test", :last_name=>"User" }})
+  let(:serializer)   { double('serializer', call: {
+    :user => { :first_name=>"Test", :last_name=>"User" } } )
   }
   let(:test_message) { double('message') }
 
@@ -24,10 +24,10 @@ describe PipelineService::Commands::Send do
   end
 
   subject do
-    build
+    build_send_command
   end
 
-  def build(message_type: :upserted)
+  def build_send_command(message_type: :upserted)
     described_class.new(
       object: object,
       user: user,
@@ -52,7 +52,7 @@ describe PipelineService::Commands::Send do
 
     context 'delete' do
       it 'sends a blank object if the message type is delete' do
-        expect(build(message_type: :removed).call.message.data).to eq(
+        expect(build_send_command(message_type: :removed).call.message.data).to eq(
           { }
         )
       end
@@ -63,7 +63,7 @@ describe PipelineService::Commands::Send do
     let(:message) { subject.call.message }
 
     it 'has a noun' do
-      expect(message.noun).to eq('course_enrollment')
+      expect(message.noun).to eq('mock_enrollment')
     end
 
     it 'has metadata' do

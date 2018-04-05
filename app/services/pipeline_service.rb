@@ -1,9 +1,8 @@
 # The public api for the PipelineService
 module PipelineService
-  def self.publish(enrollment)
+  def self.publish(object)
     PipelineService::Commands::Send.new(
-      enrollment: enrollment,
-      user:       PipelineService::Account.account_admin
+      object: object
     ).call
   end
 end

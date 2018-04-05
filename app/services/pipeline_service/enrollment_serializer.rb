@@ -1,5 +1,5 @@
 module PipelineService
-  class Serializer
+  class EnrollmentSerializer
     include Api::V1::User
     attr_accessor :services_enabled, :context, :current_user, :params, :request
     def service_enabled?(service); @services_enabled.include? service; end
@@ -10,10 +10,16 @@ module PipelineService
 
     def course_user_url(course_id, user_id); ""; end
 
-    def initialize
+    def initialize(object)
       @domain_root_account = ::Account.default
       @params = {}
       @request = OpenStruct.new
+      @object = object
+      @admin = PipelineService::Account.account_admin
+    end
+
+    def call
+      self.enrollment_json(@object, @admin, {}, [:user])
     end
   end
 end
