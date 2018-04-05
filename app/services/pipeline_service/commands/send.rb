@@ -9,15 +9,10 @@ module PipelineService
       attr_reader :message, :persisted_message
 
       def initialize(args)
-        @serializer = args[:serializer] || EnrollmentSerializer.new(object: object)
+        @args       = args
         @object     = args[:object]
-        @client     = args[:client] || PipelineClient.new(
-          args.merge(
-            object: serializer.call,
-            noun_name: noun_name,
-            id: object.id
-          )
-        )
+        @serializer = args[:serializer] || EnrollmentSerializer.new(object: object)
+        @client     = args[:client] || PipelineClient.new(config_client)
       end
 
       def call
@@ -28,7 +23,15 @@ module PipelineService
 
       private
 
-      attr_reader :object, :serializer, :client
+      attr_reader :object, :serializer, :client, :args
+
+      def config_client
+        args.merge(
+          object: serializer.call,
+          noun_name: noun_name,
+          id: object.id
+        )
+      end
 
       def persist
         @persisted_message = HashWithIndifferentAccess.new(
