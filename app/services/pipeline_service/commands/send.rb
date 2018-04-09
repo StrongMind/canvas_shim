@@ -13,7 +13,8 @@ module PipelineService
         @object     = args[:object]
         @serializer = args[:serializer] || get_serializer
         @client     = args[:client] || PipelineClient.new(config_client)
-        @message_builder_class = args[:message_builder_class] || MessageBuilder
+        @message_builder_class =
+          args[:message_builder_class] || MessageBuilder
         @logger     = args[:logger] || PipelineService::Logger
       end
 
