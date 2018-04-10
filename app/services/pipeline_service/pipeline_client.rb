@@ -33,7 +33,6 @@ module PipelineService
     def post
       api_instance.messages_post(message)
     end
-
     handle_asynchronously :post unless ENV['PIPELINE_SKIP_QUEUE']
 
     def build_pipeline_message
@@ -47,7 +46,7 @@ module PipelineService
 
     def configure_publisher
       publisher.configure do |config|
-        config.host     = host.gsub('/messages', '').gsub('https://', '')
+        config.host     = host
         config.username = username
         config.password = password
       end
