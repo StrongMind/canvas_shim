@@ -6,8 +6,6 @@ module ActiveSupport
       end
     end
   end
-
-
 end
 
 class Hash

@@ -45,6 +45,7 @@ module PipelineService
       api_instance.messages_post(message)
       sis_endpoint.call
     end
+    handle_asynchronously :post unless ENV['PIPELINE_SKIP_QUEUE']
 
     def build_pipeline_message
       @message = message_builder_class.new(
