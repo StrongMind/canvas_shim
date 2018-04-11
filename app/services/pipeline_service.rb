@@ -7,13 +7,13 @@
 module PipelineService
   def self.publish(object)
     if ENV['PIPELINE_SKIP_QUEUE']
-      job.perform
+      job(object).perform
     else
-      Delayed::Job.enqueue job
+      Delayed::Job.enqueue job(object)
     end
   end
 
-  def self.job
+  def self.job(object)
     Jobs::PostEnrollmentJob.new(
       command: PipelineService::Commands::Send.new(object: object)
     )
