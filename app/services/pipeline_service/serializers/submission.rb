@@ -2,7 +2,9 @@ module PipelineService
   module Serializers
     # This ugly thing lets us call the canvas user api
     class Submission
+      include Api
       include Api::V1::Submission
+
 
       def initialize(object:)
         @object = object
@@ -18,7 +20,7 @@ module PipelineService
       end
 
       def call
-        self.submission_json(@object, @object.assignment, @admin, {}, nil, [])
+        submission_json(@object, @object.assignment, @admin, {}, nil, [])
       end
     end
   end

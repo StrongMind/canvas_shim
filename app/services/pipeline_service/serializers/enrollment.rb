@@ -22,7 +22,7 @@ module PipelineService
       end
 
       def call
-        self.enrollment_json(@object, @admin, {})
+        enrollment_json(@object, @admin, {})
       end
     end
   end

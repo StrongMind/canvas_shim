@@ -22,8 +22,7 @@ module PipelineService
       end
 
       def call
-        # , %w{locale avatar_url permissions}
-        self.user_json(@object, @admin, {})
+        user_json(@object, @admin, {})
       end
     end
   end
