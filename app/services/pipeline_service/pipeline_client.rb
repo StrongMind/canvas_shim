@@ -31,6 +31,8 @@ module PipelineService
       :api_instance, :serializer, :message_builder_class, :object, :noun_name, :id
 
     def post
+      # HTTParty.post 'dev-integration-di-data-pipeline-api.strongmind.com', body: message
+      # byebug
       api_instance.messages_post(message)
     end
 

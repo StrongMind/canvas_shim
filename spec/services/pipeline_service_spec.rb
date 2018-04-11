@@ -1,47 +1,30 @@
-module PipelineService
-  module Delayed
-    module Job
-      def self.enqueue(job)
-      end
-    end
-  end
-end
-
 describe PipelineService do
+  before do
+    ENV['PIPELINE_ENDPOINT'] = 'https://example.com'
+    ENV['PIPELINE_USER_NAME'] = 'example_user'
+    ENV['PIPELINE_PASSWORD'] = 'example_password'
+    ENV['CANVAS_DOMAIN'] = 'someschool.com'
+  end
+
   subject { described_class }
   let(:serializer_instance) { double('Serializer Instance', call: nil) }
   let(:serializer) { double('Serializer', new: serializer_instance) }
   let(:enrollment) { double('Enrollment', pipeline_serializer: serializer, id: 1) }
+  let(:api_instance) { double('api_instance', call: nil) }
+  let(:api) { double('api', new: api_instance) }
 
   describe '#publish' do
-    context "Queued" do
-      it 'enqueues the job' do
-        expect(PipelineService::Delayed::Job).to receive(:enqueue)
-        subject.publish(enrollment)
-      end
+    it 'Runs the api command' do
+      expect(api_instance).to receive(:call)
+      subject.publish(enrollment, api: api)
     end
+  end
+end
 
-    context "Without Queue" do
-      let(:command) { double('command', call: nil) }
-
-      before do
-        allow(PipelineService).to receive(:command) { command }
-        @env_value = ENV['PIPELINE_SKIP_QUEUE']
-        ENV['PIPELINE_SKIP_QUEUE'] = 'true'
-      end
-
-      after do
-        ENV['PIPELINE_SKIP_QUEUE'] = @env_value
-      end
-
-      it 'wont enqueue' do
-        expect(PipelineService::Delayed::Job).to_not receive(:enqueue)
-        subject.publish(enrollment)
-      end
-
-      it 'will call the command inline' do
-        expect(command).to receive(:call)
-        subject.publish(enrollment)
+module PipelineService
+  module Delayed
+    module Job
+      def self.enqueue(job)
       end
     end
   end

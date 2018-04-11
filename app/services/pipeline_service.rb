@@ -5,12 +5,7 @@
 #
 # Example: PipelineService.publish(User.first)
 module PipelineService
-  def self.publish(object)
-    return command(object).call if ENV['PIPELINE_SKIP_QUEUE']
-    Delayed::Job.enqueue Jobs::PostEnrollmentJob.new(command: command(object))
-  end
-
-  def self.command(object)
-    PipelineService::Commands::Send.new(object: object)
+  def self.publish(object, api: PipelineService::API::Publish)
+    api.new(object).call
   end
 end

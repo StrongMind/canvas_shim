@@ -2,8 +2,8 @@ module PipelineService
   module Serializers
     # This ugly thing lets us call the canvas user api
     class Submission
-      include Api
-      include Api::V1::Submission
+      include ::Api
+      include ::Api::V1::Submission
 
 
       def initialize(object:)
