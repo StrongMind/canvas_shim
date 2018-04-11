@@ -13,4 +13,4 @@ gemspec
 # To use a debugger
 gem 'byebug', group: [:development, :test]
 gem "rspec-rails"
-# gem 'pipeline_publisher_ruby', :git => 'git@github.com:StrongMind/pipeline-publisher-ruby.git'
+gem 'pipeline_publisher_ruby', :git => 'git@github.com:StrongMind/pipeline-publisher-ruby.git'
