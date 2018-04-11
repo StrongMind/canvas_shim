@@ -6,13 +6,13 @@
 # Example: PipelineService.publish(User.first)
 module PipelineService
   def self.publish(object)
-    if ENV['PIPELINE_SKIP_QUEUE']
-      command(object).call
-    else
-      Delayed::Job.enqueue Jobs::PostEnrollmentJob.new(
-        command: command(object)
-      )
-    end
+    # if ENV['PIPELINE_SKIP_QUEUE']
+    #   command(object).call
+    # else
+    #   Delayed::Job.enqueue Jobs::PostEnrollmentJob.new(
+    #     command: command(object)
+    #   )
+    # end
   end
 
   def self.command(object)
