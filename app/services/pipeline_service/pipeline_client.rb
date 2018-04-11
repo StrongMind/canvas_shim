@@ -13,8 +13,8 @@ module PipelineService
 
       raise 'Missing environment variables' if config_missing?
 
-      @publisher       = args[:publisher] || PipelinePublisher
-      @api_instance    = args[:message_api] || PipelinePublisher::MessagesApi.new
+      @publisher    = args[:publisher] || PipelinePublisher
+      @api_instance = args[:message_api] || PipelinePublisher::MessagesApi.new
       @message_builder_class = args[:message_builder_class] || MessageBuilder
     end
 
@@ -31,8 +31,6 @@ module PipelineService
       :api_instance, :serializer, :message_builder_class, :object, :noun_name, :id
 
     def post
-      # HTTParty.post 'dev-integration-di-data-pipeline-api.strongmind.com', body: message
-      # byebug
       api_instance.messages_post(message)
     end
 
