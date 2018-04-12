@@ -11,7 +11,7 @@ module PipelineService
       @password          = ENV['PIPELINE_PASSWORD']
       @domain_name       = ENV['CANVAS_DOMAIN']
 
-      raise 'Missing environment variables' if config_missing?
+      raise(ArgumentError, 'Missing environment variables for the pipeline client') if config_missing?
 
       @publisher    = args[:publisher] || PipelinePublisher
       @api_instance = args[:message_api] || PipelinePublisher::MessagesApi.new
