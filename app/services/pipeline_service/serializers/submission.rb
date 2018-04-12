@@ -8,13 +8,7 @@ module PipelineService
       include ActionDispatch::Routing::UrlFor
       include Rails.application.routes.url_helpers
 
-
-
-      def avatar_url_for_user(*);'';end
-      def retrieve_course_external_tools_url(*);'';end
-      def course_assignment_submission_url(*);'';end
       def params;{};end
-      def polymorphic_url(*);'';end
 
       def initialize(object:)
         default_url_options[:host] = ENV['CANVAS_DOMAIN']
