@@ -58,10 +58,10 @@ describe PipelineService::Commands::Send do
         subject.call
       end
 
-      it 'logs' do
-        expect(logger).to receive(:log)
-        subject.call
-      end
+      # it 'logs' do
+      #   expect(logger).to receive(:log)
+      #   subject.call
+      # end
 
       it 'looks up the serializer' do
         expect(subject.call.serializer).to be_a(MockSerializer)

@@ -22,7 +22,7 @@ describe PipelineService::Serializers::Submission do
 
   describe 'Stubbed methods to work with Canvas' do
     it '#retrieve_course_external_tools_url = nil' do
-      expect(subject.retrieve_course_external_tools_url).to eq nil
+      expect(subject.retrieve_course_external_tools_url).to eq ''
     end
 
     it '#course_assignment_submission_url = \'\'' do
