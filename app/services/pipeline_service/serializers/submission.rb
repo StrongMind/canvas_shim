@@ -5,20 +5,15 @@ module PipelineService
       include ::Api
       include ::Api::V1::Submission
 
+      def retrieve_course_external_tools_url;end
+      def course_assignment_submission_url(one, two, three, four);'';end
+      def params;{};end
 
       def initialize(object:)
         @object = object
         @admin = PipelineService::Account.account_admin
       end
-
-      def course_assignment_submission_url(one, two, three, four)
-        ''
-      end
-
-      def params
-        {}
-      end
-
+      
       def call
         submission_json(@object, @object.assignment, @admin, {}, nil, [])
       end
