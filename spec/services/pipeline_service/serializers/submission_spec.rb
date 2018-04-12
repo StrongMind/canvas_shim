@@ -36,5 +36,10 @@ describe PipelineService::Serializers::Submission do
     it '#polymorphic_url = \'\'' do
       expect(subject.polymorphic_url(['1', :file_download], file_id: '2')).to eq ''
     end
+
+    it '#avatar_url_for_user = \'\'' do
+      expect(subject.avatar_url_for_user).to eq ''
+    end
+
   end
 end

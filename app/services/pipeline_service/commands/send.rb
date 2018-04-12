@@ -18,7 +18,7 @@ module PipelineService
 
       def call
         post
-        log
+        # log
         self
       end
 

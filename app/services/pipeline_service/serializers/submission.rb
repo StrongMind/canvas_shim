@@ -5,10 +5,13 @@ module PipelineService
       include ::Api
       include ::Api::V1::Submission
 
-      def retrieve_course_external_tools_url(*);end
+      def avatar_url_for_user(*);'';end
+      def retrieve_course_external_tools_url(*);'';end
       def course_assignment_submission_url(*);'';end
       def params;{};end
       def polymorphic_url(*);'';end
+
+
 
       def initialize(object:)
         @object = object
