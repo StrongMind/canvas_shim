@@ -8,27 +8,49 @@ module PipelineService
       include ActionDispatch::Routing::UrlFor
       include Rails.application.routes.url_helpers
 
-      # attr_reader :request
-
       def params;{};end
 
       def initialize(object:)
-        default_url_options[:host] = ENV['CANVAS_DOMAIN']
+        default_url_options[:host] = host
         @object = object
         @admin = PipelineService::Account.account_admin
       end
 
       def request
-        Struct.new(:host_with_port, :ssl?, :protocol).new(
-          "#{ENV['CANVAS_DOMAIN']}",
-          ENV['CANVAS_SSL'] == 'true',
-          ENV['CANVAS_SSL'] == 'true' ? 'https://' : 'http://'
+        Struct.new(:host_with_port, :ssl?, :protocol, :host, :port).new(
+          host_with_port,
+          ssl?,
+          protocol,
+          host,
+          port
         )
       end
 
       def call
         @current_user = @admin
         submission_json(@object, @object.assignment, @admin, {}, nil, [])
+      end
+
+      private
+
+      def protocol
+        ENV['CANVAS_SSL'] == 'true' ? 'https://' : 'http://'
+      end
+
+      def host
+        ENV['CANVAS_DOMAIN']
+      end
+
+      def port
+        80
+      end
+
+      def host_with_port
+        "#{host}:#{port}"
+      end
+
+      def ssl?
+        ENV['CANVAS_SSL'] == 'true'
       end
     end
   end

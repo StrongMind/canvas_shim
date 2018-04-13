@@ -26,7 +26,7 @@ describe PipelineService::Serializers::Submission do
     end
 
     it '#host_with_port' do
-      expect(subject.request.host_with_port).to eq 'someschool.com'
+      expect(subject.request.host_with_port).to eq 'someschool.com:80'
     end
 
     describe '#request' do
