@@ -8,12 +8,15 @@ module PipelineService
       include ActionDispatch::Routing::UrlFor
       include Rails.application.routes.url_helpers
 
+      attr_reader :request
+
       def params;{};end
 
       def initialize(object:)
         default_url_options[:host] = ENV['CANVAS_DOMAIN']
         @object = object
         @admin = PipelineService::Account.account_admin
+        @request = Struct.new(:host_with_port).new('hostwithport')
       end
 
       def call

@@ -21,24 +21,12 @@ describe PipelineService::Serializers::Submission do
   end
 
   describe 'Stubbed methods to work with Canvas' do
-    it '#retrieve_course_external_tools_url = nil' do
-      expect(subject.retrieve_course_external_tools_url).to eq ''
-    end
-
-    it '#course_assignment_submission_url = \'\'' do
-      expect(subject.course_assignment_submission_url(1,2,3,4)).to eq ''
-    end
-
     it '#params = {}' do
       expect(subject.params).to eq({})
     end
 
-    it '#polymorphic_url = \'\'' do
-      expect(subject.polymorphic_url(['1', :file_download], file_id: '2')).to eq ''
-    end
-
-    it '#avatar_url_for_user = \'\'' do
-      expect(subject.avatar_url_for_user).to eq ''
+    it '#host_with_port' do
+      expect(subject.request.host_with_port).to eq 'hostwithport'
     end
 
   end
