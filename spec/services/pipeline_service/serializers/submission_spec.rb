@@ -37,6 +37,14 @@ describe PipelineService::Serializers::Submission do
       it '#protocol' do
         expect(subject.request.protocol).to eq "http://"
       end
+
+      it '#host' do
+        expect(subject.request.host).to eq "someschool.com"
+      end
+
+      it '#port' do
+        expect(subject.request.port).to eq 80
+      end
     end
 
   end
