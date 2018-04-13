@@ -15,11 +15,9 @@ describe PipelineService::API::Publish do
   end
 
   describe '#call' do
-    context 'queued' do
-      it 'enqueues' do
-        expect(queue_client).to receive(:enqueue)
-        subject.call
-      end
+    it 'does not enqueue' do
+      expect(queue_client).to_not receive(:enqueue)
+      subject.call
     end
   end
 end
