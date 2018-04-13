@@ -9,7 +9,7 @@ module PipelineService
       end
 
       def call
-        enqueue_command
+        # enqueue_command
       end
 
       private
