@@ -16,7 +16,7 @@ module PipelineService
         default_url_options[:host] = ENV['CANVAS_DOMAIN']
         @object = object
         @admin = PipelineService::Account.account_admin
-        @request = Struct.new(:host_with_port).new('hostwithport')
+        @request = Struct.new(:host_with_port, :ssl?).new("#{ENV['CANVAS_DOMAIN']}", ENV['CANVAS_SSL'] == 'true')
       end
 
       def call
