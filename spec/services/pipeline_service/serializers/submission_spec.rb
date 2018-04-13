@@ -29,8 +29,14 @@ describe PipelineService::Serializers::Submission do
       expect(subject.request.host_with_port).to eq 'someschool.com'
     end
 
-    it '#ssl?' do
-      expect(subject.request.ssl?).to eq false
+    describe '#request' do
+      it '#ssl?' do
+        expect(subject.request.ssl?).to eq false
+      end
+
+      it '#protocol' do
+        expect(subject.request.protocol).to eq "http://"
+      end
     end
 
   end
