@@ -1,17 +1,17 @@
 module PipelineService
   module Jobs
     class PostEnrollmentJob
-      def initialize(command: )
-        @command  = command
+      def initialize(object:)
+        @object  = object
       end
 
       def perform
-        command.call
+        Commands::Send.new(object: object).call
       end
 
       private
 
-      attr_reader :command
+      attr_reader :object
     end
   end
 end

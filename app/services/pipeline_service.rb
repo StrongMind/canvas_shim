@@ -5,9 +5,7 @@
 #
 # Example: PipelineService.publish(User.first)
 module PipelineService
-  def self.publish(object)
-    Jobs::PostEnrollmentJob.new(
-      command: PipelineService::Commands::Send.new(object: object)
-    ).perform
+  def self.publish(object, api: PipelineService::API::Publish)
+    api.new(object).call
   end
 end

@@ -11,26 +11,20 @@ module PipelineService
       def initialize(args)
         @args       = args
         @object     = args[:object]
-        @serializer = args[:serializer] || get_serializer
+        @serializer = args[:serializer] || object.pipeline_serializer.new(object: object)
         @client     = args[:client] || PipelineClient.new(config_client)
-        @message_builder_class =
-          args[:message_builder_class] || MessageBuilder
         @logger     = args[:logger] || PipelineService::Logger
       end
 
       def call
         post
-        log
+        # log
         self
       end
 
       private
 
       attr_reader :object, :client, :args, :logger
-
-      def get_serializer
-        object.pipeline_serializer.new(object: object)
-      end
 
       def config_client
         args.merge(

@@ -17,10 +17,10 @@ module PipelineService
       @domain_name       = ENV['CANVAS_DOMAIN']
       @args = args
 
-      raise 'Missing environment variables' if config_missing?
+      raise(ArgumentError, 'Missing environment variables for the pipeline client') if config_missing?
 
-      @publisher       = args[:publisher] || PipelinePublisher
-      @api_instance    = args[:message_api] || PipelinePublisher::MessagesApi.new
+      @publisher    = args[:publisher] || PipelinePublisher
+      @api_instance = args[:message_api] || PipelinePublisher::MessagesApi.new
       @message_builder_class = args[:message_builder_class] || MessageBuilder
       @sis_endpoint = (
         args[:sis_endpoint] ||
@@ -45,7 +45,6 @@ module PipelineService
       api_instance.messages_post(message)
       sis_endpoint.call
     end
-    handle_asynchronously :post unless ENV['PIPELINE_SKIP_QUEUE']
 
     def build_pipeline_message
       @message = message_builder_class.new(
