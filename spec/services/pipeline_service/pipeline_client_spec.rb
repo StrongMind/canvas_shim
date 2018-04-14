@@ -1,17 +1,17 @@
 describe PipelineService::PipelineClient do
-  let(:message_api) { double('message_api', messages_post: nil) }
+  let(:endpoint) { double('endpoint', call: nil) }
 
   subject do
     described_class.new(
       object: nil,
       noun_name: '',
       id: 1,
-      message_api: message_api
+      endpoint: endpoint
     )
   end
 
-  it 'posts to the pipeline library' do
-    expect(message_api).to receive(:messages_post).and_return(nil)
+  it 'posts to the endpoint' do
+    expect(endpoint).to receive(:call).and_return(nil)
     subject.call
   end
 end
