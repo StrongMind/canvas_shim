@@ -5,7 +5,7 @@ module PipelineService
         @object         = object
         @queue_client   = args[:queue_client] || Delayed::Job
         @command_class  = args[:command_class] || PipelineService::Commands::Send
-        @jobs =         [Jobs::PostToPipeline, Jobs::PostToSIS]
+        @jobs           = [Jobs::PostToPipeline, Jobs::PostToSIS]
       end
 
       def call
