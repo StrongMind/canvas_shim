@@ -2,15 +2,14 @@ module PipelineService
   module API
     class Publish
       def initialize(object, args={})
-        @object = object
-        @queue_client = args[:queue_client] || Delayed::Job
-        @command_class = args[:command_class] || PipelineService::Commands::Send
-        @jobs = [Jobs::PostToPipeline, Jobs::PostToSIS]
+        @object         = object
+        @queue_client   = args[:queue_client] || Delayed::Job
+        @command_class  = args[:command_class] || PipelineService::Commands::Send
+        @jobs =         [Jobs::PostToPipeline, Jobs::PostToSIS]
       end
 
       def call
         enqueue_jobs
-
       end
 
       private
