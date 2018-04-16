@@ -1,9 +1,10 @@
 module PipelineService
   module Endpoints
     class Pipeline
-      def initialize(object, args={})
-        @object = object
-        @id                = args[:id]
+      def initialize(object, noun_name, id, args={})
+        @object            = object
+        @id                = id
+        @noun_name         = noun_name
         @endpoint          = ENV['PIPELINE_ENDPOINT']
         @username          = ENV['PIPELINE_USER_NAME']
         @password          = ENV['PIPELINE_PASSWORD']
@@ -22,7 +23,7 @@ module PipelineService
 
       private
 
-      attr_reader :message, :http_client, :endpoint, :username, :password, :publisher, :object, :message_builder_class, :domain_name, :id
+      attr_reader :message, :http_client, :endpoint, :username, :password, :publisher, :object, :message_builder_class, :domain_name, :id, :noun_name
 
       def build_message
         @message = message_builder_class.new(
@@ -31,10 +32,6 @@ module PipelineService
           id:          id,
           data:        object
         ).build
-      end
-
-      def noun_name
-        object.class.to_s.underscore
       end
 
       def missing_config?
