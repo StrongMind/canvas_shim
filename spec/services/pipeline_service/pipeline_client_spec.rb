@@ -14,4 +14,18 @@ describe PipelineService::PipelineClient do
     expect(endpoint).to receive(:call).and_return(nil)
     subject.call
   end
+
+  context 'defaults' do
+    subject do
+      described_class.new(
+        object: nil,
+        noun_name: '',
+        id: 1
+      )
+    end
+
+    it 'defaults to the pipeline endpoint' do
+      expect(subject.send(:endpoint).class).to eq PipelineService::Endpoints::Pipeline
+    end
+  end
 end
