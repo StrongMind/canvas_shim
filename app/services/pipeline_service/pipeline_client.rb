@@ -1,18 +1,13 @@
 module PipelineService
   class PipelineClient
-    # class HTTParty
-    #   def self.post(one, two)
-    #   end
-    # end
-
     attr_reader :message
 
     def initialize(args)
-      @object            = args[:object]
-      @noun_name         = args[:noun_name]
-      @id                = args[:id]
-      @args = args
-      @endpoint = args[:endpoint] || Endpoints::Endpoint.new(object, args)
+      @object     = args[:object]
+      @noun_name  = args[:noun_name]
+      @id         = args[:id]
+      @args       = args
+      @endpoint   = args[:endpoint] || Endpoints::Endpoint.new(object, args)
     end
 
     def call
