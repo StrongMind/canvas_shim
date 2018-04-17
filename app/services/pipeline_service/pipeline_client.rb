@@ -7,7 +7,7 @@ module PipelineService
       @noun_name  = args[:noun_name]
       @id         = args[:id]
       @args       = args
-      @endpoint   = args[:endpoint] || Endpoints::Pipeline.new(object, noun_name, id, args)
+      @endpoint   = (args[:endpoint] || Endpoints::Pipeline).new(object, noun_name, id, args)
     end
 
     def call
