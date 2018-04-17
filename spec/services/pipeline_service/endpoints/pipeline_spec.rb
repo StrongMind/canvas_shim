@@ -1,7 +1,14 @@
 describe PipelineService::Endpoints::Pipeline do
-  let(:object) { double('object') }
+  let(:message) { {} }
   let(:http_client) { double('http_client', messages_post: nil) }
-  subject { described_class.new(object, 'ARRecord', 1, http_client: http_client) }
+  subject { described_class.new(message: message, noun: 'ARRecord', id: 1, args: { http_client: http_client }) }
+
+  before do
+    ENV['PIPELINE_ENDPOINT'] = 'https://example.com'
+    ENV['PIPELINE_USER_NAME'] = 'example_user'
+    ENV['PIPELINE_PASSWORD'] = 'example_password'
+    ENV['CANVAS_DOMAIN'] = 'someschool.com'
+  end
 
   it 'works' do
     subject.call

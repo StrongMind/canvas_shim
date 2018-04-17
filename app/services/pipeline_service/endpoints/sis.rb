@@ -1,12 +1,12 @@
 module PipelineService
   module Endpoints
     class SIS
-      def initialize(object, noun_name, id, args)
-        @message = object
+      def initialize(message:, noun:, id:, args:)
+        @message = message
         @api_key = ENV['SIS_ENROLLMENT_UPDATE_API_KEY']
         @endpoint = ENV['SIS_ENROLLMENT_UPDATE_ENDPOINT']
         @http_client = args[:http_client] || HTTParty
-        @noun_name = noun_name
+        @noun = noun
       end
 
       def call
@@ -17,7 +17,7 @@ module PipelineService
 
       private
 
-      attr_reader :message, :http_client, :api_key, :endpoint, :noun_name
+      attr_reader :message, :http_client, :api_key, :endpoint, :noun
 
       def check_config
         raise 'Missing config' if missing_config?
@@ -28,7 +28,7 @@ module PipelineService
       end
 
       def filter
-        @message = nil unless noun_name == 'student_enrollment'
+        @message = nil unless noun == 'student_enrollment'
       end
 
       def build_endpoint

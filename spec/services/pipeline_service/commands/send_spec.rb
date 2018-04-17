@@ -24,13 +24,6 @@ describe PipelineService::Commands::Send do
   let(:client)          { double('pipeline_client', call: double('call_result', message: test_message)) }
   let(:logger)          { double('logger', log: nil) }
 
-  before do
-    ENV['PIPELINE_ENDPOINT'] = 'https://example.com'
-    ENV['PIPELINE_USER_NAME'] = 'example_user'
-    ENV['PIPELINE_PASSWORD'] = 'example_password'
-    ENV['CANVAS_DOMAIN'] = 'someschool.com'
-  end
-
   subject do
     described_class.new(
       object: object,

@@ -16,8 +16,6 @@ module PipelineService
         @logger     = args[:logger] || PipelineService::Logger
       end
 
-      # PipelineService.new(object: Enrollment.last, endpoint: PipelineService::Endpoints::SIS)
-
       def call
         post
         # log

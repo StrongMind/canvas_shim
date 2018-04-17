@@ -1,7 +1,7 @@
 describe PipelineService::Endpoints::SIS do
-  let(:message) { { noun: 'StudentEnrollment' } }
+  let(:message) { { } }
   let(:http_client) { double("HTTPClient") }
-  subject { described_class.new(message, http_client: http_client) }
+
 
   before do
     ENV['SIS_ENROLLMENT_UPDATE_API_KEY'] = 'key'
@@ -9,6 +9,7 @@ describe PipelineService::Endpoints::SIS do
   end
 
   describe '#call' do
+    subject { described_class.new(message: message, noun: "student_enrollment", id: 1, args: { http_client: http_client }) }
     it 'will post student enrollments' do
       expect(http_client).to receive(:post)
       subject.call
@@ -16,6 +17,7 @@ describe PipelineService::Endpoints::SIS do
 
     context 'filtered' do
       let(:message) { { noun: 'TeacherEnrollment' } }
+      subject { described_class.new(message: message, noun: "some_other_enrollment", id: 1, args: {http_client: http_client}) }
       it 'will only post student enrollments' do
         expect(http_client).to_not receive(:post)
         subject.call
