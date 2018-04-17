@@ -29,7 +29,7 @@ module PipelineService
       def config_client
         args.merge(
           object: serializer.call,
-          noun_name: noun_name,
+          noun: noun,
           id: object.id
         )
       end
@@ -42,7 +42,7 @@ module PipelineService
         @message = client.call.message
       end
 
-      def noun_name
+      def noun
         object.class.to_s.underscore
       end
     end

@@ -8,7 +8,6 @@ module PipelineService
       @id         = args[:id]
       @args       = args
       @domain_name = ENV['CANVAS_DOMAIN']
-      @message_builder_class = args[:message_builder_class] || MessageBuilder
       @endpoint_class   = (args[:endpoint] || Endpoints::Pipeline)
     end
 
@@ -20,25 +19,23 @@ module PipelineService
 
     private
 
-    attr_reader :domain_name, :object, :noun, :id, :endpoint_class,
-      :message_builder_class, :message, :args
+    attr_reader :domain_name, :object, :noun, :id, :endpoint_class, :args
 
     def post
       endpoint_class.new(
         message: message,
-        noun: noun,
-        id: id,
         args: args
       ).call
     end
 
     def build_message
-      @message = message_builder_class.new(
-        noun:        noun,
-        domain_name: domain_name,
-        id:          id,
-        data:        object
-      ).build
+      @message =
+        {noun:        noun,
+          domain_name: domain_name,
+          id:          id,
+          data:        object
+        }
+
     end
   end
 end

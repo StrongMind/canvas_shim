@@ -8,6 +8,7 @@ module PipelineService
         @password    = ENV['PIPELINE_PASSWORD']
         @publisher   = args[:publisher] || PipelinePublisher
         @http_client = args[:http_client] || PipelinePublisher::MessagesApi.new
+        @message_builder_class = args[:message_builder_class] || MessageBuilder
       end
 
       def call
@@ -18,14 +19,16 @@ module PipelineService
 
       private
 
-      attr_reader :message, :http_client, :endpoint, :username, :password, :publisher, :message
+      attr_reader :message, :http_client, :endpoint, :username, :password, :publisher, :message, :message_builder_class
 
       def missing_config?
         [endpoint, username, password].any?(&:nil?)
       end
 
       def post
-        http_client.messages_post(message)
+        http_client.messages_post(
+          message_builder_class.new(message).build
+        )
       end
 
       def configure

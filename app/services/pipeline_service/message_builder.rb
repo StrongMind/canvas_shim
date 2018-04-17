@@ -5,7 +5,7 @@ module PipelineService
     def initialize(args)
       @args = args
       @id = args[:id]
-      @noun_name = args[:noun]
+      @noun = args[:noun]
       @object = args[:data]
       @domain_name = args[:domain_name]
       @message_class = args[:message_class] || PipelinePublisher::Message
@@ -13,7 +13,7 @@ module PipelineService
 
     def build
       message_class.new(
-        noun: noun_name,
+        noun: noun,
         meta: {
           source: SOURCE,
           domain_name: domain_name
@@ -25,6 +25,6 @@ module PipelineService
 
     private
 
-    attr_reader :message_class, :id, :noun_name, :object, :domain_name, :args
+    attr_reader :message_class, :id, :noun, :object, :domain_name, :args
   end
 end
