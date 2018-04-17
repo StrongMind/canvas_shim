@@ -12,9 +12,6 @@ class MockEnrollment
   def pipeline_serializer
     MockSerializer
   end
-
-  def intitialize(object:)
-  end
 end
 
 describe PipelineService::Commands::Send do
@@ -27,24 +24,12 @@ describe PipelineService::Commands::Send do
   let(:client)          { double('pipeline_client', call: double('call_result', message: test_message)) }
   let(:logger)          { double('logger', log: nil) }
 
-  before do
-    ENV['PIPELINE_ENDPOINT'] = 'https://example.com'
-    ENV['PIPELINE_USER_NAME'] = 'example_user'
-    ENV['PIPELINE_PASSWORD'] = 'example_password'
-    ENV['CANVAS_DOMAIN'] = 'someschool.com'
-  end
-
   subject do
-    build_send_command
-  end
-
-  def build_send_command(message_type: :upserted)
     described_class.new(
       object: object,
       user: user,
       message_api: api,
       queue: false,
-      message_type: message_type,
       message_builder_class: message_builder_class,
       client: client,
       logger: logger

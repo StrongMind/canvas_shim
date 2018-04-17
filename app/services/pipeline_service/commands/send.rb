@@ -4,7 +4,7 @@ module PipelineService
     # send to the pipeline
     #
     # Usage:
-    # Send.new(object: some_active_record_object).call
+    # Send.new(message: User.last).call
     class Send
       attr_reader :message, :persisted_message, :serializer
 

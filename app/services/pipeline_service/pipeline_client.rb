@@ -3,56 +3,42 @@ module PipelineService
     attr_reader :message
 
     def initialize(args)
-      @object            = args[:object]
-      @noun_name         = args[:noun_name]
-      @id                = args[:id]
-      @host              = ENV['PIPELINE_ENDPOINT']
-      @username          = ENV['PIPELINE_USER_NAME']
-      @password          = ENV['PIPELINE_PASSWORD']
-      @domain_name       = ENV['CANVAS_DOMAIN']
-
-      raise(ArgumentError, 'Missing environment variables for the pipeline client') if config_missing?
-
-      @publisher    = args[:publisher] || PipelinePublisher
-      @api_instance = args[:message_api] || PipelinePublisher::MessagesApi.new
+      @object     = args[:object]
+      @noun       = args[:noun]
+      @id         = args[:id]
+      @args       = args
+      @domain_name = ENV['CANVAS_DOMAIN']
       @message_builder_class = args[:message_builder_class] || MessageBuilder
+      @endpoint_class   = (args[:endpoint] || Endpoints::Pipeline)
     end
 
     def call
-      configure_publisher
-      build_pipeline_message
+      build_message
       post
       self
     end
 
     private
 
-    attr_reader :host, :username, :password, :domain_name, :publisher,
-      :api_instance, :serializer, :message_builder_class, :object, :noun_name, :id
+    attr_reader :domain_name, :object, :noun, :id, :endpoint_class,
+      :message_builder_class, :message, :args
 
     def post
-      api_instance.messages_post(message)
-    end
-
-    def build_pipeline_message
-      @message = message_builder_class.new(
-        noun: noun_name,
-        domain_name: domain_name,
+      endpoint_class.new(
+        message: message,
+        noun: noun,
         id: id,
-        data: object
+        args: args
+      ).call
+    end
+
+    def build_message
+      @message = message_builder_class.new(
+        noun:        noun,
+        domain_name: domain_name,
+        id:          id,
+        data:        object
       ).build
-    end
-
-    def configure_publisher
-      publisher.configure do |config|
-        config.host     = host
-        config.username = username
-        config.password = password
-      end
-    end
-
-    def config_missing?
-      [@host, @username, @password].any?(&:nil?)
     end
   end
 end

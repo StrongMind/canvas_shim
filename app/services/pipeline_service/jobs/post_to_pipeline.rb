@@ -1,6 +1,6 @@
 module PipelineService
   module Jobs
-    class PostEnrollmentJob
+    class PostToPipeline
       def initialize(object:)
         @object  = object
       end
