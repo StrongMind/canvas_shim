@@ -1,3 +1,10 @@
+module Api
+  module V1
+    module User
+    end
+  end
+end
+
 module PipelineService
   # This ugly thing lets us call the canvas user api
   module Serializers

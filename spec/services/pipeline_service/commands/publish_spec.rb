@@ -6,22 +6,20 @@ class MockSerializer
   end
 end
 
-class MockEnrollment
-  def id;1;end
+# class Enrollment
+#   MOCK='yes'
+#   def id;1;end
+# end
 
-  def pipeline_serializer
-    MockSerializer
-  end
-end
-
-describe PipelineService::Commands::Send do
-  let(:object)          { MockEnrollment.new }
+describe PipelineService::Commands::Publish do
+  let(:object)          { double("Enrollment", id: 1, class: 'Enrollment') }
   let(:user)            { double('user') }
   let(:api)             { double('api', messages_post: nil) }
   let(:test_message)    { double('message') }
   let(:message_builder) { double('message_builder', build: test_message ) }
   let(:message_builder_class) { double('message_builder_class', new: message_builder) }
-  let(:client)          { double('pipeline_client', call: double('call_result', message: test_message)) }
+  let(:client_instance) { double('pipeline_client', call: double('call_result', message: test_message)) }
+  let(:client_class) { double('pipeline_client_class', new: client_instance) }
   let(:logger)          { double('logger', log: nil) }
 
   subject do
@@ -31,7 +29,7 @@ describe PipelineService::Commands::Send do
       message_api: api,
       queue: false,
       message_builder_class: message_builder_class,
-      client: client,
+      client: client_class,
       logger: logger
     )
   end
@@ -39,7 +37,7 @@ describe PipelineService::Commands::Send do
   describe '#call' do
     context 'upsert' do
       it 'sends a message to the pipeline' do
-        expect(client).to receive(:call)
+        expect(client_instance).to receive(:call)
         subject.call
       end
 

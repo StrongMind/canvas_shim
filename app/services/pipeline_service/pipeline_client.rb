@@ -8,7 +8,7 @@ module PipelineService
       @id         = args[:id]
       @args       = args
       @domain_name = ENV['CANVAS_DOMAIN']
-      @endpoint_class   = (args[:endpoint] || Endpoints::Pipeline)
+      @endpoint_class   = args[:endpoint] || Endpoints::Pipeline
     end
 
     def call
@@ -29,13 +29,12 @@ module PipelineService
     end
 
     def build_message
-      @message =
-        {noun:        noun,
+      @message = {
+          noun:        noun,
           domain_name: domain_name,
           id:          id,
           data:        object
         }
-
     end
   end
 end
