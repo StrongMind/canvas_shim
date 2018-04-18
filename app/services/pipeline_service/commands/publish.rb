@@ -12,6 +12,7 @@ module PipelineService
         @args       = args
         @object     = args[:object]
         @client     = (args[:client] || PipelineClient)
+        @serializer ||= args[:serializer]
       end
 
       def call
@@ -22,10 +23,21 @@ module PipelineService
 
       private
 
-      attr_reader :object, :client, :args, :serializer
+      attr_reader :object, :client, :args
 
       def lookup_serializer
-        @serializer = "PipelineService::Serializers::#{object.class}".constantize
+        return if serializer
+        @serializer =
+          case object
+          when Enrollment, DesignerEnrollment, ObserverEnrollment, StudentEnrollment, TeacherEnrollment
+            PipelineService::Serializers::Enrollment
+          when Submission
+            PipelineService::Serializers::Submission
+          when User
+            PipelineService::Serializers::User
+          else
+            raise object.class.to_s
+          end
       end
 
       def config_client
@@ -37,7 +49,6 @@ module PipelineService
       end
 
       def post
-        byebug
         @message = client.new(config_client).call.message
       end
 
