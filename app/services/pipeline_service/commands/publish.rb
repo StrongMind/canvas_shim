@@ -36,7 +36,7 @@ module PipelineService
           when User
             PipelineService::Serializers::User
           else
-            raise object.class.to_s
+            raise NameError.new("Could not find the serializer for #{object}")
           end
       end
 
