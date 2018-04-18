@@ -13,6 +13,7 @@ module PipelineService
         @object     = args[:object]
         @client     = (args[:client] || PipelineClient)
         @serializer ||= args[:serializer]
+        @serializer_fetcher = args[:serializer_fetcher] || SerializerFetcher
       end
 
       def call
@@ -23,21 +24,11 @@ module PipelineService
 
       private
 
-      attr_reader :object, :client, :args
+      attr_reader :object, :client, :args, :serializer_fetcher
 
       def lookup_serializer
         return if serializer
-        @serializer =
-          case object
-          when Enrollment, DesignerEnrollment, ObserverEnrollment, StudentEnrollment, TeacherEnrollment
-            PipelineService::Serializers::Enrollment
-          when Submission
-            PipelineService::Serializers::Submission
-          when User
-            PipelineService::Serializers::User
-          else
-            raise NameError.new("Could not find the serializer for #{object}")
-          end
+        @serializer = serializer_fetcher.fetch(object: object)
       end
 
       def config_client
