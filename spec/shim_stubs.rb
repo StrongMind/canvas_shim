@@ -13,6 +13,13 @@ class Enrollment
   def id;1;end
 end
 
+class DesignerEnrollment < Enrollment;end
+class ObserverEnrollment < Enrollment;end
+class StudentEnrollment < Enrollment;end
+class TeacherEnrollment < Enrollment;end
+class Submission;end
+class User;end
+
 class Account
   def self.default
     Struct.new(:account_users).new(
