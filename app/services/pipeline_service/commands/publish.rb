@@ -11,7 +11,7 @@ module PipelineService
       def initialize(args)
         @args       = args
         @object     = args[:object]
-        @client     = (args[:client] || PipelineClient)
+        @client     = args[:client] || PipelineClient
       end
 
       def call

@@ -1,21 +1,15 @@
 module PipelineService
   module Serializers
     module Fetcher
-      ENROLLMENT_OBJECTS = [
-        Enrollment, DesignerEnrollment, ObserverEnrollment,
-        StudentEnrollment, TeacherEnrollment
-      ]
-
+      # Will fetch a serializer with the same name as the object parameter.
+      # Raises a name error if the serializer doesn't exist.
+      # Maps any object with a class containing 'enrollment' to the enrollment serializer
       def self.fetch(object:)
-        case object
-        when *ENROLLMENT_OBJECTS
+        case object.class.to_s
+        when /Enrollment/
           PipelineService::Serializers::Enrollment
-        when Submission
-          PipelineService::Serializers::Submission
-        when User
-          PipelineService::Serializers::User
         else
-          raise NameError.new("Could not find the serializer for #{object}")
+          "PipelineService::Serializers::#{object.class.to_s}".constantize
         end
       end
     end

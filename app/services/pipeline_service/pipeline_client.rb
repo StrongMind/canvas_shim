@@ -10,7 +10,7 @@ module PipelineService
       @domain_name = ENV['CANVAS_DOMAIN']
       @endpoint_class   = args[:endpoint] || Endpoints::Pipeline
       @serializer_fetcher = args[:serializer_fetcher] || Serializers::Fetcher
-      @serializer ||= args[:serializer]
+      @serializer = args[:serializer]
     end
 
     def call
