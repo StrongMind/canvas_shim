@@ -12,12 +12,9 @@ module PipelineService
         @args       = args
         @object     = args[:object]
         @client     = (args[:client] || PipelineClient)
-        @serializer ||= args[:serializer]
-        @serializer_fetcher = args[:serializer_fetcher] || SerializerFetcher
       end
 
       def call
-        lookup_serializer
         post
         self
       end
@@ -26,14 +23,9 @@ module PipelineService
 
       attr_reader :object, :client, :args, :serializer_fetcher
 
-      def lookup_serializer
-        return if serializer
-        @serializer = serializer_fetcher.fetch(object: object)
-      end
-
       def config_client
         args.merge(
-          object: serializer.new(object: object).call,
+          object: object,
           noun: noun,
           id: object.id
         )

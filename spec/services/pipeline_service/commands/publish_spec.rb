@@ -22,21 +22,6 @@ describe PipelineService::Commands::Publish do
       subject.call
     end
 
-    context "Serializer" do
-      let(:fetcher) { double('fetcher_module', fetch: serializer_class) }
-      subject do
-        described_class.new(
-          object:       object,
-          user:         user,
-          client:       client_class,
-          serializer_fetcher: fetcher
-        )
-      end
-
-      it 'looks up the serializer' do
-        expect(fetcher).to receive(:fetch)
-        subject.call
-      end
-    end
+    
   end
 end
