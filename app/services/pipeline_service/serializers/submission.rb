@@ -18,11 +18,7 @@ module PipelineService
 
       def request
         Struct.new(:host_with_port, :ssl?, :protocol, :host, :port).new(
-          host_with_port,
-          ssl?,
-          protocol,
-          host,
-          port
+          host_with_port, ssl?, protocol, host, port
         )
       end
 
