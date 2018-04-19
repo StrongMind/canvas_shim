@@ -1,9 +1,14 @@
 module PipelineService
   module Serializers
     module Fetcher
-      def self.fetch(object: )
+      ENROLLMENT_OBJECTS = [
+        Enrollment, DesignerEnrollment, ObserverEnrollment,
+        StudentEnrollment, TeacherEnrollment
+      ]
+
+      def self.fetch(object:)
         case object
-        when Enrollment, DesignerEnrollment, ObserverEnrollment, StudentEnrollment, TeacherEnrollment
+        when *ENROLLMENT_OBJECTS
           PipelineService::Serializers::Enrollment
         when Submission
           PipelineService::Serializers::Submission
