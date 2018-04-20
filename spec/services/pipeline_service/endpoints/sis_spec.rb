@@ -1,5 +1,5 @@
 describe PipelineService::Endpoints::SIS do
-  let(:message) { {noun: 'student_enrollment', id: 1, data: {} } }
+  let(:message) { {noun: 'student_enrollment', id: 1, data: {state: 'completed'} } }
   let(:http_client) { double("HTTPClient") }
 
 
@@ -16,7 +16,7 @@ describe PipelineService::Endpoints::SIS do
     end
 
     context 'filtered' do
-      let(:message) { { noun: 'teacher_enrollment', id: 1, data: {} } }
+      let(:message) { { noun: 'teacher_enrollment', id: 1, data: { state: 'completed' } } }
       subject { described_class.new(message: message, args: { http_client: http_client }) }
       it 'will only post student enrollments' do
         expect(http_client).to_not receive(:post)
