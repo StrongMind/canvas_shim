@@ -6,7 +6,6 @@
 # Example: PipelineService.publish(User.first)
 module PipelineService
   def self.publish(object, api: PipelineService::API::Publish)
-    # raise 'here be an error'
     api.new(object).call
   end
 end
