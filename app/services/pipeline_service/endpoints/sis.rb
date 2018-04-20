@@ -29,8 +29,7 @@ module PipelineService
       end
 
       def run_filter
-        return if filter.match?
-        @message = nil
+        @message = nil unless filter.match?
       end
 
       def build_endpoint

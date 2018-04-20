@@ -2,7 +2,7 @@ module PipelineService
   module Endpoints
     class SIS
       class Filter
-        DATA_FILTER =  { state: 'completed' }
+        DATA_FILTER = { state: 'completed' }
         NOUN_FILTER = 'student_enrollment'
 
         def initialize(message:)
