@@ -5,41 +5,34 @@ module PipelineService
     #
     # Usage:
     # Send.new(message: User.last).call
-    class Send
+    class Publish
       attr_reader :message, :persisted_message, :serializer
 
       def initialize(args)
         @args       = args
         @object     = args[:object]
-        @serializer = args[:serializer] || object.pipeline_serializer.new(object: object)
-        @client     = args[:client] || PipelineClient.new(config_client)
-        @logger     = args[:logger] || PipelineService::Logger
+        @client     = args[:client] || PipelineClient
       end
 
       def call
         post
-        # log
         self
       end
 
       private
 
-      attr_reader :object, :client, :args, :logger
+      attr_reader :object, :client, :args
 
       def config_client
         args.merge(
-          object: serializer.call,
+          object: object,
           noun: noun,
           id: object.id
         )
       end
 
-      def log
-        logger.log(message)
-      end
-
       def post
-        @message = client.call.message
+        @message = client.new(config_client).call.message
       end
 
       def noun

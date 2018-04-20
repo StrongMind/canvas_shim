@@ -6,7 +6,7 @@ module PipelineService
       end
 
       def perform
-        Commands::Send.new(object: object, endpoint: Endpoints::SIS).call
+        Commands::Publish.new(object: object, endpoint: Endpoints::SIS).call
       end
 
       private
