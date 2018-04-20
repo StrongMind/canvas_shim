@@ -21,7 +21,7 @@ module PipelineService
 
       private
 
-      attr_reader :object, :client, :args, :serializer_fetcher
+      attr_reader :object, :client, :args
 
       def config_client
         args.merge(
