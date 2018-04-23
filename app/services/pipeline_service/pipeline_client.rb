@@ -8,11 +8,13 @@ module PipelineService
       @id         = args[:id]
       @args       = args
       @domain_name = ENV['CANVAS_DOMAIN']
-      @message_builder_class = args[:message_builder_class] || MessageBuilder
-      @endpoint_class   = (args[:endpoint] || Endpoints::Pipeline)
+      @endpoint_class   = args[:endpoint] || Endpoints::Pipeline
+      @serializer_fetcher = args[:serializer_fetcher] || Serializers::Fetcher
+      @serializer = args[:serializer]
     end
 
     def call
+      fetch_serializer
       build_message
       post
       self
@@ -20,25 +22,27 @@ module PipelineService
 
     private
 
-    attr_reader :domain_name, :object, :noun, :id, :endpoint_class,
-      :message_builder_class, :message, :args
+    attr_reader :domain_name, :object, :noun, :id, :endpoint_class, :args, :serializer_fetcher, :serializer
+
+    def fetch_serializer
+      return if @serializer
+      @serializer = serializer_fetcher.fetch(object: object)
+    end
 
     def post
       endpoint_class.new(
         message: message,
-        noun: noun,
-        id: id,
         args: args
       ).call
     end
 
     def build_message
-      @message = message_builder_class.new(
-        noun:        noun,
-        domain_name: domain_name,
-        id:          id,
-        data:        object
-      ).build
+      @message = {
+          noun:        noun,
+          domain_name: domain_name,
+          id:          id,
+          data:        serializer.new(object: object).call
+        }
     end
   end
 end
