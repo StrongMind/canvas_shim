@@ -6,12 +6,12 @@ module DomainEvents
     end
 
     def call
-      subscriptions.each do |name, details|
+      subscriptions.each do |name, subscription|
         next if name != :graded_out
         Events::GradedOut.new(
-          listeners: details[:listeners],
+          listeners: subscription.listeners,
           message:   message
-        ).call
+        ).emit
       end
     end
 
