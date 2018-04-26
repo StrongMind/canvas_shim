@@ -1,4 +1,4 @@
-module DomainEvents
+module PipelineService
   module Events
     class GradedOut
       def initialize(args)

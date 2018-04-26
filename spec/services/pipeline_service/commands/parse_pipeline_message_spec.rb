@@ -1,4 +1,4 @@
-describe DomainEvents::Commands::ParsePipelineMessage do
+describe PipelineService::Commands::PublishEvents do
   describe '#call' do
     subject { described_class.new(message) }
 
@@ -7,7 +7,7 @@ describe DomainEvents::Commands::ParsePipelineMessage do
     }
 
     let(:subscription) do
-      DomainEvents::Subscription.new(listeners: [listener])
+      PipelineService::Events::Subscription.new(listeners: [listener])
     end
 
     context 'listeners' do

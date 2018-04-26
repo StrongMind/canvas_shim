@@ -1,6 +1,6 @@
-module DomainEvents
+module PipelineService
   module Commands
-    class ParsePipelineMessage
+    class PublishEvents
       def initialize(message, args={})
         @message       = message
         @subscriptions = args[:subscriptions]
@@ -8,7 +8,7 @@ module DomainEvents
 
       def call
         return unless subscriptions
-        DomainEvents::EventEmitter.new(
+        Events::Emitter.new(
           message:       message,
           subscriptions: subscriptions
         ).call

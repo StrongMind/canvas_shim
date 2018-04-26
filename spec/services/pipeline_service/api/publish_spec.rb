@@ -16,7 +16,7 @@ describe PipelineService::API::Publish do
 
   describe '#call' do
     it 'enqueues' do
-      expect(queue_client).to receive(:enqueue).exactly(2).times
+      expect(queue_client).to receive(:enqueue)
       subject.call
     end
   end

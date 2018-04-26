@@ -1,4 +1,4 @@
-describe DomainEvents::Listeners::SIS do
+describe PipelineService::Events::Listeners::SIS do
   let(:message) {{}}
   let(:http_client) { double('http_client') }
   before do

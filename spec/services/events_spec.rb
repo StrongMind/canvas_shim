@@ -1,4 +1,4 @@
-describe DomainEvents do
+describe PipelineService::Events do
   subject { described_class }
   let(:message) { {} }
   let(:command_instance) { double('command_instance', call: nil) }

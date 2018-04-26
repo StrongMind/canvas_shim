@@ -5,11 +5,10 @@ module PipelineService
         @object         = object
         @queue_client   = args[:queue_client] || Delayed::Job
         @command_class  = args[:command_class] || PipelineService::Commands::Send
-        @jobs           = [Jobs::PostToPipeline, Jobs::PostToSIS]
       end
 
       def call
-        enqueue_jobs
+        queue_client.enqueue Jobs::PostToPipeline.new(object: object)
       end
 
       private
@@ -20,14 +19,17 @@ module PipelineService
         command.call
       end
 
-      def enqueue_jobs
-        jobs.each do |job|
-          queue_client.enqueue job.new(object: object)
-        end
+      def subscriptions
+        Subscription.new(listeners: SIS)
       end
 
       def command
-        command_class.new(object: object)
+        command_class.new(
+          object: object,
+          events: {
+            graded_out: subscriptions
+          }
+        )
       end
     end
   end
