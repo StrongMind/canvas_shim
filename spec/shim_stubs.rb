@@ -7,7 +7,7 @@ module Api
     module Submission
     end
     module User
-      def enrollment_json(one, two, three, four)
+      def enrollment_json(one=nil, two=nil, three=nil, four=nil)
       end
     end
   end
