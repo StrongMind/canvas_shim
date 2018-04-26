@@ -20,7 +20,7 @@ module PipelineService
       end
 
       def subscriptions
-        Subscription.new(listeners: SIS)
+        Subscription.new(listeners: [SIS])
       end
 
       def command
