@@ -4,7 +4,7 @@ module PipelineService
       def initialize(object, args={})
         @object         = object
         @queue_client   = args[:queue_client] || Delayed::Job
-        @command_class  = args[:command_class] || PipelineService::Commands::Send
+        @command_class  = args[:command_class] || PipelineService::Commands::Publish
       end
 
       def call
@@ -20,15 +20,13 @@ module PipelineService
       end
 
       def subscriptions
-        Subscription.new(listeners: [SIS])
+        Subscription.new(event: 'graded_out', listeners: [SIS])
       end
 
       def command
         command_class.new(
           object: object,
-          events: {
-            graded_out: subscriptions
-          }
+          event_subscriptions: subscriptions
         )
       end
     end

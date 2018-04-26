@@ -35,11 +35,9 @@ module PipelineService
 
       def publish_events
         PublishEvents.new(
-          message: message,
+          message,
           subscriptions: [
-            Events::Subscription.new(
-              listeners: listener.new(message: message)
-            )
+            Events::Subscription.new(event: :graded_out, listeners: listener.new(message: message))
           ]
         ).call
       end

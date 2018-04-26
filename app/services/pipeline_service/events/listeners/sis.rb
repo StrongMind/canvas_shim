@@ -10,6 +10,7 @@ module PipelineService
         end
 
         def call
+          byebug
           raise 'Missing config' if missing_config?
           post
         end
