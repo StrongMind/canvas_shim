@@ -8,7 +8,7 @@ module PipelineService
 
       def emit
         return unless should_trigger?
-        listeners.each { |listener| listener.call(message: message) }
+        listeners.call
       end
 
       private
@@ -17,7 +17,7 @@ module PipelineService
 
       def should_trigger?
         return unless message[:noun] == 'student_enrollment'
-        return unless message[:data][:state] == 'completed'
+        return unless message[:data][:enrollment_state] == 'completed'
         true
       end
     end

@@ -1,17 +1,17 @@
 module PipelineService
   module Events
     class Emitter
-      def initialize(args)
+      def initialize(args={})
         @subscriptions = args[:subscriptions]
         @message = args[:message]
       end
 
       def call
-        subscriptions.each do |name, subscription|
+        subscriptions.each do |subscription|
           Events::GradedOut.new(
             listeners: subscription.listeners,
             message:   message
-          ).emit if name == :graded_out
+          ).emit if subscription.event == :graded_out
         end
       end
 
