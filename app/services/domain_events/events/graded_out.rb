@@ -3,13 +3,12 @@ module DomainEvents
     class GradedOut
       def initialize(args)
         @listeners = args[:listeners]
-        @message = args[:message]
+        @message   = args[:message]
       end
 
       def emit
-        byebug
         return unless should_trigger?
-        listeners.each(&:call)
+        listeners.each { |listener| listener.call(message: message) }
       end
 
       private
@@ -17,7 +16,6 @@ module DomainEvents
       attr_accessor :listeners, :message
 
       def should_trigger?
-        byebug
         return unless message[:noun] == 'student_enrollment'
         return unless message[:data][:state] == 'completed'
         true

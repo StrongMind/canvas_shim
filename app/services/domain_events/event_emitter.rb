@@ -7,11 +7,10 @@ module DomainEvents
 
     def call
       subscriptions.each do |name, subscription|
-        next if name != :graded_out
         Events::GradedOut.new(
           listeners: subscription.listeners,
           message:   message
-        ).emit
+        ).emit if name == :graded_out
       end
     end
 
