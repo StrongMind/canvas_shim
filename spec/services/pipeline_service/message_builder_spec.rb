@@ -33,11 +33,11 @@ describe PipelineService::MessageBuilder do
         message.meta
       end
 
-      it 'has the domain name of the school' do
+      it '[:domain_name]' do
         expect(meta[:domain_name]).to eq 'someschool.com'
       end
 
-      it 'has the source of the app' do
+      it '[:source]' do
         expect(meta[:source]).to eq 'canvas'
       end
     end

@@ -6,7 +6,7 @@ module PipelineService
           @message = message
           @api_key = ENV['SIS_ENROLLMENT_UPDATE_API_KEY']
           @endpoint = ENV['SIS_ENROLLMENT_UPDATE_ENDPOINT']
-          @http_client = args[:http_client] || HTTParty
+          @args = args
         end
 
         def call
@@ -16,23 +16,21 @@ module PipelineService
 
         private
 
-        attr_reader :message, :http_client, :api_key, :endpoint, :filter
+        attr_reader :message, :api_key, :endpoint, :filter, :args
 
         def missing_config?
           [@api_key, @endpoint].any?(&:nil?)
         end
 
         def build_endpoint
-          endpoint + '?apiKey=' + api_key
+          # endpoint + '?apiKey=' + api_key
+          'http://echo:8080/postback/canvas/EnrollmentUpdate'
         end
 
         def post
           return unless message
-          http_client.post(
-            build_endpoint,
-            body: message[:data].to_json,
-            headers: { 'Content-Type' => 'application/json' }
-          )
+          # Delayed::Job.enqueue
+          PostJob.new(build_endpoint, message[:data], args).perform
         end
       end
     end
