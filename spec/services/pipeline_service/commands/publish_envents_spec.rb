@@ -7,7 +7,7 @@ describe PipelineService::Commands::PublishEvents do
     }
 
     let(:subscription) do
-      PipelineService::Events::Subscription.new(listeners: [listener])
+      PipelineService::Events::Subscription.new(event: :graded_out, listener: listener)
     end
 
     context 'listeners' do
@@ -15,14 +15,12 @@ describe PipelineService::Commands::PublishEvents do
         let(:message) do
           {
             noun: 'student_enrollment',
-            data: { state: 'completed' }
+            data: { enrollment_state: 'completed' }
           }
         end
 
         subject do
-          described_class.new(message, subscriptions: {
-            graded_out: subscription
-          })
+          described_class.new(message, subscriptions: [subscription])
         end
 
         it 'calls listeners' do
