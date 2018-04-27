@@ -27,11 +27,6 @@ describe PipelineService::Commands::PublishEvents do
           expect(responder).to receive(:call)
           subject.call
         end
-
-        it 'calls responders' do
-          subject.call
-        end
-
       end
 
       context 'event not triggered' do
