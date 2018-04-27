@@ -1,7 +1,7 @@
 describe PipelineService::Commands::Publish do
   let(:object)              { Enrollment.new }
   let(:user)                { double('user') }
-  let(:test_message)        { double('message') }
+  let(:test_message)        { double('message', '[]' => '') }
   let(:client_instance)     { double('pipeline_client', call: double('call_result', message: test_message)) }
   let(:client_class)        { double('pipeline_client_class', new: client_instance) }
   let(:serializer_class)    { double('serializer_class', new: serializer_instance) }

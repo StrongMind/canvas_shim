@@ -20,7 +20,7 @@ module PipelineService
       end
 
       def subscriptions
-        Subscription.new(event: 'graded_out', listeners: [SIS])
+        Subscription.new(event: 'graded_out', listener: SIS)
       end
 
       def command

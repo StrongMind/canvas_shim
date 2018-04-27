@@ -9,8 +9,8 @@ module PipelineService
       def call
         subscriptions.each do |subscription|
           Events::GradedOut.new(
-            listeners: subscription.listeners,
-            message:   message
+            listener: subscription.listener,
+            message:  message
           ).emit if subscription.event == :graded_out
         end
       end
