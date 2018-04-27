@@ -6,8 +6,8 @@ describe PipelineService::Commands::Publish do
   let(:client_class)        { double('pipeline_client_class', new: client_instance) }
   let(:serializer_class)    { double('serializer_class', new: serializer_instance) }
   let(:serializer_instance) { double('serializer_instance', call: nil) }
-  let(:listener_instance)   { double('listener_instance') }
-  let(:listener_class)      { double('listener_class', new: listener_instance) }
+  let(:responder_instance)   { double('responder_instance') }
+  let(:responder_class)      { double('responder_class', new: responder_instance) }
 
   subject do
     described_class.new(
@@ -15,7 +15,7 @@ describe PipelineService::Commands::Publish do
       user:         user,
       client:       client_class,
       serializer:   serializer_class,
-      listener:     listener_class
+      responder:     responder_class
     )
   end
 

@@ -12,7 +12,7 @@ module PipelineService
         @args       = args
         @object     = args[:object]
         @client     = args[:client] || PipelineClient
-        @listener   = args[:listener] || Events::Listeners::SIS
+        @responder   = args[:responder] || Events::Responders::SIS
       end
 
       def call
@@ -23,7 +23,7 @@ module PipelineService
 
       private
 
-      attr_reader :object, :client, :args, :serializer_fetcher, :listener
+      attr_reader :object, :client, :args, :serializer_fetcher, :responder
 
       def config_client
         args.merge(
@@ -37,7 +37,7 @@ module PipelineService
         PublishEvents.new(
           message,
           subscriptions: [
-            Events::Subscription.new(event: :graded_out, listener: listener.new(message: message))
+            Events::Subscription.new(event: :graded_out, responder: responder.new(message: message))
           ]
         ).call
       end

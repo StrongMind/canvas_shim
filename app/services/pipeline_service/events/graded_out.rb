@@ -2,18 +2,18 @@ module PipelineService
   module Events
     class GradedOut
       def initialize(args)
-        @listener = args[:listener]
+        @responder = args[:responder]
         @message   = args[:message]
       end
 
       def emit
         return unless should_trigger?
-        listener.call
+        responder.call
       end
 
       private
 
-      attr_accessor :listener, :message
+      attr_accessor :responder, :message
 
       def should_trigger?
         return unless message[:noun] == 'student_enrollment'
