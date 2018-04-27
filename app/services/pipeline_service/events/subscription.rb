@@ -1,9 +1,9 @@
 module PipelineService
   module Events
     class Subscription
-      attr_reader :listener, :event
-      def initialize(event:, listener: nil)
-        @listener = listener
+      attr_reader :responder, :event
+      def initialize(event:, responder: nil)
+        @responder = responder
         @event = event
       end
     end

@@ -2,15 +2,15 @@ describe PipelineService::Commands::PublishEvents do
   describe '#call' do
     subject { described_class.new(message) }
 
-    let(:listener) {
-      double(:listener, call: nil)
+    let(:responder) {
+      double(:responder, call: nil)
     }
 
     let(:subscription) do
-      PipelineService::Events::Subscription.new(event: :graded_out, listener: listener)
+      PipelineService::Events::Subscription.new(event: :graded_out, responder: responder)
     end
 
-    context 'listeners' do
+    context 'responders' do
       context 'event triggered' do
         let(:message) do
           {
@@ -23,12 +23,12 @@ describe PipelineService::Commands::PublishEvents do
           described_class.new(message, subscriptions: [subscription])
         end
 
-        it 'calls listeners' do
-          expect(listener).to receive(:call)
+        it 'calls responders' do
+          expect(responder).to receive(:call)
           subject.call
         end
 
-        it 'calls listeners' do
+        it 'calls responders' do
           subject.call
         end
 
@@ -45,7 +45,7 @@ describe PipelineService::Commands::PublishEvents do
         end
 
         it 'will not call if the event is not triggered' do
-          expect(listener).to_not receive(:call)
+          expect(responder).to_not receive(:call)
           subject.call
         end
       end

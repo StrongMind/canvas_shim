@@ -1,6 +1,6 @@
 module PipelineService
   module Events
-    module Listeners
+    module Responders
       class SIS
         def initialize(message:, args: {})
           @message = message
