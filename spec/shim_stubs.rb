@@ -15,6 +15,9 @@ end
 
 class Enrollment
   def id;1;end
+
+  def changes
+  end
 end
 
 class Account

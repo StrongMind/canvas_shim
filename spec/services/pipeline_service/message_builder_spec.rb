@@ -20,7 +20,7 @@ describe PipelineService::MessageBuilder do
   )
   end
 
-  let(:object) { double("object", id: 1) }
+  let(:object) { double("object", id: 1, changes: {}) }
   let(:message) { subject.build }
 
   describe "#message" do

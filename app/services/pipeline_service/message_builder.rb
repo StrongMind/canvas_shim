@@ -16,7 +16,8 @@ module PipelineService
         noun: noun,
         meta: {
           source: SOURCE,
-          domain_name: domain_name
+          domain_name: domain_name,
+          changes: object.changes
         },
         identifiers: { id: id },
         data: object
