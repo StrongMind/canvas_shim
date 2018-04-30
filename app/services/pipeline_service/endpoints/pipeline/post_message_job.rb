@@ -14,7 +14,7 @@ module PipelineService
 
         def perform
           raise 'Missing config' if missing_config?
-          configure
+          configure_publisher
           post
         end
 
@@ -27,7 +27,7 @@ module PipelineService
           [endpoint, username, password].any?(&:nil?)
         end
 
-        def configure
+        def configure_publisher
           publisher.configure do |config|
             config.host     = endpoint
             config.username = username

@@ -37,7 +37,6 @@ module PipelineService
     end
 
     def build_message
-
       @message = {
           noun:        noun,
           domain_name: domain_name,
