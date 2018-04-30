@@ -15,7 +15,8 @@ describe PipelineService::Commands::PublishEvents do
         let(:message) do
           {
             noun: 'student_enrollment',
-            data: { enrollment_state: 'completed' }
+            data: { enrollment_state: 'completed' },
+            meta: { changes: {'workflow_state' => ['unstarted', 'completed']} }
           }
         end
 
