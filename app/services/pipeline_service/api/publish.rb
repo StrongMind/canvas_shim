@@ -8,16 +8,16 @@ module PipelineService
       end
 
       def call
-        run_command
+        Delayed::Job.enqueue self
+      end
+
+      def perform
+        command.call
       end
 
       private
 
       attr_reader :object, :jobs, :command_class, :args
-
-      def run_command
-        command.call
-      end
 
       def subscriptions
         Events::Subscription.new(event: 'graded_out', responder: Events::Responders::SIS)
