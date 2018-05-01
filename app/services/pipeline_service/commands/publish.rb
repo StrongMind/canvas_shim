@@ -6,32 +6,44 @@ module PipelineService
     # Usage:
     # Send.new(message: User.last).call
     class Publish
-      attr_reader :message, :persisted_message, :serializer
+      attr_reader :message, :serializer
 
       def initialize(args)
         @args       = args
         @object     = args[:object]
         @client     = args[:client] || PipelineClient
+        @responder   = args[:responder] || Events::Responders::SIS
       end
 
       def call
-        post
+        post_to_pipeline
+        publish_events
         self
       end
 
       private
 
-      attr_reader :object, :client, :args
+      attr_reader :object, :client, :args, :responder
 
       def config_client
         args.merge(
           object: object,
           noun: noun,
-          id: object.id
+          id: object.id,
+          args: args
         )
       end
 
-      def post
+      def publish_events
+        PublishEvents.new(
+          message,
+          subscriptions: [
+            Events::Subscription.new(event: :graded_out, responder: responder.new(message: message))
+          ]
+        ).call
+      end
+
+      def post_to_pipeline
         @message = client.new(config_client).call.message
       end
 

@@ -41,7 +41,8 @@ module PipelineService
           noun:        noun,
           domain_name: domain_name,
           id:          id,
-          data:        serializer.new(object: object).call
+          data:        serializer.new(object: object).call,
+          meta:        { changes: object.changes }
         }
     end
   end

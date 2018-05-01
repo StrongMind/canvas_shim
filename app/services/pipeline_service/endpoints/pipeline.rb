@@ -1,42 +1,49 @@
 module PipelineService
   module Endpoints
     class Pipeline
-      def initialize(message:, args: {})
-        @message     = message
+      def initialize(message, args={})
+        @message = message
+        @message_builder_class = args[:message_builder_class] || MessageBuilder
+        @http_client = args[:http_client] || PipelinePublisher::MessagesApi
+        @publisher   = args[:publisher] || PipelinePublisher
         @endpoint    = ENV['PIPELINE_ENDPOINT']
         @username    = ENV['PIPELINE_USER_NAME']
         @password    = ENV['PIPELINE_PASSWORD']
-        @publisher   = args[:publisher] || PipelinePublisher
-        @http_client = args[:http_client] || PipelinePublisher::MessagesApi.new
-        @message_builder_class = args[:message_builder_class] || MessageBuilder
+        @args        = args
+        raise 'Missing config' if missing_config?
       end
 
       def call
-        raise 'Missing config' if missing_config?
-        configure
+        Delayed::Job.enqueue(self)
+      end
+
+      def peform
         post
       end
 
       private
 
-      attr_reader :message, :http_client, :endpoint, :username, :password, :publisher, :message, :message_builder_class
+      attr_reader :message, :args
+
+      attr_reader :http_client, :message, :message_builder_class, :endpoint,
+        :username, :password, :publisher
 
       def missing_config?
         [endpoint, username, password].any?(&:nil?)
       end
 
-      def post
-        http_client.messages_post(
-          message_builder_class.new(message).build
-        )
-      end
-
-      def configure
+      def configure_publisher
         publisher.configure do |config|
           config.host     = endpoint
           config.username = username
           config.password = password
         end
+      end
+
+      def post
+        http_client.new.messages_post(
+          message_builder_class.new(message).build
+        )
       end
     end
   end
