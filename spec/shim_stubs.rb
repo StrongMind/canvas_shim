@@ -7,7 +7,7 @@ module Api
     module Submission
     end
     module User
-      def enrollment_json(one, two, three)
+      def enrollment_json(*)
       end
     end
   end
@@ -15,6 +15,9 @@ end
 
 class Enrollment
   def id;1;end
+
+  def changes
+  end
 end
 
 class Account

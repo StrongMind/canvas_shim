@@ -3,31 +3,32 @@ module PipelineService
     class Publish
       def initialize(object, args={})
         @object         = object
-        @queue_client   = args[:queue_client] || Delayed::Job
-        @command_class  = args[:command_class] || PipelineService::Commands::Send
-        @jobs           = [Jobs::PostToPipeline, Jobs::PostToSIS]
+        @command_class  = args[:command_class] || PipelineService::Commands::Publish
+        @args = args
+        @queue = args[:queue] || Delayed::Job
       end
 
       def call
-        enqueue_jobs
+        queue.enqueue self
+      end
+
+      def perform
+        command.call
       end
 
       private
 
-      attr_reader :object, :queue_client, :jobs, :command_class
+      attr_reader :object, :jobs, :command_class, :args, :queue
 
-      def run_command
-        command.call
-      end
-
-      def enqueue_jobs
-        jobs.each do |job|
-          queue_client.enqueue job.new(object: object)
-        end
+      def subscriptions
+        Events::Subscription.new(event: 'graded_out', responder: Events::Responders::SIS)
       end
 
       def command
-        command_class.new(object: object)
+        command_class.new(
+          object: object,
+          event_subscriptions: subscriptions
+        )
       end
     end
   end

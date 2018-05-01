@@ -20,38 +20,36 @@ describe PipelineService::MessageBuilder do
   )
   end
 
-  let(:object) { double("object", id: 1) }
+  let(:object) { double("object", id: 1, changes: {}) }
   let(:message) { subject.build }
 
   describe "#message" do
-    it 'has a noun' do
+    it '[:noun]' do
       expect(message.noun).to eq('example')
     end
 
-    it 'has metadata' do
-      expect(message.meta).to eq({:source=>"canvas", :domain_name=>"someschool.com"})
+    describe '[:meta]' do
+      let!(:meta) do
+        message.meta
+      end
+
+      it '[:domain_name]' do
+        expect(meta[:domain_name]).to eq 'someschool.com'
+      end
+
+      it '[:source]' do
+        expect(meta[:source]).to eq 'canvas'
+      end
     end
 
-    it 'has data' do
+    it '[:data]' do
       expect(message.data).to be_present
     end
 
-    it 'has identifiers' do
+    it '[:identifiers]' do
       expect(message.identifiers).to eq :id => 1
     end
   end
 
-  describe '#meta' do
-    let!(:meta) do
-      message.meta
-    end
 
-    it 'has the domain name of the school' do
-      expect(meta[:domain_name]).to eq 'someschool.com'
-    end
-
-    it 'has the source of the app' do
-      expect(meta[:source]).to eq 'canvas'
-    end
-  end
 end
