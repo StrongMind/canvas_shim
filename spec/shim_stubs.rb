@@ -4,8 +4,8 @@
 # and running the tests to see where they are used
 module Api
   module V1
-    module Submission
-    end
+    module Submission;end
+    module Assignment;end
     module User
       def enrollment_json(*)
       end
