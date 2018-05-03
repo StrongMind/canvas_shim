@@ -1,24 +1,29 @@
 module PipelineService
   class Logger
-    HEADERS = ''
+    HEADERS = {}
     def initialize(message, args={})
       @message = message
+      @queue = args[:queue] || Delayed::Job
       @http_client = args[:http_client] || HTTParty
     end
 
     def call
+      queue.enqueue self
+    end
+
+    # This makes it possible for the instance to be run later by Delayed::Job
+    def perform
       post
     end
 
     private
 
-    attr_reader :http_client, :message
+    attr_reader :http_client, :message, :queue
 
     def post
-      http_client.post(
-        'http://lrs.strongmind.com/pipeline-watcher-staging',
-        body:    message,
-        headers: HEADERS
+      result = http_client.post(
+        'https://3wupzgqsoh.execute-api.us-west-2.amazonaws.com/prod',
+        body: message.to_json
       )
     end
   end

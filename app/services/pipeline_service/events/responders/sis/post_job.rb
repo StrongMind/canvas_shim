@@ -9,15 +9,17 @@ module PipelineService
             @endpoint    = endpoint
             @data        = data
             @http_client = args[:http_client] || HTTParty
+            @logger = args[:logger]
           end
 
           def perform
             post
+            log
           end
 
           private
 
-          attr_reader :endpoint, :data, :http_client
+          attr_reader :endpoint, :data, :http_client, :logger
 
           def post
             http_client.post(
@@ -25,6 +27,10 @@ module PipelineService
               body:    data.to_json,
               headers: HEADERS
             )
+          end
+
+          def log
+            logger.new(data.to_json).call
           end
         end
       end

@@ -30,6 +30,16 @@ module PipelineService
       logger.new(message).call
     end
 
+    def log
+      logger.new(
+        {
+          source: 'pipeline',
+          message: message[:data]
+        }
+      ).call
+    end
+
+
     def fetch_serializer
       return if @serializer
       @serializer = serializer_fetcher.fetch(object: object)
@@ -37,18 +47,16 @@ module PipelineService
 
     def post
       endpoint_class.new(
-        message: message,
-        args: args
+        message,
+        args
       ).call
     end
 
     def build_message
       @message = {
           noun:        noun,
-          domain_name: domain_name,
           id:          id,
           data:        serializer.new(object: object).call,
-          meta:        { changes: object.changes }
         }
     end
   end
