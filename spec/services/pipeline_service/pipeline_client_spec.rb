@@ -2,13 +2,16 @@ describe PipelineService::PipelineClient do
   let(:endpoint_instance) { double('endpoint_instance', call: nil)}
   let(:endpoint_class) { double('endpoint_class', new: endpoint_instance) }
   let(:serializer) {double('serializer class', new: double('serializer instance', call: nil))}
+  let(:logger_class) { double('logger_class', new: logger_instance) }
+  let(:logger_instance) { double('logger_class', call: nil) }
 
   subject do
     described_class.new(
       object: Enrollment.new,
       noun: '',
       id: 1,
-      endpoint: endpoint_class
+      endpoint: endpoint_class,
+      logger: logger_class
     )
   end
 
@@ -22,6 +25,15 @@ describe PipelineService::PipelineClient do
       .to receive(:fetch)
       .and_return(serializer)
     subject.call
+  end
+
+  context 'logging' do
+
+
+    it 'logs pipeline requests' do
+      expect(logger_instance).to receive(:call)
+      subject.call
+    end
   end
 
   context 'defaults' do
