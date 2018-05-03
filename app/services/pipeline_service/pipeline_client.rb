@@ -11,18 +11,24 @@ module PipelineService
       @endpoint_class   = args[:endpoint] || Endpoints::Pipeline
       @serializer_fetcher = args[:serializer_fetcher] || Serializers::Fetcher
       @serializer = args[:serializer]
+      @logger = args[:logger] || PipelineService::Logger
     end
 
     def call
       fetch_serializer
       build_message
       post
+      log
       self
     end
 
     private
 
-    attr_reader :domain_name, :object, :noun, :id, :endpoint_class, :args, :serializer_fetcher, :serializer
+    attr_reader :domain_name, :object, :noun, :id, :endpoint_class, :args, :serializer_fetcher, :serializer, :logger
+
+    def log
+      logger.new(message).call
+    end
 
     def fetch_serializer
       return if @serializer
