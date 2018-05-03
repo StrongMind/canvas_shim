@@ -29,16 +29,20 @@ module PipelineService
         args.merge(
           object: object,
           noun: noun,
-          id: object.id,
-          args: args
+          id: object.id
         )
       end
 
       def publish_events
+        puts '*' * 1000, object.changes
         PublishEvents.new(
           message,
+          changes: object.changes,
           subscriptions: [
-            Events::Subscription.new(event: :graded_out, responder: responder.new(message: message))
+            Events::Subscription.new(
+              event: :graded_out,
+              responder: responder.new(message: message)
+            )
           ]
         ).call
       end

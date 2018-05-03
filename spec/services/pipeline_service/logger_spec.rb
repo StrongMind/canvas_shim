@@ -1,12 +1,17 @@
 describe PipelineService::Logger do
   describe '#call' do
-    let(:message) { double('message') }
-    let(:http_client) { double('http_client') }
+    let(:message) { { foo: 'bar' } }
+    let(:queue) { double('queue') }
 
-    subject { described_class.new(message, http_client: http_client) }
+    subject do
+      described_class.new(
+        message,
+        queue: queue
+      )
+    end
 
-    it 'posts to an http library' do
-      expect(http_client).to receive(:post)
+    it 'enqueues the post to the logger service' do
+      expect(queue).to receive(:enqueue)
       subject.call
     end
   end

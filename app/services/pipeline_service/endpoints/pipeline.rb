@@ -17,7 +17,8 @@ module PipelineService
         Delayed::Job.enqueue(self)
       end
 
-      def peform
+      def perform
+        configure_publisher
         post
       end
 
