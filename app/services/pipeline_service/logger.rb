@@ -21,7 +21,7 @@ module PipelineService
     attr_reader :http_client, :message, :queue
 
     def post
-      result = http_client.post(
+      http_client.post(
         'https://3wupzgqsoh.execute-api.us-west-2.amazonaws.com/prod',
         body: message.to_json
       )

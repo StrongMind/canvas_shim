@@ -11,6 +11,7 @@ module PipelineService
       def initialize(args)
         @args       = args
         @object     = args[:object]
+        @changes    = args[:changes]
         @client     = args[:client] || PipelineClient
         @responder   = args[:responder] || Events::Responders::SIS
       end
@@ -23,7 +24,7 @@ module PipelineService
 
       private
 
-      attr_reader :object, :client, :args, :responder
+      attr_reader :object, :client, :args, :responder, :changes
 
       def config_client
         args.merge(
@@ -34,17 +35,18 @@ module PipelineService
       end
 
       def publish_events
-        puts '*' * 1000, object.changes
         PublishEvents.new(
           message,
-          changes: object.changes,
-          subscriptions: [
-            Events::Subscription.new(
-              event: :graded_out,
-              responder: responder.new(message: message)
-            )
-          ]
+          changes: changes,
+          subscriptions: [subscription]
         ).call
+      end
+
+      def subscription
+        Events::Subscription.new(
+          event: :graded_out,
+          responder: responder.new(message: message)
+        )
       end
 
       def post_to_pipeline

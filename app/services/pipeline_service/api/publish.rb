@@ -3,6 +3,7 @@ module PipelineService
     class Publish
       def initialize(object, args={})
         @object         = object
+        @changes        = object.changes
         @command_class  = args[:command_class] || PipelineService::Commands::Publish
         @args = args
         @queue = args[:queue] || Delayed::Job
@@ -18,7 +19,7 @@ module PipelineService
 
       private
 
-      attr_reader :object, :jobs, :command_class, :args, :queue
+      attr_reader :object, :jobs, :command_class, :args, :queue, :changes
 
       def subscriptions
         Events::Subscription.new(event: 'graded_out', responder: Events::Responders::SIS)
@@ -27,7 +28,8 @@ module PipelineService
       def command
         command_class.new(
           object: object,
-          event_subscriptions: subscriptions
+          event_subscriptions: subscriptions,
+          changes: changes
         )
       end
     end

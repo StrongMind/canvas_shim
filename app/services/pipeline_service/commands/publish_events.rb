@@ -10,7 +10,8 @@ module PipelineService
       def call
         return unless subscriptions
         Events::Emitter.new(
-          message:       message.merge(changes: changes),
+          message:       message,
+          changes:       changes,
           subscriptions: subscriptions
         ).call
       end

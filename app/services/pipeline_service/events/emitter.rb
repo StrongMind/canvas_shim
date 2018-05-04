@@ -4,21 +4,22 @@ module PipelineService
       def initialize(args={})
         @subscriptions = args[:subscriptions]
         @message = args[:message]
+        @changes = args[:changes]
       end
 
       def call
-        puts 0, 'calling subscriptions'
         subscriptions.each do |subscription|
           Events::GradedOutEvent.new(
             responder: subscription.responder,
-            message:   message
+            message:   message,
+            changes:   changes
           ).emit if subscription.event == :graded_out
         end
       end
 
       private
 
-      attr_reader :subscriptions, :message
+      attr_reader :subscriptions, :message, :changes
     end
   end
 end

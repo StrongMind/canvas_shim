@@ -34,7 +34,7 @@ module PipelineService
       logger.new(
         {
           source: 'pipeline',
-          message: message[:data]
+          message: message
         }
       ).call
     end
