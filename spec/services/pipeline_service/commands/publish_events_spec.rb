@@ -15,13 +15,16 @@ describe PipelineService::Commands::PublishEvents do
         let(:message) do
           {
             noun: 'student_enrollment',
-            data: { enrollment_state: 'completed' },
-            meta: { changes: {'workflow_state' => ['unstarted', 'completed']} }
+            data: { enrollment_state: 'completed' }
           }
         end
 
         subject do
-          described_class.new(message, subscriptions: [subscription])
+          described_class.new(
+              message,
+              subscriptions: [subscription],
+              changes: {'workflow_state' => ['unstarted', 'completed']}
+          )
         end
 
         it 'calls responders' do
