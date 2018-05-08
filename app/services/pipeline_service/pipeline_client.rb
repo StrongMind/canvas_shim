@@ -6,9 +6,9 @@ module PipelineService
       @object     = args[:object]
       @noun       = args[:noun]
       @id         = args[:id]
-      @args       = args
-      @domain_name = ENV['CANVAS_DOMAIN']
-      @endpoint_class   = args[:endpoint] || Endpoints::Pipeline
+      @args           = args
+      @domain_name    = ENV['CANVAS_DOMAIN']
+      @endpoint_class = args[:endpoint] || Endpoints::Pipeline
       @serializer_fetcher = args[:serializer_fetcher] || Serializers::Fetcher
       @serializer = args[:serializer]
       @logger = args[:logger] || PipelineService::Logger
@@ -26,9 +26,6 @@ module PipelineService
 
     attr_reader :domain_name, :object, :noun, :id, :endpoint_class, :args, :serializer_fetcher, :serializer, :logger
 
-    def log
-      logger.new(message).call
-    end
 
     def log
       logger.new(
@@ -56,7 +53,7 @@ module PipelineService
       @message = {
           noun:        noun,
           id:          id,
-          data:        serializer.new(object: object).call,
+          data:        serializer.new(object: object).call
         }
     end
   end
