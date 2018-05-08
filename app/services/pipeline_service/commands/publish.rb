@@ -6,18 +6,21 @@ module PipelineService
     # Usage:
     # Send.new(message: User.last).call
     class Publish
+      NOUN_MISSING_ERROR = 'Noun must be specified if object is a hash.'
       attr_reader :message, :serializer
 
       def initialize(args)
         @args       = args
         @object     = args[:object]
         @client     = args[:client] || PipelineClient
-        @responder   = args[:responder] || Events::Responders::SIS
+        @responder  = args[:responder] || Events::Responders::SIS
+        @noun       = args[:noun]
+        validate_noun_is_present_if_object_is_hash!
       end
 
       def call
         post_to_pipeline
-        publish_events
+        publish_events if object.respond_to?(:changes)
         self
       end
 
@@ -25,16 +28,11 @@ module PipelineService
 
       attr_reader :object, :client, :args, :responder
 
-      def config_client
-        args.merge(
-          object: object,
-          noun: noun,
-          id: object.id
-        )
+      def validate_noun_is_present_if_object_is_hash!
+        raise NOUN_MISSING_ERROR if object.is_a?(Hash) && @noun.nil?
       end
 
       def publish_events
-        puts '*' * 1000, object.changes
         PublishEvents.new(
           message,
           changes: object.changes,
@@ -48,11 +46,22 @@ module PipelineService
       end
 
       def post_to_pipeline
-        @message = client.new(config_client).call.message
+        @message = client.new(
+          args.merge(
+            object: object,
+            noun: noun,
+            id: id
+          )
+        ).call.message
       end
 
       def noun
-        object.class.to_s.underscore
+        @noun || object.class.to_s.underscore
+      end
+
+      def id
+        return object.id unless object.is_a?(Hash)
+        object[:id]
       end
     end
   end
