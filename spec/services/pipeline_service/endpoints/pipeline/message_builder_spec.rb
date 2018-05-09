@@ -26,16 +26,16 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
   end
 
   let(:object) { double("object", id: 1, changes: {}, class: 'Enrollment') }
-  let(:message) { subject.call }
+  let(:message) { subject.call.payload }
 
   describe "#message" do
     it '[:noun]' do
-      expect(message.noun).to eq('example')
+      expect(message[:noun]).to eq('example')
     end
 
     describe '[:meta]' do
       let!(:meta) do
-        message.meta
+        message[:meta]
       end
 
       it '[:domain_name]' do
@@ -48,11 +48,11 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
     end
 
     it '[:data]' do
-      expect(message.data).to be_present
+      expect(message[:data]).to be_present
     end
 
     it '[:identifiers]' do
-      expect(message.identifiers).to eq id: 1
+      expect(message[:identifiers]).to eq id: 1
     end
   end
 

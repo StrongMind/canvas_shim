@@ -16,6 +16,19 @@ module PipelineService
         def call
           fetch_serializer
           build
+          self
+        end
+
+        def payload
+          {
+            noun: noun,
+            meta: {
+              source: SOURCE,
+              domain_name: canvas_domain
+            },
+            identifiers: { id: id },
+            data: object
+          }
         end
 
         private
@@ -34,16 +47,9 @@ module PipelineService
         end
 
         def build
-          message_class.new(
-            noun: noun,
-            meta: {
-              source: SOURCE,
-              domain_name: canvas_domain
-            },
-            identifiers: { id: id },
-            data: object
-          )
+          message_class.new(payload)
         end
+
       end
     end
   end
