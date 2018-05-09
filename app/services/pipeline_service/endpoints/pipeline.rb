@@ -23,7 +23,6 @@ module PipelineService
         :username, :password, :publisher
 
       def configure_dependencies
-        @message_builder_class = @args[:message_builder_class] || MessageBuilder
         @http_client = @args[:http_client] || PipelinePublisher::MessagesApi
         @publisher   = @args[:publisher] || PipelinePublisher
         @endpoint    = ENV['PIPELINE_ENDPOINT']

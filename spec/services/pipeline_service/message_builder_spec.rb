@@ -1,4 +1,4 @@
-describe PipelineService::MessageBuilder do
+describe PipelineService::Endpoints::Pipeline::MessageBuilder do
   let(:message_class_instance) do
     double('MessageClassInstance',
       noun: 'example',
