@@ -12,9 +12,8 @@ module PipelineService
       def initialize(args)
         @args       = args
         @object     = args[:object]
-        @client     = args[:client] || PipelineClient
-        @responder  = args[:responder] || Events::Responders::SIS
         @noun       = args[:noun]
+        configure_dependencies
         validate_noun_is_present_if_object_is_hash!
       end
 
@@ -27,6 +26,11 @@ module PipelineService
       private
 
       attr_reader :object, :client, :args, :responder
+
+      def configure_dependencies
+        @client     = @args[:client] || PipelineClient
+        @responder  = @args[:responder] || Events::Responders::SIS
+      end
 
       def validate_noun_is_present_if_object_is_hash!
         raise NOUN_MISSING_ERROR if object.is_a?(Hash) && @noun.nil?

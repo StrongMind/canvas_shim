@@ -33,10 +33,8 @@ describe PipelineService::PipelineClient do
     subject.call
   end
 
-  context 'logging' do
-    it 'logs pipeline requests' do
-      expect(logger_instance).to receive(:call)
-      subject.call
-    end
+  it 'logs pipeline requests' do
+    expect(logger_instance).to receive(:call)
+    subject.call
   end
 end
