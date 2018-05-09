@@ -18,7 +18,6 @@ module PipelineService
     end
 
     def call
-      build_message
       post
       log
       self
@@ -31,7 +30,6 @@ module PipelineService
     def configure_dependencies
       @endpoint        = @args[:endpoint] || Endpoints::Pipeline
       @logger          = @args[:logger] || PipelineService::Logger
-      @message_builder = @args[:message_builder] || PipelineService::Endpoints::Pipeline::MessageBuilder
     end
 
     def log
@@ -42,10 +40,6 @@ module PipelineService
 
     def post
       endpoint.new(message, @args).call
-    end
-
-    def build_message
-      @message = message_builder.new(@args).call
     end
   end
 end

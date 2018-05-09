@@ -11,6 +11,8 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
     )
   end
 
+  let(:serializer) { double('serializer') }
+
   before do
     ENV['CANVAS_DOMAIN'] = 'someschool.com'
     allow(ENV).to receive('[]').with('CANVAS_DOMAIN').and_return('someschool.com')
@@ -53,4 +55,12 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
       expect(message.identifiers).to eq id: 1
     end
   end
+
+  it 'looks up the serializer' do
+    expect(PipelineService::Serializers::Fetcher)
+      .to receive(:fetch)
+      .and_return(serializer)
+    subject.call
+  end
+
 end
