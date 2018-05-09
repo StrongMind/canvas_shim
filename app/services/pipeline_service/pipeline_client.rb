@@ -6,7 +6,7 @@ module PipelineService
   # a noun as an optional parameter
   #
   # PipelineCient.new(object: Enrollment.last)
-  # PipelineCient.new(object: {data: {foo: 'bar'}, 'enrollment'})
+  # PipelineCient.new(object: { data: { foo: 'bar' } }, noun: 'enrollment' )
   class PipelineClient
     attr_reader :message
 
@@ -31,7 +31,7 @@ module PipelineService
     def configure_dependencies
       @endpoint        = @args[:endpoint] || Endpoints::Pipeline
       @logger          = @args[:logger] || PipelineService::Logger
-      @message_builder = @args[:message_builder] || MessageBuilder
+      @message_builder = @args[:message_builder] || PipelineService::Endpoints::Pipeline::MessageBuilder
     end
 
     def log
