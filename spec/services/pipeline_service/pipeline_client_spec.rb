@@ -15,6 +15,12 @@ describe PipelineService::PipelineClient do
     )
   end
 
+  before do
+    allow(PipelineService::Serializers::Fetcher)
+      .to receive(:fetch)
+      .and_return(serializer)
+  end
+
   it 'posts to the endpoint' do
     expect(endpoint_instance).to receive(:call).and_return(nil)
     subject.call
@@ -28,19 +34,9 @@ describe PipelineService::PipelineClient do
   end
 
   context 'logging' do
-
-
     it 'logs pipeline requests' do
       expect(logger_instance).to receive(:call)
       subject.call
-    end
-  end
-
-  context 'defaults' do
-    subject { described_class.new(object: nil, noun: '', id: 1) }
-
-    it 'defaults to the pipeline endpoint' do
-      expect(subject.send(:endpoint_class)).to eq PipelineService::Endpoints::Pipeline
     end
   end
 end
