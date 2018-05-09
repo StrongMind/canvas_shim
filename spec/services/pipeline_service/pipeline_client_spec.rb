@@ -1,7 +1,6 @@
 describe PipelineService::PipelineClient do
   let(:endpoint_instance) { double('endpoint_instance', call: nil)}
   let(:endpoint_class) { double('endpoint_class', new: endpoint_instance) }
-  let(:serializer) {double('serializer class', new: double('serializer instance', call: nil))}
   let(:logger_class) { double('logger_class', new: logger_instance) }
   let(:logger_instance) { double('logger_class', call: nil) }
 
@@ -15,21 +14,8 @@ describe PipelineService::PipelineClient do
     )
   end
 
-  before do
-    allow(PipelineService::Serializers::Fetcher)
-      .to receive(:fetch)
-      .and_return(serializer)
-  end
-
   it 'posts to the endpoint' do
     expect(endpoint_instance).to receive(:call).and_return(nil)
-    subject.call
-  end
-
-  it 'looks up the serializer' do
-    expect(PipelineService::Serializers::Fetcher)
-      .to receive(:fetch)
-      .and_return(serializer)
     subject.call
   end
 
