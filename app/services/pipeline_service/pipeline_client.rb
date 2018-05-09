@@ -29,7 +29,7 @@ module PipelineService
 
     def configure_dependencies
       @endpoint        = @args[:endpoint] || Endpoints::Pipeline
-      @logger          = @args[:logger] || PipelineService::Logger
+      @logger          = @args[:logger] || Logger
     end
 
     def log
