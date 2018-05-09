@@ -3,8 +3,8 @@ module PipelineService
     HEADERS = {}
     def initialize(message, args={})
       @message = message
-      @queue = args[:queue] || Delayed::Job
-      @http_client = args[:http_client] || HTTParty
+      @args = args
+      configure_dependencies
     end
 
     def call
@@ -19,6 +19,11 @@ module PipelineService
     private
 
     attr_reader :http_client, :message, :queue
+
+    def configure_dependencies
+      @queue       = @args[:queue] || Delayed::Job
+      @http_client = @args[:http_client] || HTTParty
+    end
 
     def post
       result = http_client.post(

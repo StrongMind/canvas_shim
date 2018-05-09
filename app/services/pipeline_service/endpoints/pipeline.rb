@@ -3,13 +3,8 @@ module PipelineService
     class Pipeline
       def initialize(message, args={})
         @message = message
-        @message_builder_class = args[:message_builder_class] || MessageBuilder
-        @http_client = args[:http_client] || PipelinePublisher::MessagesApi
-        @publisher   = args[:publisher] || PipelinePublisher
-        @endpoint    = ENV['PIPELINE_ENDPOINT']
-        @username    = ENV['PIPELINE_USER_NAME']
-        @password    = ENV['PIPELINE_PASSWORD']
-        @args        = args
+        @args    = args
+        configure_dependencies
         raise 'Missing config' if missing_config?
       end
 
@@ -24,16 +19,21 @@ module PipelineService
 
       private
 
-      attr_reader :message, :args
+      attr_reader :http_client, :message, :endpoint,
+        :username, :password, :publisher
 
-      attr_reader :http_client, :message, :message_builder_class, :endpoint,
-        :username, :password, :publisher, :logger, :message
-
+      def configure_dependencies
+        @message_builder_class = @args[:message_builder_class] || MessageBuilder
+        @http_client = @args[:http_client] || PipelinePublisher::MessagesApi
+        @publisher   = @args[:publisher] || PipelinePublisher
+        @endpoint    = ENV['PIPELINE_ENDPOINT']
+        @username    = ENV['PIPELINE_USER_NAME']
+        @password    = ENV['PIPELINE_PASSWORD']
+      end
 
       def missing_config?
         [endpoint, username, password].any?(&:nil?)
       end
-
 
       def configure_publisher
         publisher.configure do |config|
