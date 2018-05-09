@@ -1,6 +1,7 @@
 module PipelineService
   module Endpoints
     class Pipeline
+      attr_reader
       def initialize(message, args={})
         @message = message
         @args    = args
@@ -24,7 +25,7 @@ module PipelineService
         :username, :password, :publisher, :payload
 
       def build_payload
-        @payload = message_builder.new(@args).call
+        @payload = message_builder.new(@args).call.payload
       end
 
       def configure_dependencies
