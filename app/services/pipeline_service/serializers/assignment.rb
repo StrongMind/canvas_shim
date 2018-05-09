@@ -23,7 +23,7 @@ module PipelineService
       attr_reader :object, :admin, :host
 
       def fetch_admin
-        @admin = PipelineService::Account.account_admin
+        @admin = Account.account_admin
       end
 
       def host

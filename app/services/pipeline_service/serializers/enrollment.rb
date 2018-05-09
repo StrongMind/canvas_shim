@@ -18,7 +18,7 @@ module PipelineService
         @params = {}
         @request = OpenStruct.new
         @object = object
-        @admin = PipelineService::Account.account_admin
+        @admin = Account.account_admin
       end
 
       def call

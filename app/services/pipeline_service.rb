@@ -3,7 +3,7 @@
 #
 # Example: PipelineService.publish(User.first)
 module PipelineService
-  def self.publish(object, api: PipelineService::API::Publish, noun: nil)
+  def self.publish(object, api: API::Publish, noun: nil)
     api.new(object, noun: noun).call
   end
 end

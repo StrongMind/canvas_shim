@@ -26,7 +26,7 @@ module PipelineService
       attr_reader :object, :jobs, :command_class, :queue, :noun
 
       def configure_dependencies
-        @command_class = @args[:command_class] || PipelineService::Commands::Publish
+        @command_class = @args[:command_class] || Commands::Publish
         @queue         = @args[:queue] || Delayed::Job
       end
 

@@ -23,7 +23,7 @@ module PipelineService
 
           def configure_dependencies
             @http_client = @args[:http_client] || HTTParty
-            @logger      = @args[:logger] || PipelineService::Logger
+            @logger      = @args[:logger] || Logger
           end
 
           def post

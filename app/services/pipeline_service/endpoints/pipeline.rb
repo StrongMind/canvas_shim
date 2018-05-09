@@ -28,7 +28,7 @@ module PipelineService
       end
 
       def configure_dependencies
-        @message_builder = @args[:message_builder] || PipelineService::Endpoints::Pipeline::MessageBuilder
+        @message_builder = @args[:message_builder] || MessageBuilder
         @http_client = @args[:http_client] || PipelinePublisher::MessagesApi
         @publisher   = @args[:publisher] || PipelinePublisher
         @endpoint    = ENV['PIPELINE_ENDPOINT']
