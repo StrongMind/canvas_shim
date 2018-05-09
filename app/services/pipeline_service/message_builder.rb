@@ -2,13 +2,29 @@ module PipelineService
   class MessageBuilder
     SOURCE = 'canvas'
 
+
     def initialize(args)
-      @args = args
-      @id = args[:id]
-      @noun = args[:noun]
-      @object = args[:data]
-      @domain_name = args[:domain_name]
+      @id            = args[:id]
+      @noun          = args[:noun]
+      @object        = args[:data]
+      @serializer    = args[:serializer]
       @message_class = args[:message_class] || PipelinePublisher::Message
+      @fetcher       = args[:fetcher] || Serializers::Fetcher
+      @canvas_domain = ENV['CANVAS_DOMAIN']
+    end
+
+    def call
+      fetch_serializer
+      build
+    end
+
+    private
+
+    attr_reader :message_class, :noun, :id, :object, :fetcher, :serializer, :canvas_domain
+
+    def fetch_serializer
+      return if @serializer
+      @serializer = fetcher.fetch(object: object)
     end
 
     def build
@@ -16,15 +32,11 @@ module PipelineService
         noun: noun,
         meta: {
           source: SOURCE,
-          domain_name: domain_name
+          domain_name: canvas_domain
         },
         identifiers: { id: id },
         data: object
       )
     end
-
-    private
-
-    attr_reader :message_class, :id, :noun, :object, :domain_name, :args
   end
 end

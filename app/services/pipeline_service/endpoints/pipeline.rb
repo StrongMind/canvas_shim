@@ -27,11 +27,13 @@ module PipelineService
       attr_reader :message, :args
 
       attr_reader :http_client, :message, :message_builder_class, :endpoint,
-        :username, :password, :publisher
+        :username, :password, :publisher, :logger, :message
+
 
       def missing_config?
         [endpoint, username, password].any?(&:nil?)
       end
+
 
       def configure_publisher
         publisher.configure do |config|
@@ -42,9 +44,7 @@ module PipelineService
       end
 
       def post
-        http_client.new.messages_post(
-          message_builder_class.new(message).build
-        )
+        http_client.new.messages_post(message)
       end
     end
   end

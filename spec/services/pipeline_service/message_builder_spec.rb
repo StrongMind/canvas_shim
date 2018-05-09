@@ -11,17 +11,20 @@ describe PipelineService::MessageBuilder do
     )
   end
 
+  before do
+    ENV['CANVAS_DOMAIN'] = 'someschool.com'
+    allow(ENV).to receive('[]').with('CANVAS_DOMAIN').and_return('someschool.com')
+  end
+
   subject do described_class.new(
     id: 1,
     noun: 'example',
-    data: object,
-    domain_name: 'someschool.com',
-    message_class: double("message_class", new: message_class_instance)
+    data: object
   )
   end
 
-  let(:object) { double("object", id: 1, changes: {}) }
-  let(:message) { subject.build }
+  let(:object) { double("object", id: 1, changes: {}, class: 'Enrollment') }
+  let(:message) { subject.call }
 
   describe "#message" do
     it '[:noun]' do
@@ -47,9 +50,7 @@ describe PipelineService::MessageBuilder do
     end
 
     it '[:identifiers]' do
-      expect(message.identifiers).to eq :id => 1
+      expect(message.identifiers).to eq id: 1
     end
   end
-
-
 end
