@@ -1,23 +1,32 @@
 module PipelineService
   module Commands
     class PublishEvents
-      def initialize(message, args={})
-        @message       = message
+      def initialize(object, args={})
+        @object        = object
         @subscriptions = args[:subscriptions]
-        @changes       = args[:changes]
+        @changes       = object.changes
       end
 
       def call
         return unless subscriptions
-        Events::Emitter.new(
-          message:       message.merge(changes: changes),
-          subscriptions: subscriptions
-        ).call
+        build_message
+        emit
       end
 
       private
 
       attr_accessor :message, :subscriptions, :changes
+
+      def build_message
+        @message = MessageBuilder.new
+      end
+
+      def emit
+        Events::Emitter.new(
+          message:       message.merge(changes: changes),
+          subscriptions: subscriptions
+        ).call
+      end
     end
   end
 end

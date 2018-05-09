@@ -23,12 +23,8 @@ module PipelineService
       end
 
       def recently_completed?
-        puts 'a0', 'checking meta'
-        puts message
         return unless message[:meta]
-        puts 'a1', 'meta exists'
         return unless message[:meta][:changes]
-        puts 'a2', 'meta changes exists'
         message[:meta][:changes]['workflow_state'].try(:[], 1) == 'completed'
       end
     end

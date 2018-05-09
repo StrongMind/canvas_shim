@@ -22,7 +22,7 @@ module PipelineService
           @api_key = ENV['SIS_ENROLLMENT_UPDATE_API_KEY']
           @endpoint = ENV['SIS_ENROLLMENT_UPDATE_ENDPOINT']
           @queue = args[:queue] || Delayed::Job
-          @logger = args[:logger] || Logger
+          @logger = args[:logger] || PipelineService::Logger
         end
 
         def missing_config?

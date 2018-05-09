@@ -7,7 +7,6 @@ module PipelineService
       end
 
       def call
-        puts 0, 'calling subscriptions'
         subscriptions.each do |subscription|
           Events::GradedOutEvent.new(
             responder: subscription.responder,

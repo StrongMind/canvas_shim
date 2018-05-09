@@ -13,7 +13,7 @@ module PipelineService
       def initialize(object:)
         default_url_options[:host] = host
         @object = object
-        @admin = Account.account_admin
+        @admin = PipelineService::Account.account_admin
       end
 
       def request

@@ -38,8 +38,7 @@ module PipelineService
 
       def publish_events
         PublishEvents.new(
-          message,
-          changes: object.changes,
+          object,
           subscriptions: [
             Events::Subscription.new(
               event: :graded_out,
@@ -50,13 +49,13 @@ module PipelineService
       end
 
       def post_to_pipeline
-        @message = client.new(
+        client.new(
           args.merge(
             object: object,
             noun: noun,
             id: id
           )
-        ).call.message
+        ).call
       end
 
       def noun
