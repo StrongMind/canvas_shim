@@ -7,10 +7,10 @@ module PipelineService
   module API
     class Publish
       def initialize(object, args={})
-        @object        = object
-        @command_class = args[:command_class] || PipelineService::Commands::Publish
-        @queue         = args[:queue] || Delayed::Job
-        @noun          = args[:noun]
+        @object = object
+        @noun = args[:noun]
+        @args = args
+        configure_dependencies
       end
 
       def call
@@ -24,6 +24,12 @@ module PipelineService
       private
 
       attr_reader :object, :jobs, :command_class, :queue, :noun
+
+      def configure_dependencies
+        @command_class = @args[:command_class] || PipelineService::Commands::Publish
+        @queue         = @args[:queue] || Delayed::Job
+      end
+
 
       def subscriptions
         Events::Subscription.new(

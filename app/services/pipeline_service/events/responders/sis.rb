@@ -4,11 +4,8 @@ module PipelineService
       class SIS
         def initialize(message:, args: {})
           @message = message
-          @api_key = ENV['SIS_ENROLLMENT_UPDATE_API_KEY']
-          @endpoint = ENV['SIS_ENROLLMENT_UPDATE_ENDPOINT']
           @args = args
-          @queue = args[:queue] || Delayed::Job
-          @logger = args[:logger] || PipelineService::Logger
+          configure_dependencies
         end
 
         def call
@@ -20,6 +17,13 @@ module PipelineService
         private
 
         attr_reader :message, :api_key, :endpoint, :args, :queue, :logger
+
+        def configure_dependencies
+          @api_key = ENV['SIS_ENROLLMENT_UPDATE_API_KEY']
+          @endpoint = ENV['SIS_ENROLLMENT_UPDATE_ENDPOINT']
+          @queue = args[:queue] || Delayed::Job
+          @logger = args[:logger] || PipelineService::Logger
+        end
 
         def missing_config?
           [@api_key, @endpoint].any?(&:nil?)
