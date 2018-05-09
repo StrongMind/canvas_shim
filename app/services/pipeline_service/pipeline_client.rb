@@ -8,39 +8,26 @@ module PipelineService
   # PipelineCient.new(object: Enrollment.last)
   # PipelineCient.new(object: { data: { foo: 'bar' } }, noun: 'enrollment' )
   class PipelineClient
-    attr_reader :message
-
     def initialize(args)
-      @args   = args
-
-      @noun   = args[:noun]
-      @args   = args
+      @args = args
       configure_dependencies
     end
 
     def call
       post
-      log
       self
     end
 
     private
 
-    attr_reader :noun, :endpoint, :logger, :message_builder
+    attr_reader :endpoint
 
     def configure_dependencies
-      @endpoint        = @args[:endpoint] || Endpoints::Pipeline
-      @logger          = @args[:logger] || Logger
-    end
-
-    def log
-      logger.new(
-        { source: 'pipeline', message: message }
-      ).call
+      @endpoint = @args[:endpoint] || Endpoints::Pipeline
     end
 
     def post
-      endpoint.new(message, @args).call
+      endpoint.new(@args).call
     end
   end
 end

@@ -7,7 +7,7 @@ module PipelineService
         def initialize(args)
           @id            = args[:id]
           @noun          = args[:noun]
-          @object        = args[:data]
+          @object        = args[:object]
           @serializer    = args[:serializer]
           @args          = args
           configure_dependencies
@@ -16,7 +16,18 @@ module PipelineService
         def call
           fetch_serializer
           build
+          log
           self
+        end
+
+        private
+
+        attr_reader :message_class, :noun, :id, :object, :fetcher, :serializer, :canvas_domain, :logger
+
+        def log
+          logger.new(
+            { source: 'pipeline', message: payload }
+          ).call
         end
 
         def payload
@@ -27,17 +38,14 @@ module PipelineService
               domain_name: canvas_domain
             },
             identifiers: { id: id },
-            data: object
+            data: serializer.new(object: object).call
           }
         end
-
-        private
-
-        attr_reader :message_class, :noun, :id, :object, :fetcher, :serializer, :canvas_domain
 
         def configure_dependencies
           @message_class = @args[:message_class] || PipelinePublisher::Message
           @fetcher       = @args[:fetcher] || Serializers::Fetcher
+          @logger        = @args[:logger] || PipelineService::Logger
           @canvas_domain = ENV['CANVAS_DOMAIN']
         end
 
@@ -49,7 +57,6 @@ module PipelineService
         def build
           message_class.new(payload)
         end
-
       end
     end
   end

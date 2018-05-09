@@ -1,16 +1,16 @@
 module PipelineService
   module Endpoints
     class Pipeline
-      attr_reader
-      def initialize(message, args={})
-        @message = message
-        @args    = args
+
+      def initialize(args={})
+        @args = args
         configure_dependencies
         raise 'Missing config' if missing_config?
       end
 
       def call
         Delayed::Job.enqueue(self)
+        self
       end
 
       def perform
@@ -21,11 +21,11 @@ module PipelineService
 
       private
 
-      attr_reader :http_client, :message, :endpoint,
-        :username, :password, :publisher, :payload
+      attr_reader :http_client, :endpoint,
+        :username, :password, :publisher, :message_builder, :payload
 
       def build_payload
-        @payload = message_builder.new(@args).call.payload
+        @payload = message_builder.new(@args).call
       end
 
       def configure_dependencies
