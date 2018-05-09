@@ -12,6 +12,7 @@ module PipelineService
 
     def initialize(args)
       @args   = args
+
       @noun   = args[:noun]
       @args   = args
       configure_dependencies
