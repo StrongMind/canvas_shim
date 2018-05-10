@@ -19,7 +19,7 @@ module PipelineService
 
       def call
         post_to_pipeline
-        # publish_events if object.respond_to?(:changes)
+        publish_events if object.respond_to?(:changes)
         self
       end
 

@@ -14,7 +14,11 @@ module PipelineService
       end
 
       def call
-        queue.enqueue self
+        if ENV['SYNCHRONOUS_PIPELINE_JOBS']
+          perform
+        else
+          queue.enqueue self
+        end
       end
 
       def perform

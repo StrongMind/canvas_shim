@@ -8,7 +8,11 @@ module PipelineService
     end
 
     def call
-      queue.enqueue self
+      if ENV['SYNCHRONOUS_PIPELINE_JOBS']
+         perform
+      else
+        queue.enqueue self
+      end
     end
 
     # This makes it possible for the instance to be run later by Delayed::Job
