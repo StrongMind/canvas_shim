@@ -35,7 +35,9 @@ module PipelineService
             noun: noun,
             meta: {
               source: SOURCE,
-              domain_name: canvas_domain
+              domain_name: canvas_domain,
+              version: 1,
+              status: object.try(:state)
             },
             identifiers: { id: id },
             data: serializer.new(object: object).call
