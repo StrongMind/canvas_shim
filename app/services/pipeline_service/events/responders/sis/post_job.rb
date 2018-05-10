@@ -8,8 +8,8 @@ module PipelineService
           def initialize(endpoint, data, args={})
             @endpoint    = endpoint
             @data        = data
-            @http_client = args[:http_client] || HTTParty
-            @logger = args[:logger]
+            @args        = args
+            configure_dependencies
           end
 
           def perform
@@ -20,6 +20,11 @@ module PipelineService
           private
 
           attr_reader :endpoint, :data, :http_client, :logger
+
+          def configure_dependencies
+            @http_client = @args[:http_client] || HTTParty
+            @logger      = @args[:logger] || PipelineService::Logger
+          end
 
           def post
             http_client.post(

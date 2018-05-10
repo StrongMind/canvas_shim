@@ -1,7 +1,6 @@
 describe PipelineService::PipelineClient do
   let(:endpoint_instance) { double('endpoint_instance', call: nil)}
   let(:endpoint_class) { double('endpoint_class', new: endpoint_instance) }
-  let(:serializer) {double('serializer class', new: double('serializer instance', call: nil))}
   let(:logger_class) { double('logger_class', new: logger_instance) }
   let(:logger_instance) { double('logger_class', call: nil) }
 
@@ -20,27 +19,8 @@ describe PipelineService::PipelineClient do
     subject.call
   end
 
-  it 'looks up the serializer' do
-    expect(PipelineService::Serializers::Fetcher)
-      .to receive(:fetch)
-      .and_return(serializer)
+  it 'logs pipeline requests' do
+    expect(logger_instance).to receive(:call)
     subject.call
-  end
-
-  context 'logging' do
-
-
-    it 'logs pipeline requests' do
-      expect(logger_instance).to receive(:call)
-      subject.call
-    end
-  end
-
-  context 'defaults' do
-    subject { described_class.new(object: nil, noun: '', id: 1) }
-
-    it 'defaults to the pipeline endpoint' do
-      expect(subject.send(:endpoint_class)).to eq PipelineService::Endpoints::Pipeline
-    end
   end
 end

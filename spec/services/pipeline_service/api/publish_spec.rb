@@ -1,5 +1,4 @@
 describe PipelineService::API::Publish do
-  let(:serializer_fetcher)  { double('fetcher') }
   let(:submission)          { double('submission', id: 1, class: 'Submission', assignment: double('assignment')) }
   let(:command_instance)    { double('command_instance', call: nil) }
   let(:command_class)       { double('command_class', new: command_instance) }
@@ -14,7 +13,7 @@ describe PipelineService::API::Publish do
   end
 
   describe '#call' do
-    it 'enqueues' do
+    it 'enqueue' do
       expect(queue).to receive(:enqueue).with(subject)
       subject.call
     end

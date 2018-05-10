@@ -24,5 +24,19 @@ describe PipelineService::Commands::Publish do
       expect(client_instance).to receive(:call)
       subject.call
     end
+    
+    context 'with a hash' do
+      it 'will require a noun' do
+        expect do
+          described_class.new(
+            object:       { id: 1, last_activity_at: Time.now },
+            user:         user,
+            client:       client_class,
+            serializer:   serializer_class,
+            responder:     responder_class
+          ).call
+        end.to raise_error(/Noun must be specified/)
+      end
+    end
   end
 end
