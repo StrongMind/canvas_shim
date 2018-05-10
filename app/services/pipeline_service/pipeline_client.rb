@@ -1,63 +1,33 @@
 module PipelineService
+  # PipelineClient builds a pipeline message using the object, an optional noun
+  # and an id, posts it to the endpoint and logs the message that was sent.
+  #
+  # Accepts an ActiveRecord object or a hash.  If using a hash, you must provide
+  # a noun as an optional parameter
+  #
+  # PipelineCient.new(object: Enrollment.last)
+  # PipelineCient.new(object: { data: { foo: 'bar' } }, noun: 'enrollment' )
   class PipelineClient
-    attr_reader :message
-
     def initialize(args)
-      @object     = args[:object]
-      @noun       = args[:noun]
-      @id         = args[:id]
-      @args       = args
-      @domain_name = ENV['CANVAS_DOMAIN']
-      @endpoint_class   = args[:endpoint] || Endpoints::Pipeline
-      @serializer_fetcher = args[:serializer_fetcher] || Serializers::Fetcher
-      @serializer = args[:serializer]
-      @logger = args[:logger] || PipelineService::Logger
+      @args = args
+      configure_dependencies
     end
 
     def call
-      fetch_serializer
-      build_message
       post
-      log
       self
     end
 
     private
 
-    attr_reader :domain_name, :object, :noun, :id, :endpoint_class, :args, :serializer_fetcher, :serializer, :logger
+    attr_reader :endpoint
 
-    def log
-      logger.new(message).call
-    end
-
-    def log
-      logger.new(
-        {
-          source: 'pipeline',
-          message: message
-        }
-      ).call
-    end
-
-
-    def fetch_serializer
-      return if @serializer
-      @serializer = serializer_fetcher.fetch(object: object)
+    def configure_dependencies
+      @endpoint = @args[:endpoint] || Endpoints::Pipeline
     end
 
     def post
-      endpoint_class.new(
-        message,
-        args
-      ).call
-    end
-
-    def build_message
-      @message = {
-          noun:        noun,
-          id:          id,
-          data:        serializer.new(object: object).call,
-        }
+      endpoint.new(@args).call
     end
   end
 end

@@ -14,9 +14,22 @@ describe PipelineService do
   let(:api) { double('api', new: api_instance) }
 
   describe '#publish' do
-    it 'Runs the api command' do
+    it 'Calls the API instance' do
       expect(api_instance).to receive(:call)
       subject.publish(enrollment, api: api)
+    end
+
+    context 'when the object is a hash' do
+      it 'works' do
+        expect do
+          subject.publish(
+            { id: 1, last_activity_at: Time.now },
+            api: api,
+            noun: 'enrollment'
+          )
+        end.to_not raise_error
+
+      end
     end
   end
 end
