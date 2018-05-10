@@ -9,7 +9,7 @@ module PipelineService
 
       def call
         return unless subscriptions
-        build_message
+
         emit
       end
 
@@ -18,7 +18,7 @@ module PipelineService
       attr_accessor :message, :subscriptions, :changes
 
       def build_message
-        @message = MessageBuilder.new
+        @message = PipelineService::AMessageBuilder.new
       end
 
       def emit
