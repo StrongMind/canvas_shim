@@ -5,8 +5,11 @@ module PipelineService
         @object = object
       end
 
+      # This is only enrollments
       def call
-        object
+        Serializers::Enrollment.new(
+          object: ::Enrollment.find(object[:id])
+        ).call
       end
 
       private

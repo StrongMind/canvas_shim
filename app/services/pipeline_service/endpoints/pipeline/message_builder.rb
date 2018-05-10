@@ -15,9 +15,9 @@ module PipelineService
 
         def call
           fetch_serializer
-          build
+          result = build
           log
-          self
+          result
         end
 
         private
