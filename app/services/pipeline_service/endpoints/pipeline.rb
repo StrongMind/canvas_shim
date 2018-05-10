@@ -9,7 +9,11 @@ module PipelineService
       end
 
       def call
-        Delayed::Job.enqueue(self)
+        if ENV['SYNCHRONOUS_PIPELINE_JOBS']
+          perform
+        else
+          Delayed::Job.enqueue(self)
+        end
         self
       end
 

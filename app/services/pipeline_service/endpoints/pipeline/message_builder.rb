@@ -57,7 +57,7 @@ module PipelineService
         end
 
         def build
-          message_class.new(payload)
+          message_class.new(payload.to_hash)
         end
       end
     end
