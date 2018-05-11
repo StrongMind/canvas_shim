@@ -6,15 +6,12 @@ module PipelineService
     # Usage:
     # Send.new(message: User.last).call
     class Publish
-      NOUN_MISSING_ERROR = 'Noun must be specified if object is a hash.'
       attr_reader :message, :serializer
 
       def initialize(args)
         @args       = args
         @object     = args[:object]
-        @noun       = args[:noun]
         configure_dependencies
-        validate_noun_is_present_if_object_is_hash!
       end
 
       def call
@@ -25,15 +22,11 @@ module PipelineService
 
       private
 
-      attr_reader :object, :client, :args, :responder, :changes
+      attr_reader :object, :client, :responder, :changes
 
       def configure_dependencies
         @client     = @args[:client] || PipelineClient
         @responder  = @args[:responder] || Events::Responders::SIS
-      end
-
-      def validate_noun_is_present_if_object_is_hash!
-        raise NOUN_MISSING_ERROR if object.is_a?(Hash) && @noun.nil?
       end
 
       def publish_events
@@ -57,7 +50,7 @@ module PipelineService
 
       def post_to_pipeline
         client.new(
-          args.merge(
+          @args.merge(
             object: object,
             noun: noun,
             id: id
@@ -66,7 +59,7 @@ module PipelineService
       end
 
       def noun
-        @noun || object.class.to_s.underscore
+        object.class.to_s.underscore
       end
 
       def id
