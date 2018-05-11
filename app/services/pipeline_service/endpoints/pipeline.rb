@@ -12,7 +12,7 @@ module PipelineService
         if ENV['SYNCHRONOUS_PIPELINE_JOBS']
           perform
         else
-          Delayed::Job.enqueue(self, {strand: "pipeline_service"})
+          Delayed::Job.enqueue(self, {strand: "pipeline_service", max_attempts: 100})
         end
         self
       end
