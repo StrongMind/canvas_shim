@@ -11,7 +11,7 @@ module PipelineService
       if ENV['SYNCHRONOUS_PIPELINE_JOBS']
          perform
       else
-        queue.enqueue self
+        queue.enqueue(self, {strand: "pipeline_service", max_attempts: 100})
       end
     end
 
