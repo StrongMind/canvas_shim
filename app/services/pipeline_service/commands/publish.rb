@@ -30,7 +30,7 @@ module PipelineService
       end
 
       def publish_events
-        PublishEvents.new(
+        Commands::PublishEvents.new(
           object,
           subscriptions: [
             Events::Subscription.new(
@@ -50,21 +50,8 @@ module PipelineService
 
       def post_to_pipeline
         client.new(
-          @args.merge(
-            object: object,
-            noun: noun,
-            id: id
-          )
+          @args.merge(object: object)
         ).call
-      end
-
-      def noun
-        object.class.to_s.underscore
-      end
-
-      def id
-        return object.id unless object.is_a?(Hash)
-        object[:id]
       end
     end
   end
