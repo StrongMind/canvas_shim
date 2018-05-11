@@ -5,8 +5,6 @@ module PipelineService
         SOURCE = 'canvas'
 
         def initialize(args)
-          @id            = args[:id]
-          @noun          = args[:noun]
           @object        = args[:object]
           @serializer    = args[:serializer]
           @args          = args
@@ -15,6 +13,7 @@ module PipelineService
 
         def call
           fetch_serializer
+          serialize
           result = build
           log
           result
@@ -22,7 +21,11 @@ module PipelineService
 
         private
 
-        attr_reader :message_class, :noun, :id, :object, :fetcher, :serializer, :canvas_domain, :logger
+        attr_reader :message_class, :object, :fetcher, :serializer, :canvas_domain, :logger, :serialized_object
+
+        def serialize
+          @serialized_object = serializer.new(object: object).call
+        end
 
         def log
           logger.new(
@@ -40,7 +43,7 @@ module PipelineService
               status: object.try(:state)
             },
             identifiers: { id: id },
-            data: serializer.new(object: object).call
+            data: serialized_object
           }
         end
 
@@ -58,6 +61,15 @@ module PipelineService
 
         def build
           message_class.new(payload.to_hash)
+        end
+
+        def noun
+          object.class.to_s.underscore
+        end
+
+        def id
+          object.id unless object.is_a?(Hash)
+          object[:id]
         end
       end
     end
