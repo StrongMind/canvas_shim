@@ -49,7 +49,7 @@ module PipelineService
           if ENV['SYNCHRONOUS_PIPELINE_JOBS']
              PostJob.new(build_endpoint, message[:data], args).peform
           else
-            queue.enqueue PostJob.new(build_endpoint, message[:data], args)
+            queue.enqueue(PostJob.new(build_endpoint, message[:data], args), {strand: "pipeline_service"})
           end
         end
       end
