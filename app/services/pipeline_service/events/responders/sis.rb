@@ -2,7 +2,7 @@ module PipelineService
   module Events
     module Responders
       class SIS
-        def initialize(message:, args: {})
+        def initialize(object:, message:, args: {})
           @message = message
           @args = args
           configure_dependencies
@@ -19,10 +19,10 @@ module PipelineService
         attr_reader :message, :api_key, :endpoint, :args, :queue, :logger
 
         def configure_dependencies
-          @api_key = ENV['SIS_ENROLLMENT_UPDATE_API_KEY']
+          @api_key  = ENV['SIS_ENROLLMENT_UPDATE_API_KEY']
           @endpoint = ENV['SIS_ENROLLMENT_UPDATE_ENDPOINT']
-          @queue = args[:queue] || Delayed::Job
-          @logger = args[:logger] || PipelineService::Logger
+          @queue    = args[:queue] || Delayed::Job
+          @logger   = args[:logger] || PipelineService::Logger
         end
 
         def missing_config?
@@ -33,7 +33,7 @@ module PipelineService
           logger.new(
             {
               source: 'pipeline_event::graded_out',
-              message: message[:data],
+              message: message,
               enpdoint: build_endpoint
             }
           ).call
@@ -46,10 +46,13 @@ module PipelineService
         def post
           return unless message
 
+
+          job = PostJob.new(build_endpoint, message, args)
+
           if ENV['SYNCHRONOUS_PIPELINE_JOBS']
-             PostJob.new(build_endpoint, message[:data], args).peform
+             job.perform
           else
-            queue.enqueue(PostJob.new(build_endpoint, message[:data], args), {strand: "pipeline_service", max_attempts: 100})
+            queue.enqueue(job)
           end
         end
       end

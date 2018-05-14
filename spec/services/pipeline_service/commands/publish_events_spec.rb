@@ -21,9 +21,9 @@ describe PipelineService::Commands::PublishEvents do
 
         subject do
           described_class.new(
-              message,
+              object,
               subscriptions: [subscription],
-              changes: {'workflow_state' => ['unstarted', 'completed']}
+              changes: { 'workflow_state' => ['unstarted', 'completed'] }
           )
         end
 
