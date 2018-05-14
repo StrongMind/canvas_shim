@@ -19,15 +19,18 @@ module PipelineService
 
           private
 
-          attr_reader :endpoint, :data, :http_client, :logger
+          attr_reader :endpoint, :data, :logger
 
           def configure_dependencies
-            @http_client = @args[:http_client] || HTTParty
-            @logger      = @args[:logger] || PipelineService::Logger
+            @logger = @args[:logger] || PipelineService::Logger
+          end
+
+          def self.http_client
+            HTTParty || @args[:http_client]
           end
 
           def post
-            http_client.post(
+            self.class.http_client.post(
               endpoint,
               body:    data.to_json,
               headers: HEADERS
@@ -35,7 +38,7 @@ module PipelineService
           end
 
           def log
-            logger.new(data.to_json).call
+            logger.new(data).call
           end
         end
       end

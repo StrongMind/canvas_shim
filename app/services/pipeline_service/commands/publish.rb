@@ -26,26 +26,10 @@ module PipelineService
 
       def configure_dependencies
         @client     = @args[:client] || PipelineClient
-        @responder  = @args[:responder] || Events::Responders::SIS
       end
 
       def publish_events
-        Commands::PublishEvents.new(
-          object,
-          subscriptions: [
-            Events::Subscription.new(
-              event: :graded_out,
-              responder: responder.new(message: message)
-            )
-          ]
-        ).call
-      end
-
-      def subscription
-        Events::Subscription.new(
-          event: :graded_out,
-          responder: responder.new(message: message)
-        )
+        Commands::PublishEvents.new(object).call
       end
 
       def post_to_pipeline
