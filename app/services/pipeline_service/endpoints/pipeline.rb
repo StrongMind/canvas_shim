@@ -25,15 +25,18 @@ module PipelineService
 
       private
 
-      attr_reader :http_client, :endpoint, :username, :password, :publisher, :message_builder, :payload
+      attr_reader :endpoint, :username, :password, :publisher, :message_builder, :payload
 
       def build_payload
         @payload = message_builder.new(@args).call
       end
 
+      def self.http_client
+        PipelinePublisher::MessagesApi.new
+      end
+
       def configure_dependencies
         @message_builder = @args[:message_builder] || MessageBuilder
-        @http_client = @args[:http_client] || PipelinePublisher::MessagesApi
         @publisher   = @args[:publisher] || PipelinePublisher
         @endpoint    = ENV['PIPELINE_ENDPOINT']
         @username    = ENV['PIPELINE_USER_NAME']
@@ -53,7 +56,7 @@ module PipelineService
       end
 
       def post
-        http_client.new.messages_post(payload)
+        self.class.http_client.messages_post(payload)
       end
     end
   end
