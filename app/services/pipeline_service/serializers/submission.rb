@@ -1,12 +1,13 @@
 module PipelineService
   module Serializers
     # This ugly thing lets us call the canvas user api
-    class Submission < Base
+    class Submission
       include ::Api
       include ::Api::V1::Submission
       include ActionView::Helpers
       include ActionDispatch::Routing::UrlFor
       include Rails.application.routes.url_helpers
+      include BaseMethods
 
       def params;{};end
 

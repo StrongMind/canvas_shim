@@ -1,6 +1,6 @@
 module PipelineService
   module Serializers
-    class Base
+    module BaseMethods
       private
 
       def protocol
