@@ -1,12 +1,14 @@
 module PipelineService
   # This ugly thing lets us call the canvas assignment api
   module Serializers
-    class Assignment < Base
+    class Assignment
       include ::Api
       include ::Api::V1::Assignment
       include ActionView::Helpers
       include ActionDispatch::Routing::UrlFor
       include Rails.application.routes.url_helpers
+
+      include BaseMethods
 
       def initialize(object:)
         default_url_options[:host] = host
