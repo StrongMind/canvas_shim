@@ -8,9 +8,15 @@ module PipelineService
       include ActionDispatch::Routing::UrlFor
       include Rails.application.routes.url_helpers
 
+      include BaseMethods
+
       def initialize(object:)
         default_url_options[:host] = host
         @object = object
+        @domain_root_account = ::Account.default
+        @params = {}
+        @request = OpenStruct.new
+        @admin = PipelineService::Account.account_admin
       end
 
       def call
