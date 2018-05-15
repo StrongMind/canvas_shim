@@ -1,7 +1,7 @@
 module PipelineService
   # This ugly thing lets us call the canvas assignment api
   module Serializers
-    class Assignment
+    class Assignment < Base
       include ::Api
       include ::Api::V1::Assignment
       include ActionView::Helpers
@@ -11,6 +11,10 @@ module PipelineService
       def initialize(object:)
         default_url_options[:host] = host
         @object = object
+        @domain_root_account = ::Account.default
+        @params = {}
+        @request = OpenStruct.new
+        @admin = PipelineService::Account.account_admin
       end
 
       def call

@@ -1,7 +1,7 @@
 module PipelineService
   # This ugly thing lets us call the canvas user api
   module Serializers
-    class Enrollment
+    class Enrollment < Base
       include ::Api::V1::User
       attr_accessor :services_enabled, :context, :current_user, :params, :request
 
