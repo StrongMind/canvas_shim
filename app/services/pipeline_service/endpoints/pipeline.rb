@@ -56,6 +56,7 @@ module PipelineService
       end
 
       def post
+        byebug
         self.class.http_client.messages_post(payload)
       end
     end
