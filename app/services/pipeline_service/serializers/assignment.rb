@@ -41,6 +41,7 @@ module PipelineService
       end
 
       def post
+        self.class.
         http_client.get(
           endpoint, headers: headers
         ).parsed_response
@@ -50,7 +51,7 @@ module PipelineService
         object.course.id
       end
 
-      def http_client
+      def self.http_client
         HTTParty
       end
 
