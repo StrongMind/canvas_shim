@@ -1,14 +1,12 @@
 module PipelineService
   module Serializers
     class Assignment
-      KEY = 'IQQI1GysDSk8XdjZheKZ3eaa8Qu5J9ZfB2pZ8YMEVgWMvzXInpTv15Frh0GGEZ0l'
-
       def initialize(object:)
         @object = object
       end
 
       def call
-        post
+        fetch
       end
 
       private
@@ -17,6 +15,29 @@ module PipelineService
 
       def domain
         ENV['CANVAS_DOMAIN']
+      end
+
+      def self.build_token
+        Thread.new do
+          ActiveRecord::Base.connection_pool.with_connection do
+            PipelineService::Account.account_admin.access_tokens.create(
+              developer_key: DeveloperKey.default,
+              purpose: 'Pipeline API Access'
+            )
+          end
+        end.value.full_token
+      end
+
+      def self.token
+        token = Canvas.redis.get('PIPELINE_CANVAS_API_TOKEN')
+        return token if token
+
+        AccessToken.where(purpose: 'Pipeline API Access').delete_all
+
+        result = build_token
+
+        Canvas.redis.set('PIPELINE_CANVAS_API_TOKEN', result)
+        result
       end
 
       def endpoint
@@ -37,14 +58,11 @@ module PipelineService
       end
 
       def headers
-        { Authorization: "Bearer #{KEY}" }
+        { Authorization: "Bearer #{self.class.token}" }
       end
 
-      def post
-        self.class.
-        http_client.get(
-          endpoint, headers: headers
-        ).parsed_response
+      def fetch
+        self.class.http_client.get(endpoint, headers: headers).parsed_response
       end
 
       def course_id
