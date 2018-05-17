@@ -1,7 +1,6 @@
 module PipelineService
   module Endpoints
     class Pipeline
-
       def initialize(args={})
         @args = args
         configure_dependencies

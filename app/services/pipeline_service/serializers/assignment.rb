@@ -53,8 +53,14 @@ module PipelineService
         ].join('')
       end
 
+      def use_ssl?
+        ENV['CANVAS_SSL'] == 'true'
+      end
+
       def port
-        '3000'
+        return '3000' if Rails.env == 'development'
+        return '443' if use_ssl?
+        '80'
       end
 
       def headers
@@ -74,7 +80,7 @@ module PipelineService
       end
 
       def protocol
-        return 'https://' if ENV['CANVAS_SSL'] == 'true'
+        return 'https://' if use_ssl?
         'http://'
       end
     end
