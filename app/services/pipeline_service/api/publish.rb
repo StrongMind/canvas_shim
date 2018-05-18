@@ -8,7 +8,7 @@ module PipelineService
     class Publish
       def initialize(object, args={})
         @object = object
-        @changes = object.changes
+        @changes = object.try(:changes)
         @noun = args[:noun]
         @args = args
         configure_dependencies

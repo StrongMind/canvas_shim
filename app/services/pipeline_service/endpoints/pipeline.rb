@@ -32,10 +32,6 @@ module PipelineService
         @payload = message_builder.new(@args).call
       end
 
-      def self.http_client
-        PipelinePublisher::MessagesApi.new
-      end
-
       def configure_dependencies
         @message_builder = @args[:message_builder] || MessageBuilder
         @publisher   = @args[:publisher] || PipelinePublisher
@@ -57,7 +53,7 @@ module PipelineService
       end
 
       def post
-        self.class.http_client.messages_post(payload)
+        PipelineService::HTTPClient.post(payload)
       end
     end
   end
