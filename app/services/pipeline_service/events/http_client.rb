@@ -7,7 +7,6 @@ module PipelineService
       end
 
       def post(*args)
-        binding.pry
         HTTParty.post(args)
       end
     end
