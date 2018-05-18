@@ -68,15 +68,11 @@ module PipelineService
       end
 
       def fetch
-        self.class.http_client.get(endpoint, headers: headers).parsed_response
+        PipelineService::HTTPClient.get(endpoint, headers: headers).parsed_response
       end
 
       def course_id
         object.course.id
-      end
-
-      def self.http_client
-        HTTParty
       end
 
       def protocol

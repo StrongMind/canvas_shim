@@ -11,7 +11,7 @@ module PipelineService
   def self.perform_synchronously?
     queue_mode == 'synchronous'
   end
-  
+
   @@queue_mode = ENV['SYNCHRONOUS_PIPELINE_JOBS'] == 'true' ? 'synchronous' : 'asynchronous'
   def self.queue_mode=(mode)
     case mode
