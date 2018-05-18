@@ -26,7 +26,7 @@ module PipelineService
           end
 
           def post
-            SIS::HTTPClient.post(
+            PipelineService::Events::HTTPClient.post(
               endpoint,
               body:    data.to_json,
               headers: HEADERS
