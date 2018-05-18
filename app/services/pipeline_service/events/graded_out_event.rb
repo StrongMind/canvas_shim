@@ -3,18 +3,19 @@ module PipelineService
     class GradedOutEvent
       def initialize(args)
         @args = args
-        @responder = args[:responder]
+        @subscription = args[:subscription]
         @object    = args[:object]
+        @changes   = args[:changes]
       end
 
       def emit
         return unless should_trigger?
-        responder.call
+        subscription.responder.call
       end
 
       private
 
-      attr_accessor :responder, :object
+      attr_accessor :subscription, :object, :changes
 
       def should_trigger?
         return unless object.is_a?(::Enrollment)
@@ -22,7 +23,8 @@ module PipelineService
       end
 
       def recently_completed?
-        object.changes['workflow_state'].try(:[], 1) == 'completed'
+        return false unless changes['workflow_state']
+        changes['workflow_state'][1] == 'completed'
       end
     end
   end

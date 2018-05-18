@@ -8,7 +8,7 @@ module PipelineService
     end
 
     def call
-      if ENV['SYNCHRONOUS_PIPELINE_JOBS']
+      if PipelineService.perform_synchronously?
         perform
       else
         queue.enqueue(self)
