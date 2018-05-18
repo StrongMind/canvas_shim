@@ -1,17 +1,13 @@
 module PipelineService
   module Commands
     class PublishEvents
-      def initialize(object, args={})
-        @object = object
+      def initialize(args={})
+        @args = args
       end
 
       def call
-        Events::Emitter.new(object: object).call
+        Events::Emitter.new(@args).call
       end
-
-      private
-
-      attr_accessor :message, :subscriptions, :changes, :object, :serializer
     end
   end
 end
