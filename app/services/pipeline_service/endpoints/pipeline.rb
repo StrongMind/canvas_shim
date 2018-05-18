@@ -8,7 +8,7 @@ module PipelineService
       end
 
       def call
-        if PipelineService.perform_synchronously?
+        if ENV['SYNCHRONOUS_PIPELINE_JOBS']
           perform
         else
           Delayed::Job.enqueue(self, {

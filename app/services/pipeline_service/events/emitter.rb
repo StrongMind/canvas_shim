@@ -47,7 +47,10 @@ module PipelineService
       def emit
         subscriptions.each do |subscription|
           next if subscription.event != :graded_out
-          event.new(@args.merge(subscription: subscription)).emit
+          event.new(
+            responder: subscription.responder,
+            object: object
+          ).emit
         end
       end
     end
