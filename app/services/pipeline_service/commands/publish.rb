@@ -11,13 +11,12 @@ module PipelineService
       def initialize(args)
         @args       = args
         @object     = args[:object]
-        @changes    = args[:changes]
         configure_dependencies
       end
 
       def call
         post_to_pipeline
-        publish_events unless changes.empty?
+        publish_events if object.respond_to?(:changes)
         self
       end
 
@@ -30,7 +29,7 @@ module PipelineService
       end
 
       def publish_events
-        Commands::PublishEvents.new(@args).call
+        Commands::PublishEvents.new(object).call
       end
 
       def post_to_pipeline

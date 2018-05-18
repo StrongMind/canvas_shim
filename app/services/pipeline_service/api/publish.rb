@@ -8,14 +8,13 @@ module PipelineService
     class Publish
       def initialize(object, args={})
         @object = object
-        @changes = object.changes
         @noun = args[:noun]
         @args = args
         configure_dependencies
       end
 
       def call
-        if PipelineService.perform_synchronously?
+        if ENV['SYNCHRONOUS_PIPELINE_JOBS']
           perform
         else
           queue.enqueue(self)
@@ -28,7 +27,7 @@ module PipelineService
 
       private
 
-      attr_reader :object, :jobs, :command_class, :queue, :noun, :changes
+      attr_reader :object, :jobs, :command_class, :queue, :noun
 
       def configure_dependencies
         @command_class = @args[:command_class] || Commands::Publish
@@ -47,8 +46,7 @@ module PipelineService
         command_class.new(
           object: object,
           event_subscriptions: subscriptions,
-          noun: noun,
-          changes: changes
+          noun: noun
         )
       end
     end

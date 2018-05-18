@@ -46,9 +46,10 @@ module PipelineService
         def post
           return unless message
 
+
           job = PostJob.new(build_endpoint, message, args)
 
-          if PipelineService.perform_synchronously?
+          if ENV['SYNCHRONOUS_PIPELINE_JOBS']
              job.perform
           else
             queue.enqueue(job)
