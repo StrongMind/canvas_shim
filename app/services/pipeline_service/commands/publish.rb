@@ -17,7 +17,7 @@ module PipelineService
 
       def call
         post_to_pipeline
-        publish_events unless changes.empty?
+        publish_events unless changes.nil?
         self
       end
 

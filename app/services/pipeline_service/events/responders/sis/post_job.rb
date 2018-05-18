@@ -25,12 +25,8 @@ module PipelineService
             @logger = @args[:logger] || PipelineService::Logger
           end
 
-          def self.http_client
-            HTTParty || @args[:http_client]
-          end
-
           def post
-            self.class.http_client.post(
+            SIS::HTTPClient.post(
               endpoint,
               body:    data.to_json,
               headers: HEADERS
