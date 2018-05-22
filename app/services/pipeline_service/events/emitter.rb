@@ -9,6 +9,7 @@ module PipelineService
       end
 
       def call
+        return unless object.is_a?(Enrollment)
         fetch_serializer
         build_message
         build_responder
@@ -37,7 +38,7 @@ module PipelineService
       end
 
       def fetch_serializer
-        @serializer = Serializers::Fetcher.fetch(object: object)
+        @serializer = Serializers::CanvasAPIEnrollment
       end
 
       def build_message
