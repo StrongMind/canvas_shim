@@ -44,6 +44,7 @@ module PipelineService
         end
 
         def post
+          byebug
           return unless message
 
           job = PostJob.new(build_endpoint, message, args)

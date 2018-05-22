@@ -2,12 +2,12 @@ module PipelineService
   module Events
     class HTTPClient
       include Singleton
-      def self.post(*args)
-        instance.post(args)
+      def self.post(endpoint, args={})
+        instance.post(endpoint, args)
       end
 
-      def post(*args)
-        HTTParty.post(args)
+      def post(endpoint, args)
+        HTTParty.post(endpoint, args)
       end
     end
   end
