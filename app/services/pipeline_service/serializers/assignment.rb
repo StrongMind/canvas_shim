@@ -19,14 +19,8 @@ module PipelineService
 
       def endpoint
         [
-          protocol,
-          domain,
-          ':',
-          port,
-          '/api/v1/courses/',
-          course_id,
-          '/assignments/',
-          object.id
+          protocol, domain, ':', port,
+          '/api/v1/courses/', course_id, '/assignments/', object.id
         ].join('')
       end
 
