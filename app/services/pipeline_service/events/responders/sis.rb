@@ -3,8 +3,7 @@ module PipelineService
     module Responders
       class SIS
         HEADERS = { 'Content-Type' => 'application/json' }
-        PORT    = 8080
-        
+
         def initialize(object:, message:, args: {})
           @message = message
           @args = args
