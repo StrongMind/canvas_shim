@@ -2,6 +2,9 @@ module PipelineService
   module Events
     module Responders
       class SIS
+        HEADERS = { 'Content-Type' => 'application/json' }
+        PORT    = 8080
+        
         def initialize(object:, message:, args: {})
           @message = message
           @args = args
@@ -10,6 +13,15 @@ module PipelineService
 
         def call
           raise 'Missing config' if missing_config?
+
+          if PipelineService.perform_synchronously?
+             perform
+          else
+            queue.enqueue(self)
+          end
+        end
+
+        def perform
           post
           log
         end
@@ -46,13 +58,11 @@ module PipelineService
         def post
           return unless message
 
-          job = PostJob.new(build_endpoint, message, args)
-
-          if PipelineService.perform_synchronously?
-             job.perform
-          else
-            queue.enqueue(job)
-          end
+          PipelineService::Events::HTTPClient.post(
+            build_endpoint,
+            body:    message.to_json,
+            headers: HEADERS
+          )
         end
       end
     end
