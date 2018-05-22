@@ -1,6 +1,6 @@
 module PipelineService
   module Serializers
-    class Assignment
+    class CanvasAPIEnrollment
       def initialize(object:)
         @object = object
       end
@@ -20,7 +20,7 @@ module PipelineService
       def endpoint
         [
           protocol, domain, ':', port,
-          '/api/v1/courses/', course_id, '/assignments/', object.id
+          '/api/v1/accounts/',account_id,'/enrollments/',object.id
         ].join('')
       end
 
@@ -42,8 +42,8 @@ module PipelineService
         PipelineService::HTTPClient.get(endpoint, headers: headers).parsed_response
       end
 
-      def course_id
-        object.course.id
+      def account_id
+        object.root_account.id
       end
 
       def protocol
