@@ -11,9 +11,7 @@ module PipelineService
         if PipelineService.perform_synchronously?
           perform
         else
-          Delayed::Job.enqueue(self, {
-            strand: "pipeline_service", max_attempts: 100
-          })
+          Delayed::Job.enqueue(self)
         end
         self
       end
