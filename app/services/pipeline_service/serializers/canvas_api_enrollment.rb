@@ -35,7 +35,7 @@ module PipelineService
       end
 
       def headers
-        { Authorization: "Bearer #{PipelineService::TokenBuilder.build}" }
+        { Authorization: "Bearer #{ENV['STRONGMIND_INTEGRATION_KEY']}" }
       end
 
       def fetch
