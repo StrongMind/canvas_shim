@@ -38,7 +38,7 @@ module PipelineService
     end
 
     def cache
-      Canvas.redis.set('PIPELINE_CANVAS_API_TOKEN', result)
+      Canvas.redis.set('PIPELINE_CANVAS_API_TOKEN', token)
     end
 
     def token
