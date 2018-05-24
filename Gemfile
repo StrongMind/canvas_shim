@@ -15,3 +15,6 @@ gem 'byebug', group: [:development, :test]
 gem "rspec-rails"
 gem 'pipeline_publisher_ruby', :git => 'git@github.com:StrongMind/pipeline-publisher-ruby.git'
 gem 'httparty'
+gem 'grape'
+gem 'grape-swagger'
+gem 'grape-swagger-ui'
