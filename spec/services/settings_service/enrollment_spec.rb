@@ -1,11 +1,12 @@
 describe SettingsService::Enrollment do
   subject { described_class.new }
 
-  let(:table_name) {'testschool.strongmind.com-enrollment_settings'}
+  let(:table_name) {'integration.example.com-enrollment_settings'}
 
   before do
-    ENV['CANVAS_DOMAIN'] = "testschool.strongmind.com"
+    ENV['CANVAS_DOMAIN'] = 'integration.example.com'
   end
+
   it 'should exist' do
     expect {subject}.to_not raise_error
   end
@@ -25,7 +26,7 @@ describe SettingsService::Enrollment do
         table_name: table_name
       )
 
-      subject.get(id: 1)
+      described_class.get(id: 1)
     end
   end
 
