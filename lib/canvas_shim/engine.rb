@@ -1,4 +1,3 @@
-require 'byebug'
 module CanvasShim
   class Engine < ::Rails::Engine
     config.autoload_paths << File.expand_path("app/services", __dir__)
@@ -13,7 +12,7 @@ module CanvasShim
     config.generators do |g|
       g.test_framework :rspec
     end
-    config.assets.precompile += %w(swagger_ui.js swagger_ui.css swagger_ui_print.css swagger_ui_screen.css)
 
+    config.assets.precompile += %w(swagger_ui.js swagger_ui.css swagger_ui_print.css swagger_ui_screen.css)
   end
 end

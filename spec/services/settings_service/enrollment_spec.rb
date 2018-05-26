@@ -1,7 +1,7 @@
 describe SettingsService::Enrollment do
   subject { described_class.new }
 
-  let(:table_name) {'testschool.strongmind.com/enrollment_settings'}
+  let(:table_name) {'testschool.strongmind.com-enrollment_settings'}
 
   before do
     ENV['CANVAS_DOMAIN'] = "testschool.strongmind.com"
