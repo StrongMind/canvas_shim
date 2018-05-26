@@ -1,6 +1,12 @@
+require 'forwardable'
 module SettingsService
   class Repository
     include Singleton
+
+    class << self
+      extend Forwardable
+      def_delegators :instance, :create_table, :get, :put
+    end
 
     def initialize
       @secret_key = ENV['AWS_SECRET_ACCESS_KEY']
@@ -8,16 +14,8 @@ module SettingsService
       Aws.config.update({region: 'us-west-2', credentials: creds })
     end
 
-    def self.create_table(name:)
-      instance.create_table(name: name)
-    end
-
     def create_table(name:)
       dynamodb.create_table(table_params(name)).successful?
-    end
-
-    def self.get(table_name:, id:)
-        instance.get(table_name: table_name, id: id)
     end
 
     def get(table_name:, id:)
@@ -29,22 +27,13 @@ module SettingsService
       }).items.map { |i| i.merge('id' => id) }
     end
 
-    def self.put(table_name:, id:, setting:, value:)
-      instance.put(
-        table_name: table_name,
-        id: id,
-        setting: setting,
-        value: value
-      )
-    end
-
     def  put(table_name:, id:, setting:, value:)
       dynamodb.put_item({
         table_name: table_name,
         item: {
-           id: id,
-           setting: setting,
-           value: value
+          id: id,
+          setting: setting,
+          value: value
         }
       })
     end
