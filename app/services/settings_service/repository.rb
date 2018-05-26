@@ -27,7 +27,7 @@ module SettingsService
       ).items.map { |i| i.merge('id' => id) }
     end
 
-    def  put(table_name:, id:, setting:, value:)
+    def put(table_name:, id:, setting:, value:)
       dynamodb.put_item(
         table_name: table_name,
         item: {
