@@ -20,8 +20,8 @@ describe 'Save an enrollment setting' do
     enrollment.put(id: 1, setting: 'foo2', value: 'bar2')
 
     expect( SettingsService::Enrollment.get(id: 1) ).to be == [
-      {"id" => 1, "setting" => 'foo', "value" => 'bar'},
-      {"id" => 1, "setting" => 'foo2', "value" => 'bar2'}
+      { "id" => 1, "setting" => 'foo', "value" => 'bar' },
+      { "id" => 1, "setting" => 'foo2', "value" => 'bar2' }
     ]
   end
 end
