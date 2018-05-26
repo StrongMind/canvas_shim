@@ -19,23 +19,23 @@ module SettingsService
     end
 
     def get(table_name:, id:)
-      dynamodb.query({
+      dynamodb.query(
         table_name: table_name,
         key_condition_expression: "#id = :id",
         expression_attribute_names: { "#id" => "id" },
         expression_attribute_values: { ":id" => id }
-      }).items.map { |i| i.merge('id' => id) }
+      ).items.map { |i| i.merge('id' => id) }
     end
 
     def  put(table_name:, id:, setting:, value:)
-      dynamodb.put_item({
+      dynamodb.put_item(
         table_name: table_name,
         item: {
           id: id,
           setting: setting,
           value: value
         }
-      })
+      )
     end
 
     def self.use_test_client!
