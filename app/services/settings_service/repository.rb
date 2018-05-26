@@ -5,11 +5,7 @@ module SettingsService
     def initialize
       @secret_key = ENV['AWS_SECRET_ACCESS_KEY']
       @id_key = ENV['AWS_ACCESS_KEY_ID']
-
-      Aws.config.update({
-        region: 'us-west-2',
-        credentials: creds
-      })
+      Aws.config.update({region: 'us-west-2', credentials: creds })
     end
 
     def self.create_table(name:)
@@ -20,10 +16,53 @@ module SettingsService
       dynamodb.create_table(table_params(name)).successful?
     end
 
+    def self.get(table_name:, id:)
+        instance.get(table_name: table_name, id: id)
+    end
+
+    def get(table_name:, id:)
+      dynamodb.query({
+        table_name: table_name,
+        key_condition_expression: "#id = :id",
+        expression_attribute_names: { "#id" => "id" },
+        expression_attribute_values: { ":id" => id }
+      }).items.map { |i| i.merge('id' => id) }
+    end
+
+    def self.put(table_name:, id:, setting:, value:)
+      instance.put(
+        table_name: table_name,
+        id: id,
+        setting: setting,
+        value: value
+      )
+    end
+
+    def  put(table_name:, id:, setting:, value:)
+      dynamodb.put_item({
+        table_name: table_name,
+        item: {
+           id: id,
+           setting: setting,
+           value: value
+        }
+      })
+    end
+
+    def self.use_test_client!
+      instance.use_test_client!
+    end
+
+    def use_test_client!
+      @dynamodb = Aws::DynamoDB::Client.new(
+        endpoint: 'http://localhost:8000'
+      )
+    end
+
     private
 
     def dynamodb
-      Aws::DynamoDB::Client.new
+      @dynamodb ||= Aws::DynamoDB::Client.new
     end
 
     def creds

@@ -19,7 +19,7 @@ RSpec.configure do |config|
 # Use the specified formatter
   config.formatter = :documentation # :progress, :html, :textmate
   config.before(:each) do
-end
+  end
   config.after(:each) do
-end
+  end
 end
