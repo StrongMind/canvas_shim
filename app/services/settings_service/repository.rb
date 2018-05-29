@@ -11,6 +11,8 @@ module SettingsService
     def initialize
       @secret_key = ENV['AWS_SECRET_ACCESS_KEY']
       @id_key = ENV['AWS_ACCESS_KEY_ID']
+      raise "missing canvas domain!" if ENV['CANVAS_DOMAIN'].nil?
+
       Aws.config.update({region: 'us-west-2', credentials: creds })
     end
 

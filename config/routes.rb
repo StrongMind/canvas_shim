@@ -1,3 +1,3 @@
 CanvasShim::Engine.routes.draw do
-  mount CanvasShim::API => 'api'
+  # mount CanvasShim::API => 'api'
 end
