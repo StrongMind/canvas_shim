@@ -8,8 +8,7 @@ module SettingsService
       end
 
       def call
-        enrollment = SettingsService::Enrollment.new
-        enrollment.put(
+        SettingsService::Enrollment.put(
           id: @id,
           setting: @setting,
           value: @value
