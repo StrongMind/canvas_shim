@@ -9,14 +9,16 @@ module SettingsService
     end
 
     def initialize
+      raise "missing canvas domain!" if ENV['CANVAS_DOMAIN'].nil?
       @secret_key = ENV['AWS_SECRET_ACCESS_KEY']
       @id_key = ENV['AWS_ACCESS_KEY_ID']
-      raise "missing canvas domain!" if ENV['CANVAS_DOMAIN'].nil?
+
 
       Aws.config.update({region: 'us-west-2', credentials: creds })
     end
 
     def create_table(name:)
+
       dynamodb.create_table(table_params(name)).successful?
     end
 
