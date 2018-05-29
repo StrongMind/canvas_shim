@@ -6,7 +6,12 @@ module SettingsService
     end
 
     def put(id:, setting: , value:)
-      Repository.put(table_name: table_name, id: id, setting: setting, value: value)
+      Repository.put(
+        table_name: table_name,
+        id: id,
+        setting: setting,
+        value: value
+      )
     end
 
     def self.get(id:)
