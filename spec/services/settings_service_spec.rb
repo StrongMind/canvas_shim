@@ -5,7 +5,9 @@ describe SettingsService do
     it 'calls the update setting command' do
       expect(
         SettingsService::Commands::GetEnrollmentSettings
-      ).to receive(:new).with(:id=>1,).and_return(double('command', call: nil))
+      ).to receive(:new).with(
+        id: 1
+      ).and_return(double('command', call: nil))
 
       described_class.get_enrollment_settings(id: 1)
     end
@@ -16,9 +18,9 @@ describe SettingsService do
       expect(
         SettingsService::Commands::UpdateEnrollmentSetting
       ).to receive(:new).with(
-        :id=>1,
-        :setting=>"foo",
-        :value=>"bar"
+        id: 1,
+        setting: "foo",
+        value: "bar"
       ).and_return(double('command', call: nil))
 
       described_class.update_enrollment_setting(
