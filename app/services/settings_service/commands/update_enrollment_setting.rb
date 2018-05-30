@@ -8,6 +8,7 @@ module SettingsService
       end
 
       def call
+        SettingsService::Enrollment.create_table
         SettingsService::Enrollment.put(
           id: @id,
           setting: @setting,

@@ -12,14 +12,14 @@ module SettingsService
       raise "missing canvas domain!" if ENV['CANVAS_DOMAIN'].nil?
       @secret_key = ENV['AWS_SECRET_ACCESS_KEY']
       @id_key = ENV['AWS_ACCESS_KEY_ID']
-
-
       Aws.config.update({region: 'us-west-2', credentials: creds })
     end
 
     def create_table(name:)
-
-      dynamodb.create_table(table_params(name)).successful?
+      begin
+        dynamodb.create_table(table_params(name)).successful?
+      rescue
+      end
     end
 
     def get(table_name:, id:)
@@ -35,7 +35,7 @@ module SettingsService
       dynamodb.put_item(
         table_name: table_name,
         item: {
-          id: id,
+          id: id.to_i,
           setting: setting,
           value: value
         }
