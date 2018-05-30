@@ -6,6 +6,7 @@ module SettingsService
       end
 
       def call
+        SettingsService::Enrollment.create_table
         SettingsService::Enrollment.get(
           id: @id
         )
