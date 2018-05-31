@@ -27,7 +27,7 @@ module SettingsService
         table_name: table_name,
         key_condition_expression: "#id = :id",
         expression_attribute_names: { "#id" => "id" },
-        expression_attribute_values: { ":id" => id }
+        expression_attribute_values: { ":id" => id.to_i }
       ).items.map { |i| i.merge('id' => id) }
     end
 

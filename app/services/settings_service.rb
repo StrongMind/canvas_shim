@@ -10,8 +10,6 @@ module SettingsService
   end
 
   def self.get_enrollment_settings(id:)
-    Commands::GetEnrollmentSettings.new(
-      id: id
-    ).call
+    Commands::GetEnrollmentSettings.new(id: id).call
   end
 end
