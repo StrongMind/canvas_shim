@@ -28,7 +28,10 @@ module SettingsService
         key_condition_expression: "#id = :id",
         expression_attribute_names: { "#id" => "id" },
         expression_attribute_values: { ":id" => id.to_i }
-      ).items.map { |i| i.merge('id' => id) }
+      ).items.inject({}) do |newhash, setting|
+        newhash[setting['setting']] = setting['value']
+        newhash
+      end
     end
 
     def put(table_name:, id:, setting:, value:)
