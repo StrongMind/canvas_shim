@@ -17,5 +17,7 @@ gem 'pipeline_publisher_ruby', :git => 'git@github.com:StrongMind/pipeline-publi
 gem 'httparty'
 gem 'grape', '~> 1'
 gem 'grape-swagger', '~> 0'
-gem 'grape-swagger-ui', '~> 2'
+# gem 'swagger_ui_engine'
+# gem 'grape-swagger-ui', '~> 2'
+gem 'grape-swagger-rails'
 gem 'aws-sdk-dynamodb', '~> 1.6'
