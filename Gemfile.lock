@@ -98,6 +98,8 @@ GEM
       virtus (>= 1.0.0)
     grape-swagger (0.27.3)
       grape (>= 0.16.2)
+    grape-swagger-rails (0.3.0)
+      railties (>= 3.2.12)
     grape-swagger-ui (2.2.8)
       railties (>= 3.1)
     httparty (0.16.2)
@@ -201,7 +203,7 @@ DEPENDENCIES
   canvas_shim!
   grape (~> 1)
   grape-swagger (~> 0)
-  grape-swagger-ui (~> 2)
+  grape-swagger-rails
   httparty
   pipeline_publisher_ruby!
   rspec-rails

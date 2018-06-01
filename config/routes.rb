@@ -1,3 +1,4 @@
 CanvasShim::Engine.routes.draw do
-  # mount CanvasShim::API => 'api'
+  mount GrapeSwaggerRails::Engine => 'api/docs'
+  mount SettingsService::RestAPI => 'settings_api'
 end
