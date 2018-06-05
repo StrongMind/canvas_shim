@@ -12,6 +12,10 @@ module SettingsService
 
     resource :users do
       route_param :id do
+        get do
+          {}
+        end
+
         params do
           requires :settings, type: JSON
         end
@@ -31,6 +35,6 @@ module SettingsService
         end
       end
     end
-    add_swagger_documentation
+    # add_swagger_documentation
   end
 end
