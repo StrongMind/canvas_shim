@@ -13,7 +13,7 @@ module SettingsService
     resource :users do
       route_param :id do
         params do
-          optional :settings, type: JSON
+          requires :settings, type: JSON
         end
         desc 'Adds a setting to a user' do
           detail 'send an id and a setting as json {"foo": "bar"}'
