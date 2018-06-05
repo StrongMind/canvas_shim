@@ -12,7 +12,7 @@ module SettingsService
       if AuthToken.authenticate(key)
         @app.call(env)
       else
-        [500, {"Content-Type" => "application/json"}, ['{ "message" : "Bad Auth Token!" }']]
+        [401, {"Content-Type" => "application/json"}, ['{ "message" : "Unauthorized" }']]
       end
     end
   end
