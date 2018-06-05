@@ -1,16 +1,11 @@
 module SettingsService
-  class ShimAuthenticator
-    # Some people would say I'm higly permissive
-    def self.authenticate(key)
-      true
-    end
-  end
-
   class AuthToken
     cattr_writer :authenticator
 
+    # Set SettingsService::AuthToken.authenticator to override
+    # in the LMS
     def self.authenticator
-      @@authenticator || ShimAuthenticator
+      @@authenticator || AuthenticatorStub
     end
 
     def self.authenticate(key)
