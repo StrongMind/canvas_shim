@@ -37,16 +37,16 @@ module SettingsService
         end
 
         params do
-          optional :json, type: JSON
+          optional :settings, type: JSON
         end
 
         post do
           SettingsService.update_user_setting(
             id: params[:id],
-            setting: params[:json].keys.first,
-            value: params[:json].values.first
+            setting: params[:settings].keys.first,
+            value: params[:settings].values.first
           )
-          params
+          status 202
         end
       end
     end
