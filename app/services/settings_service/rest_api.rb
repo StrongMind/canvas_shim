@@ -14,38 +14,21 @@ module SettingsService
       #   # { 'user1' => 'password1' }[username]
     end
 
-    resource :enrollments do
-      route_param :id do
-        desc 'Get settings associated with a user'
-        get do
-          puts "This is executable!"
-          {type: 'enrollments', setting2: 'yes'}
-        end
-
-        desc 'Add settings to users'
-        put do
-          {}
-        end
-      end
-    end
-
     resource :users do
       route_param :id do
-        get do
-          puts "This is executable!"
-          {type: 'users', setting2: 'no'}
-        end
-
         params do
           optional :settings, type: JSON
         end
 
         post do
-          SettingsService.update_user_setting(
-            id: params[:id],
-            setting: params[:settings].keys.first,
-            value: params[:settings].values.first
-          )
+          params[:settings].each do |key, value|
+            SettingsService.update_user_setting(
+              id: params[:id],
+              setting: key,
+              value: value
+            )
+          end
+
           status 202
         end
       end
