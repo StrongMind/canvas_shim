@@ -8,10 +8,6 @@ module SettingsService
     version 'v1'
 
     auth :auth_by_token, { realm: 'Settings Service API'} do |credentials|
-      byebug
-      #   # lookup the user's password here
-      #   # AccessToken.authenticate(token_string, token_key = :crypted_token)
-      #   # { 'user1' => 'password1' }[username]
     end
 
     resource :users do
