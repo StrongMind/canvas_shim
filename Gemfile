@@ -15,10 +15,4 @@ gem 'byebug', group: [:development, :test]
 gem "rspec-rails"
 gem 'pipeline_publisher_ruby', :git => 'git@github.com:StrongMind/pipeline-publisher-ruby.git'
 gem 'httparty'
-gem 'grape', '~> 1'
-# gem 'grape-entity'
-# gem 'grape-swagger', '~> 0'
-# gem 'swagger_ui_engine'
-# gem 'grape-swagger-ui', '~> 2'
-# gem 'grape-swagger-rails'
 gem 'aws-sdk-dynamodb', '~> 1.6'
