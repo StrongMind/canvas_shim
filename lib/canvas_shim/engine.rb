@@ -1,4 +1,4 @@
-require 'sprockets/railtie'
+# require 'sprockets/railtie'
 
 module CanvasShim
   class Engine < ::Rails::Engine
