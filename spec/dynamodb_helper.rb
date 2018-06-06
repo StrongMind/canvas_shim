@@ -1,7 +1,7 @@
 RSpec.configure do |config|
   config.before(:each) do
     Process.fork do
-      `docker run --name shim_dynamodb -p 8000:8000 dwmkerr/dynamodb`
+      puts `docker run --name shim_dynamodb -p 8000:8000 dwmkerr/dynamodb`
     end
   end
 

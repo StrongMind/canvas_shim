@@ -1,0 +1,68 @@
+swagger: '2.0'
+info:
+  description: This is User Settings
+  version: '1.0'
+  title: User Settings
+  contact:
+    email: devemail@example.com
+host: localhost:3001
+basePath: "/canvas_shim/settings_api/v1"
+tags:
+- name: user_setting
+  description: User Settings
+schemes:
+- http
+paths:
+  "/users/{id}":
+    put:
+      tags:
+      - user_setting
+      summary: Adjust a setting on a user
+      description: ''
+      operationId: addUserSetting
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Settings to be stored on a user
+        required: true
+        schema:
+          "$ref": "#/definitions/User"
+      - name: id
+        in: path
+        description: ID of the user to apply the setting to
+        required: true
+        type: integer
+        format: int64
+      responses:
+        '405':
+          description: Invalid input
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: api_key
+    in: header
+definitions:
+  User:
+    type: object
+    properties:
+      accomodations:
+        type: array
+        items:
+          "$ref": "#/definitions/AccomodationTypes"
+  AccomodationTypes:
+    type: string
+    example: cat
+  ApiResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      type:
+        type: string
+      message:
+        type: string
