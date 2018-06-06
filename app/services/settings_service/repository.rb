@@ -64,7 +64,12 @@ module SettingsService
     end
 
     def test_client
-      Aws::DynamoDB::Client.new(endpoint: 'http://localhost:8000')
+      Aws.config.update(
+        region: 'us-west-2',
+        credentials: creds
+      )
+
+      Aws::DynamoDB::Client.new()
     end
 
     def creds
