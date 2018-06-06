@@ -1,9 +1,19 @@
+require 'swagger/docs'
 module CanvasShim
   module SettingsApi
     module V1
       class UsersController < ApplicationController
+        include Swagger::Docs::Methods
         skip_before_action :verify_authenticity_token
         before_action :validate_key
+        swagger_controller :users, 'Users'
+        # respond_to :json
+
+
+        swagger_api :update do
+          summary 'Updates a user setting'
+          notes 'PUT id=1 settings={"yoursetting": "setting_value"}'
+        end
 
         def update
           settings.each do |key, value|

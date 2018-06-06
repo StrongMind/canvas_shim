@@ -1,0 +1,12 @@
+{
+  "apiVersion": "v1",
+  "swaggerVersion": "1.2",
+  "basePath": "http://localhost:3001",
+  "apis": [
+    {
+      "path": "/apidocs/canvas_shim/settings_api/v1/users.{format}",
+      "description": "Users"
+    }
+  ],
+  "authorizations": null
+}
