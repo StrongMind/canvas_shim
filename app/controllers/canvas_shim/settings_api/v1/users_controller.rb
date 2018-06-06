@@ -1,4 +1,3 @@
-require 'swagger/docs'
 module CanvasShim
   module SettingsApi
     module V1
