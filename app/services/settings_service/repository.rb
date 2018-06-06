@@ -9,7 +9,7 @@ module SettingsService
     end
 
     def initialize
-      raise "missing canvas domain!" if ENV['CANVAS_DOMAIN'].nil?
+      raise "missing canvas domain!" if SettingsService::Enrollment.canvas_domain.nil?
       @secret_key = ENV['S3_ACCESS_KEY']
       @id_key = ENV['S3_ACCESS_KEY_ID']
       Aws.config.update({region: 'us-west-2', credentials: creds })
@@ -35,6 +35,7 @@ module SettingsService
     end
 
     def put(table_name:, id:, setting:, value:)
+
       dynamodb.put_item(
         table_name: table_name,
         item: {

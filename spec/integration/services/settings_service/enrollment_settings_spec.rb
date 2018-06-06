@@ -11,13 +11,13 @@ describe 'Save an enrollment setting' do
   end
 
   it 'creates a table' do
-    expect(enrollment.create_table).to eq true
+    expect(SettingsService::Enrollment.create_table).to eq true
   end
 
   it 'creates and reads items' do
-    enrollment.create_table
-    enrollment.put(id: 1, setting: 'foo', value: 'bar')
-    enrollment.put(id: 1, setting: 'foo2', value: 'bar2')
+    SettingsService::Enrollment.create_table
+    SettingsService::Enrollment.put(id: 1, setting: 'foo', value: 'bar')
+    enrollment.SettingsService::Enrollment(id: 1, setting: 'foo2', value: 'bar2')
 
     expect( SettingsService::Enrollment.get(id: 1) ).to be == [
       { "id" => 1, "setting" => 'foo', "value" => 'bar' },
