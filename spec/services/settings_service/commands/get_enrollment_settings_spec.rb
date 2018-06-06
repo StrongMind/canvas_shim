@@ -10,6 +10,7 @@ describe SettingsService::Commands::GetEnrollmentSettings do
 
   describe '#call' do
     it 'gets the settings from the repository' do
+      allow(SettingsService::Repository).to receive(:create_table)
       expect(SettingsService::Repository).to receive(:get).with(
         :table_name=>"somedomain.com-enrollment_settings",
         :id=>1
