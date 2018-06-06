@@ -1,10 +1,20 @@
-# GrapeSwaggerRails.options.url      = '/swagger_doc.json'
-# GrapeSwaggerRails.options.url = '/canvas_shim/settings_api/v1/swagger_doc'
-# GrapeSwaggerRails.options.app_name = 'SettingsService'
-# GrapeSwaggerRails.options.api_auth = 'bearer'
-# GrapeSwaggerRails.options.api_key_name = 'Authorization'
-# GrapeSwaggerRails.options.api_key_type = 'header'
-#
-# GrapeSwaggerRails.options.before_action do
-#   GrapeSwaggerRails.options.app_url = request.protocol + request.host_with_port
-# end
+class Swagger::Docs::Config
+  def self.base_application; CanvasShim::Engine end
+
+  def self.transform_path(path, api_version)
+    # Make a distinction between the APIs and API documentation paths.
+    "apidocs/#{path}"
+  end
+
+  Swagger::Docs::Config.register_apis({
+
+    'v1' => {
+        swagger: '2.0',
+        controller_base_path: '',
+        api_file_path: 'public/apidocs',
+        base_path: 'http://localhost:3001',
+        clean_directory: true,
+        # parent_controller: CanvasShim::SettingsApi::V1::UsersController
+    }
+  })
+end
