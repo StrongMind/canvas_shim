@@ -15,6 +15,7 @@ module SettingsService
     end
 
     def create_table(name:)
+
       begin
         dynamodb.create_table(table_params(name)).successful?
       rescue
@@ -64,12 +65,7 @@ module SettingsService
     end
 
     def test_client
-      Aws.config.update(
-        region: 'us-west-2',
-        credentials: creds
-      )
-
-      Aws::DynamoDB::Client.new()
+      Aws::DynamoDB::Client.new(endpoint: 'http://localhost:8000')
     end
 
     def creds
