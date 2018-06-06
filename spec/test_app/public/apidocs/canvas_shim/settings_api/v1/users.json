@@ -8,8 +8,17 @@
       "path": "/settings_api/v1/users/{id}",
       "operations": [
         {
+          "parameters": [
+            {
+              "paramType": "body",
+              "name": "settings",
+              "type": "settings",
+              "description": "A hash of settings",
+              "required": true
+            }
+          ],
           "summary": "Updates a user setting",
-          "notes": "PUT id=1 settings={\"yoursetting\": \"setting_value\"}",
+          "notes": "Format: {\"yoursetting\": \"setting_value\"}",
           "nickname": "CanvasShim::SettingsApi::V1::Users#update",
           "method": "patch"
         }
