@@ -46,7 +46,7 @@ module SettingsService
     end
 
     def self.use_production_client!
-      instance.use_test_client!
+      instance.use_production_client!
     end
 
     def use_production_client!
