@@ -12,6 +12,7 @@ describe SettingsService::Commands::UpdateEnrollmentSetting do
 
   describe '#call' do
     it 'saves the setting to the repository' do
+      allow(SettingsService::Repository).to receive(:create_table)
       expect(SettingsService::Repository).to receive(:put).with(
         :table_name=>"somedomain.com-enrollment_settings",
         :id=>1,
