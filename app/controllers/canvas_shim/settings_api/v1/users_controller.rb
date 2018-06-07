@@ -12,14 +12,16 @@ module CanvasShim
               setting: key,
               value: value
             )
-            render json: { status: 'ok' }
           end
+          render json: { status: 'ok' }
         end
 
         private
 
         def settings
-          params[:user]
+          result = params.clone
+          result.delete(:id)
+          result
         end
 
         def valid_token?(token)
@@ -28,11 +30,9 @@ module CanvasShim
         end
 
         def validate_key
-          return true
           token = SettingsService::AuthToken.authenticate(request.headers['HTTP_AUTHORIZATION'].try(:gsub, 'Bearer ', ''))
-
-          return true if valid_token?(token)
-          render(json: {status: 'error'}, status: 401)
+          render(json: {status: 'error'}, status: 401) and return unless token
+          # return true #if valid_token?(token)
         end
       end
     end
