@@ -12,6 +12,10 @@ module SettingsService
       raise "missing canvas domain!" if SettingsService::Enrollment.canvas_domain.nil?
       @secret_key = ENV['S3_ACCESS_KEY']
       @id_key = ENV['S3_ACCESS_KEY_ID']
+      Aws.config.update(
+        region: 'us-west-2',
+        credentials: creds
+      )
     end
 
     def create_table(name:)
@@ -45,27 +49,18 @@ module SettingsService
       )
     end
 
-    def self.use_production_client!
-      instance.use_production_client!
+    def self.use_test_client!
+      instance.use_test_client!
     end
 
-    def use_production_client!
-      @use_production_client = true
-      Aws.config.update(
-        region: 'us-west-2',
-        credentials: creds
-      )
-      @dynamodb = Aws::DynamoDB::Client.new
+    def use_test_client!
+      @dynamodb = Aws::DynamoDB::Client.new(endpoint: 'http://localhost:8000')
     end
 
     private
 
     def dynamodb
-      @dynamodb ||= test_client
-    end
-
-    def test_client
-      Aws::DynamoDB::Client.new(endpoint: 'http://localhost:8000')
+      @dynamodb || Aws::DynamoDB::Client.new
     end
 
     def creds
