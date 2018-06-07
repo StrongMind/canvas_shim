@@ -19,9 +19,7 @@ module CanvasShim
         private
 
         def settings
-          result = params.clone
-          result.delete(:id)
-          result
+          params[:user]
         end
 
         def valid_token?(token)
