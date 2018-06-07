@@ -22,15 +22,11 @@ module CanvasShim
           params[:user]
         end
 
-        def valid_token?(token)
-          return false if token.nil?
-          token.user.user_roles(Account.site_admin).include?('root_admin')
-        end
-
         def validate_key
-          token = SettingsService::AuthToken.authenticate(request.headers['HTTP_AUTHORIZATION'].try(:gsub, 'Bearer ', ''))
+          token = SettingsService::AuthToken.authenticate(
+            request.headers['HTTP_AUTHORIZATION'].try(:gsub, 'Bearer ', '')
+          )
           render(json: {status: 'error'}, status: 401) and return unless token
-          # return true #if valid_token?(token)
         end
       end
     end

@@ -9,7 +9,13 @@ module SettingsService
     end
 
     def self.authenticate(key)
-      authenticator.authenticate(key)
+      return valid_token?(authenticator.authenticate(key))
     end
+
+    def self.valid_token?(token)
+      return false if token.nil?
+      token.user.user_roles(Account.site_admin).include?('root_admin')
+    end
+
   end
 end
