@@ -19,7 +19,6 @@ module SettingsService
     end
 
     def create_table(name:)
-
       begin
         dynamodb.create_table(table_params(name)).successful?
       rescue
