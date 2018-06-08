@@ -53,6 +53,7 @@ module SettingsService
     end
 
     def use_test_client!
+      Aws.config = {}
       @dynamodb = Aws::DynamoDB::Client.new(endpoint: 'http://localhost:8000')
     end
 
