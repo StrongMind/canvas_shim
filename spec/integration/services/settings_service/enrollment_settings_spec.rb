@@ -7,7 +7,7 @@ describe 'Save an enrollment setting' do
     ENV['CANVAS_DOMAIN'] = 'integration.example.com'
     ENV['AWS_SECRET_ACCESS_KEY'] = 'SecretKey'
     ENV['AWS_ACCESS_KEY_ID'] = 'SecretKeyID'
-    # SettingsService::Repository.use_test_client!
+    SettingsService::Repository.use_test_client!
   end
 
   it 'creates a table' do
@@ -21,7 +21,7 @@ describe 'Save an enrollment setting' do
 
     expect( SettingsService::Enrollment.get(id: 1) ).to be == {
       "foo" => 'bar',
-      'foo2' => 'bar2' 
+      'foo2' => 'bar2'
     }
 
   end
