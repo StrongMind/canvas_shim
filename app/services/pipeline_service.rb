@@ -1,14 +1,26 @@
 # The public api for the PipelineService
+# By default the command will be enqueued.
+#
+# Example: PipelineService.publish(User.first)
 module PipelineService
-  def self.publish(object)
-    job = Jobs::PostEnrollmentJob.new(
-      command: PipelineService::Commands::Send.new(object: object)
-    )
+  cattr_reader :queue_mode
+  def self.publish(object, api: API::Publish, noun: nil)
+    api.new(object, noun: noun).call
+  end
 
-    if ENV['PIPELINE_SKIP_QUEUE']
-      job.perform
+  def self.perform_synchronously?
+    queue_mode == 'synchronous'
+  end
+
+  @@queue_mode = ENV['SYNCHRONOUS_PIPELINE_JOBS'] == 'true' ? 'synchronous' : 'asynchronous'
+  def self.queue_mode=(mode)
+    case mode
+    when 'synchronous'
+      @@queue_mode = 'synchronous'
+    when 'asynchronous'
+      @@queue_mode = 'asynchronous'
     else
-      Delayed::Job.enqueue job
+      raise 'unknown queue mode: ' + mode
     end
   end
 end
