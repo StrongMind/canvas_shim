@@ -5,6 +5,7 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path("../test_app/config/environment.rb",  __FILE__)
 require 'rspec/rails'
+require 'shim_stubs'
 ENGINE_RAILS_ROOT=File.join(File.dirname(__FILE__), '../')
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -18,7 +19,7 @@ RSpec.configure do |config|
 # Use the specified formatter
   config.formatter = :documentation # :progress, :html, :textmate
   config.before(:each) do
-end
+  end
   config.after(:each) do
-end
+  end
 end

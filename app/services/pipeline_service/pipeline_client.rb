@@ -1,58 +1,41 @@
 module PipelineService
+  # PipelineClient builds a pipeline message using the object
+  # posts it to the endpoint and logs the message that was sent.
+  #
+  # Accepts an ActiveRecord object or a hash.  If using a hash, you must provide
+  # a noun as an optional parameter
+  #
+  # PipelineCient.new(object: Enrollment.last)
+  # PipelineCient.new(object: { data: { foo: 'bar' } }, noun: 'enrollment' )
   class PipelineClient
-    attr_reader :message
-
     def initialize(args)
-      @object            = args[:object]
-      @noun_name         = args[:noun_name]
-      @id                = args[:id]
-      @host              = ENV['PIPELINE_ENDPOINT']
-      @username          = ENV['PIPELINE_USER_NAME']
-      @password          = ENV['PIPELINE_PASSWORD']
-      @domain_name       = ENV['CANVAS_DOMAIN']
-
-      raise 'Missing environment variables' if config_missing?
-
-      @publisher       = args[:publisher] || PipelinePublisher
-      @api_instance    = args[:message_api] || PipelinePublisher::MessagesApi.new
-      @message_builder_class = args[:message_builder_class] || MessageBuilder
+      @args = args
+      @object = args[:object]
+      configure_dependencies
     end
 
     def call
-      configure_publisher
-      build_pipeline_message
+      fetch_enrollment_from_hash
       post
       self
     end
 
     private
 
-    attr_reader :host, :username, :password, :domain_name, :publisher,
-      :api_instance, :serializer, :message_builder_class, :object, :noun_name, :id
+    attr_reader :endpoint, :object
+
+    def configure_dependencies
+      @endpoint = @args[:endpoint] || Endpoints::Pipeline
+    end
+
+    # EVIL!  I'm rewriting an arg.  What could go wrong?
+    def fetch_enrollment_from_hash
+      return unless object.is_a?(Hash)
+      @args[:object] = Enrollment.find(object[:id])
+    end
 
     def post
-      api_instance.messages_post(message)
-    end
-
-    def build_pipeline_message
-      @message = message_builder_class.new(
-        noun: noun_name,
-        domain_name: domain_name,
-        id: id,
-        data: object
-      ).build
-    end
-
-    def configure_publisher
-      publisher.configure do |config|
-        config.host     = host
-        config.username = username
-        config.password = password
-      end
-    end
-
-    def config_missing?
-      [@host, @username, @password].any?(&:nil?)
+      endpoint.new(@args).call
     end
   end
 end
