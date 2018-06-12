@@ -47,6 +47,9 @@ module PipelineService
           config.host     = endpoint
           config.username = username
           config.password = password
+          if endpoint.slice(0,7) == 'http://'
+            config.scheme = 'http'
+          end
         end
       end
 
