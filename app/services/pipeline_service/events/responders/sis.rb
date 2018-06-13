@@ -27,13 +27,12 @@ module PipelineService
 
         private
 
-        attr_reader :message, :api_key, :endpoint, :args, :queue, :logger
+        attr_reader :message, :api_key, :endpoint, :args, :queue
 
         def configure_dependencies
           @api_key  = ENV['SIS_ENROLLMENT_UPDATE_API_KEY']
           @endpoint = ENV['SIS_ENROLLMENT_UPDATE_ENDPOINT']
           @queue    = args[:queue] || Delayed::Job
-          @logger   = args[:logger] || PipelineService::Logger
         end
 
         def missing_config?
@@ -41,13 +40,11 @@ module PipelineService
         end
 
         def log
-          logger.new(
-            {
-              source: 'pipeline_event::graded_out',
-              message: message,
-              enpdoint: build_endpoint
-            }
-          ).call
+          PipelineService::Logger.call(
+            source: 'pipeline_event::graded_out',
+            message: message,
+            enpdoint: build_endpoint
+          )
         end
 
         def build_endpoint
