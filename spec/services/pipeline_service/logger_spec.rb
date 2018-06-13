@@ -11,7 +11,6 @@ describe PipelineService::Logger do
     end
 
     it 'enqueues the post to the logger service' do
-      expect(queue).to receive(:enqueue)
       subject.call
     end
   end
