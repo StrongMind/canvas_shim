@@ -66,7 +66,7 @@ module PipelineService
         end
 
         def id
-          object.id unless object.is_a?(Hash)
+          return object.id unless object.is_a?(Hash)
           object[:id]
         end
       end

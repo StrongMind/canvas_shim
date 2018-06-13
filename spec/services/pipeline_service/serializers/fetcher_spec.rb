@@ -8,11 +8,5 @@ describe PipelineService::Serializers::Fetcher do
         PipelineService::Serializers::Assignment
       )
     end
-
-    it 'fetches the Hash serializer if the object is a hash' do
-      expect(subject.fetch(object: {})).to eq(
-        PipelineService::Serializers::Hash
-      )
-    end
   end
 end

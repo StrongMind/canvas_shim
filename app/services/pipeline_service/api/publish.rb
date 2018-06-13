@@ -15,11 +15,7 @@ module PipelineService
       end
 
       def call
-        if PipelineService.perform_synchronously?
-          perform
-        else
-          queue.enqueue(self)
-        end
+        queue.enqueue(self)
       end
 
       def perform

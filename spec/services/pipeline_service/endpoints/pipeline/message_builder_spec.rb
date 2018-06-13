@@ -11,55 +11,61 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
     )
   end
 
-  let(:serializer) { double('serializer') }
+  let(:serializer_instance) { double('serializer_instance', call: nil) }
+  let(:serializer_class) { double('serializer_class', new: serializer_instance) }
 
   before do
     ENV['CANVAS_DOMAIN'] = 'someschool.com'
-    allow(ENV).to receive('[]').with('CANVAS_DOMAIN').and_return('someschool.com')
+    # allow(ENV).to receive('[').with('CANVAS_DOMAIN').and_return('someschool.com')
   end
 
   subject do described_class.new(
     id: 1,
-    noun: 'example',
-    data: object
+    object: object
   )
   end
 
-  let(:object) { double("object", id: 1, changes: {}, class: 'Enrollment') }
-  let(:message) { subject.call.payload }
+  let(:object) do double(
+    "object",
+    id: 1,
+    changes: {},
+    class: 'Enrollment')
+  end
+
+  let(:message) { subject.call }
 
   describe "#message" do
-    it '[:noun]' do
-      expect(message[:noun]).to eq('example')
+    it '#noun' do
+      expect(message.noun).to eq('enrollment')
     end
 
-    describe '[:meta]' do
+    describe '#meta' do
       let!(:meta) do
-        message[:meta]
+        message.meta
       end
 
-      it '[:domain_name]' do
+      it '#domain_name' do
         expect(meta[:domain_name]).to eq 'someschool.com'
       end
 
-      it '[:source]' do
+      it '#source' do
         expect(meta[:source]).to eq 'canvas'
       end
     end
 
-    it '[:data]' do
-      expect(message[:data]).to be_present
+    it '#data' do
+      expect(message.data).to be_nil
     end
 
-    it '[:identifiers]' do
-      expect(message[:identifiers]).to eq id: 1
+    it '#identifiers' do
+      expect(message.identifiers).to eq id: 1
     end
   end
 
   it 'looks up the serializer' do
     expect(PipelineService::Serializers::Fetcher)
       .to receive(:fetch)
-      .and_return(serializer)
+      .and_return(serializer_class)
     subject.call
   end
 
