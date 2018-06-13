@@ -18,9 +18,4 @@ describe PipelineService::PipelineClient do
     expect(endpoint_instance).to receive(:call).and_return(nil)
     subject.call
   end
-
-  it 'logs pipeline requests' do
-    expect(logger_instance).to receive(:call)
-    subject.call
-  end
 end

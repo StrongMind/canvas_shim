@@ -1,6 +1,6 @@
 require ENGINE_RAILS_ROOT + 'spec/dynamodb_helper'
 
-describe 'Save an enrollment setting' do
+describe 'Save an enrollment setting', dynamo_db: true do
   let(:enrollment) { SettingsService::Enrollment.new }
 
   before do
