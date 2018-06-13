@@ -5,6 +5,7 @@ describe PipelineService::Serializers::Submission do
 
   before do
     allow(PipelineService::Account).to receive(:account_admin).and_return(user)
+    ENV['CANVAS_DOMAIN'] = 'someschool.com'
   end
 
   describe 'Stubbed methods to work with Canvas' do

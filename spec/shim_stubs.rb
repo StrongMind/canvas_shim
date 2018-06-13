@@ -18,6 +18,10 @@ class Enrollment
 
   def changes
   end
+
+  def root_account
+    Struct.new(:id).new(1)
+  end
 end
 
 class Account
@@ -30,5 +34,11 @@ class Account
         )
       ]
     )
+  end
+end
+
+
+module Delayed
+  module Job
   end
 end

@@ -17,6 +17,10 @@ module PipelineService
         @admin = PipelineService::Account.account_admin
       end
 
+      def request
+        super
+      end
+
       def call
         @current_user = @admin
         submission_json(@object, @object.assignment, @admin, {}, nil, [])

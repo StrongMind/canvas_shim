@@ -6,7 +6,11 @@ module PipelineService
       end
 
       def call
-        Events::Emitter.new(@args).call
+        self.class.emitter.new(@args).call
+      end
+
+      def self.emitter
+        Events::Emitter
       end
     end
   end
