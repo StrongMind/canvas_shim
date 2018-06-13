@@ -28,7 +28,7 @@ module PipelineService
         end
 
         def log
-          logger.new(source: 'pipeline', message: payload).call
+          Logger.call(source: 'pipeline', message: payload)
         end
 
         def payload

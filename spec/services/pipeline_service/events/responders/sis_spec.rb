@@ -1,9 +1,5 @@
 describe PipelineService::Events::Responders::SIS do
   let(:message) {{}}
-  let(:http_client) { double('http_client') }
-  let(:queue) { double('queue', enqueue: nil) }
-  let(:logger_class) { double('logger_class', new: logger_instance) }
-  let(:logger_instance) { double('logger_instance', call: nil) }
   let(:object) { double(:object) }
 
   before do
@@ -15,13 +11,7 @@ describe PipelineService::Events::Responders::SIS do
   subject do
     described_class.new(
       object: object,
-      message: message,
-      args: {
-        http_client: http_client,
-        queue: queue,
-        logger: logger_class
-      }
-
+      message: message
     )
   end
   describe '#call' do
@@ -33,7 +23,7 @@ describe PipelineService::Events::Responders::SIS do
 
   context 'logging' do
     it 'logs' do
-      expect(logger_instance).to receive(:call)
+      expect(PipelineService::Logger).to receive(:call)
       subject.call
     end
   end

@@ -1,17 +1,14 @@
 describe PipelineService::Logger do
   describe '#call' do
     let(:message) { { foo: 'bar' } }
-    let(:queue) { double('queue') }
 
     subject do
-      described_class.new(
-        message,
-        queue: queue
-      )
+      described_class
     end
 
     it 'enqueues the post to the logger service' do
-      subject.call
+      expect(HTTParty).to receive(:post)
+      subject.call(message)
     end
   end
 end

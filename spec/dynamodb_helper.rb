@@ -1,6 +1,7 @@
 RSpec.configure do |config|
   config.before(:each) do |e|
     if e.metadata[:dynamo_db]
+      byebug
       Process.fork do
         puts `docker run --name shim_dynamodb -p 8000:8000 dwmkerr/dynamodb`
       end
