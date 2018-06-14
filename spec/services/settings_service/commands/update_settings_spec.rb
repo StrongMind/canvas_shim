@@ -13,8 +13,8 @@ describe SettingsService::Commands::UpdateSettings do
 
   describe '#call' do
     it 'saves the setting to the repository' do
-      allow(SettingsService::Repository).to receive(:create_table)
-      expect(SettingsService::Repository).to receive(:put).with(
+      allow(SettingsService::AssignmentRepository).to receive(:create_table)
+      expect(SettingsService::AssignmentRepository).to receive(:put).with(
         :table_name=>"somedomain.com-assignment_settings",
         :id=>1,
         :setting=>"foo",

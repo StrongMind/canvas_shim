@@ -9,7 +9,7 @@ module SettingsService
     end
 
     def initialize
-      raise "missing canvas domain!" if SettingsService::Enrollment.canvas_domain.nil?
+      raise "missing canvas domain!" if SettingsService.canvas_domain.nil?
       @secret_key = ENV['S3_ACCESS_KEY']
       @id_key = ENV['S3_ACCESS_KEY_ID']
       Aws.config.update(

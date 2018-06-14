@@ -1,6 +1,5 @@
 module SettingsService
   class Assignment
-    cattr_writer :canvas_domain
     def self.table_name
       [SettingsService.canvas_domain, '-', 'assignment_settings'].join('')
     end
@@ -20,9 +19,6 @@ module SettingsService
     end
     def self.get(id:)
       AssignmentRepository.get(table_name: table_name, id: id)
-    end
-    def self.canvas_domain
-      @@canvas_domain || ENV['CANVAS_DOMAIN']
     end
   end
 end

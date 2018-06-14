@@ -22,7 +22,7 @@ describe PipelineService::Events::Responders::SIS do
   end
 
   context 'logging' do
-    it 'logs' do
+    xit 'logs' do
       expect(PipelineService::Logger).to receive(:call)
       subject.call
     end

@@ -12,8 +12,9 @@ describe SettingsService::Commands::GetSettings do
 
   describe '#call' do
     it 'gets the settings from the repository' do
-      allow(SettingsService::Repository).to receive(:create_table)
-      expect(SettingsService::Repository).to receive(:get).with(
+      allow(SettingsService::AssignmentRepository).to receive(:put)
+      allow(SettingsService::AssignmentRepository).to receive(:create_table)
+      expect(SettingsService::AssignmentRepository).to receive(:get).with(
         :table_name=>"somedomain.com-assignment_settings",
         :id=>1
       )

@@ -11,7 +11,7 @@ describe SettingsService::Assignment do
 
   describe '#create_table' do
     it 'creates a table' do
-      expect(SettingsService::Repository).to receive(:create_table)
+      expect(SettingsService::AssignmentRepository).to receive(:create_table)
         .with(name: table_name)
 
       described_class.create_table
@@ -20,7 +20,7 @@ describe SettingsService::Assignment do
 
   describe '#get' do
     it 'fetches the settings for enrollment' do
-      expect(SettingsService::Repository).to receive(:get).with(
+      expect(SettingsService::AssignmentRepository).to receive(:get).with(
         id: 1,
         table_name: table_name
       )
@@ -31,7 +31,7 @@ describe SettingsService::Assignment do
 
   describe '#put' do
     it 'calls put on the repository' do
-      expect(SettingsService::Repository).to receive(:put).with(
+      expect(SettingsService::AssignmentRepository).to receive(:put).with(
         id:         1,
         setting:    'max_attempts',
         value:      13,

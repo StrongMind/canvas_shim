@@ -40,11 +40,11 @@ module PipelineService
         end
 
         def log
-          PipelineService::Logger.call(
-            source: 'pipeline_event::graded_out',
-            message: message,
-            enpdoint: build_endpoint
-          )
+          PipelineService::Logger.new(
+              source: 'pipeline_event::graded_out',
+              message: message,
+              enpdoint: build_endpoint
+          ).call
         end
 
         def build_endpoint

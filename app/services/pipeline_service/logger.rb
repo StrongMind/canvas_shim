@@ -1,15 +1,13 @@
 module PipelineService
   class Logger
-    include Singleton
-
-    class << self
-      extend Forwardable
-      def_delegators :instance, :call, :perform
+    HEADERS = {}
+    def initialize(message, args={})
+      @message = message
+      @args = args
+      configure_dependencies
     end
 
-    HEADERS = {}
-
-    def call(message, args={})
+    def call
       if PipelineService.perform_synchronously?
         perform
       else
@@ -24,21 +22,18 @@ module PipelineService
 
     private
 
-    attr_reader :message
+    attr_reader :http_client, :message, :queue
+
+    def configure_dependencies
+      @queue       = @args[:queue] || Delayed::Job
+      @http_client = @args[:http_client] || HTTParty
+    end
 
     def post
       http_client.post(
         'https://3wupzgqsoh.execute-api.us-west-2.amazonaws.com/prod',
         body: message.to_json
       )
-    end
-
-    def http_client
-      HTTParty
-    end
-
-    def queue
-      Delayed::Job
     end
   end
 end

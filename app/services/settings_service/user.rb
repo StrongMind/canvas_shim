@@ -1,7 +1,5 @@
 module SettingsService
   class User
-    cattr_writer :canvas_domain
-
     def self.create_table
       Repository.create_table(name: table_name)
     end
@@ -25,10 +23,6 @@ module SettingsService
 
     def table_name
       self.class.table_name
-    end
-
-    def self.canvas_domain
-      @@canvas_domain || ENV['CANVAS_DOMAIN']
     end
   end
 end
