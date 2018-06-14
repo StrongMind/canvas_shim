@@ -1,7 +1,7 @@
 module CanvasShim
   module SettingsApi
     module V1
-      class UsersController < ApplicationController
+      class UsersController < CanvasShim::ApplicationController
         skip_before_action :verify_authenticity_token
         before_action :validate_key
 
@@ -20,13 +20,6 @@ module CanvasShim
 
         def settings
           params[:user]
-        end
-
-        def validate_key
-          token = SettingsService::AuthToken.authenticate(
-            request.headers['HTTP_AUTHORIZATION'].try(:gsub, 'Bearer ', '')
-          )
-          render(json: {status: 'error'}, status: 401) and return unless token
         end
       end
     end

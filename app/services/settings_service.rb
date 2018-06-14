@@ -1,6 +1,8 @@
 # Usage:
 # SettingsService.update_enrollment_setting(id: 1, setting: 'foo', value: 'bar')
 module SettingsService
+  cattr_writer :canvas_domain
+  
   def self.update_enrollment_setting(id:, setting:, value:)
     Commands::UpdateEnrollmentSetting.new(
       id: id,
@@ -24,4 +26,10 @@ module SettingsService
   def self.get_user_settings(id:)
     Commands::GetUserSettings.new(id: id).call
   end
+
+
+  def self.canvas_domain
+    @@canvas_domain || ENV['CANVAS_DOMAIN']
+  end
+
 end

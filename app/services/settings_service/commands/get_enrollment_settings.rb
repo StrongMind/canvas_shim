@@ -5,6 +5,7 @@ module SettingsService
         @id = id
       end
 
+      # DEPRICATED: Use "GetSettings instead"
       def call
         SettingsService::Enrollment.create_table
         SettingsService::Enrollment.get(
