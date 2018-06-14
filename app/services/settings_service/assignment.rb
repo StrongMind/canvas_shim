@@ -5,7 +5,7 @@ module SettingsService
       [SettingsService.canvas_domain, '-', 'assignment_settings'].join('')
     end
     def self.put(id:, setting: , value:)
-      Repository.put(
+      AssignmentRepository.put(
         table_name: table_name,
         id: id,
         setting: setting,
@@ -16,10 +16,10 @@ module SettingsService
       self.class.table_name
     end
     def self.create_table
-      Repository.create_table(name: table_name)
+      AssignmentRepository.create_table(name: table_name)
     end
     def self.get(id:)
-      Repository.get(table_name: table_name, id: id)
+      AssignmentRepository.get(table_name: table_name, id: id)
     end
     def self.canvas_domain
       @@canvas_domain || ENV['CANVAS_DOMAIN']
