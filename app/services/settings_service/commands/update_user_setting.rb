@@ -1,6 +1,7 @@
 module SettingsService
   module Commands
     class UpdateUserSetting
+      # DEPRICATED: Use "UpdateSettings instead"
       def initialize id:, setting:, value:
         @id = id
         @setting = setting

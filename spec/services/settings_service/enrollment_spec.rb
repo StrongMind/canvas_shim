@@ -20,7 +20,7 @@ describe SettingsService::Enrollment do
 
   context 'canvas domain present' do
     before do
-      SettingsService::Enrollment.canvas_domain = 'integration.example.com'
+      SettingsService.canvas_domain = 'integration.example.com'
     end
 
     describe '#create_table' do
