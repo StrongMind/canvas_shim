@@ -24,6 +24,10 @@ module SettingsService
     Commands::GetEnrollmentSettings.new(id: id).call
   end
 
+  def self.get_settings(id:, object:)
+    Commands::GetSettings.new(id: id, object: object).call
+  end
+
   def self.update_user_setting(id:, setting:, value:)
     Commands::UpdateUserSetting.new(
       id: id,

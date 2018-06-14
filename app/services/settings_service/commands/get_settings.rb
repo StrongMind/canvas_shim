@@ -14,7 +14,14 @@ module SettingsService
       private
 
       def object
-        SettingsService.const_get(@object.titleize)
+        case @object
+        when 'assignment'
+          SettingsService::Assignment
+        when 'user'
+          SettingsService::User
+        when 'enrollment'
+          SettingsService::Enrollment
+        end
       end
     end
   end
