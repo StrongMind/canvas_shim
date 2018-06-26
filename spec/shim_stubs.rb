@@ -24,6 +24,16 @@ class Enrollment
   end
 end
 
+class Assignment
+  def self.find id
+    new
+  end
+
+  def migration_id
+    '1232141423'
+  end
+end
+
 class Account
   def self.default
     Struct.new(:account_users).new(
