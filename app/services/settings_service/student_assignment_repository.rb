@@ -26,11 +26,15 @@ module SettingsService
     end
 
     def get(table_name:, id:)
+      assignment = ::Assignment.find(id[:assignment_id])
+      migration_id = assignment.migration_id
+      student_assignment_id = "#{migration_id}:#{id[:student_id]}"
+
       self.class.dynamodb.query(
         table_name: table_name,
         key_condition_expression: "#id = :id",
         expression_attribute_names: { "#id" => "id" },
-        expression_attribute_values: { ":id" => id }
+        expression_attribute_values: { ":id" => student_assignment_id }
       ).items.inject({}) do |newhash, setting|
         newhash[setting['setting']] = setting['value']
         newhash
@@ -40,27 +44,33 @@ module SettingsService
     def put(table_name:, id:, setting:, value:)
       return unless value == 'increment'
 
+
       assignment = ::Assignment.find(id[:assignment_id])
       return unless assignment.migration_id
       migration_id = assignment.migration_id
       student_assignment_id = "#{migration_id}:#{id[:student_id]}"
 
-      assignment_default_attempts = SettingsService.get_settings(
+
+      value = SettingsService.get_settings(
         object: 'assignment',
         id: migration_id
-      )[:value] || 1
+      )["max_attempts"]
+
+      return unless value
 
       student_attempts = SettingsService.get_settings(
         object: 'student_assignment',
-        id: student_assignment_id
-      )[:value] || assignment_default_attempts
+        id: id
+      )['max_attempts']
+
+      value = student_attempts if student_attempts
 
       self.class.dynamodb.put_item(
         table_name: table_name,
         item: {
           id: student_assignment_id,
           setting: setting,
-          value: student_attempts + 1
+          value: value.to_i + 1
         }
       )
     end
