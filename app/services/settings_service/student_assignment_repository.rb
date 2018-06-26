@@ -12,10 +12,10 @@ module SettingsService
       raise "missing canvas domain!" if SettingsService.canvas_domain.nil?
       @secret_key = ENV['S3_ACCESS_KEY']
       @id_key = ENV['S3_ACCESS_KEY_ID']
-      # Aws.config.update(
-      #   region: 'us-west-2',
-      #   credentials: creds
-      # )
+      Aws.config.update(
+        region: 'us-west-2',
+        credentials: creds
+      )
     end
 
     def create_table(name:)
