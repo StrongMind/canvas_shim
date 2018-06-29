@@ -17,7 +17,7 @@ module GradesService
       attr_reader :assignment
 
       def grader
-        Account.account_admin
+        GradesService::Account.account_admin
       end
 
       def not_past_due?
