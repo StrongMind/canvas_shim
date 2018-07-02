@@ -10,7 +10,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       before(:each) do
         ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'] = 'true'
       end
-      let(:assignment) { double('assignment', due_date: Time.zone.now)}
+      let(:assignment) { double('assignment', due_date: Time.zone.now, published?: true)}
 
       it "do nothing" do
         expect(subject).to_not receive(:students_without_submissions)
@@ -27,7 +27,8 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
           'past due assignment, with student submission',
           due_date: 2.hours.ago,
           context: context,
-          submissions: [submission]
+          submissions: [submission],
+          published?: true
         )
       end
 
@@ -40,6 +41,26 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
             'past due assignment, with student submission',
             due_date: 2.hours.ago,
             context: context,
+            submissions: [],
+            published?: true
+          )
+        end
+        it "do nothing" do
+          expect(subject).to_not receive(:students_without_submissions)
+          subject.call!
+        end
+      end
+
+      context "and the assignment isnt published" do
+        before(:each) do
+          ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'] = 'true'
+        end
+        let(:assignment) do
+          double(
+            'past due assignment, with student submission',
+            due_date: 2.hours.ago,
+            context: context,
+            published?: false,
             submissions: []
           )
         end
