@@ -6,7 +6,7 @@ module GradesService
       end
 
       def call!
-        return unless ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'] == "true"
+        return unless ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'].downcase == "true"
         return if not_past_due?
         students_without_submissions.each do |student|
           assignment.grade_student(student, score: 0, grader: grader)
