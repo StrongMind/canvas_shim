@@ -40,7 +40,7 @@ class Account
       [
         Struct.new(:role, :user).new(
           Struct.new(:name).new('AccountAdmin'),
-          'user'
+          'account admin user'
         )
       ]
     )
