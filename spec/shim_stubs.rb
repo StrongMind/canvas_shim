@@ -29,6 +29,10 @@ class Assignment
     new
   end
 
+  def self.find_each(&block)
+    block.yield(self.new)
+  end
+
   def migration_id
     '1232141423'
   end
