@@ -95,7 +95,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
           expect(assignment).to receive(:grade_student).with(
             student,
               :score=>0,
-              :grader=>"user"
+              :grader=>"account admin user"
             )
           subject.call!
         end
