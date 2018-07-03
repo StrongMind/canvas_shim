@@ -86,6 +86,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
         before(:each) do
           ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'] = 'true'
         end
+
         let(:submission) { double('submission', student: nil) }
         before do
           allow(assignment).to receive(:submissions).and_return([])
@@ -94,9 +95,9 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
         it "will zero out the student's grade" do
           expect(assignment).to receive(:grade_student).with(
             student,
-              :score=>0,
-              :grader=>"account admin user"
-            )
+            score: 0,
+            grader: "account admin user"
+          )
           subject.call!
         end
       end
