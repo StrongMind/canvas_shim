@@ -8,23 +8,27 @@ module GradesService
       def call!
         return unless ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'] and ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'].downcase == "true"
         return unless assignment.published?
-        return if not_past_due?
-        students_without_submissions.each do |student|
-          assignment.grade_student(student, score: 0, grader: grader)
-        end
+        return if still_submittable?
+        grade_students
       end
 
       private
 
       attr_reader :assignment
 
+      def grade_students
+        students_without_submissions.each do |student|
+          assignment.grade_student(student, score: 0, grader: grader)
+        end
+      end
+
       def grader
         GradesService::Account.account_admin
       end
 
-      def not_past_due?
-        return unless assignment.due_date
-        (1.hour.ago < assignment.due_date )
+      def still_submittable?
+        return if assignment.due_date.nil?
+        assignment.due_date > 1.hour.ago
       end
 
       def students
