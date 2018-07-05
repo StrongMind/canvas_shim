@@ -5,7 +5,7 @@
 module PipelineService
   cattr_reader :queue_mode
   def self.publish(object, api: API::Publish, noun: nil)
-    api.new(object, noun: noun).call
+    #api.new(object, noun: noun).call
   end
 
   def self.perform_synchronously?
