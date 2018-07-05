@@ -27,16 +27,18 @@ module GradesService
       end
 
       def still_submittable?
-        return if assignment.due_date.nil?
+        return true if assignment.due_date.nil?
         assignment.due_date > 1.hour.ago
       end
 
       def students
          assignment.context.students
       end
-
+      
       def students_with_submissions
-        assignment.submissions.map {|s| s.student}
+        assignment.submissions.map do |submission| 
+          submission.student if submission.state != :unsubmitted 
+        end.compact
       end
 
       def students_without_submissions

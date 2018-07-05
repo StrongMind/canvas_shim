@@ -74,7 +74,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
         before(:each) do
           ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'] = 'true'
         end
-        let(:submission) { double('submission', student: student) }
+        let(:submission) { double('submission', student: student, state: '') }
 
         it 'will not grade the student' do
           expect(assignment).to_not receive(:grade_student)
@@ -87,9 +87,53 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
           ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'] = 'true'
         end
 
-        let(:submission) { double('submission', student: nil) }
         before do
           allow(assignment).to receive(:submissions).and_return([])
+        end
+
+        let(:submission) { double('submission', student: nil) }
+
+        it "will zero out the student's grade" do
+          expect(assignment).to receive(:grade_student).with(
+            student,
+            score: 0,
+            grader: "account admin user"
+          )
+          subject.call!
+        end
+      end
+
+      context 'assignment does not have a due date' do
+        before(:each) do
+          ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'] = 'true'
+        end
+
+        before do
+          allow(assignment).to receive(:submissions).and_return([])
+        end
+
+        let(:assignment) do
+           double('assignment', due_date: nil, published?: true, context: context)
+        end
+
+        it "will zero out the student's grade" do
+          expect(assignment).to_not receive(:grade_student).with(
+            student,
+            score: 0,
+            grader: "account admin user"
+          )
+          subject.call!
+        end
+      end
+
+      context 'assignment has an "unsubmitted submission"' do
+        before(:each) do
+          ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'] = 'true'
+          allow(assignment).to receive(:submissions).and_return([submission])
+        end
+
+        let(:submission) do 
+          double('submission', student: student, state: :unsubmitted) 
         end
 
         it "will zero out the student's grade" do
