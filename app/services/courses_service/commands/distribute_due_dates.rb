@@ -3,11 +3,6 @@ module CoursesService
     class DistributeDueDates
       def initialize(args)
         @course = args[:course]
-        @scheduler = Scheduler.new(
-          assignment_count: assignments.count,
-          start_date: course.start_at,
-          end_date: course.end_at
-        )
       end
 
       def call
@@ -18,7 +13,15 @@ module CoursesService
 
       private
 
-      attr_reader :course, :startdate, :enddate, :assignments_per_day, :scheduler
+      attr_reader :course, :startdate, :enddate, :assignments_per_day
+
+      def scheduler
+        @scheduler ||= Scheduler.new(
+          assignment_count: assignments.count,
+          start_date: course.start_at,
+          end_date: course.end_at
+        )
+      end
 
       def update_assignments(assignments_for_day, date)
         assignments_for_day.each { |assignment| assignment.update(due_at: date) }
@@ -29,13 +32,10 @@ module CoursesService
       end
 
       def assignments
-        content_tags.map { |tag| tag.assignment }
-      end
-
-      def content_tags
         ContentTag
           .where(content_type: 'Assignment', context_id: course.id)
           .order(:position)
+          .map { |tag| tag.assignment }
       end
     end
   end
