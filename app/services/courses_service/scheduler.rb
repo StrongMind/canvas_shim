@@ -13,7 +13,7 @@ module CoursesService
     def course_dates
       course_days_count.times.map do |i|
         day = startdate + i.days
-        day unless !calendar.business_day?(day)
+        day if calendar.business_day?(day)
       end.compact
     end
 
