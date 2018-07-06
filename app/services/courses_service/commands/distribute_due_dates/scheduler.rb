@@ -14,25 +14,8 @@ module CoursesService
         end
 
         def course_dates
-          days = course_days_count.times.map do |count|
-
-            day = startdate + (count).days
-            day if calendar.business_day?(day)
-          end.compact
-
-          result = {}
-
-          days.each do |day|
-            result[day] = assignments_per_day
-          end
-
-          remainder = assignment_count % course_days_count
-
-          remainder.times.each do |num|
-            result[days[num]] = result[days[num]] + 1
-          end
-
-          result
+          get_days
+          populate_assignment_counts
         end
 
         def course_days_count
@@ -49,6 +32,27 @@ module CoursesService
 
         def calendar
           Business::Calendar.new(working_days: %w( mon tue wed thu fri ))
+        end
+
+        def get_days
+          @days ||= course_days_count.times.map do |count|
+            day = startdate + (count).days
+            day if calendar.business_day?(day)
+          end.compact
+        end
+
+        def populate_assignment_counts
+          result = {}
+
+          @days.each do |day|
+            result[day] = assignments_per_day
+          end
+
+          (assignment_count % course_days_count).times.each do |num|
+            result[@days[num]] = result[@days[num]] + 1
+          end
+
+          result
         end
       end
     end
