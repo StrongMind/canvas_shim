@@ -1,14 +1,15 @@
 describe CoursesService::Commands::DistributeDueDates::Scheduler do
-  let(:start_at) { Date.parse("Thu Nov 29 2018") }
-  let(:end_at)   { start_at + 1.month }
-  let(:course)   { double(:course, start_at: start_at, end_at: end_at) }
+  let(:start_at) { Date.parse("Mon Nov 26 2018") }
+
+  let(:end_at) { start_at + 30.days }
+  let(:course) { double(:course, start_at: start_at, end_at: end_at) }
 
   let(:days) do
-    subject.course_dates.map { |d| d.strftime("%a") }.uniq
+    subject.course_dates.keys.map { |d| d.strftime("%a") }.uniq
   end
 
   subject do
-    described_class.new(course: course, assignment_count: 100)
+    described_class.new(course: course, assignment_count: 44)
   end
 
   describe '#course_days_count' do
@@ -19,7 +20,17 @@ describe CoursesService::Commands::DistributeDueDates::Scheduler do
 
   describe '#assignments_per_day' do
     it 'does assignment count / course_days_count' do
-      expect(subject.assignments_per_day).to eq 100 / 22
+      expect(subject.assignments_per_day).to eq 2
+    end
+
+    context 'assignments dont divide evenly into course days' do
+      subject do
+        described_class.new(course: course, assignment_count: 23)
+      end
+
+      it 'distributes remainder' do
+        expect(subject.course_dates[subject.course_dates.keys.first]).to eq 2
+      end
     end
   end
 
