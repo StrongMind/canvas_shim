@@ -3,27 +3,29 @@ module CoursesService
     class DistributeDueDates
       def initialize(args)
         @course = args[:course]
-        @startdate = course.start_at
-        @enddate = course.end_at
-        @assignments_per_day = (assignments.count / course_days_count).to_i
+        @scheduler = Scheduler.new(
+          assignment_count: assignments.count,
+          start_date: course.start_at,
+          end_date: course.end_at
+        )
       end
 
       def call
         assignment_groups.each.with_index do |assignments_for_day, i|
-          update_assignments(assignments_for_day, course_dates[i])
+          update_assignments(assignments_for_day, scheduler.course_dates[i])
         end
       end
 
       private
 
-      attr_reader :course, :startdate, :enddate, :assignments_per_day
+      attr_reader :course, :startdate, :enddate, :assignments_per_day, :scheduler
 
       def update_assignments(assignments_for_day, date)
         assignments_for_day.each { |assignment| assignment.update(due_at: date) }
       end
 
       def assignment_groups
-        assignments.in_groups_of(assignments_per_day, false)
+        assignments.in_groups_of(scheduler.assignments_per_day, false)
       end
 
       def assignments
@@ -34,21 +36,6 @@ module CoursesService
         ContentTag
           .where(content_type: 'Assignment', context_id: course.id)
           .order(:position)
-      end
-
-      def calendar
-        Business::Calendar.new(working_days: %w( mon tue wed thu fri ))
-      end
-
-      def course_dates
-        course_days_count.times.map do |i|
-          day = startdate + i.days
-          day unless !calendar.business_day?(day)
-        end.compact
-      end
-
-      def course_days_count
-        calendar.business_days_between(startdate, enddate)
       end
     end
   end
