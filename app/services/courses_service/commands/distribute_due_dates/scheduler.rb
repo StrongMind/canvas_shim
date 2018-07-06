@@ -2,6 +2,8 @@ module CoursesService
   module Commands
     class DistributeDueDates
       class Scheduler
+        WORKING_DAYS = %w( mon tue wed thu fri )
+        
         def initialize(args = {})
           @args = args
           @startdate = first_due_date
@@ -31,7 +33,7 @@ module CoursesService
         end
 
         def calendar
-          Business::Calendar.new(working_days: %w( mon tue wed thu fri ))
+          Business::Calendar.new(working_days: WORKING_DAYS)
         end
 
         def get_days
