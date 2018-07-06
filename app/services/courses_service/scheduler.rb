@@ -7,7 +7,7 @@ module CoursesService
     end
 
     def assignments_per_day
-      assignment_count / course_days_count.to_i
+      assignment_count / course_days_count
     end
 
     def course_dates
