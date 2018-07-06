@@ -11,10 +11,6 @@ describe CoursesService::Commands::DistributeDueDates do
     )
   end
 
-  let(:assignment) { double(:assignment, update: nil) }
-  let(:content_tag) { double(:content_tag, assignment: assignment) }
-  let(:content_tags) { double(:content_tags, order: [content_tag]) }
-
   subject { described_class.new(course: course) }
 
   before do
