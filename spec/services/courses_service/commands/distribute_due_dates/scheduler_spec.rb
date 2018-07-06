@@ -1,6 +1,5 @@
 describe CoursesService::Commands::DistributeDueDates::Scheduler do
   let(:start_at) { Date.parse("Mon Nov 26 2018") }
-
   let(:end_at) { start_at + 30.days }
   let(:course) { double(:course, start_at: start_at, end_at: end_at) }
 
@@ -14,7 +13,7 @@ describe CoursesService::Commands::DistributeDueDates::Scheduler do
 
   describe '#course_days_count' do
     it 'should return a count of all weekdays' do
-      expect(subject.course_days_count).to eq 22
+      expect(subject.course_days_count).to eq 21
     end
   end
 
@@ -25,18 +24,23 @@ describe CoursesService::Commands::DistributeDueDates::Scheduler do
 
     context 'assignments dont divide evenly into course days' do
       subject do
-        described_class.new(course: course, assignment_count: 23)
+        described_class.new(course: course, assignment_count: 22)
       end
 
       it 'distributes remainder' do
-        expect(subject.course_dates[subject.course_dates.keys.first]).to eq 2
+        expect(subject.course_dates[subject.course_dates.keys[0]]).to eq 2
+        expect(subject.course_dates[subject.course_dates.keys[1]]).to eq 1
       end
     end
   end
 
   describe '#course_dates' do
-    it do
+    it 'does not include weekends' do
       expect(days).to_not include("Sat")
+    end
+
+    it 'will not assign a due date on the first day of the course' do
+      expect(subject.course_dates.keys[0]).to_not eq start_at
     end
   end
 end
