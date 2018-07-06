@@ -1,8 +1,8 @@
 module CoursesService
   class Scheduler
     def initialize(args = {})
-      @startdate = args[:start_date]
-      @enddate = args[:end_date]
+      @startdate = args[:course].start_at
+      @enddate = args[:course].end_at
       @assignment_count = args[:assignment_count]
     end
 

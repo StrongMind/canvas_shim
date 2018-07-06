@@ -2,6 +2,7 @@ module CoursesService
   module Commands
     class DistributeDueDates
       def initialize(args)
+        @args = args
         @course = args[:course]
       end
 
@@ -16,11 +17,7 @@ module CoursesService
       attr_reader :course, :startdate, :enddate, :assignments_per_day
 
       def scheduler
-        @scheduler ||= Scheduler.new(
-          assignment_count: assignments.count,
-          start_date: course.start_at,
-          end_date: course.end_at
-        )
+        @scheduler ||= Scheduler.new(@args.merge(assignment_count: assignments.count))
       end
 
       def update_assignments(assignments_for_day, date)

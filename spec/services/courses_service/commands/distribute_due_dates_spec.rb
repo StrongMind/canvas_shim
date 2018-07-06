@@ -4,7 +4,7 @@ end
 describe CoursesService::Commands::DistributeDueDates do
   let(:course) do
     double(
-      'course',
+      :course,
       start_at: Date.today,
       end_at: Date.today + 1.day,
       id: 1
@@ -23,6 +23,7 @@ describe CoursesService::Commands::DistributeDueDates do
 
   describe "#call" do
     it 'runs' do
+      expect(assignment).to receive(:update)
       subject.call
     end
   end
