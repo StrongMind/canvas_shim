@@ -16,3 +16,4 @@ gem "rspec-rails"
 gem 'pipeline_publisher_ruby', :git => 'git@github.com:StrongMind/pipeline-publisher-ruby.git'
 gem 'httparty'
 gem 'aws-sdk-dynamodb', '~> 1.6'
+gem 'business'
