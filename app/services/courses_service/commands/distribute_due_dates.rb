@@ -9,8 +9,8 @@ module CoursesService
       end
 
       def call
-        assignment_groups.each.with_index do |assignment_group, i|
-          update_assignments(assignment_group, course_days[i])
+        assignment_groups.each.with_index do |assignments_for_day, i|
+          update_assignments(assignments_for_day, course_dates[i])
         end
       end
 
@@ -18,8 +18,8 @@ module CoursesService
 
       attr_reader :course, :startdate, :enddate, :assignments_per_day
 
-      def update_assignments(assignment_group, day)
-        assignment_group.each { |assignment| assignment.update(due_at: day) }
+      def update_assignments(assignments_for_day, date)
+        assignments_for_day.each { |assignment| assignment.update(due_at: date) }
       end
 
       def assignment_groups
@@ -40,7 +40,7 @@ module CoursesService
         Business::Calendar.new(working_days: %w( mon tue wed thu fri ))
       end
 
-      def course_days
+      def course_dates
         course_days_count.times.map do |i|
           day = startdate + i.days
           day unless !calendar.business_day?(day)
