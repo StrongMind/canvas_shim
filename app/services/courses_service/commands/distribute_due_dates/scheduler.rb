@@ -3,7 +3,7 @@ module CoursesService
     class DistributeDueDates
       class Scheduler
         WORKING_DAYS = %w( mon tue wed thu fri )
-        
+
         def initialize(args = {})
           @args = args
           @startdate = first_due_date
@@ -26,7 +26,7 @@ module CoursesService
 
         private
 
-        attr_reader :assignment_count, :startdate, :enddate
+        attr_reader :assignment_count, :startdate, :enddate, :days
 
         def first_due_date
           @args[:course].start_at + 1
@@ -45,13 +45,12 @@ module CoursesService
 
         def populate_assignment_counts
           result = {}
-
-          @days.each do |day|
+          days.each do |day|
             result[day] = assignments_per_day
           end
 
           (assignment_count % course_days_count).times.each do |num|
-            result[@days[num]] = result[@days[num]] + 1
+            result[days[num]] = result[days[num]] + 1
           end
 
           result
