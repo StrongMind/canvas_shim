@@ -25,7 +25,7 @@ module CoursesService
         end
 
         def course_days_count
-          enddate.mjd - startdate.mjd
+          enddate.to_date.mjd - startdate.to_date.mjd
         end
 
         private
