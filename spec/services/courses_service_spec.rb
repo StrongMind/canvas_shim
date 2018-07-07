@@ -5,7 +5,7 @@ describe CoursesService do
     let(:command)  { CoursesService::Commands::DistributeDueDates }
 
     before do
-      allow(command).to receive(:new).and_return(instance)
+      allow(command).to receive(:new).with(course: course).and_return(instance)
     end
 
     it 'calls the command' do
