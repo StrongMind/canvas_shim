@@ -8,6 +8,7 @@ module CoursesService
 
       def call
         return unless course.start_at && course.end_at
+        byebug
         scheduler.course_dates.each do |date, count|
           update_assignments(assignments.slice!(0..count - 1), date)
         end

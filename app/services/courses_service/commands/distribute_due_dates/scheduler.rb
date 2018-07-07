@@ -12,7 +12,7 @@ module CoursesService
         end
 
         def assignments_per_day
-          (assignment_count / course_days_count)
+          (assignment_count / business_days_count)
         end
 
         def course_dates
@@ -20,8 +20,12 @@ module CoursesService
           populate_assignment_counts
         end
 
-        def course_days_count
+        def business_days_count
           calendar.business_days_between(startdate, enddate)
+        end
+
+        def course_days_count
+          enddate.mjd - startdate.mjd
         end
 
         private
@@ -49,7 +53,7 @@ module CoursesService
             result[day] = assignments_per_day
           end
 
-          (assignment_count % course_days_count).times.each do |num|
+          (assignment_count % business_days_count).times.each do |num|
             result[days[num]] = result[days[num]] + 1
           end
 
