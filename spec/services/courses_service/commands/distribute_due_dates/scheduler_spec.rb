@@ -13,7 +13,7 @@ describe CoursesService::Commands::DistributeDueDates::Scheduler do
 
   describe '#course_days_count' do
     it 'should return a count of all weekdays' do
-      expect(subject.course_days_count).to eq 21
+      expect(subject.course_days_count).to eq 29
     end
   end
 
