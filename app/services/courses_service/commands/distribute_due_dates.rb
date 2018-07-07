@@ -7,6 +7,7 @@ module CoursesService
       end
 
       def call
+        return unless course.start_at && course.end_at
         scheduler.course_dates.each do |date, count|
           update_assignments(assignments.slice!(0..count - 1), date)
         end
@@ -14,7 +15,7 @@ module CoursesService
 
       private
 
-      attr_reader :course, :startdate, :enddate, :assignments_per_day
+      attr_reader :course, :assignments_per_day
 
       def scheduler
         @scheduler ||= Scheduler.new(@args.merge(assignment_count: assignments.count))

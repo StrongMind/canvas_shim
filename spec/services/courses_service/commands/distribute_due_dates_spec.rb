@@ -46,6 +46,39 @@ describe CoursesService::Commands::DistributeDueDates do
   end
 
   describe "#call" do
+    context 'course without start date' do
+      let(:course) do
+        double(
+          :course,
+          start_at: nil,
+          end_at: start_at + 5.days,
+          id: 1
+        )
+      end
+
+      it 'wont distribute the due dates' do
+        expect(assignment).to_not(receive(:update))
+        subject.call
+      end
+    end
+
+    context 'course without start date' do
+      let(:course) do
+        double(
+          :course,
+          start_at: start_at,
+          end_at: nil,
+          id: 1
+        )
+      end
+
+      it 'wont distribute the due dates' do
+        expect(assignment).to_not(receive(:update))
+        subject.call
+      end
+    end
+
+
     it 'distributes the assignments across workdays' do
       expect(assignment).to(
         receive(:update).with(due_at: Date.parse('Mon, 27 Nov 2018'))
