@@ -4,13 +4,18 @@ module CoursesService
       def initialize(args)
         @args = args
         @course = args[:course]
+        @modules = ContextModule
+                    .where(
+                      'context_modules.context_id = ? AND context_modules.context_type = \'Course\' AND context_modules.name IS NOT NULL',
+                      @course.id)
+                    .order(:position)
       end
 
       def call
         return unless course.start_at && course.end_at
-        byebug
+        course_assignments = assignments
         scheduler.course_dates.each do |date, count|
-          update_assignments(assignments.slice!(0..count - 1), date)
+          update_assignments(course_assignments.slice!(0..count - 1), date)
         end
       end
 
@@ -27,10 +32,14 @@ module CoursesService
       end
 
       def assignments
-        @assignments ||= ContentTag
-          .where(content_type: 'Assignment', context_id: course.id)
-          .order(:position)
-          .map { |tag| tag.assignment }
+        assignment_list = []
+        @modules.each do |context_module|
+          context_module.content_tags
+            .where(content_type: 'Assignment')
+            .order(:position)
+            .map { |tag| assignment_list.push(tag.assignment) }
+        end
+        assignment_list
       end
     end
   end
