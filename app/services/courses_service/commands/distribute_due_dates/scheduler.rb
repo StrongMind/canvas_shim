@@ -33,7 +33,7 @@ module CoursesService
         attr_reader :assignment_count, :startdate, :enddate, :days
 
         def first_due_date
-          @args[:course].start_at + 1
+          @args[:course].start_at + 1.day
         end
 
         def calendar
