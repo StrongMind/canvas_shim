@@ -1,4 +1,5 @@
 class ContentTag;end
+class ContextModule;end
 
 describe CoursesService::Commands::DistributeDueDates do
   let(:start_at) { Date.parse("Mon Nov 26 2018") }
@@ -27,6 +28,12 @@ describe CoursesService::Commands::DistributeDueDates do
     ]
   end
 
+  let(:ordered_context_modules) do
+    [
+      double(:context_module, content_tags: double(:context_module, where: content_tags))
+    ]
+  end
+
   let(:content_tags) { double(:content_tags, order: ordered_content_tags) }
   let(:assignment)  { double(:assignment) }
   let(:assignment2) { double(:assignment2, update: nil) }
@@ -38,11 +45,14 @@ describe CoursesService::Commands::DistributeDueDates do
   let(:assignment8) { double(:assignment8, update: nil) }
   let(:assignment9) { double(:assignment9, update: nil) }
   let(:assignment10) { double(:assignment10, update: nil) }
+  let(:context_modules) { double(:context_modules, order: ordered_context_modules) }
 
   subject { described_class.new(course: course) }
 
   before do
     allow(ContentTag).to receive(:where).and_return(content_tags)
+    allow(ContextModule).to receive(:where).and_return(context_modules)
+    ENV["AUTOMATIC_DUE_DATES"] = "true"
   end
 
   describe "#call" do
@@ -73,7 +83,7 @@ describe CoursesService::Commands::DistributeDueDates do
       end
     end
 
-    context 'course without start date' do
+    context 'course without end date' do
       let(:course) do
         double(
           :course,
