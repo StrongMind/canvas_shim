@@ -42,5 +42,9 @@ describe CoursesService::Commands::DistributeDueDates::Scheduler do
     it 'will not assign a due date on the first day of the course' do
       expect(subject.course_dates.keys[0]).to_not eq start_at
     end
+
+    it 'will have a due time of 23:59' do
+      expect(subject.course_dates.keys[0].strftime("%H:%M")). to eq "23:59"
+    end
   end
 end
