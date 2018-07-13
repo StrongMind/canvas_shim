@@ -103,19 +103,19 @@ describe CoursesService::Commands::DistributeDueDates do
 
     it 'distributes the assignments across workdays' do
       expect(assignment).to(
-        receive(:update).with(due_at: Date.parse('Mon, 27 Nov 2018'))
+        receive(:update).with(due_at: Time.parse('2018-11-27 23:59:59.999999999 +0000'))
       )
 
       expect(assignment2).to(
-        receive(:update).with(due_at: Date.parse('Tue, 27 Nov 2018'))
+        receive(:update).with(due_at: Time.parse('2018-11-27 23:59:59.999999999 +0000'))
       )
 
       expect(assignment3).to(
-        receive(:update).with(due_at: Date.parse('Wed, 27 Nov 2018'))
+        receive(:update).with(due_at: Time.parse('2018-11-27 23:59:59.999999999 +0000'))
       )
 
       expect(assignment4).to(
-        receive(:update).with(due_at: Date.parse('Wed, 28 Nov 2018'))
+        receive(:update).with(due_at: Time.parse('2018-11-28 23:59:59.999999999 +0000'))
       )
       subject.call
     end
