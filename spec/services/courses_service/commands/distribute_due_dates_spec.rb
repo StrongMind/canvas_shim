@@ -9,7 +9,8 @@ describe CoursesService::Commands::DistributeDueDates do
       :course,
       start_at: start_at,
       end_at: end_at,
-      id: 1
+      id: 1,
+      time_zone: Time.zone
     )
   end
 
@@ -62,7 +63,7 @@ describe CoursesService::Commands::DistributeDueDates do
         ENV["AUTOMATIC_DUE_DATES"] = nil
       end
 
-      it 'will not distribute the due dates' do 
+      it 'will not distribute the due dates' do
         expect(assignment).to_not(receive(:update))
         subject.call
       end
