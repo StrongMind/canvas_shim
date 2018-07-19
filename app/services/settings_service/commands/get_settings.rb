@@ -14,7 +14,7 @@ module SettingsService
       private
 
       def object
-        case @object
+        case @object.to_s
         when 'assignment'
           SettingsService::Assignment
         when 'user'
@@ -23,6 +23,8 @@ module SettingsService
           SettingsService::Enrollment
         when 'student_assignment'
           SettingsService::StudentAssignment
+        when 'school'
+          SettingsService::School
         else
           raise "Unrecognized Object: #{@object}"
         end

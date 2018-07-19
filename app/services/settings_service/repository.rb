@@ -26,14 +26,18 @@ module SettingsService
     end
 
     def get(table_name:, id:)
-      dynamodb.query(
-        table_name: table_name,
-        key_condition_expression: "#id = :id",
-        expression_attribute_names: { "#id" => "id" },
-        expression_attribute_values: { ":id" => id.to_i }
-      ).items.inject({}) do |newhash, setting|
-        newhash[setting['setting']] = setting['value']
-        newhash
+      begin
+        dynamodb.query(
+          table_name: table_name,
+          key_condition_expression: "#id = :id",
+          expression_attribute_names: { "#id" => "id" },
+          expression_attribute_values: { ":id" => id.to_i }
+        ).items.inject({}) do |newhash, setting|
+          newhash[setting['setting']] = setting['value']
+          newhash
+        end
+      rescue Aws::DynamoDB::Errors::ResourceNotFoundException
+        nil
       end
     end
 
