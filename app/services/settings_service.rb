@@ -12,32 +12,8 @@ module SettingsService
     ).call
   end
 
-  def self.update_enrollment_setting(id:, setting:, value:)
-    Commands::UpdateEnrollmentSetting.new(
-      id: id,
-      setting: setting,
-      value: value
-    ).call
-  end
-
-  def self.get_enrollment_settings(id:)
-    Commands::GetEnrollmentSettings.new(id: id).call
-  end
-
   def self.get_settings(id:, object:)
     Commands::GetSettings.new(id: id, object: object).call
-  end
-
-  def self.update_user_setting(id:, setting:, value:)
-    Commands::UpdateUserSetting.new(
-      id: id,
-      setting: setting,
-      value: value
-    ).call
-  end
-
-  def self.get_user_settings(id:)
-    Commands::GetUserSettings.new(id: id).call
   end
 
   def self.canvas_domain
