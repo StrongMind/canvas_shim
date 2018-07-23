@@ -7,11 +7,10 @@ module CanvasShim
 
         def update
           settings.each do |key, value|
-            SettingsService.update_setting(
+            SettingsService.update_user_setting(
               id: params[:id],
               setting: key,
-              value: value,
-              noun: :user
+              value: value
             )
           end
           render json: { status: 'ok' }
