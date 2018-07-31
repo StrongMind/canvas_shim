@@ -1,6 +1,10 @@
 module AuthenticationMethods
+  def load_user_called?
+    @original_method_called
+  end
+
   def load_user
-    puts 'lms applicaiton methods'
+    @original_method_called = true
   end
 end
 
@@ -10,7 +14,16 @@ end
 
 describe CanvasShim::AuthenticationMethods do
   subject { described_class }
+  let(:controller) { SomeRailsController.new }
+
+
+  before do
+
+  end
+
   it 'works' do
-    SomeRailsController.new.load_user
+    controller.load_user
+    expect(controller.load_user_called?).to be(true)
+    expect(controller.canvas_shim_extensions).to eq ['load_user']
   end
 end

@@ -8,5 +8,10 @@ module ::AuthenticationMethods
       :load_user,
       CanvasShim::AuthenticationMethods.instance_method(:load_user)
     )
+
+    base.send(:define_method, :canvas_shim_extensions) do
+      @canvas_shim_extensions ||= []
+      @canvas_shim_extensions
+    end
   end
 end

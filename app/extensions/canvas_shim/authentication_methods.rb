@@ -1,7 +1,8 @@
 module CanvasShim
   module AuthenticationMethods
+
     def load_user
-      puts 'shim authentication methods'
+      canvas_shim_extensions << 'load_user'
       original_method
       @current_user = @current_pseudonym && @current_pseudonym.user
       sis_id = @current_user && @current_user.pseudonym && @current_user.pseudonym.sis_user_id
