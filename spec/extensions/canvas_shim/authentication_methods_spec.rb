@@ -16,14 +16,17 @@ describe CanvasShim::AuthenticationMethods do
   subject { described_class }
   let(:controller) { SomeRailsController.new }
 
+  context 'method chaining' do
+    before do
+      controller.load_user
+    end
 
-  before do
+    it 'calls the original method' do
+      expect(controller.load_user_called?).to be(true)
+    end
 
-  end
-
-  it 'works' do
-    controller.load_user
-    expect(controller.load_user_called?).to be(true)
-    expect(controller.canvas_shim_extensions).to eq ['load_user']
+    it 'calls the new method' do
+       expect(controller.canvas_shim_extensions).to eq ['load_user']
+    end
   end
 end
