@@ -12,7 +12,7 @@ module AuthenticationMethodsShim
   include YAYA
   def self.included base
     base.send :alias_method, :original_load_user, :load_user
-    base.send :define_method, instance_method(:load_user)
+    base.send :define_method, YAYA.instance_method(:load_user)
   end
 end
 
