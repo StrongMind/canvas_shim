@@ -1,8 +1,6 @@
-describe 'something' do
+describe 'AuthenticationMethods extension' do
   subject do
-    class MockClass
-      include AuthenticationMethods
-    end.new
+    class MockClass;include AuthenticationMethods;end.new
   end
 
   before do
