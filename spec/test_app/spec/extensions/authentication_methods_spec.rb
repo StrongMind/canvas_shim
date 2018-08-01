@@ -1,33 +1,20 @@
 describe 'something' do
-  class MockClass
-    include AuthenticationMethods
+  subject do
+    class MockClass
+      include AuthenticationMethods
+    end.new
   end
 
-  let(:instance) { MockClass.new }
-
   before do
-    allow(instance).to receive(:redirect_to)
-    allow(MockClass).to receive(:new).and_return(instance)
     allow(HTTParty).to receive(:get).and_return(response)
   end
 
   describe '#load_user' do
-    context 'not locked' do
-      let(:response) { double(:response, body: 'false') }
+    let(:response) { double(:response, body: 'true') }
 
-      it 'does not redirect' do
-        expect(instance).to_not receive(:redirect_to)
-        MockClass.new.load_user
-      end
-    end
-
-    context 'locked' do
-      let(:response) { double(:response, body: 'true') }
-
-      it 'redirects' do
-        expect(instance).to receive(:redirect_to)
-        MockClass.new.load_user
-      end
+    it 'redirects if the studnet is locked out' do
+      expect(subject).to receive(:redirect_to)
+      subject.load_user
     end
   end
 end
