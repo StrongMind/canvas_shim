@@ -12,7 +12,6 @@ module CanvasShim
         ).body == 'true'
 
         redirect_to('https://flms.flipswitch.com') if lock_out
-        lock_out
       end
     end
   end
