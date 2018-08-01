@@ -1,13 +1,3 @@
-module AuthenticationMethods
-  def load_user_called?
-    @original_method_called
-  end
-
-  def load_user
-    @original_method_called = true
-  end
-end
-
 class SomeRailsController
   include AuthenticationMethods
 end
@@ -16,17 +6,25 @@ describe CanvasShim::AuthenticationMethods do
   subject { described_class }
   let(:controller) { SomeRailsController.new }
 
-  context 'method chaining' do
+  describe '#load_user' do
     before do
-      controller.load_user
+      allow(HTTParty).to receive(:get).and_return(response)
     end
 
-    it 'calls the original method' do
-      expect(controller.load_user_called?).to be(true)
+    context 'locked' do
+      let(:response) { double('response', body: 'true') }
+      it 'redirects if locked out' do
+        expect(controller).to receive(:redirect_to)
+        controller.load_user
+      end
     end
 
-    it 'calls the new method' do
-       expect(controller.canvas_shim_extensions).to eq ['load_user']
+    context 'not locked' do
+      let(:response) { double('response', body: 'false') }
+      it 'does not redirect if not locked out' do
+        expect(controller).to_not receive(:redirect_to)
+        controller.load_user
+      end
     end
   end
 end
