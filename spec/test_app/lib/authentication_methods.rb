@@ -1,8 +1,5 @@
-puts 'original auth methods'
 module AuthenticationMethods
   def load_user
-    puts 'original load user'
+    @current_user = User.new
   end
 end
-
-class Yaya;include AuthenticationMethods;end

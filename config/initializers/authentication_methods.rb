@@ -1,4 +1,4 @@
-module ::AuthenticationMethods
+module AuthenticationMethodsShim
   include CanvasShim::AuthenticationMethods
 
   def self.included base
@@ -15,3 +15,5 @@ module ::AuthenticationMethods
     end
   end
 end
+
+AuthenticationMethods.include(AuthenticationMethodsShim)
