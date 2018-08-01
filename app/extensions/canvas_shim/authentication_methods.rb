@@ -1,8 +1,7 @@
 module CanvasShim
   module AuthenticationMethods
     def load_user
-      canvas_shim_extensions << 'load_user'
-      original_output = original_method
+      original_method
 
       sis_id = @current_user && @current_user.pseudonym && @current_user.pseudonym.sis_user_id
       return unless sis_id
