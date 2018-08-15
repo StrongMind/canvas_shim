@@ -36,7 +36,7 @@ describe CoursesService::Commands::DistributeDueDates do
   end
 
   let(:content_tags) { double(:content_tags, order: ordered_content_tags) }
-  let(:assignment)  { double(:assignment) }
+  let(:assignment)  { double(:assignment, update: nil) }
   let(:assignment2) { double(:assignment2, update: nil) }
   let(:assignment3) { double(:assignment3, update: nil) }
   let(:assignment4)  { double(:assignment4, update: nil) }
@@ -68,6 +68,7 @@ describe CoursesService::Commands::DistributeDueDates do
         subject.call
       end
     end
+
     context 'course without start date' do
       let(:course) do
         double(
@@ -119,5 +120,16 @@ describe CoursesService::Commands::DistributeDueDates do
       )
       subject.call
     end
+
+    context 'Process a discussion topic without an assignment' do
+      let(:assignment) { double('assignment', nil?: true) }
+      let(:content_tags) { double(:content_tags, order: [double('DisscussionTopic', assignment: assignment)]) }
+
+      it 'wont break' do
+        expect(assignment).to_not receive(:update)
+        subject.call
+      end
+    end
+
   end
 end

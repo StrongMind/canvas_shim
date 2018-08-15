@@ -29,7 +29,10 @@ module CoursesService
       end
 
       def update_assignments(assignments_for_day, date)
-        assignments_for_day.each { |assignment| assignment.update(due_at: date) }
+        assignments_for_day.each do |assignment|
+          next if assignment.nil?
+          assignment.update(due_at: date)
+        end
       end
 
       def assignments
