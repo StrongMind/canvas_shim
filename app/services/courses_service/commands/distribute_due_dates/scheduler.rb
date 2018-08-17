@@ -37,7 +37,12 @@ module CoursesService
         end
 
         def calendar
-          Business::Calendar.new(working_days: WORKING_DAYS)
+          if ENV['HOLIDAYS']
+            Business::Calendar.new(working_days: WORKING_DAYS, holidays: ENV['HOLIDAYS'].split(','))
+          else
+            Business::Calendar.new(working_days: WORKING_DAYS)
+          end
+
         end
 
         def get_days
