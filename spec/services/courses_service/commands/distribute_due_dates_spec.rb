@@ -57,18 +57,6 @@ describe CoursesService::Commands::DistributeDueDates do
   end
 
   describe "#call" do
-    context 'instance has no automatic due date setting' do
-      before do
-        # thing to fake environment setting
-        ENV["AUTOMATIC_DUE_DATES"] = nil
-      end
-
-      it 'will not distribute the due dates' do
-        expect(assignment).to_not(receive(:update))
-        subject.call
-      end
-    end
-
     context 'course without start date' do
       let(:course) do
         double(

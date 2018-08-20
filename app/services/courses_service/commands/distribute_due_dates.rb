@@ -12,7 +12,6 @@ module CoursesService
       end
 
       def call
-        return unless Account.first.feature_flags.find_by(feature: 'auto_due_dates')try(:enabled?),
         return unless course.start_at && course.end_at
         course_assignments = assignments
         scheduler.course_dates.each do |date, count|
