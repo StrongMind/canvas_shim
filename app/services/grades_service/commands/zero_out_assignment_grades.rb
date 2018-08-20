@@ -6,7 +6,6 @@ module GradesService
       end
 
       def call!
-        return unless ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'] and ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'].downcase == "true"
         return unless assignment.published?
         return if still_submittable?
         grade_students
@@ -34,10 +33,10 @@ module GradesService
       def students
          assignment.context.students
       end
-      
+
       def students_with_submissions
-        assignment.submissions.map do |submission| 
-          submission.student if submission.state != :unsubmitted 
+        assignment.submissions.map do |submission|
+          submission.student if submission.state != :unsubmitted
         end.compact
       end
 
