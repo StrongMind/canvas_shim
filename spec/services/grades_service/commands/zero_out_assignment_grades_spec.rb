@@ -8,13 +8,13 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
         'default_account',
         feature_enabled?: true,
         account_users:        [
-                Struct.new(:role, :user).new(
-                  Struct.new(:name).new('AccountAdmin'),
-                  'account admin user'
-                )
-              ]
+          Struct.new(:role, :user).new(
+            Struct.new(:name).new('AccountAdmin'),
+              'account admin user'
             )
-      }
+        ]
+      )
+    }
     let(:student)  { double('student') }
     let(:context)  { double('context', students: [student]) }
     let(:students) { [student] }
@@ -59,7 +59,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
             published?: true
           )
         end
-        
+
         it "do nothing" do
           expect(subject).to_not receive(:students_without_submissions)
           subject.call!

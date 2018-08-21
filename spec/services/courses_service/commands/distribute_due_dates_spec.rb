@@ -2,6 +2,24 @@ class ContentTag;end
 class ContextModule;end
 
 describe CoursesService::Commands::DistributeDueDates do
+
+  let(:account_instance) {
+    double(
+      'default_account',
+      feature_enabled?: true,
+      account_users:        [
+        Struct.new(:role, :user).new(
+          Struct.new(:name).new('AccountAdmin'),
+            'account admin user'
+          )
+      ]
+    )
+  }
+
+  before do
+    allow(Account).to receive(:default).and_return(account_instance)
+  end
+
   let(:start_at) { Date.parse("Mon Nov 26 2018") }
   let(:end_at)   { start_at + 5.days }
   let(:course) do
@@ -56,6 +74,17 @@ describe CoursesService::Commands::DistributeDueDates do
   end
 
   describe "#call" do
+    context 'feature not enabled' do
+      before do
+        allow(account_instance).to receive(:feature_enabled?).and_return(false)
+      end
+
+      it 'will not distribute the due dates' do
+        expect(assignment).to_not(receive(:update))
+        subject.call
+      end
+    end
+
     context 'course without start date' do
       let(:course) do
         double(
