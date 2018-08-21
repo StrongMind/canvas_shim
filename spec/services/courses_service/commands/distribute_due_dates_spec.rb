@@ -53,7 +53,6 @@ describe CoursesService::Commands::DistributeDueDates do
   before do
     allow(ContentTag).to receive(:where).and_return(content_tags)
     allow(ContextModule).to receive(:where).and_return(context_modules)
-    ENV["AUTOMATIC_DUE_DATES"] = "true"
   end
 
   describe "#call" do
@@ -88,7 +87,6 @@ describe CoursesService::Commands::DistributeDueDates do
         subject.call
       end
     end
-
 
     it 'distributes the assignments across workdays' do
       expect(assignment).to(
