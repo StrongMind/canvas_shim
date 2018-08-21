@@ -1,15 +1,31 @@
+class Account
+end
+
 describe GradesService::Commands::ZeroOutAssignmentGrades do
   describe '#call' do
+    let(:account_instance) {
+      double(
+        'default_account',
+        feature_enabled?: true,
+        account_users:        [
+                Struct.new(:role, :user).new(
+                  Struct.new(:name).new('AccountAdmin'),
+                  'account admin user'
+                )
+              ]
+            )
+      }
     let(:student)  { double('student') }
     let(:context)  { double('context', students: [student]) }
     let(:students) { [student] }
 
     subject { described_class.new(assignment) }
 
+    before do
+      allow(Account).to receive(:default).and_return(account_instance)
+    end
+
     context "when the assignment is on time" do
-      before(:each) do
-        ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'] = 'true'
-      end
       let(:assignment) { double('assignment', due_date: Time.zone.now, published?: true)}
 
       it "do nothing" do
@@ -19,9 +35,6 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
     end
 
     context 'when the assignment is past due' do
-      before(:each) do
-        ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'] = 'true'
-      end
       let(:assignment) do
         double(
           'past due assignment, with student submission',
@@ -33,9 +46,10 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       end
 
       context "and zero out assignment setting is off" do
-        before(:each) do
-          ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'] = 'false'
+        before do
+          allow(account_instance).to receive(:feature_enabled?).and_return(false)
         end
+
         let(:assignment) do
           double(
             'past due assignment, with student submission',
@@ -45,6 +59,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
             published?: true
           )
         end
+        
         it "do nothing" do
           expect(subject).to_not receive(:students_without_submissions)
           subject.call!
@@ -52,9 +67,6 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       end
 
       context "and the assignment isnt published" do
-        before(:each) do
-          ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'] = 'true'
-        end
         let(:assignment) do
           double(
             'past due assignment, with student submission',
@@ -71,9 +83,6 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       end
 
       context "and the student has a submission" do
-        before(:each) do
-          ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'] = 'true'
-        end
         let(:submission) { double('submission', student: student, state: '') }
 
         it 'will not grade the student' do
@@ -83,10 +92,6 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       end
 
       context "and the student does not have a submission" do
-        before(:each) do
-          ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'] = 'true'
-        end
-
         before do
           allow(assignment).to receive(:submissions).and_return([])
         end
@@ -104,10 +109,6 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       end
 
       context 'assignment does not have a due date' do
-        before(:each) do
-          ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'] = 'true'
-        end
-
         before do
           allow(assignment).to receive(:submissions).and_return([])
         end
@@ -128,12 +129,11 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
 
       context 'assignment has an "unsubmitted submission"' do
         before(:each) do
-          ENV['ZERO_OUT_PASTDUE_ASSIGNMENTS'] = 'true'
           allow(assignment).to receive(:submissions).and_return([submission])
         end
 
-        let(:submission) do 
-          double('submission', student: student, state: :unsubmitted) 
+        let(:submission) do
+          double('submission', student: student, state: :unsubmitted)
         end
 
         it "will zero out the student's grade" do
