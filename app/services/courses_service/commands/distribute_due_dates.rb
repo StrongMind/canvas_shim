@@ -12,7 +12,7 @@ module CoursesService
       end
 
       def call
-        return unless ::Account.default.feature_enabled?(:auto_due_dates)
+        return unless SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on'
         return unless course.start_at && course.end_at
         course_assignments = assignments
         scheduler.course_dates.each do |date, count|

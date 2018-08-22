@@ -6,7 +6,7 @@ module GradesService
       end
 
       def call!
-        return unless ::Account.default.feature_enabled?(:zero_out_past_due)
+        return unless SettingsService.get_settings(object: :school, id: 1)['zero_out_past_due'] == 'on'
         return unless assignment.published?
         return if still_submittable?
         grade_students
