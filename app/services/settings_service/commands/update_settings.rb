@@ -25,6 +25,8 @@ module SettingsService
           SettingsService::Enrollment
         when 'student_assignment'
           SettingsService::StudentAssignment
+        when 'school'
+          SettingsService::School
         else
           raise "Unrecognized Object: #{@object}"
         end

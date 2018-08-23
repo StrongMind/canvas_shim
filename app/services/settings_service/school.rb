@@ -10,6 +10,15 @@ module SettingsService
       Repository.get(table_name: table_name, id: id)
     end
 
+    def self.put(id:, setting: , value:)
+      Repository.put(
+        table_name: table_name,
+        id: id,
+        setting: setting,
+        value: value
+      )
+    end
+
     def self.table_name
       [SettingsService.canvas_domain, '-', OBJECT_NAME].join('')
     end
