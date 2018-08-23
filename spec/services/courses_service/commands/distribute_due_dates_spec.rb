@@ -2,6 +2,24 @@ class ContentTag;end
 class ContextModule;end
 
 describe CoursesService::Commands::DistributeDueDates do
+
+  let(:account_instance) {
+    double(
+      'default_account',
+      feature_enabled?: true,
+      account_users:        [
+        Struct.new(:role, :user).new(
+          Struct.new(:name).new('AccountAdmin'),
+            'account admin user'
+          )
+      ]
+    )
+  }
+
+  before do
+    allow(Account).to receive(:default).and_return(account_instance)
+  end
+
   let(:start_at) { Date.parse("Mon Nov 26 2018") }
   let(:end_at)   { start_at + 5.days }
   let(:course) do
@@ -53,14 +71,12 @@ describe CoursesService::Commands::DistributeDueDates do
   before do
     allow(ContentTag).to receive(:where).and_return(content_tags)
     allow(ContextModule).to receive(:where).and_return(context_modules)
-    ENV["AUTOMATIC_DUE_DATES"] = "true"
   end
 
   describe "#call" do
-    context 'instance has no automatic due date setting' do
+    context 'feature not enabled' do
       before do
-        # thing to fake environment setting
-        ENV["AUTOMATIC_DUE_DATES"] = nil
+        allow(account_instance).to receive(:feature_enabled?).and_return(false)
       end
 
       it 'will not distribute the due dates' do
@@ -100,7 +116,6 @@ describe CoursesService::Commands::DistributeDueDates do
         subject.call
       end
     end
-
 
     it 'distributes the assignments across workdays' do
       expect(assignment).to(
