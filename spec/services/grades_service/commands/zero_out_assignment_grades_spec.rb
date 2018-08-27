@@ -22,6 +22,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
     subject { described_class.new(assignment) }
 
     before do
+      allow(SettingsService).to receive(:get_settings).and_return({'zero_out_past_due' => 'on'})
       allow(Account).to receive(:default).and_return(account_instance)
     end
 
@@ -47,7 +48,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
 
       context "and zero out assignment setting is off" do
         before do
-          allow(account_instance).to receive(:feature_enabled?).and_return(false)
+          allow(SettingsService).to receive(:get_settings).and_return({'zero_out_past_due' => 'off'})
         end
 
         let(:assignment) do
