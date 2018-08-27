@@ -6,6 +6,7 @@ describe GradesService do
       .to receive(:new).and_return(instance)
 
     allow(GradesService::Commands::ZeroOutAssignmentGrades).to receive(:new).and_return(instance)
+    allow(SettingsService).to receive(:get_settings).and_return({'zero_out_past_due' => 'on'})
   end
 
   it 'calls the command' do
