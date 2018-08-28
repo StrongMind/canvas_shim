@@ -1,5 +1,20 @@
 require ENGINE_RAILS_ROOT + 'spec/dynamodb_helper'
 
+class Assignment
+  def self.find id
+    new
+  end
+
+  def self.find_each(&block)
+    block.yield(self.new)
+  end
+
+  def migration_id
+    '1232141423'
+  end
+end
+
+
 describe SettingsService::StudentAssignment do
   subject {
     described_class.new
@@ -47,17 +62,7 @@ describe SettingsService::StudentAssignment do
     describe '#put' do
       let(:dynamodb) {double('dynamodb')}
       it 'calls put on the repository' do
-        allow(SettingsService::StudentAssignmentRepository).to receive(:dynamodb).and_return(dynamodb)
-        allow(dynamodb).to receive(:create_table) #.with({})
-        allow(dynamodb).to receive(:query).and_return(double('something', items: [])) #.with({})
-        expect(dynamodb).to receive(:put_item) #.with({})
-
-        # expect(SettingsService::StudentAssignmentRepository).to receive(:put).with(
-        #   id:         {student_id: 1, assignment_id: 2},
-        #   setting:    'max_attempts',
-        #   value:      'increment',
-        #   table_name: table_name
-        # )
+        expect(SettingsService::StudentAssignmentRepository).to receive(:put)
         described_class.put(id: {student_id: 1, assignment_id: 2}, setting: 'max_attempts', value: 'increment')
       end
     end

@@ -15,15 +15,18 @@ describe GradesService do
 
     context 'no submissions'  do
       let!(:assignment) { Assignment.create!(due_at: 2.days.ago, published: true, context: course) }
+
       it 'calls the command' do
         expect(command_class).to receive(:new).with(assignment)
         subject.zero_out_grades!(sleep: false)
       end
+
+      it 'no submissions were created' do
+        expect(assignment.submissions.count).to eq 0
+      end
     end
 
     context 'setting is not on' do
-      let!(:submission) { Submission.create(assignment: assignment, score: 1) }
-
       before do
         allow(SettingsService).to receive(:get_settings).and_return('zero_out_past_due' => 'off')
       end
