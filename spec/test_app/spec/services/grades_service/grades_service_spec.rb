@@ -29,7 +29,7 @@ describe GradesService do
       end
 
       it 'does not call the command' do
-        expect(command_class).to_not receive(:new).with(Assignment.first)
+        expect(command_class).to_not receive(:new)
         subject.zero_out_grades!(sleep: false)
       end
     end
@@ -47,7 +47,7 @@ describe GradesService do
       let!(:submission) { Submission.create(assignment: assignment, score: 1) }
 
       it 'does not call the command' do
-        expect(command_class).to_not receive(:new).with(Assignment.first)
+        expect(command_class).to_not receive(:new)
         subject.zero_out_grades!(sleep: false)
       end
     end
@@ -55,7 +55,7 @@ describe GradesService do
     context 'no due date' do
       let!(:assignment) { Assignment.create!(due_at: nil, published: true, context: course) }
       it 'does not call the command' do
-        expect(command_class).to_not receive(:new).with(Assignment.first)
+        expect(command_class).to_not receive(:new)
         subject.zero_out_grades!(sleep: false)
       end
     end
@@ -63,7 +63,7 @@ describe GradesService do
     context 'recent due date' do
       let!(:assignment) { Assignment.create!(due_at: 10.minutes.ago, published: true, context: course) }
       it 'does not call the command' do
-        expect(command_class).to_not receive(:new).with(Assignment.first)
+        expect(command_class).to_not receive(:new)
         subject.zero_out_grades!(sleep: false)
       end
     end
