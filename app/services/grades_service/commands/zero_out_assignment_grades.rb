@@ -41,7 +41,7 @@ module GradesService
       end
 
       def students_without_submissions
-        students.select {|s| students_with_submissions.exclude?(s) }
+        students.select { |s| students_with_submissions.exclude?(s) }
       end
     end
   end
