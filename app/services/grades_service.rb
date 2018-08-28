@@ -1,14 +1,14 @@
 module GradesService
-  def self.zero_out_grades!(force: false, sleep: true)
+  def self.zero_out_grades!(force: false, seconds_to_sleep: 60, batch_size: 1000)
     if force == false
       return unless SettingsService.get_settings(object: :school, id: 1)['zero_out_past_due'] == 'on'
     end
 
-    scope.in_batches do |batch|
+    scope.in_batches(of: batch_size) do |batch|
       batch.each do |assignment|
         Commands::ZeroOutAssignmentGrades.new(assignment).call!
       end
-      sleep 60 if sleep
+      sleep seconds_to_sleep
     end
   end
 
