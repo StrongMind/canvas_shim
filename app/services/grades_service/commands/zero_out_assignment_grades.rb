@@ -31,7 +31,7 @@ module GradesService
       end
 
       def students
-         assignment.context.students
+        assignment.context.students
       end
 
       def students_with_submissions

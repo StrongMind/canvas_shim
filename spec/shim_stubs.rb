@@ -13,10 +13,10 @@ module Api
   end
 end
 
-class Course
-  def self.first
-  end
-end
+# class Course
+#   def self.first
+#   end
+# end
 
 class Enrollment
   def id;1;end
