@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 20180828184459) do
   create_table "submissions", force: :cascade do |t|
     t.string  "assignment_id"
     t.integer "score"
+    t.string  "workflow_state"
   end
 
 end
