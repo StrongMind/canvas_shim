@@ -15,13 +15,6 @@ describe GradesService do
       allow(command_class).to receive(:new).with(assignment).and_return(command)
     end
 
-    context 'skipping the command' do
-      it 'does not call the command' do
-        expect(command_class).to_not receive(:new).with(Assignment.first)
-        subject.zero_out_grades!(seconds_to_sleep: 0, skip_command: true)
-      end
-    end
-
     context 'no submissions'  do
       let!(:assignment) { Assignment.create!(due_at: 2.days.ago, published: true, context: course) }
 
