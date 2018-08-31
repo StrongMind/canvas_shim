@@ -46,27 +46,6 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
         )
       end
 
-      context "and zero out assignment setting is off" do
-        before do
-          allow(SettingsService).to receive(:get_settings).and_return({'zero_out_past_due' => 'off'})
-        end
-
-        let(:assignment) do
-          double(
-            'past due assignment, with student submission',
-            due_date: 2.hours.ago,
-            context: context,
-            submissions: [],
-            published?: true
-          )
-        end
-
-        it "do nothing" do
-          expect(subject).to_not receive(:students_without_submissions)
-          subject.call!
-        end
-      end
-
       context "and the assignment isnt published" do
         let(:assignment) do
           double(

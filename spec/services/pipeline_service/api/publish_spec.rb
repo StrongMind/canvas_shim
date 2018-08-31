@@ -1,3 +1,6 @@
+module Delayed
+  MAX_PRIORITY = 1000000
+end
 describe PipelineService::API::Publish do
   let(:submission)          { double('submission', id: 1, class: 'Submission', assignment: double('assignment')) }
   let(:command_instance)    { double('command_instance', call: nil) }
@@ -14,7 +17,7 @@ describe PipelineService::API::Publish do
 
   describe '#call' do
     it 'enqueue' do
-      expect(queue).to receive(:enqueue).with(subject)
+      expect(queue).to receive(:enqueue).with(subject, priority: Delayed::MAX_PRIORITY)
       subject.call
     end
   end

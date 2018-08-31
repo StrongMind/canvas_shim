@@ -77,7 +77,7 @@ describe CoursesService::Commands::DistributeDueDates do
   describe "#call" do
     context 'feature not enabled' do
       before do
-        allow(account_instance).to receive(:feature_enabled?).and_return(false)
+        allow(SettingsService).to receive(:get_settings).and_return('auto_due_dates' => 'off')
       end
 
       it 'will not distribute the due dates' do
