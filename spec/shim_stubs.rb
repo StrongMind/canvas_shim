@@ -41,12 +41,3 @@ class Account
     )
   end
 end
-
-
-module Delayed
-  module Job
-    def self.enqueue(job)
-      job.perform
-    end
-  end
-end
