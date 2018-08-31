@@ -1,3 +1,14 @@
+class Enrollment
+  def id;1;end
+
+  def changes
+  end
+
+  def root_account
+    Struct.new(:id).new(1)
+  end
+end
+
 describe PipelineService::Commands::Publish do
   let(:object)              { Enrollment.new }
   let(:user)                { double('user') }
@@ -23,6 +34,6 @@ describe PipelineService::Commands::Publish do
     it 'sends a message to the pipeline' do
       expect(client_instance).to receive(:call)
       subject.call
-    end    
+    end
   end
 end

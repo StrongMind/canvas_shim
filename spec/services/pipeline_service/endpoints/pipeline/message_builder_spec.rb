@@ -1,3 +1,16 @@
+class Account
+  def self.default
+    Struct.new(:account_users).new(
+      [
+        Struct.new(:role, :user).new(
+          Struct.new(:name).new('AccountAdmin'),
+          'account admin user'
+        )
+      ]
+    )
+  end
+end
+
 describe PipelineService::Endpoints::Pipeline::MessageBuilder do
   let(:message_class_instance) do
     double('MessageClassInstance',
