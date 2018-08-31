@@ -17,6 +17,7 @@ describe CoursesService::Commands::DistributeDueDates do
   }
 
   before do
+    allow(SettingsService).to receive(:get_settings).and_return('auto_due_dates' => 'on')
     allow(Account).to receive(:default).and_return(account_instance)
   end
 

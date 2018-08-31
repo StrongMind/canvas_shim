@@ -15,7 +15,7 @@ module PipelineService
       end
 
       def call
-        queue.enqueue(self)
+        queue.enqueue(self, priority: Delayed::MAX_PRIORITY)
       end
 
       def perform
