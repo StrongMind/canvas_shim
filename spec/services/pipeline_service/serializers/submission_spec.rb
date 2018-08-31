@@ -1,3 +1,14 @@
+module Api
+  module V1
+    module Submission;end
+    module Assignment;end
+    module User
+      def enrollment_json(*)
+      end
+    end
+  end
+end
+
 describe PipelineService::Serializers::Submission do
   let (:user)       { double('user') }
   let (:submission) { double('submission') }
