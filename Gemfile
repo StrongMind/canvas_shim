@@ -17,3 +17,5 @@ gem 'pipeline_publisher_ruby', :git => 'git@github.com:StrongMind/pipeline-publi
 gem 'httparty'
 gem 'aws-sdk-dynamodb', '~> 1.6'
 gem 'business'
+gem 'inst-jobs'
+gem 'pg'

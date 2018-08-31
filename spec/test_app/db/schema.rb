@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180828184459) do
+ActiveRecord::Schema.define(version: 20180831223221) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "assignments", force: :cascade do |t|
     t.datetime "due_at"
@@ -21,12 +24,58 @@ ActiveRecord::Schema.define(version: 20180828184459) do
   create_table "courses", force: :cascade do |t|
   end
 
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer  "priority",                   default: 0
+    t.integer  "attempts",                   default: 0
+    t.text     "handler"
+    t.text     "last_error"
+    t.string   "queue",          limit: 255
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by",      limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "tag",            limit: 255
+    t.integer  "max_attempts"
+    t.string   "strand",         limit: 255
+    t.boolean  "next_in_strand",             default: true, null: false
+    t.string   "source",         limit: 255
+    t.integer  "max_concurrent",             default: 1,    null: false
+    t.datetime "expires_at"
+    t.index ["locked_by"], name: "index_delayed_jobs_on_locked_by", where: "(locked_by IS NOT NULL)", using: :btree
+    t.index ["priority", "run_at", "queue"], name: "get_delayed_jobs_index", where: "((locked_at IS NULL) AND (next_in_strand = true))", using: :btree
+    t.index ["run_at", "tag"], name: "index_delayed_jobs_on_run_at_and_tag", using: :btree
+    t.index ["strand", "id"], name: "index_delayed_jobs_on_strand", using: :btree
+    t.index ["tag"], name: "index_delayed_jobs_on_tag", using: :btree
+  end
+
+  create_table "failed_jobs", force: :cascade do |t|
+    t.integer  "priority",                       default: 0
+    t.integer  "attempts",                       default: 0
+    t.string   "handler",         limit: 512000
+    t.text     "last_error"
+    t.string   "queue",           limit: 255
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by",       limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "tag",             limit: 255
+    t.integer  "max_attempts"
+    t.string   "strand",          limit: 255
+    t.bigint   "original_job_id"
+    t.string   "source",          limit: 255
+    t.datetime "expires_at"
+  end
+
   create_table "students", force: :cascade do |t|
     t.integer "course_id"
   end
 
   create_table "submissions", force: :cascade do |t|
-    t.string  "assignment_id"
+    t.integer "assignment_id"
     t.integer "score"
     t.string  "workflow_state"
   end
