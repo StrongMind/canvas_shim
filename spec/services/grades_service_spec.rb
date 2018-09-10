@@ -15,7 +15,6 @@ describe GradesService do
   end
 
   it 'calls the command' do
-
     expect(instance).to receive(:call!)
     described_class.zero_out_grades!(seconds_to_sleep: 0)
   end

@@ -49,8 +49,8 @@ describe GradesService do
       end
     end
 
-    context 'unsubmitted submissions' do
-      let!(:submission) { Submission.create(assignment: assignment, workflow_state: :unsubmitted) }
+    context 'submissions with scores' do
+      let!(:submission) { Submission.create(assignment: assignment, score: 2) }
       it 'does not call the command' do
         expect(command_class).to_not receive(:new)
         subject.zero_out_grades!(seconds_to_sleep: 0)
