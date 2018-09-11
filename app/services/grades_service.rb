@@ -19,6 +19,5 @@ module GradesService
       .where.not(due_at: nil)
       .where('due_at < ?', 1.hour.ago)
       .where('submissions.score IS NULL')
-      .where('submissions.workflow_state != ? OR submissions.workflow_state IS NULL', 'unsubmitted')
   end
 end

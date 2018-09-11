@@ -36,7 +36,7 @@ module GradesService
 
       def students_with_submissions
         assignment.submissions.map do |submission|
-          submission.student if submission.state != :unsubmitted
+          submission.student unless submission.score.nil?
         end.compact
       end
 
