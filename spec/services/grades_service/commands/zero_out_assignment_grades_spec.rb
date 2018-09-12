@@ -62,8 +62,8 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
         end
       end
 
-      context "and the submission already has a score" do
-        let(:submission) { double('submission', student: student, state: '', score: 2) }
+      context "and the submission has been submitted" do
+        let(:submission) { double('submission', student: student, state: '', workflow_state: 'submitted') }
 
         it 'will not grade the student' do
           expect(assignment).to_not receive(:grade_student)
@@ -107,13 +107,13 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
         end
       end
 
-      context 'submission has no score "unsubmitted submission"' do
+      context 'submission is not in a submitted state' do
         before(:each) do
           allow(assignment).to receive(:submissions).and_return([submission])
         end
 
         let(:submission) do
-          double('submission', student: student, state: :unsubmitted, score: nil )
+          double('submission', student: student, workflow_state: 'junk' )
         end
 
         it "will zero out the student's grade" do
