@@ -36,7 +36,7 @@ module GradesService
 
       def students_with_submissions
         assignment.submissions.map do |submission|
-          submission.student unless submission.score.nil?
+          submission.student if submission.workflow_state == 'submitted'
         end.compact
       end
 
