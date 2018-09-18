@@ -71,6 +71,33 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
         end
       end
 
+      context "and the submission has been graded" do
+        let(:submission) { double('submission', student: student, state: '', workflow_state: 'graded') }
+
+        it 'will not grade the student' do
+          expect(assignment).to_not receive(:grade_student)
+          subject.call!
+        end
+      end
+
+      context "and the submission has a score" do
+        let(:submission) { double('submission', student: student, state: '', workflow_state: 'junk', score: 50, grade: nil) }
+
+        it 'will not grade the student' do
+          expect(assignment).to_not receive(:grade_student)
+          subject.call!
+        end
+      end
+
+      context "and the submission has a grade" do
+        let(:submission) { double('submission', student: student, state: '', workflow_state: 'junk', grade: 50, score: nil) }
+
+        it 'will not grade the student' do
+          expect(assignment).to_not receive(:grade_student)
+          subject.call!
+        end
+      end
+
       context "and the student does not have a submission" do
         before do
           allow(assignment).to receive(:submissions).and_return([])
@@ -113,7 +140,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
         end
 
         let(:submission) do
-          double('submission', student: student, workflow_state: 'junk' )
+          double('submission', student: student, workflow_state: 'junk' , score: nil, grade: nil)
         end
 
         it "will zero out the student's grade" do
