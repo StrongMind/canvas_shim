@@ -17,15 +17,18 @@ describe GradesService do
 
     context 'no submissions'  do
       let!(:assignment) { Assignment.create!(due_at: 2.days.ago, published: true, context: course) }
+      before do
+        allow(command_class).to receive(:new).with(assignment.id).and_return(command)
+      end
 
       it 'calls the command' do
-        expect(command_class).to receive(:new).with(assignment)
-        subject.zero_out_grades!(seconds_to_sleep: 0)
+        expect(command_class).to receive(:new).with(assignment.id).and_return(command)
+        subject.zero_out_grades!
       end
 
       it 'no submissions were created' do
         expect(assignment.submissions.count).to eq 0
-        subject.zero_out_grades!(seconds_to_sleep: 0)
+        subject.zero_out_grades!
       end
     end
 
@@ -36,7 +39,7 @@ describe GradesService do
 
       it 'does not call the command' do
         expect(command_class).to_not receive(:new)
-        subject.zero_out_grades!(seconds_to_sleep: 0)
+        subject.zero_out_grades!
       end
     end
 
@@ -44,8 +47,8 @@ describe GradesService do
       let!(:submission) { Submission.create(assignment: assignment) }
 
       it 'calls the command' do
-        expect(command_class).to receive(:new).with(Assignment.first)
-        subject.zero_out_grades!(seconds_to_sleep: 0)
+        expect(command_class).to receive(:new).with(Assignment.first.id).and_return(command)
+        subject.zero_out_grades!
       end
     end
 
@@ -53,7 +56,7 @@ describe GradesService do
       let!(:submission) { Submission.create(assignment: assignment, score: 2) }
       it 'does not call the command' do
         expect(command_class).to_not receive(:new)
-        subject.zero_out_grades!(seconds_to_sleep: 0)
+        subject.zero_out_grades!
       end
     end
 
@@ -62,7 +65,7 @@ describe GradesService do
 
       it 'does not call the command' do
         expect(command_class).to_not receive(:new)
-        subject.zero_out_grades!(seconds_to_sleep: 0)
+        subject.zero_out_grades!
       end
     end
 
@@ -70,7 +73,7 @@ describe GradesService do
       let!(:assignment) { Assignment.create!(due_at: nil, published: true, context: course) }
       it 'does not call the command' do
         expect(command_class).to_not receive(:new)
-        subject.zero_out_grades!(seconds_to_sleep: 0)
+        subject.zero_out_grades!
       end
     end
 
@@ -78,7 +81,7 @@ describe GradesService do
       let!(:assignment) { Assignment.create!(due_at: 10.minutes.ago, published: true, context: course) }
       it 'does not call the command' do
         expect(command_class).to_not receive(:new)
-        subject.zero_out_grades!(seconds_to_sleep: 0)
+        subject.zero_out_grades!
       end
     end
   end
