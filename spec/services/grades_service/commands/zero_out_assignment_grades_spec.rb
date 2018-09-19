@@ -19,11 +19,12 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
     let(:context)  { double('context', students: [student]) }
     let(:students) { [student] }
 
-    subject { described_class.new(assignment) }
+    subject { described_class.new(1) }
 
     before do
       allow(SettingsService).to receive(:get_settings).and_return({'zero_out_past_due' => 'on'})
       allow(Account).to receive(:default).and_return(account_instance)
+      allow(::Assignment).to receive(:find).and_return(assignment)
     end
 
     context "when the assignment is on time" do
