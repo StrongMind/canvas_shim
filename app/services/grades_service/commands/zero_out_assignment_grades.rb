@@ -1,8 +1,8 @@
 module GradesService
   module Commands
     class ZeroOutAssignmentGrades
-      def initialize(assignment)
-        @assignment = assignment
+      def initialize(id)
+        @assignment = ::Assignment.find(id)
       end
 
       def call!
