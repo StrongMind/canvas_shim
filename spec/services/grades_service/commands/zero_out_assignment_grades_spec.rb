@@ -15,9 +15,11 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
         ]
       )
     }
-    let(:student)  { double('student') }
+    let(:student)  { double('student', id: 1) }
     let(:context)  { double('context', students: [student]) }
     let(:students) { [student] }
+    let(:submissions) { [submission] }
+    let(:submission) { double('submission2', student: student, state: '', workflow_state: 'submitted') }
 
     subject { described_class.new(1) }
 
@@ -25,6 +27,8 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       allow(SettingsService).to receive(:get_settings).and_return({'zero_out_past_due' => 'on'})
       allow(Account).to receive(:default).and_return(account_instance)
       allow(::Assignment).to receive(:find).and_return(assignment)
+      ENV['CANVAS_DOMAIN'] = 'somedomain'
+      allow(SettingsService).to receive(:update_settings)
     end
 
     context "when the assignment is on time" do
@@ -42,9 +46,14 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
           'past due assignment, with student submission',
           due_date: 2.hours.ago,
           context: context,
-          submissions: [submission],
-          published?: true
+          submissions: submissions,
+          published?: true,
+          id: 2
         )
+      end
+
+      before do
+        allow(submissions).to receive(:find_by).and_return(double('submission1', score: 30))
       end
 
       context "and the assignment isnt published" do
@@ -64,7 +73,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       end
 
       context "and the submission has been submitted" do
-        let(:submission) { double('submission', student: student, state: '', workflow_state: 'submitted') }
+        let(:submission) { double('submission2', student: student, state: '', workflow_state: 'submitted') }
 
         it 'will not grade the student' do
           expect(assignment).to_not receive(:grade_student)
@@ -100,11 +109,11 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       end
 
       context "and the student does not have a submission" do
+        let(:submissions) {[]}
         before do
-          allow(assignment).to receive(:submissions).and_return([])
+          allow(submissions).to receive(:find_by).and_return nil
+          allow(assignment).to receive(:submissions).and_return(submissions)
         end
-
-        let(:submission) { double('submission', student: nil) }
 
         it "will zero out the student's grade" do
           expect(assignment).to receive(:grade_student).with(
@@ -125,7 +134,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
            double('assignment', due_date: nil, published?: true, context: context)
         end
 
-        it "will zero out the student's grade" do
+        it "will not zero out the student's grade" do
           expect(assignment).to_not receive(:grade_student).with(
             student,
             score: 0,
@@ -137,20 +146,56 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
 
       context 'submission is not in a submitted state' do
         before(:each) do
-          allow(assignment).to receive(:submissions).and_return([submission])
+          allow(assignment).to receive(:submissions).and_return(submissions)
+          allow(assignment).to receive(:grade_student)
+          allow(SettingsService).to receive(:update_settings)
+          allow(submissions).to receive(:find_by).and_return(submission)
         end
 
         let(:submission) do
-          double('submission', student: student, workflow_state: 'junk' , score: nil, grade: nil)
+          double('submission4', student: student, workflow_state: 'junk', score: nil, grade: nil )
         end
 
         it "will zero out the student's grade" do
+
           expect(assignment).to receive(:grade_student).with(
             student,
             score: 0,
             grader: "account admin user"
           )
           subject.call!
+        end
+
+      end
+
+      context "Logging" do
+        before(:each) do
+          allow(assignment).to receive(:grade_student)
+        end
+
+        let(:submission) do
+          double('submission4', student: student, workflow_state: 'junk', score: nil, grade: nil )
+        end
+        context "Zeroed out scores" do
+          before do
+            allow(submissions).to receive(:find_by).and_return(double('submission1', score: nil))
+          end
+
+          it "records true" do
+            expect(SettingsService).to receive(:update_settings).with(hash_including(value: true))
+
+            subject.call!
+          end
+        end
+        context "Pre-existing Grades" do
+          before do
+            allow(submissions).to receive(:find_by).and_return(double('submission1', score: 0))
+          end
+
+          it "records false" do
+            expect(SettingsService).to receive(:update_settings).with(hash_including(value: false))
+            subject.call!
+          end
         end
       end
     end
