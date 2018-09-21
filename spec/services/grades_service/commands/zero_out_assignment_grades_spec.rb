@@ -1,6 +1,3 @@
-class Account
-end
-
 describe GradesService::Commands::ZeroOutAssignmentGrades do
   subject {described_class.new(submission)}
   let(:assignment) { double("assignment", grade_student: nil, published?: true) }
@@ -102,16 +99,17 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
         subject.call!
       end
     end
+
+    context 'when submission is on an unpublished assignment' do
+      before do
+        allow(assignment).to receive(:published?).and_return(false)
+      end
+
+      it 'will not grade' do
+        expect(assignment).to_not receive(:grade_student)
+        subject.call!
+      end
+    end
   end
 
-  context 'when submission is on an unpublished assignment' do
-    before do
-      allow(assignment).to receive(:published?).and_return(false)
-    end
-
-    it 'will not grade' do
-      expect(assignment).to_not receive(:grade_student)
-      subject.call!
-    end
-  end
 end

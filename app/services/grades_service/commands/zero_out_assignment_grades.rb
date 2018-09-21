@@ -6,12 +6,12 @@ module GradesService
         @submission = submission
         @assignment = submission.assignment
         @student = submission.user
-        @grader = grader
+        @grader = GradesService::Account.account_admin
       end
 
       def call!
         return if should_not_grade?
-        @assignment.grade_student(@student, score: 0, grader: grader)
+        @assignment.grade_student(@student, score: 0, grader: @grader)
       end
 
       private
@@ -31,11 +31,7 @@ module GradesService
       def unpublished?
         !@assignment.published?
       end
-
-      def grader
-        GradesService::Account.account_admin
-      end
-
+      
       def should_not_grade?
         submitted? || scored? || still_submittable? || unpublished?
       end
