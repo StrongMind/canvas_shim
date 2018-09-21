@@ -124,6 +124,13 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
           )
           subject.call!
         end
+
+        context 'turn it off!' do
+          it 'wont run the command' do
+            expect(assignment).to_not receive(:grade_student)
+            subject.call!
+          end
+        end
       end
     end
   end

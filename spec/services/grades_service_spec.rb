@@ -18,4 +18,12 @@ describe GradesService do
     expect(instance).to receive(:call!)
     described_class.zero_out_grades!(seconds_to_sleep: 0)
   end
+
+  context 'turn it off!' do
+    it 'wont run the command' do
+      expect(instance).to_not receive(:call!)
+      described_class.zero_out_grades!(seconds_to_sleep: 0)
+    end
+  end
+
 end

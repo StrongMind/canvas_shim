@@ -6,6 +6,7 @@ module GradesService
       end
 
       def call!
+        Rails.logger.warn("The zero out grades command has been disabled") && return
         return unless assignment.published?
         return if still_submittable?
         grade_students
