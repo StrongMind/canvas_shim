@@ -1,5 +1,6 @@
 module GradesService
   def self.zero_out_grades!(force: false, seconds_to_sleep: 1, batch_size: 50)
+    Rails.logger.warn("The zero out grades command has been disabled") && return
     if force == false
       return unless SettingsService.get_settings(object: :school, id: 1)['zero_out_past_due'] == 'on'
     end
