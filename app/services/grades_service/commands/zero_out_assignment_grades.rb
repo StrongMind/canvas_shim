@@ -5,8 +5,9 @@ module GradesService
       def initialize(submission)
         @previous_score = submission.score
         @submission = submission
-        @assignment = submission.assignment
-        @student = submission.user
+        @assignment = @submission.assignment
+        @student = @submission.user
+        @course = @assignment.context
         @grader = GradesService::Account.account_admin
       end
 
@@ -31,6 +32,16 @@ module GradesService
         file.close
       end
 
+      def log_operation
+        SettingsService.update_settings(
+          id: @submission.id,
+          setting: 'previous_score',
+          value: @previous_score,
+          object: 'submission',
+          context: 'zero_grader'
+        )
+      end
+
       def still_submittable?
         @assignment.due_at > 1.hour.ago
       end
@@ -47,18 +58,12 @@ module GradesService
         @assignment.published?
       end
 
-      def should_grade?
-        !submitted? && !scored? && !still_submittable? && published?
+      def enrolled?
+        @course.includes_user?(@student, @course.admin_visible_student_enrollments)
       end
 
-      def log_operation
-        SettingsService.update_settings(
-          id: @submission.id,
-          setting: 'previous_score',
-          value: @previous_score,
-          object: 'submission',
-          context: 'zero_grader'
-        )
+      def should_grade?
+        !submitted? && !scored? && !still_submittable? && published? && enrolled?
       end
     end
   end

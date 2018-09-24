@@ -5,12 +5,22 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       "assignment",
       grade_student: nil,
       published?: true,
-      due_at: 1.hour.ago
+      due_at: 1.hour.ago,
+      context: course
     )
   end
 
   let(:user) {double("user")}
   let(:grader) {double("grader")}
+  let(:enrollment) {double("enrollment")}
+  let(:course) {
+    double(
+      'course',
+      includes_user?: true,
+      admin_visible_student_enrollments: [enrollment]
+    )
+  }
+
   let(:submission) do
     double(
       "submission",
@@ -74,6 +84,13 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
 
       it 'when submission is on an unpublished assignment' do
         allow(assignment).to receive(:published?).and_return(false)
+      end
+
+      it 'when student is not enrolled in the course' do
+        allow(course).to receive(:includes_user?).with(
+          user,
+          course.admin_visible_student_enrollments
+        ).and_return(false)
       end
     end
 
