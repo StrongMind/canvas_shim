@@ -11,7 +11,8 @@ module GradesService
       end
 
       def call!(options={})
-        return if should_not_grade?
+        return unless should_grade?
+
         if options[:dry_run]
           log_execution_plan
           return
@@ -23,9 +24,8 @@ module GradesService
       private
 
       def log_execution_plan
-        message = "Changing submission #{@submission.id} from #{@previous_score} to 0\n"
-        file  = File.open('dry_run.log', 'a')
-        file.write(message)
+        file = File.open('dry_run.log', 'a')
+        file.write("Changing submission #{@submission.id} from #{@previous_score} to 0\n")
         file.close
       end
 
@@ -41,12 +41,12 @@ module GradesService
         EXCLUDE_WORKFLOW_STATES.include? @submission.workflow_state
       end
 
-      def unpublished?
-        !@assignment.published?
+      def published?
+        @assignment.published?
       end
 
-      def should_not_grade?
-        submitted? || scored? || still_submittable? || unpublished?
+      def should_grade?
+        !submitted? && !scored? && !still_submittable? && published?
       end
     end
   end

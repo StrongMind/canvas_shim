@@ -5,7 +5,7 @@ describe GradesService do
   before do
     allow(GradesService::Commands::ZeroOutAssignmentGrades).to receive(:new).and_return(instance)
     allow(SettingsService).to receive(:get_settings).and_return({'zero_out_past_due' => 'on'})
-    allow(Submission).to receive(:find_each).and_return([submission])
+    allow(Submission).to receive(:find_each).and_yield(submission)
   end
 
   it "calls the command and passes on options" do

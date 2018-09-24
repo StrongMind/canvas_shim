@@ -5,7 +5,7 @@ module GradesService
       return unless SettingsService.get_settings(object: :school, id: 1)['zero_out_past_due'] == 'on'
     end
 
-    Submission.find_each.each do |submission|
+    Submission.find_each do |submission|
       Commands::ZeroOutAssignmentGrades.new(submission).call!(options)
     end
   end
