@@ -3,18 +3,31 @@ module GradesService
     class ZeroOutAssignmentGrades
       EXCLUDE_WORKFLOW_STATES = ['submitted', 'graded']
       def initialize(submission)
+        @previous_score = submission.score || 'nil'
         @submission = submission
         @assignment = submission.assignment
         @student = submission.user
         @grader = GradesService::Account.account_admin
       end
 
-      def call!
+      def call!(options={})
         return if should_not_grade?
+        if options[:dry_run]
+          log_execution_plan
+          return
+        end
+
         @assignment.grade_student(@student, score: 0, grader: @grader)
       end
 
       private
+
+      def log_execution_plan
+        message = "Changing submission #{@submission.id} from #{@previous_score} to 0\n"
+        file  = File.open('dry_run.log', 'a')
+        file.write(message)
+        file.close
+      end
 
       def still_submittable?
         @submission.due_at > 1.hour.ago
@@ -31,7 +44,7 @@ module GradesService
       def unpublished?
         !@assignment.published?
       end
-      
+
       def should_not_grade?
         submitted? || scored? || still_submittable? || unpublished?
       end

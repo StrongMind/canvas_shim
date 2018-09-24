@@ -6,6 +6,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
   let(:submission) do
     double(
       "submission",
+      id: 1,
       assignment: assignment,
       user: user,
       workflow_state: 'unsubmitted',
@@ -21,95 +22,72 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
   end
 
   context '#call' do
-    context 'when assingment is unsubmitted and late' do
-      it 'grades' do
-        expect(assignment).to receive(:grade_student)
-        subject.call!
-      end
-
-      context 'notifications' do
-        it 'mutes notifications'
-        it 'unmutes notifications'
-      end
-
-      it 'uses the correct grader' do
-        expect(assignment).to receive(:grade_student).with(any_args, hash_including(grader: grader))
-        subject.call!
-      end
-
-      it 'updates the score to 0' do
-        expect(assignment).to receive(:grade_student).with(any_args, hash_including(score: 0))
-        subject.call!
-      end
-
-      it 'logs'
+    it 'uses the correct grader' do
+      expect(assignment).to receive(:grade_student).with(any_args, hash_including(grader: grader))
+      subject.call!
     end
 
-    context 'when submission is submitted' do
-      before do
+    it 'updates the score to 0' do
+      expect(assignment).to receive(:grade_student).with(any_args, hash_including(score: 0))
+      subject.call!
+    end
+
+    it 'logs'
+
+    context 'notifications' do
+      it 'mutes notifications'
+      it 'unmutes notifications'
+    end
+
+    context 'will not grade' do
+      after do
+        expect(assignment).to_not receive(:grade_student)
+        subject.call!
+      end
+
+      it 'when submission is submitted' do
         allow(submission).to receive(:workflow_state).and_return('submitted')
       end
 
-      it 'will not grade' do
-        expect(assignment).to_not receive(:grade_student)
-        subject.call!
-      end
-    end
-
-    context 'when submission is graded' do
-      before do
+      it 'when submission is graded' do
         allow(submission).to receive(:workflow_state).and_return('graded')
       end
 
-      it 'will not grade' do
-        expect(assignment).to_not receive(:grade_student)
-        subject.call!
-      end
-    end
-
-    context 'when submission has a score' do
-      before do
+      it 'when submission has a score' do
         allow(submission).to receive(:score).and_return(1)
       end
 
-      it 'will not grade' do
-        expect(assignment).to_not receive(:grade_student)
-        subject.call!
-      end
-    end
-
-    context 'when submission has a grade' do
-      before do
+      it 'when submission is not late' do
         allow(submission).to receive(:grade).and_return(1)
       end
 
-      it 'will not grade' do
-        expect(assignment).to_not receive(:grade_student)
-        subject.call!
-      end
-    end
-
-    context 'when submission is not late' do
-      before do
-        allow(submission).to receive(:due_at).and_return(1.minute.ago)
-      end
-
-      it 'will not grade' do
-        expect(assignment).to_not receive(:grade_student)
-        subject.call!
-      end
-    end
-
-    context 'when submission is on an unpublished assignment' do
-      before do
+      it 'when submission is on an unpublished assignment' do
         allow(assignment).to receive(:published?).and_return(false)
       end
+    end
 
-      it 'will not grade' do
-        expect(assignment).to_not receive(:grade_student)
-        subject.call!
+    context 'when in dry run mode' do
+      let(:file) { double(:file, write: nil, close: nil) }
+
+      before do
+        allow(File).to receive(:open).and_return(file)
+      end
+
+      after do
+        subject.call!(dry_run: true)
+      end
+
+      it 'will append the file' do
+        expect(File).to receive(:open).with('dry_run.log', 'a')
+      end
+
+      it 'will not run the command' do
+        expect(assignment).to_not receive(:grade_student).with(any_args, hash_including(score: 0))
+      end
+
+      it 'will log execution plan' do
+        expect(file).to receive(:write).with("Changing submission 1 from nil to 0\n")
       end
     end
   end
-
 end
