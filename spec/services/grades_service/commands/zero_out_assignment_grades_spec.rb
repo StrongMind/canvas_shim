@@ -1,6 +1,14 @@
 describe GradesService::Commands::ZeroOutAssignmentGrades do
   subject {described_class.new(submission)}
-  let(:assignment) { double("assignment", grade_student: nil, published?: true) }
+  let(:assignment) do
+    double(
+      "assignment",
+      grade_student: nil,
+      published?: true,
+      due_at: 1.hour.ago
+    )
+  end
+
   let(:user) {double("user")}
   let(:grader) {double("grader")}
   let(:submission) do
@@ -12,13 +20,13 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       workflow_state: 'unsubmitted',
       score: nil,
       grade: nil,
-      due_at: 1.hour.ago,
       grader: nil
     )
   end
 
   before do
     allow(GradesService::Account).to receive(:account_admin).and_return(grader)
+    allow(SettingsService).to receive(:update_settings)
   end
 
   context '#call' do
@@ -32,7 +40,10 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       subject.call!
     end
 
-    it 'logs'
+    it 'logs' do
+      expect(SettingsService).to receive(:update_settings)
+      subject.call!
+    end
 
     context 'notifications' do
       it 'mutes notifications'
