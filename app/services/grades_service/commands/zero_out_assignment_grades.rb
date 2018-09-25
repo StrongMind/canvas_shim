@@ -43,7 +43,7 @@ module GradesService
       end
 
       def still_submittable?
-        @assignment.due_at > 1.hour.ago
+        @assignment.due_at.present? && @assignment.due_at > 1.hour.ago
       end
 
       def scored?
