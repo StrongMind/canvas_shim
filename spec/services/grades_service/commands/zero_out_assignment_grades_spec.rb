@@ -6,7 +6,9 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       grade_student: nil,
       published?: true,
       due_at: 1.hour.ago,
-      context: course
+      context: course,
+      mute!: nil,
+      unmute!: nil
     )
   end
 
@@ -50,14 +52,27 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       subject.call!
     end
 
-    xit 'logs' do
-      expect(SettingsService).to receive(:update_settings)
+    it 'logs the operation' do
+      expect(SettingsService).to receive(:update_settings).with(
+        id: 1,
+        setting: "zero_grader_previous_score",
+        value: nil,
+        object: "submission"
+      )
       subject.call!
     end
 
     context 'notifications' do
-      it 'mutes notifications'
-      it 'unmutes notifications'
+      after do
+        subject.call!
+      end
+      it 'mutes notifications' do
+        expect(assignment).to receive(:mute!)
+      end
+
+      it 'unmutes notifications' do
+        expect(assignment).to receive(:unmute!)
+      end
     end
 
     context 'will not grade' do
