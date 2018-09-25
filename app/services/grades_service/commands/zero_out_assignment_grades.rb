@@ -35,16 +35,14 @@ module GradesService
       def log_operation
         SettingsService.update_settings(
           id: @submission.id,
-          setting: 'previous_score',
+          setting: 'zero_grader_previous_score',
           value: @previous_score,
           object: 'submission',
-          context: 'zero_grader'
         )
       end
 
-      def still_submittable?
-        return true if @assignment.due_at.nil?
-        @assignment.due_at > 1.hour.ago
+      def late?
+        return @assignment.due_at.present? && 1.hour.ago > @assignment.due_at
       end
 
       def scored?
@@ -64,7 +62,7 @@ module GradesService
       end
 
       def should_grade?
-        !submitted? && !scored? && !still_submittable? && published? && enrolled?
+        !submitted? && !scored? && late? && published? && enrolled?
       end
     end
   end
