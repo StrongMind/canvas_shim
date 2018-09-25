@@ -19,7 +19,7 @@ module GradesService
           return
         end
 
-        log_operation
+        # log_operation
         @assignment.mute!
         @assignment.grade_student(@student, score: 0, grader: @grader)
         @assignment.unmute!
