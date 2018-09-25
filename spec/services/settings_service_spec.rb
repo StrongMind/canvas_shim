@@ -83,4 +83,12 @@ describe SettingsService do
       )
     end
   end
+
+  describe '#query' do
+    it 'calls the query' do
+      expect(SettingsService::Queries::ZeroGraderAudit).to receive(:run)
+      described_class.query
+    end
+  end
+
 end

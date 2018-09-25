@@ -44,4 +44,8 @@ module SettingsService
     @@canvas_domain || ENV['CANVAS_DOMAIN']
   end
 
+  def self.query
+    Queries::ZeroGraderAudit.run
+  end
+
 end
