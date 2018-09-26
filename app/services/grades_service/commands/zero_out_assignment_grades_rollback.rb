@@ -13,12 +13,15 @@ module GradesService
           grader = GradesService::Account.account_admin
           submission = Submission.find(submission_id)
           assignment = submission.assignment
-          puts "Setting submission #{submission.id} from #{submission.score} to #{orig_score or 'nil'}"
-          begin
-            puts "assignment.grade_student(#{user.id}, score: #{orig_score or 'nil'}, grader: 1)"
-            assignment.grade_student(user, score: orig_score, grader: grader)
-          rescue => e
-            puts "Failed Setting submission #{submission.id} from #{submission.score} to #{orig_score or 'nil'}: #{e}"
+
+          if orig_score.present? && submission.score == 0 || submission.score.nil?
+            puts "Setting submission #{submission.id} from #{submission.score} to #{orig_score or 'nil'}"
+            begin
+              puts "assignment.grade_student(#{user.id}, score: #{orig_score or 'nil'}, grader: 1)"
+              assignment.grade_student(user, score: orig_score, grader: grader)
+            rescue => e
+              puts "Failed Setting submission #{submission.id} from #{submission.score} to #{orig_score or 'nil'}: #{e}"
+            end
           end
         end
       end
