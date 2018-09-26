@@ -14,7 +14,6 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
 
   let(:user) { double("user") }
   let(:grader) { double("grader") }
-  let(:log_file) { double('log_file') }
   let(:enrollment) {double("enrollment")}
   let(:course) {
     double(
@@ -54,23 +53,12 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
     end
 
     it 'logs the operation' do
-      expect(File).to receive(:open).and_return(log_file)
-      expect(log_file).to receive(:close)
-      expect(log_file).to receive(:write).with("\"1\", \"\"\n")
-      subject.call!(log_file_name: 'log_file')
-    end
+      fh = File.open('test.log', 'a+')
+      expect(File).to receive(:open).and_return(fh)
+      expect(fh).to receive(:close)
+      expect(fh).to receive(:write).with("1,\n")
 
-    context 'notifications' do
-      after do
-        subject.call!
-      end
-      it 'mutes notifications' do
-        expect(assignment).to receive(:mute!)
-      end
-
-      it 'unmutes notifications' do
-        expect(assignment).to receive(:unmute!)
-      end
+      subject.call!(log_file: 'log_file')
     end
 
     context 'will not grade' do
@@ -124,7 +112,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       end
 
       it 'will append the file' do
-        expect(File).to receive(:open).with('dry_run.log', 'a')
+        expect(File).to receive(:open).with('dry_run.log', 'a+')
       end
 
       it 'will not run the command' do
