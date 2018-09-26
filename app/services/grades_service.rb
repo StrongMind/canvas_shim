@@ -14,11 +14,8 @@ module GradesService
   end
 
   def self.save_audit(options)
-    ENV['AWS_REGION'] = 'us-west-2'
-    ENV['S3_BUCKET_NAME'] = 'canvas-docker-dev'
-
-    options[:log_file] = 'zero_grader_audit_201809252353.csv'
-    s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
+    return if options[:dry_run]
+    s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'], access_key_id: ENV['S3_ACCESS_KEY_ID'], secret_access_key: ENV['S3_ACCESS_KEY'])
     obj = s3.bucket(ENV['S3_BUCKET_NAME']).object('zero_grader/' + options[:log_file])
     obj.upload_file('/tmp/' + options[:log_file])
   end
