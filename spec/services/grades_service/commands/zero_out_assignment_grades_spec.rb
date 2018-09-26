@@ -12,8 +12,9 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
     )
   end
 
-  let(:user) {double("user")}
-  let(:grader) {double("grader")}
+  let(:user) { double("user") }
+  let(:grader) { double("grader") }
+  let(:log_file) { double('log_file') }
   let(:enrollment) {double("enrollment")}
   let(:course) {
     double(
@@ -53,13 +54,10 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
     end
 
     it 'logs the operation' do
-      expect(SettingsService).to receive(:update_settings).with(
-        id: 1,
-        setting: "zero_grader_previous_score",
-        value: nil,
-        object: "submission"
-      )
-      subject.call!
+      expect(File).to receive(:open).and_return(log_file)
+      expect(log_file).to receive(:close)
+      expect(log_file).to receive(:write).with("\"1\", \"\"\n")
+      subject.call!(log_file_name: 'log_file')
     end
 
     context 'notifications' do
@@ -114,11 +112,11 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
     end
 
     context 'when in dry run mode' do
-      let(:file) { double(:file, write: nil, close: nil) }
+      let(:dry_run_file) { double(:dry_run_file, write: nil, close: nil) }
 
       before do
         allow(assignment).to receive(:due_at?).and_return(2.hour.ago)
-        allow(File).to receive(:open).and_return(file)
+        allow(File).to receive(:open).and_return(dry_run_file)
       end
 
       after do
@@ -134,7 +132,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       end
 
       it 'will log execution plan' do
-        expect(file).to receive(:write).with("Changing submission 1 from nil to 0\n")
+        expect(dry_run_file).to receive(:write).with("Changing submission 1 from nil to 0\n")
       end
     end
   end
