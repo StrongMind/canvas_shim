@@ -21,22 +21,20 @@ module GradesService
         end
 
         log_operation
-        @assignment.mute!
         @assignment.grade_student(@student, score: 0, grader: @grader)
-        @assignment.unmute!
       end
 
       private
 
       def log_execution_plan
-        file = File.open('dry_run.log', 'a')
+        file = File.open('dry_run.log', 'a+')
         file.write("Changing submission #{@submission.id} from #{@previous_score || 'nil'} to 0\n")
         file.close
       end
 
       def log_operation
         return unless @options[:log_file]
-        csv = CSV.open('/tmp/' + @options[:log_file], 'a')
+        csv = CSV.open('/tmp/' + @options[:log_file], 'a+')
         csv << [@submission.id, @previous_score]
         csv.close
       end
