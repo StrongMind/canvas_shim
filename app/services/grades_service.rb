@@ -1,3 +1,5 @@
+require 'fileutils'
+
 module GradesService
   def self.zero_out_grades!(options={})
     if options[:force] == false
@@ -5,6 +7,7 @@ module GradesService
     end
 
     options[:log_file] = 'zero_grader_audit_' + Time.now.strftime('%Y%m%d%H%M') + '.csv'
+    FileUtils.touch('/tmp/' + options[:log_file])
 
     Submission.where(score: nil).where('cached_due_date < ?', 1.hour.ago).find_each do |submission|
       Commands::ZeroOutAssignmentGrades.new(submission).call!(options)
