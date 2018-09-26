@@ -12,6 +12,7 @@ module GradesService
       end
 
       def call!(options={})
+        @options = options
         return unless should_grade?
 
         if options[:dry_run]
@@ -19,7 +20,7 @@ module GradesService
           return
         end
 
-        # log_operation
+        log_operation
         @assignment.mute!
         @assignment.grade_student(@student, score: 0, grader: @grader)
         @assignment.unmute!
@@ -34,12 +35,10 @@ module GradesService
       end
 
       def log_operation
-        SettingsService.update_settings(
-          id: @submission.id,
-          setting: 'zero_grader_previous_score',
-          value: @previous_score,
-          object: 'submission',
-        )
+        return unless @options[:log_file]
+        csv = CSV.open('/tmp/' + @options[:log_file], 'a')
+        csv << [@submission.id, @previous_score]
+        csv.close
       end
 
       def late?

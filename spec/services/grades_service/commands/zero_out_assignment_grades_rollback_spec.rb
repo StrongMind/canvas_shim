@@ -3,15 +3,15 @@ describe GradesService::Commands::ZeroOutAssignmentGradesRollback do
 
   describe '#call' do
     before do
-      allow(SettingsService).to receive(:query).with('zero_grader_audit')
+
     end
 
     it 'works' do
       subject.call!
     end
 
-    it 'gets modified submissions' do
-      expect(SettingsService).to receive(:query).with('zero_grader_audit')
+    it 'calls the script' do
+      
       subject.call!
     end
   end
