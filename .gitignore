@@ -8,3 +8,4 @@ spec/test_app/tmp/
 .byebug_history
 .DS_Store
 .idea
+test.log
