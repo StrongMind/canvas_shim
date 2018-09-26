@@ -3,7 +3,6 @@ module GradesService
     class ZeroOutAssignmentGradesRollback
       def call!(options={})
         load_audit(options)
-        byebug
 
         CSV.foreach('/tmp/zero_grader_rollback.csv') do |row|
           submission_id = row[0]
@@ -30,7 +29,6 @@ module GradesService
 
       def load_audit(options)
         s3 = Aws::S3::Client.new
-        options[:log_file] = 'zero_grader_audit_201809252353.csv'
         File.open('/tmp/zero_grader_rollback.csv', 'w') do |file|
           s3.get_object({ bucket: ENV['S3_BUCKET_NAME'], key: 'zero_grader/' + options[:log_file] }, target: file)
         end
