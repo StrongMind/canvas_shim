@@ -28,7 +28,7 @@ module GradesService
       private
 
       def load_audit(options)
-        s3 = Aws::S3::Client.new
+        s3 = Aws::S3::Client.new(access_key_id: ENV['S3_ACCESS_KEY_ID'], secret_access_key: ENV['S3_ACCESS_KEY'])
         File.open('/tmp/zero_grader_rollback.csv', 'w') do |file|
           s3.get_object({ bucket: ENV['S3_BUCKET_NAME'], key: 'zero_grader/' + options[:log_file] }, target: file)
         end
