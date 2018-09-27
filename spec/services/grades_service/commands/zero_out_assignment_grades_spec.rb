@@ -45,51 +45,72 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
   context '#call' do
     it 'uses the correct grader' do
       expect(assignment).to receive(:grade_student).with(any_args, hash_including(grader: grader))
-      subject.call!
+      subject.call!(log_file: 'logfile')
     end
 
     it 'updates the score to 0' do
       expect(assignment).to receive(:grade_student).with(any_args, hash_including(score: 0))
-      subject.call!
+      subject.call!(log_file: 'logfile')
     end
 
-    it 'logs the operation' do
-      fh = File.open('test.log', 'a+')
-      expect(File).to receive(:open).and_return(fh)
-      expect(fh).to receive(:close)
-      expect(fh).to receive(:write).with("1,\n")
 
-      subject.call!(log_file: 'log_file')
+    context 'logging the operation' do
+      it 'logs the operation' do
+        fh = File.open('test.log', 'a+')
+        expect(File).to receive(:open).and_return(fh)
+        expect(fh).to receive(:close)
+        expect(fh).to receive(:write).with("1,\n")
+
+        subject.call!(log_file: 'logfile')
+      end
+
+      it 'dies if the file can not be opened' do
+        allow(CSV).to receive(:open).and_raise
+        expect(assignment).to_not receive(:grade_student)
+        expect {subject.call!(log_file: 'logfile')}.to raise_error(RuntimeError)
+      end
     end
 
     context 'will not grade' do
-      after do
+      it 'when there is no due date on the assignment' do
+        allow(assignment).to receive(:due_at).and_return(nil)
+        expect(assignment).to_not receive(:grade_student)
+        subject.call!(log_file: 'logfile')
+      end
+
+      it 'when no logfile is supplied' do
         expect(assignment).to_not receive(:grade_student)
         subject.call!
       end
 
-      it 'when there is no due date on the assignment' do
-        allow(assignment).to receive(:due_at).and_return(nil)
-      end
-
       it 'when submission is submitted' do
         allow(submission).to receive(:workflow_state).and_return('submitted')
+        expect(assignment).to_not receive(:grade_student)
+        subject.call!(log_file: 'logfile')
       end
 
       it 'when submission is graded' do
         allow(submission).to receive(:workflow_state).and_return('graded')
+        expect(assignment).to_not receive(:grade_student)
+        subject.call!(log_file: 'logfile')
       end
 
       it 'when submission has a score' do
         allow(submission).to receive(:score).and_return(1)
+        expect(assignment).to_not receive(:grade_student)
+        subject.call!(log_file: 'logfile')
       end
 
       it 'when submission is not late' do
         allow(submission).to receive(:grade).and_return(1)
+        expect(assignment).to_not receive(:grade_student)
+        subject.call!(log_file: 'logfile')
       end
 
       it 'when submission is on an unpublished assignment' do
         allow(assignment).to receive(:published?).and_return(false)
+        expect(assignment).to_not receive(:grade_student)
+        subject.call!(log_file: 'logfile')
       end
 
       it 'when student is not enrolled in the course' do
@@ -97,10 +118,14 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
           user,
           course.admin_visible_student_enrollments
         ).and_return(false)
+        expect(assignment).to_not receive(:grade_student)
+        subject.call!(log_file: 'logfile')
       end
 
       it 'when the setting is not turned on' do
         allow(SettingsService).to receive(:get_settings).and_return({})
+        expect(assignment).to_not receive(:grade_student)
+        subject.call!(log_file: 'logfile')
       end
     end
 
@@ -113,7 +138,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       end
 
       after do
-        subject.call!(dry_run: true)
+        subject.call!(log_file: 'logfile', dry_run: true)
       end
 
       it 'will append the file' do
