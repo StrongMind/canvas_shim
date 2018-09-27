@@ -12,6 +12,7 @@ module GradesService
       end
 
       def call!(options={})
+        return unless SettingsService.get_settings(object: :school, id: 1)['zero_out_past_due'] == 'on'
         @options = options
         return unless should_grade?
 
