@@ -2,9 +2,7 @@ require 'fileutils'
 
 module GradesService
   def self.zero_out_grades!(options={})
-    if options[:force] == false
-      return unless SettingsService.get_settings(object: :school, id: 1)['zero_out_past_due'] == 'on'
-    end
+    return unless SettingsService.get_settings(object: :school, id: 1)['zero_out_past_due'] == 'on'
 
     options[:log_file] = 'zero_grader_audit_' + Time.now.strftime('%Y%m%d%H%M') + '.csv'
     FileUtils.touch('/tmp/' + options[:log_file])

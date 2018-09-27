@@ -39,6 +39,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
   before do
     allow(GradesService::Account).to receive(:account_admin).and_return(grader)
     allow(SettingsService).to receive(:update_settings)
+    allow(SettingsService).to receive('get_settings').and_return({'zero_out_past_due' => 'on'})
   end
 
   context '#call' do
@@ -96,6 +97,10 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
           user,
           course.admin_visible_student_enrollments
         ).and_return(false)
+      end
+
+      it 'when the setting is not turned on' do
+        allow(SettingsService).to receive(:get_settings).and_return({})
       end
     end
 

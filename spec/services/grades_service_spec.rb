@@ -12,13 +12,25 @@ describe GradesService do
     allow(described_class).to receive(:save_audit_log)
   end
 
-  it "calls the command and passes on options" do
-    expect(instance).to receive(:call!).with(hash_including(dry_run: true))
-    described_class.zero_out_grades!(dry_run: true)
+  context 'when the zero grader setting is on' do
+    it "calls the command and passes on options" do
+      expect(instance).to receive(:call!).with(hash_including(dry_run: true))
+      described_class.zero_out_grades!(dry_run: true)
+    end
+
+    it 'saves the audit log' do
+      expect(described_class).to receive(:save_audit)
+      described_class.zero_out_grades!
+    end
   end
 
-  it 'saves the audit log' do
-    expect(described_class).to receive(:save_audit)
-    described_class.zero_out_grades!
+  context 'when the zero grader setting is off' do
+    before do
+      allow(SettingsService).to receive(:get_settings).and_return({'zero_out_past_due' => 'off'})
+    end
+    it 'does not call the command' do
+      expect(instance).to_not receive(:call!)
+      described_class.zero_out_grades!
+    end
   end
 end
