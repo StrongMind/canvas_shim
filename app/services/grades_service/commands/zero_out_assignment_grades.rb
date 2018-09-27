@@ -12,6 +12,7 @@ module GradesService
       end
 
       def call!(options={})
+        return unless options[:log_file]
         return unless SettingsService.get_settings(object: :school, id: 1)['zero_out_past_due'] == 'on'
         @options = options
         return unless should_grade?
@@ -35,9 +36,14 @@ module GradesService
 
       def log_operation
         return unless @options[:log_file]
-        csv = CSV.open('/tmp/' + @options[:log_file], 'a+')
-        csv << [@submission.id, @previous_score]
-        csv.close
+
+        begin
+          csv = CSV.open('/tmp/' + @options[:log_file], 'a+')
+          csv << [@submission.id, @previous_score]
+          csv.close
+        rescue => e
+          raise e, 'error opening log file'
+        end
       end
 
       def late?
