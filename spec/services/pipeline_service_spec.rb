@@ -4,6 +4,7 @@ describe PipelineService do
     ENV['PIPELINE_USER_NAME'] = 'example_user'
     ENV['PIPELINE_PASSWORD'] = 'example_password'
     ENV['CANVAS_DOMAIN'] = 'someschool.com'
+    allow(SettingsService).to receive(:get_settings).and_return({})
   end
 
   subject { described_class }
@@ -19,6 +20,12 @@ describe PipelineService do
       subject.publish(enrollment, api: api)
     end
 
+    it "Can be turned off" do
+      allow(SettingsService).to receive(:get_settings).and_return({'disable_pipeline' => true})
+      expect(api_instance).to_not receive(:call)
+      subject.publish(enrollment, api: api)
+    end
+
     context 'when the object is a hash' do
       it 'works' do
         expect do
@@ -28,7 +35,6 @@ describe PipelineService do
             noun: 'enrollment'
           )
         end.to_not raise_error
-
       end
     end
   end

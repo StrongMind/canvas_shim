@@ -8,6 +8,7 @@ module PipelineService
       end
 
       def call
+        return if SettingsService.get_settings(object: :school, id: 1)['disable_pipeline']
         if PipelineService.perform_synchronously?
           perform
         else

@@ -15,6 +15,7 @@ module PipelineService
       end
 
       def call
+        return if SettingsService.get_settings(object: :school, id: 1)['disable_pipeline']
         queue.enqueue(self, priority: 1000000)
       end
 
