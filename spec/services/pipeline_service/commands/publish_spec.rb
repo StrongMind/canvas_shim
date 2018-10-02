@@ -20,6 +20,10 @@ describe PipelineService::Commands::Publish do
   let(:responder_instance)   { double('responder_instance') }
   let(:responder_class)      { double('responder_class', new: responder_instance) }
 
+  before do
+    allow(SettingsService).to receive(:get_settings).and_return({})
+  end
+
   subject do
     described_class.new(
       object:       object,
@@ -33,6 +37,12 @@ describe PipelineService::Commands::Publish do
   describe '#call' do
     it 'sends a message to the pipeline' do
       expect(client_instance).to receive(:call)
+      subject.call
+    end
+
+    it 'can be turned off' do
+      allow(SettingsService).to receive(:get_settings).and_return({'disable_pipeline' => true})
+      expect(client_instance).to_not receive(:call)
       subject.call
     end
   end
