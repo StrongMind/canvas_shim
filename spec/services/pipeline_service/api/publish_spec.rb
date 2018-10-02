@@ -13,8 +13,19 @@ describe PipelineService::API::Publish do
   end
 
   describe '#call' do
-    it 'enqueue' do
+    before do
+      allow(SettingsService).to receive(:get_settings).and_return({})
+    end
+
+    it 'enqueues' do
       expect(queue).to receive(:enqueue).with(subject, priority: 1000000)
+      subject.call
+    end
+
+    it 'can be turned off' do
+      allow(SettingsService).to receive(:get_settings).and_return({'disable_pipeline' => true})
+      allow(queue).to receive(:enqueue)
+      expect(queue).to_not receive(:enqueue)
       subject.call
     end
   end
