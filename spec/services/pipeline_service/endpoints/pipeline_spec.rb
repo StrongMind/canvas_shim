@@ -18,8 +18,13 @@ describe PipelineService::Endpoints::Pipeline do
     allow(SettingsService).to receive(:get_settings).and_return({})
   end
 
-  it 'works' do
-    expect(Delayed::Job).to receive(:enqueue)
+  it 'uses the lowest priority' do
+    expect(Delayed::Job).to receive(:enqueue).with(subject, hash_including(priority: 1000000))
+    subject.call
+  end
+
+  it 'runs in a strand' do
+    expect(Delayed::Job).to receive(:enqueue).with(subject, hash_including(strand: 'pipeline_service'))
     subject.call
   end
 
