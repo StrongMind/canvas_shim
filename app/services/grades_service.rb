@@ -7,10 +7,15 @@ module GradesService
     options[:log_file] = 'zero_grader_audit_' + Time.now.strftime('%Y%m%d%H%M') + '.csv'
     FileUtils.touch('/tmp/' + options[:log_file])
 
-    Submission.where(score: nil).where('cached_due_date < ?', 1.hour.ago).find_each do |submission|
-      Commands::ZeroOutAssignmentGrades.new(submission).call!(options)
-    end
-
+    Submission
+      .joins(assignment: :course)
+      .where('submissions.workflow_state not in (?)', ['deleted', 'graded', 'submitted'])
+      .where(score: nil)
+      .where('cached_due_date < ?', 1.hour.ago)
+      .where('courses.conclude_at > ?', Time.now)
+      .find_each do |submission|
+        Commands::ZeroOutAssignmentGrades.new(submission).call!(options)
+      end
     save_audit(options)
   end
 
