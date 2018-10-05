@@ -1,7 +1,6 @@
 module GradesService
   module Commands
     class ZeroOutAssignmentGrades
-      EXCLUDE_WORKFLOW_STATES = ['submitted', 'graded']
       def initialize(submission)
         @previous_score = submission.score
         @submission = submission
@@ -50,12 +49,12 @@ module GradesService
         return @assignment.due_at.present? && 1.hour.ago > @assignment.due_at
       end
 
-      def scored?
-        @submission.score.present? || @submission.grade.present?
+      def unscored?
+        @submission.score.nil? || @submission.grade.nil?
       end
 
-      def submitted?
-        EXCLUDE_WORKFLOW_STATES.include? @submission.workflow_state
+      def unsubmitted?
+        @submission.workflow_state == 'unsubmitted'
       end
 
       def published?
@@ -67,7 +66,7 @@ module GradesService
       end
 
       def should_grade?
-        !submitted? && !scored? && late? && published? && enrolled?
+        unsubmitted? && unscored? && late? && published? && enrolled?
       end
     end
   end
