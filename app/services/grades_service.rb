@@ -8,11 +8,9 @@ module GradesService
     FileUtils.touch('/tmp/' + options[:log_file])
 
     Submission
-      .joins(assignment: :course)
       .where('submissions.workflow_state not in (?)', ['deleted', 'graded', 'submitted'])
       .where(score: nil)
       .where('cached_due_date < ?', 1.hour.ago)
-      .where('courses.conclude_at > ?', Time.now)
       .find_each do |submission|
         Commands::ZeroOutAssignmentGrades.new(submission).call!(options)
       end
