@@ -4,8 +4,8 @@ describe GradesService do
   let(:submission_list) { [submission] }
 
   before do
-    allow(submission_list).to receive(:where).and_return(submission_list)
-    allow(submission_list).to receive(:find_each).and_yield(submission)
+    allow(GradesService).to receive(:submissions).and_return(submission_list)
+    allow(submission_list).to receive(:find_each).and_yield(submission_list)
     allow(GradesService::Commands::ZeroOutAssignmentGrades).to receive(:new).and_return(instance)
     allow(SettingsService).to receive(:get_settings).and_return({'zero_out_past_due' => 'on'})
     allow(Submission).to receive(:where).and_return(submission_list)

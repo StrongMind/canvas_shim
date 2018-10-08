@@ -50,7 +50,7 @@ module GradesService
       end
 
       def unscored?
-        @submission.score.nil? || @submission.grade.nil?
+        @submission.score.nil? && @submission.grade.nil?
       end
 
       def unsubmitted?
