@@ -18,8 +18,10 @@ module GradesService
       .joins(assignment: :course)
       .where('submissions.workflow_state = ?', 'unsubmitted')
       .where(score: nil)
+      .where(grade: nil)
       .where('cached_due_date < ?', 1.hour.ago)
       .where('courses.conclude_at > ?', Time.now)
+      .where('assignments.workflow_state = ?', 'published')
   end
 
   def self.save_audit(options)
