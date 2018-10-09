@@ -17,11 +17,6 @@ describe PipelineService::API::Publish do
       allow(SettingsService).to receive(:get_settings).and_return({})
     end
 
-    it 'uses a strand' do
-      expect(queue).to receive(:enqueue).with(subject, hash_including(strand: 'pipeline_service'))
-      subject.call
-    end
-
     it 'has uses the lowest priority' do
       expect(queue).to receive(:enqueue).with(subject, hash_including(priority: 1000000))
       subject.call
