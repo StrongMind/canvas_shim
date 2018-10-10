@@ -10,7 +10,7 @@ class Enrollment
 end
 
 describe PipelineService::Commands::Publish do
-  let(:object)              { Enrollment.new }
+  let(:object)              { Submission.new }
   let(:user)                { double('user') }
   let(:test_message)        { {} }
   let(:client_instance)     { double('pipeline_client', call: double('call_result', message: test_message)) }
@@ -19,9 +19,12 @@ describe PipelineService::Commands::Publish do
   let(:serializer_instance) { double('serializer_instance', call: nil) }
   let(:responder_instance)   { double('responder_instance') }
   let(:responder_class)      { double('responder_class', new: responder_instance) }
+  let(:account_admin)       { double('account', id: 1)}
 
   before do
     allow(SettingsService).to receive(:get_settings).and_return({})
+    allow(PipelineService::Account).to receive(:account_admin).and_return(account_admin)
+
   end
 
   subject do
@@ -45,5 +48,12 @@ describe PipelineService::Commands::Publish do
       expect(client_instance).to_not receive(:call)
       subject.call
     end
+
+    it 'does not publish zero grader graded items' do
+      allow(object).to receive(:grader_id).and_return(account_admin.id)
+      expect(client_instance).to_not receive(:call)
+      subject.call
+    end
+
   end
 end
