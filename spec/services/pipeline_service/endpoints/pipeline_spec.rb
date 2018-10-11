@@ -23,11 +23,6 @@ describe PipelineService::Endpoints::Pipeline do
     subject.call
   end
 
-  it 'runs in a strand' do
-    expect(Delayed::Job).to receive(:enqueue).with(subject, hash_including(strand: 'pipeline_service'))
-    subject.call
-  end
-
   it 'can be turned off' do
     allow(SettingsService).to receive(:get_settings).and_return({'disable_pipeline' => true})
     expect(Delayed::Job).to_not receive(:enqueue)
