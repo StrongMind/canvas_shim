@@ -3,3 +3,4 @@ rvm:
   - 2.4.3
 before_script:
   - psql -c 'create database shim_test;' -U postgres
+  - RAILS_ENV=test bundle exec rake db:migrate --trace
