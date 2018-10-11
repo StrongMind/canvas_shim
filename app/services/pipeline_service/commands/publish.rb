@@ -17,7 +17,6 @@ module PipelineService
 
       def call
         return if SettingsService.get_settings(object: :school, id: 1)['disable_pipeline']
-        return if object.try(:grader_id) == PipelineService::Account.account_admin.id
         post_to_pipeline
         publish_events unless changes.nil?
         self

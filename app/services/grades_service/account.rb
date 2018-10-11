@@ -5,5 +5,9 @@ module GradesService
         account_user.role.name == 'AccountAdmin'
       end.try(:user)
     end
+
+    def self.strongmind_grader
+      User.new(id: -1001)
+    end
   end
 end
