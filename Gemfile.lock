@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:StrongMind/pipeline-publisher-ruby.git
+  remote: https://github.com/StrongMind/pipeline-publisher-ruby.git
   revision: 4bb66bcbc32ef860af6a499206e1b3f60c20e762
   specs:
     pipeline_publisher_ruby (1.0.2)

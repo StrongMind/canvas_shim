@@ -13,7 +13,7 @@ gemspec
 # To use a debugger
 gem 'byebug', group: [:development, :test]
 gem "rspec-rails"
-gem 'pipeline_publisher_ruby', :git => 'git@github.com:StrongMind/pipeline-publisher-ruby.git'
+gem 'pipeline_publisher_ruby', :git => 'https://github.com/StrongMind/pipeline-publisher-ruby.git'
 gem 'httparty'
 gem 'aws-sdk-dynamodb', '~> 1.6'
 gem 'aws-sdk-core', '3.27.0', require: false
