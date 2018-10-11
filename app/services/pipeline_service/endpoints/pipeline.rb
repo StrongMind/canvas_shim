@@ -3,14 +3,12 @@ module PipelineService
     class Pipeline
       def initialize(args={})
         @args = args
-        @object = @args[:object]
         configure_dependencies
         raise 'Missing config' if missing_config?
       end
 
       def call
         return if SettingsService.get_settings(object: :school, id: 1)['disable_pipeline']
-        return if @object.try(:grader_id) == PipelineService::Account.account_admin.id
         if PipelineService.perform_synchronously?
           perform
         else
