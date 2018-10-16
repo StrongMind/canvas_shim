@@ -1,4 +1,7 @@
-# desc "Explaining what the task does"
-# task :canvas_shim do
-#   # Task goes here
-# end
+namespace :canvas_shim do
+  namespace :deploy do
+    task :assets => :environment do
+      CanvasShimAssetUploader.new.upload!
+    end
+  end
+end
