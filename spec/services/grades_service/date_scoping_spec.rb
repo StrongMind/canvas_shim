@@ -4,6 +4,7 @@ describe GradesService do
   before do
     ENV['CANVAS_DOMAIN'] = 'integration.example.com'
     allow(GradesService).to receive(:save_audit)
+    allow(SettingsService).to receive(:get_settings).and_return('zero_out_start_date' => nil)
   end
 
   it 'should not scope by date' do
