@@ -27,8 +27,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'aws-sdk-core', '3.27.0'
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'inst-jobs'
+  s.add_dependency 'delayed_job_active_record'
   s.add_dependency 'pg'
-  s.add_dependency 'inst-jobs'
 
   s.add_development_dependency 'byebug'
   s.add_development_dependency "rspec-rails"
