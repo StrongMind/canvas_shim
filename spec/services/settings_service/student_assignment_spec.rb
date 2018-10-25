@@ -1,20 +1,5 @@
 require ENGINE_RAILS_ROOT + 'spec/dynamodb_helper'
 
-class Assignment
-  def self.find id
-    new
-  end
-
-  def self.find_each(&block)
-    block.yield(self.new)
-  end
-
-  def migration_id
-    '1232141423'
-  end
-end
-
-
 describe SettingsService::StudentAssignment do
   subject {
     described_class.new
