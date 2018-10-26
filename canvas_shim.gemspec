@@ -29,6 +29,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'inst-jobs'
   s.add_dependency 'pg'
 
-  s.add_development_dependency 'byebug'
   s.add_development_dependency "rspec-rails"
 end
