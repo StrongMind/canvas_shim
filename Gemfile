@@ -12,3 +12,4 @@ gemspec
 
 # To use a debugger
 gem 'byebug', groups: ['development', 'test']
+gem "rspec-rails", "~> 3"
