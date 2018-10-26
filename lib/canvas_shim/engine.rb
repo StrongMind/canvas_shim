@@ -1,4 +1,3 @@
-require 'delayed_job'
 require 'csv'
 require "rails"
 require 'grape'
@@ -12,8 +11,6 @@ require 'aws-sdk-core'
 require 'aws-sdk-s3'
 require 'inst-jobs'
 require 'pg'
-require 'byebug'
-require "rspec-rails"
 
 module CanvasShim
   class Engine < ::Rails::Engine
