@@ -2,7 +2,9 @@ require 'fileutils'
 
 module GradesService
   def self.zero_out_grades!(options={})
-    return unless SettingsService.get_settings(object: :school, id: 1)['zero_out_past_due'] == 'on'
+    settings = SettingsService.get_settings(object: :school, id: 1)
+    return unless settings
+    return unless settings['zero_out_past_due'] == 'on'
 
     options[:log_file] = 'zero_grader_audit_' + Time.now.strftime('%Y%m%d%H%M') + '.csv'
     FileUtils.touch('/tmp/' + options[:log_file])
@@ -14,14 +16,7 @@ module GradesService
   end
 
   def self.submissions
-    Submission
-      .joins(assignment: :course)
-      .where('submissions.workflow_state = ?', 'unsubmitted')
-      .where(score: nil)
-      .where(grade: nil)
-      .where('assignments.due_at < ?', 1.hour.ago)
-      .where('courses.conclude_at > ?', Time.now)
-      .where('assignments.workflow_state = ?', 'published')
+    Queries::ZeroGraderSubmissions.new.query
   end
 
   def self.save_audit(options)
