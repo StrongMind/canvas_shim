@@ -17,7 +17,6 @@ module UnitsService
           end
         end
 
-        byebug
         result
       end
     end
