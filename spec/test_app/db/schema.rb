@@ -88,12 +88,11 @@ ActiveRecord::Schema.define(version: 20181029231922) do
   end
 
   create_table "submissions", force: :cascade do |t|
-    t.integer  "assignment_id"
-    t.integer  "score"
-    t.string   "workflow_state"
-    t.integer  "grade"
-    t.datetime "conclude_at"
-    t.integer  "user_id"
+    t.integer "assignment_id"
+    t.integer "score"
+    t.string  "workflow_state"
+    t.integer "grade"
+    t.integer "user_id"
   end
 
   create_table "users", force: :cascade do |t|
