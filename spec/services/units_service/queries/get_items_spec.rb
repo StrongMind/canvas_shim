@@ -1,13 +1,26 @@
 describe UnitsService::Queries::GetItems do
-  let(:course) { Course.new(context_modules: [context_module]) }
-  let(:context_module) { ContextModule.new(content_tags: [content_tag]) }
-  let(:content_tag) { ContentTag.new(content: assignment) }
-  let(:assignment) { Assignment.new }
+  let(:course) { Course.create(context_modules: [context_module]) }
+  let(:context_module) { ContextModule.create(content_tags: [content_tag]) }
+  let(:content_tag) { ContentTag.create(content: assignment) }
+  let(:assignment) { Assignment.create }
 
   subject { described_class.new(course: course) }
 
-  it do
-    subject.query
-    # expect(subject.query).to eq course
+  context 'tags with content' do
+    let(:content_tag) { ContentTag.create(content: assignment) }
+    it 'returns a content tag' do
+      result = {}
+      result[context_module] = [content_tag]
+      expect(subject.query).to eq(result)
+    end
+  end
+
+  context 'tags without content' do
+    let(:content_tag) { ContentTag.create(content: nil) }
+    it 'does not return a content tag' do
+      result = {}
+      result[context_module] = []
+      expect(subject.query).to eq(result)
+    end
   end
 end
