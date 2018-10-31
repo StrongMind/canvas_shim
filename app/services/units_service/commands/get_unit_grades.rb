@@ -21,6 +21,7 @@ module UnitsService
       end
 
       def calculate_grades
+        # @course.assignment_groups.map{|ag| [ag.group_weight, ag.name]}
         result = {}
 
         @submissions.each do |unit, submissions|
