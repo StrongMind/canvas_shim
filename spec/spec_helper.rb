@@ -17,8 +17,11 @@ RSpec.configure do |config|
 
 # Use the specified formatter
   config.formatter = :documentation # :progress, :html, :textmate
-  config.before(:each) do
+
+  config.before do
+    Delayed::Worker.delay_jobs = false
   end
+
   config.after(:each) do
   end
 end

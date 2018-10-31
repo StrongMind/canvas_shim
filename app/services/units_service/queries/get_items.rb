@@ -15,7 +15,7 @@ module UnitsService
             ct.content.present? && ct.content.respond_to?(:submissions)
           end
         end
-
+        byebug
         result
       end
     end
