@@ -28,7 +28,7 @@ module UnitsService
           next if submissions.count == 0
           result[unit.id] = submissions.sum(&:score) / submissions.count
         end
-        
+
         result
       end
     end
