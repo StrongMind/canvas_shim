@@ -12,7 +12,7 @@ module UnitsService
         @context_modules.each do |context_module|
           result[context_module] =
           context_module.content_tags.select do |ct|
-            ct.content.present?
+            ct.content.present? && ct.content.respond_to?(:submissions)
           end
         end
 
