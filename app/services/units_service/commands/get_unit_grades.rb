@@ -3,7 +3,7 @@ module UnitsService
     class GetUnitGrades
       def initialize(course:, student:)
         @course = course
-        @stuent = student
+        @student = student
       end
 
       def call
