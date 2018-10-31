@@ -1,11 +1,18 @@
 describe PipelineService::Serializers::UnitGrades do
   subject { described_class.new(object: submission)}
-  let(:submission) { double('Submission') }
+  let(:assignment) { double('Assignment', course: course) }
+  let(:course) { double('Course') }
+  let(:student) { double('Student') }
+  let(:submission) { double('Submission', assignment: assignment, student: student) }
   let(:random_string) { rand.to_s }
   let(:command_instance) { double('CommandInstance', call: { foo: random_string }) }
+  let(:course) { double('course') }
+  let(:student) { double('student') }
+
+
   before do
     allow(UnitsService::Commands::GetUnitGrades).to(
-      receive(:new).with(object: submission).and_return(command_instance)
+      receive(:new).with(course: course, student: student).and_return(command_instance)
     )
   end
 

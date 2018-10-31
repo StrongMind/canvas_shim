@@ -9,7 +9,7 @@ require "business"
 require 'httparty'
 require 'aws-sdk-core'
 require 'aws-sdk-s3'
-require 'inst-jobs'
+require 'delayed_job_active_record'
 require 'pg'
 
 module CanvasShim
