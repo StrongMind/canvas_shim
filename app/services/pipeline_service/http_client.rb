@@ -11,7 +11,8 @@ module PipelineService
     end
 
     def post(args)
-      PipelinePublisher::MessagesApi.new.messages_post(*args)
+      message = PipelinePublisher::Message.new(*args)
+      PipelinePublisher::MessagesApi.new.messages_post(message)
     end
 
     def get(endpoint, args)
