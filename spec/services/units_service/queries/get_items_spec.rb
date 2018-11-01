@@ -2,8 +2,8 @@ describe UnitsService::Queries::GetItems do
   let(:course) { Course.create(context_modules: [context_module]) }
   let(:context_module) { ContextModule.create(content_tags: [content_tag]) }
   let(:content_tag) { ContentTag.create(content: assignment) }
-  let(:assignment) { Assignment.create(submissions: [submission]) }
-  let(:submission) { Submission.create }
+  let(:assignment) { Assignment.create }
+  let(:submission) { Submission.create(assignment: assgnment) }
 
   subject { described_class.new(course: course) }
 

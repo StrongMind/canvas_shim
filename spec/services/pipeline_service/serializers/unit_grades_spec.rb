@@ -1,9 +1,9 @@
 describe PipelineService::Serializers::UnitGrades do
-  subject { described_class.new(object: submission)}
+  subject { described_class.new(object: unit_grades)}
   let(:assignment) { double('Assignment', course: course) }
   let(:course) { double('Course') }
   let(:student) { double('Student') }
-  let(:submission) { double('Submission', assignment: assignment, student: student) }
+  let(:unit_grades) { double('UnitGrades', course: course, student: student) }
   let(:random_string) { rand.to_s }
   let(:command_instance) { double('CommandInstance', call: { foo: random_string }) }
   let(:course) { double('course') }
