@@ -4,7 +4,6 @@ class Submission < ActiveRecord::Base
 
   after_save :send_unit_grades_to_pipeline
 
-
   class ::UnitGrades
     attr_reader :course, :student, :id
     def initialize(submission)

@@ -2,18 +2,13 @@ PATH
   remote: .
   specs:
     canvas_shim (0.1.6rc)
-      aws-sdk-core (= 3.27.0)
       aws-sdk-dynamodb (~> 1.6)
-      aws-sdk-s3
       business
-      delayed_job_active_record
       grape (~> 1)
       grape-swagger (~> 0)
       grape-swagger-ui (~> 2)
       httparty
-      pg
       pipeline_publisher_ruby
-      rails (~> 5.0.4)
 
 GEM
   remote: https://rubygems.org/
@@ -210,8 +205,13 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  aws-sdk-core
+  aws-sdk-s3
   byebug
   canvas_shim!
+  delayed_job_active_record
+  pg
+  rails (~> 5.0.4)
   rspec-rails (~> 3)
 
 BUNDLED WITH
