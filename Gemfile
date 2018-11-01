@@ -13,3 +13,8 @@ gemspec
 # To use a debugger
 gem 'byebug', groups: ['development', 'test']
 gem "rspec-rails", "~> 3"
+gem 'delayed_job_active_record'
+gem 'aws-sdk-core'
+gem 'aws-sdk-s3'
+gem 'pg'
+gem "rails", "~> 5.0.4"

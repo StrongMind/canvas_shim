@@ -16,7 +16,6 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
-  s.add_dependency "rails", "~> 5.0.4"
   s.add_dependency 'grape', '~> 1'
   s.add_dependency 'grape-swagger', '~> 0'
   s.add_dependency 'grape-swagger-ui', '~> 2'
@@ -24,8 +23,4 @@ Gem::Specification.new do |s|
   s.add_dependency "pipeline_publisher_ruby"
   s.add_dependency "business"
   s.add_dependency 'httparty'
-  s.add_dependency 'aws-sdk-core', '3.27.0'
-  s.add_dependency 'aws-sdk-s3'
-  s.add_dependency 'delayed_job_active_record'
-  s.add_dependency 'pg'
 end
