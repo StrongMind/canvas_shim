@@ -1,8 +1,8 @@
 describe UnitsService::Queries::GetSubmissions do
   let(:user) { User.create }
   let(:course) { Course.create }
-  let(:submission) { Submission.create(user: user) }
-  let(:assignment) { Assignment.create(submissions: [submission]) }
+  let(:submission) { Submission.create(user: user, assignment: assignment) }
+  let(:assignment) { Assignment.create() }
   let(:content_tag) { ContentTag.create(content: assignment) }
 
   let(:query_result) do
