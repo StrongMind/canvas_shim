@@ -15,11 +15,13 @@ describe Submission do
       let(:content_tag) { ContentTag.create(content: assignment) }
       let(:context_module) { ContextModule.create(content_tags: [content_tag]) }
       let(:course) { Course.create(context_modules: [context_module]) }
-      let(:data_result) { {}.tap {|result| result[context_module.id] = 50} }
+      let(:data_result) { {}.tap { |result| result[context_module.id] = 50} }
 
-      it 'actually happens' do
-        expect(PipelineService::HTTPClient).to receive(:post).with(hash_including(data: data_result))
-        submission = Submission.create(user: user, assignment: assignment, score: 50)
+      it 'posts unit grades to the pipeline' do
+        expect(PipelineService::HTTPClient).to receive(:post).with(
+          hash_including(data: data_result, noun: 'unit_grades')
+        )
+        Submission.create(user: user, assignment: assignment, score: 50)
       end
     end
   end

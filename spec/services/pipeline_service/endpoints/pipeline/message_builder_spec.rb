@@ -12,24 +12,15 @@ class Account
 end
 
 describe PipelineService::Endpoints::Pipeline::MessageBuilder do
-  let(:message_class_instance) do
-    double('MessageClassInstance',
-      noun: 'example',
-      identifiers: {id: 1},
-      data: {some: 'data'},
-      meta: {
-        source: 'canvas',
-        domain_name: 'someschool.com'
-      }
-    )
-  end
-
   let(:serializer_instance) { double('serializer_instance', call: nil) }
   let(:serializer_class) { double('serializer_class', new: serializer_instance) }
 
   before do
     ENV['CANVAS_DOMAIN'] = 'someschool.com'
-    # allow(ENV).to receive('[').with('CANVAS_DOMAIN').and_return('someschool.com')
+    allow(PipelineService::Serializers::Fetcher)
+      .to receive(:fetch)
+      .and_return(serializer_class)
+
   end
 
   subject do described_class.new(
@@ -49,12 +40,12 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
 
   describe "#message" do
     it '#noun' do
-      expect(message.noun).to eq('enrollment')
+      expect(message[:noun]).to eq('enrollment')
     end
 
     describe '#meta' do
       let!(:meta) do
-        message.meta
+        message[:meta]
       end
 
       it '#domain_name' do
@@ -67,11 +58,11 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
     end
 
     it '#data' do
-      expect(message.data).to be_nil
+      expect(message[:data]).to be_nil
     end
 
     it '#identifiers' do
-      expect(message.identifiers).to eq id: 1
+      expect(message[:identifiers]).to eq id: 1
     end
   end
 
