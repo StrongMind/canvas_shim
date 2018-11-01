@@ -2,8 +2,8 @@ class Submission < ActiveRecord::Base
   belongs_to :assignment
   belongs_to :user
 
-  after_update :send_unit_grades_to_pipeline
-  after_create :send_unit_grades_to_pipeline
+  after_save :send_unit_grades_to_pipeline
+
 
   class ::UnitGrades
     attr_reader :course, :student, :id
