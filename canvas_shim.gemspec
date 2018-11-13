@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'grape', '~> 1'
   s.add_dependency 'grape-swagger', '~> 0'
   s.add_dependency 'grape-swagger-ui', '~> 2'
-  s.add_dependency 'aws-sdk-dynamodb', '~> 1.6'
+  s.add_dependency 'aws-sdk-dynamodb', '1.15.0'
   s.add_dependency "pipeline_publisher_ruby"
   s.add_dependency "business"
   s.add_dependency 'httparty'
