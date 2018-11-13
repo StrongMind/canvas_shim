@@ -27,16 +27,12 @@ module PipelineService
       end
 
       def build_subscriptions
-        @subscriptions = [
+        @subscriptions = [:graded_out, :grade_changed].map do |event_name|
           Events::Subscription.new(
-            event: :graded_out,
-            responder: responder
-          ),
-          Events::Subscription.new(
-            event: :grade_changed,
+            event: event_name,
             responder: responder
           )
-        ]
+        end
       end
 
       def build_responder
