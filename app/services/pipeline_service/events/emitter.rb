@@ -20,13 +20,20 @@ module PipelineService
       attr_reader :subscriptions, :object, :responder, :message, :event
 
       def event
-        { graded_out: Events::GradedOutEvent }
+        {
+          graded_out: Events::GradedOutEvent,
+          grade_changed: Events::GradeChangedEvent
+        }
       end
 
       def build_subscriptions
         @subscriptions = [
           Events::Subscription.new(
             event: :graded_out,
+            responder: responder
+          ),
+          Events::Subscription.new(
+            event: :grade_changed,
             responder: responder
           )
         ]
@@ -42,6 +49,7 @@ module PipelineService
       def serializer
         case(object)
         when Submission
+          Serializers::Submission
         else
           Serializers::CanvasAPIEnrollment
         end
