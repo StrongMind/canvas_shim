@@ -1,7 +1,7 @@
 module PipelineService
   module Events
     class Emitter
-      def initialize(args={})
+      def initialize args={}
         @object = args[:object]
         @args = args
         @responder = @args[:responder] || Events::Responders::SIS
@@ -39,7 +39,7 @@ module PipelineService
       end
 
       def serializer
-        case(object)
+        case object
         when Submission
           Serializers::Submission
         when Enrollment
