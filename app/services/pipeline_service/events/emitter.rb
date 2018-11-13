@@ -4,7 +4,7 @@ module PipelineService
       def initialize(args={})
         @object = args[:object]
         @args = args
-        @responder  = @args[:responder] || Events::Responders::SIS
+        @responder = @args[:responder] || Events::Responders::SIS
       end
 
       def call
@@ -16,9 +16,9 @@ module PipelineService
 
       private
 
-      attr_reader :subscriptions, :object, :responder, :message, :event
+      attr_reader :subscriptions, :object, :responder, :message
 
-      def event
+      def events
         {
           graded_out: Events::GradedOutEvent,
           grade_changed: Events::GradeChangedEvent
@@ -53,8 +53,8 @@ module PipelineService
 
       def emit
         subscriptions.each do |subscription|
-          next unless event[subscription.event]
-          event[subscription.event].new(
+          next unless events[subscription.event]
+          events[subscription.event].new(
             @args.merge(subscription: subscription)
           ).emit
         end
