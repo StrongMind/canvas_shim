@@ -11,19 +11,20 @@ describe PipelineService::Events::GradedOutEvent do
     )
   end
 
-  context "completed" do
-    let(:changes) { { 'workflow_state' => [nil, 'completed']} }
-    it 'calls the responder' do
-      expect(responder).to receive(:call)
-      subject.emit
-    end
-  end
-
   describe '#emit' do
-    let(:changes) { { 'workflow_state' => []} }
-    it 'does not call the responder' do
-      expect(responder).to_not receive(:call)
-      subject.emit
+    context "completed" do
+      let(:changes) { { 'workflow_state' => [nil, 'completed']} }
+      it 'calls the responder' do
+        expect(responder).to receive(:call)
+        subject.emit
+      end
+    end
+    context 'not completed' do
+      let(:changes) { { 'workflow_state' => []} }
+      it 'does not call the responder' do
+        expect(responder).to_not receive(:call)
+        subject.emit
+      end
     end
   end
 end
