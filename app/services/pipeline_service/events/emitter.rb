@@ -5,12 +5,10 @@ module PipelineService
         @object = args[:object]
         @args = args
         @responder  = @args[:responder] || Events::Responders::SIS
-        @event = Events::GradedOutEvent
       end
 
       def call
         return unless object.is_a?(Enrollment)
-        fetch_serializer
         build_message
         build_responder
         build_subscriptions
@@ -19,7 +17,11 @@ module PipelineService
 
       private
 
-      attr_reader :subscriptions, :object, :responder, :message, :serializer, :event
+      attr_reader :subscriptions, :object, :responder, :message, :event
+
+      def event
+        { graded_out: Events::GradedOutEvent }
+      end
 
       def build_subscriptions
         @subscriptions = [
@@ -37,8 +39,12 @@ module PipelineService
         )
       end
 
-      def fetch_serializer
-        @serializer = Serializers::CanvasAPIEnrollment
+      def serializer
+        case(object)
+        when Submission
+        else
+          Serializers::CanvasAPIEnrollment
+        end
       end
 
       def build_message
@@ -47,8 +53,9 @@ module PipelineService
 
       def emit
         subscriptions.each do |subscription|
-          next if subscription.event != :graded_out
-          event.new(@args.merge(subscription: subscription)).emit
+          event[subscription.event].new(
+            @args.merge(subscription: subscription)
+          ).emit
         end
       end
     end

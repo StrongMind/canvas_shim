@@ -2,6 +2,7 @@ describe PipelineService::Events::GradedOutEvent do
   let(:subscription) { double(:subscription, responder: responder) }
   let(:responder) { double(:responder, call: nil) }
   let(:object) { Enrollment.new }
+  let(:changes) { {} }
 
   subject do
     described_class.new(
