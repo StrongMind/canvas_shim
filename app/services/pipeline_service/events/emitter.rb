@@ -8,7 +8,6 @@ module PipelineService
       end
 
       def call
-        return unless object.is_a?(Enrollment)
         build_message
         build_responder
         build_subscriptions
@@ -28,10 +27,7 @@ module PipelineService
 
       def build_subscriptions
         @subscriptions = [:graded_out, :grade_changed].map do |event_name|
-          Events::Subscription.new(
-            event: event_name,
-            responder: responder
-          )
+          Events::Subscription.new(event: event_name, responder: responder)
         end
       end
 
@@ -46,7 +42,7 @@ module PipelineService
         case(object)
         when Submission
           Serializers::Submission
-        else
+        when Enrollment
           Serializers::CanvasAPIEnrollment
         end
       end
