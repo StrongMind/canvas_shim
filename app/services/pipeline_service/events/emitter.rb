@@ -53,6 +53,7 @@ module PipelineService
 
       def emit
         subscriptions.each do |subscription|
+          next unless event[subscription.event]
           event[subscription.event].new(
             @args.merge(subscription: subscription)
           ).emit
