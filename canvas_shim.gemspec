@@ -23,4 +23,5 @@ Gem::Specification.new do |s|
   s.add_dependency "pipeline_publisher_ruby"
   s.add_dependency "business"
   s.add_dependency 'httparty'
+  s.add_dependency "loofah", "2.2.3"
 end

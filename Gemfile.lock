@@ -8,6 +8,7 @@ PATH
       grape-swagger (~> 0)
       grape-swagger-ui (~> 2)
       httparty
+      loofah (= 2.2.3)
       pipeline_publisher_ruby
 
 GEM
