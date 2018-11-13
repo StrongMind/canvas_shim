@@ -21,7 +21,7 @@ describe PipelineService::Events::Emitter do
     end
 
     describe '#call' do
-      it 'emits a graded out event' do
+      it 'emits an event' do
         expect(event).to receive(:emit)
         subject.call
       end
@@ -35,7 +35,7 @@ describe PipelineService::Events::Emitter do
     end
 
     describe '#call' do
-      it 'emits a graded out event' do
+      it 'emits an event' do
         expect(event).to receive(:emit)
         subject.call
       end
