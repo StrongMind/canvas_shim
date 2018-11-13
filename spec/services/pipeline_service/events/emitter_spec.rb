@@ -17,7 +17,7 @@ describe PipelineService::Events::Emitter do
 
   context 'graded_out_event' do
     before do
-      allow(subject).to receive(:event).and_return({graded_out: event_class})
+      allow(subject).to receive(:events).and_return({graded_out: event_class})
     end
 
     describe '#call' do
@@ -31,7 +31,7 @@ describe PipelineService::Events::Emitter do
   context 'grade_changed_event' do
     let(:object) { Submission.new }
     before do
-      allow(subject).to receive(:event).and_return({ grade_changed: event_class })
+      allow(subject).to receive(:events).and_return({ grade_changed: event_class })
     end
 
     describe '#call' do
