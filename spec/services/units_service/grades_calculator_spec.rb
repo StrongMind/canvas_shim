@@ -58,8 +58,7 @@ describe UnitsService::GradesCalculator do
     # 50 * (10/30) = 16.667
     # Then, you add the categories:
     # 46.667 + 16.667 = 63.33% Unit Grade for the student
-
-    it 'works' do
+    it 'accceptance scenario 1' do
       expect(subject.call[1]).to be_within(0.1).of(63.33)
       subject.call
     end

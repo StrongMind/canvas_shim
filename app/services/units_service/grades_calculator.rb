@@ -30,9 +30,8 @@ module UnitsService
       end.each do |group, submissions|
         result[group.name] = [] unless result[group]
         average = (submissions.sum(&:score)) / submissions.count
-        result[group.name] << (
-          average * category_weights[group.name] / category_weights.values.sum
-        )
+        weight  = category_weights[group.name] / category_weights.values.sum
+        result[group.name] << average * weight
       end
 
       result.sum { |r, weighted| weighted.sum }
