@@ -40,7 +40,7 @@ module PipelineService
 
       def serializer
         case object
-        when Submission
+        when UnitGrades
           Serializers::UnitGrades
         when Enrollment
           Serializers::CanvasAPIEnrollment

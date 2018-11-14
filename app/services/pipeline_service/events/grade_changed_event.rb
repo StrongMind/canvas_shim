@@ -17,7 +17,7 @@ module PipelineService
 
       def should_trigger?
         return false unless @changes['score']
-        @object.is_a?(::Submission)
+        @object.is_a?(::UnitGrades)
       end
     end
   end
