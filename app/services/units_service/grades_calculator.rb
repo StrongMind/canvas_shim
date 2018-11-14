@@ -38,13 +38,17 @@ module UnitsService
     private
 
     def weighted_average(submissions)
-      result = {}
-      grouped = submissions.group_by {|submission| submission.assignment.assignment_group}
+      grouped = submissions.group_by do |submission|
+        submission.assignment.assignment_group
+      end
 
+      result = {}
       grouped.each do |group, submissions|
         result[group.name] = [] unless result[group]
         average = (submissions.sum(&:score)) / submissions.count
-        result[group.name] << (average * category_weights[group.name] / category_weights.values.sum)
+        result[group.name] << (
+          average * category_weights[group.name] / category_weights.values.sum
+        )
       end
 
       result.sum { |r, weighted| weighted.sum }
