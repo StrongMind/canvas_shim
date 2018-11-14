@@ -29,8 +29,7 @@ module UnitsService
           !submission.excused?
         end
 
-
-        result[unit.id] = weighted_average(filtered) / filtered.count
+        result[unit.id] = weighted_average(filtered)
       end
 
       result
@@ -44,17 +43,11 @@ module UnitsService
 
       grouped.each do |group, submissions|
         result[group.name] = [] unless result[group]
-        result[group.name] << submissions.sum
+        average = (submissions.sum(&:score)) / submissions.count
+        result[group.name] << (average * category_weights[group.name] / category_weights.values.sum)
       end
 
-      submissions.sum(&:score)
-      # 70% average checkpoint grade, weighted at 20% (divided by a sum category weight of 30%)
-      # 70 * (20/30)  = 46.667
-      # +
-      # 50% average discussion grade, weighted at 10% (divided by a sum category weight of 30%)
-      # 50 * (10/30) = 16.667
-      # Then, you add the categories:
-      # 46.667 + 16.667 = 63.33% Unit Grade for the student
+      result.sum { |r, weighted| weighted.sum }
     end
 
     def category_weights
