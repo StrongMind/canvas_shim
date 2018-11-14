@@ -24,12 +24,10 @@ module UnitsService
     private
 
     def weighted_average(submissions)
-      grouped = submissions.group_by do |submission|
-        submission.assignment.assignment_group
-      end
-
       result = {}
-      grouped.each do |group, submissions|
+      submissions.group_by do |submission|
+        submission.assignment.assignment_group
+      end.each do |group, submissions|
         result[group.name] = [] unless result[group]
         average = (submissions.sum(&:score)) / submissions.count
         result[group.name] << (
