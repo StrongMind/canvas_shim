@@ -22,20 +22,7 @@ module UnitsService
 
       def calculate_grades
         # @course.assignment_groups.map{|ag| [ag.group_weight, ag.name]}
-
-        result = {}
-
-        @unit_submissions.each do |unit, submissions|
-          next if submissions.count == 0
-
-          filtered = submissions.select do |submission|
-            !submission.excused?
-          end
-
-          result[unit.id] = filtered.sum(&:score) / filtered.count
-        end
-
-        result
+        UnitsService::GradesCalculator.new(@unit_submissions, @course).call
       end
     end
   end

@@ -1,5 +1,5 @@
 describe UnitsService::Commands::GetUnitGrades do
-  let(:course) { double('course') }
+  let(:course) { double('course', assignment_groups: []) }
   let(:user) { double('user') }
   let(:content_tag) { double('content_tag') }
   let(:context_module1) { double('context_module', id: 1) }
