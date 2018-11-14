@@ -10,10 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181029231922) do
+ActiveRecord::Schema.define(version: 20181114192149) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "assignment_groups", force: :cascade do |t|
+    t.integer "course_id"
+    t.integer "group_weight"
+    t.string  "name"
+  end
 
   create_table "assignments", force: :cascade do |t|
     t.datetime "due_at"
