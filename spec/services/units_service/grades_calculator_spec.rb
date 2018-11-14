@@ -3,12 +3,38 @@ describe UnitsService::GradesCalculator do
   let(:unit) { double('unit', id: 1) }
   let(:course) { double('course') }
   let(:submissions) { [checkpoint_submission, discussion_group_submission] }
-  let(:checkpoint_submission) { double(:submission, excused?: false, score: 70, assignment: checkpoint_assignment) }
-  let(:discussion_group_submission) { double(:submission, excused?: false, score: 50, assignment: discussion_assignment) }
-  let(:checkpoint_assignment_group) { double(:checkpoint_assignment_group, name: 'checkpoints') }
-  let(:discussion_assignment_group) { double(:checkpoint_assignment_group, name: 'discussion_groups') }
-  let(:checkpoint_assignment) { double(:assignment, assignment_group: checkpoint_assignment_group) }
-  let(:discussion_assignment) { double(:assignment, assignment_group: discussion_assignment_group) }
+  let(:checkpoint_submission) do
+    double(
+      :submission,
+      excused?: false,
+      score: 70,
+      assignment: checkpoint_assignment
+    )
+  end
+
+  let(:discussion_group_submission) do
+    double(
+      :submission,
+      excused?: false,
+      score: 50,
+      assignment: discussion_assignment)
+  end
+
+  let(:checkpoint_assignment_group) do
+    double(:checkpoint_assignment_group, name: 'checkpoints')
+  end
+
+  let(:discussion_assignment_group) do
+    double(:checkpoint_assignment_group, name: 'discussion_groups')
+  end
+
+  let(:checkpoint_assignment) do
+    double(:assignment, assignment_group: checkpoint_assignment_group)
+  end
+
+  let(:discussion_assignment) do
+    double(:assignment, assignment_group: discussion_assignment_group)
+  end
 
   let(:unit_submissions) do
     result = {}
@@ -20,10 +46,7 @@ describe UnitsService::GradesCalculator do
 
   before do
     allow(subject).to receive(:category_weights).and_return(
-      {
-        "checkpoints" => 0.2,
-        "discussion_groups" => 0.1
-      }
+      { "checkpoints" => 0.2, "discussion_groups" => 0.1 }
     )
   end
 
