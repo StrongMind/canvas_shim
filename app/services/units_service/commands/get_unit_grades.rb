@@ -14,7 +14,7 @@ module UnitsService
       private
 
       def get_submissions
-        @submissions = UnitsService::Queries::GetSubmissions.new(
+        @unit_submissions = UnitsService::Queries::GetSubmissions.new(
           course: @course,
           student: @student
         ).query
@@ -22,11 +22,17 @@ module UnitsService
 
       def calculate_grades
         # @course.assignment_groups.map{|ag| [ag.group_weight, ag.name]}
+
         result = {}
 
-        @submissions.each do |unit, submissions|
+        @unit_submissions.each do |unit, submissions|
           next if submissions.count == 0
-          result[unit.id] = submissions.sum(&:score) / submissions.count
+
+          filtered = submissions.select do |submission|
+            !submission.excused?
+          end
+
+          result[unit.id] = filtered.sum(&:score) / filtered.count
         end
 
         result

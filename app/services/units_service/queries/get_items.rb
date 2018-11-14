@@ -11,9 +11,11 @@ module UnitsService
 
         @context_modules.each do |context_module|
           result[context_module] =
-          context_module.content_tags.select do |ct|
-            ct.content.present? && ct.content.respond_to?(:submissions)
-          end
+            context_module.content_tags.select do |ct|
+              ct.content.present? &&
+              ct.content.respond_to?(:submissions) &&
+              ct.content.workflow_state == 'published'
+            end
         end
         result
       end
