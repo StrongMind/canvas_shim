@@ -1,17 +1,4 @@
 module UnitsService
-  # {
-  #   course_id: 1,
-  #   student_id: 13,
-  #   units: {
-  #     { id: 1, score: 80 },
-  #     { id: 2, grade: 83 },
-  #     { id: 3, grade: 74 },
-  #     { id: 4, grade: 56 },
-  #     { id: 5, grade: 99 },
-  #     { id: 6, grade: 12 }
-  #   }
-  # }
-
   class GradesCalculator
     def initialize unit_submissions, course
       @unit_submissions = unit_submissions
