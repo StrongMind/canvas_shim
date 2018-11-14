@@ -20,7 +20,6 @@ module UnitsService
 
     def call
       result = {}
-      category_weights
 
       @unit_submissions.each do |unit, submissions|
         next if submissions.count == 0
