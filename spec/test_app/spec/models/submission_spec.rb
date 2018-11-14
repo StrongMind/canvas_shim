@@ -6,7 +6,11 @@ describe Submission do
         ENV['PIPELINE_ENDPOINT'] = 'endpoint'
         ENV['PIPELINE_USER_NAME'] = 'name'
         ENV['PIPELINE_PASSWORD'] = 'password'
+        ENV['SIS_ENROLLMENT_UPDATE_API_KEY'] = 'junk'
+        ENV['SIS_ENROLLMENT_UPDATE_ENDPOINT'] = 'junk'
+
         allow(PipelineService::HTTPClient).to receive(:post)
+        allow(PipelineService::Events::HTTPClient).to receive(:post)
         assignment.update(course: course)
       end
 
@@ -22,6 +26,16 @@ describe Submission do
           hash_including(data: data_result, noun: 'unit_grades')
         )
         Submission.create(user: user, assignment: assignment, score: 50)
+      end
+
+      it 'sends an event to SIS with the unit grade' do
+        expect(PipelineService::Events::HTTPClient).to receive(:post).with("junk?apiKey=junk", hash_including(:body=>"{\"#{context_module.id}\":50}"))
+        Submission.create(user: user, assignment: assignment, score: 50)
+      end
+
+      it 'wont send if there is no change to the score' do
+        expect(PipelineService::Events::HTTPClient).to_not receive(:post)
+        Submission.create(user: user, assignment: assignment)
       end
     end
   end

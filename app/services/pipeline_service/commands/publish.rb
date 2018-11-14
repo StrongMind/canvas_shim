@@ -35,9 +35,7 @@ module PipelineService
       end
 
       def post_to_pipeline
-        client.new(
-          @args.merge(object: object)
-        ).call
+        client.new(@args.merge(object: object)).call
       end
     end
   end
