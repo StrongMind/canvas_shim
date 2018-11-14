@@ -61,7 +61,7 @@ module PipelineService
         end
 
         def noun
-          object.class.to_s.underscore
+          object.class.to_s.split('::').last.underscore
         end
 
         def id

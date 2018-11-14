@@ -2,8 +2,13 @@ describe PipelineService::Events::GradeChangedEvent do
   describe '#emit' do
     let(:subscription) { double(:subscription, responder: responder) }
     let(:responder) { double(:responder, call: nil) }
-    let(:object) { Submission.new }
+    let(:object) { double('UnitGrades') }
     let(:changes) { {'score' => 10} }
+
+
+    before do
+      allow(object).to receive(:is_a?).with(PipelineService::Nouns::UnitGrades).and_return(true)
+    end
 
     subject do
       described_class.new(
