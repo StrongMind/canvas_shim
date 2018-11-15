@@ -10,12 +10,7 @@ module UnitsService
 
       @unit_submissions.each do |unit, submissions|
         next if submissions.count == 0
-
-        filtered = submissions.select do |submission|
-          !submission.excused?
-        end
-
-        result[unit.id] = weighted_average(filtered)
+        result[unit.id] = weighted_average(submissions)
       end
 
       result
