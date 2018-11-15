@@ -1,6 +1,6 @@
 
 describe UnitsService::GradesCalculator do
-  let(:unit) { double('unit', id: 1) }
+  let(:unit) { double('unit', id: 1, position: 1) }
   let(:course) { double('course') }
   let(:submissions) { [checkpoint_submission, discussion_group_submission] }
   let(:checkpoint_submission) do
@@ -61,7 +61,7 @@ describe UnitsService::GradesCalculator do
   describe '#call' do
     context 'scenario 1' do
       it 'scored 63.33' do
-        expect(subject.call[1]).to be_within(0.1).of(63.33)
+        expect(subject.call[unit]).to be_within(0.1).of(63.33)
         subject.call
       end
     end
@@ -130,7 +130,7 @@ describe UnitsService::GradesCalculator do
       # Then, you add the categories:
       # 28.18 + 14.54 +29.54 = 72.26% Unit Grade for the student
       it 'scored 72.26' do
-        expect(subject.call[1]).to be_within(0.1).of(72.26)
+        expect(subject.call[unit]).to be_within(0.1).of(72.26)
         subject.call
       end
     end
