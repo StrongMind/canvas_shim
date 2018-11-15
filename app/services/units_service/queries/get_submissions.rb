@@ -7,17 +7,18 @@ module UnitsService
       end
 
       def query
-        units = GetItems.new(course: @course).query
-
         result = {}
-
         units.each do |unit, items|
           items.each do |item|
-            result[unit] = item.content.submissions.where(user_id: @student.id)
+            result[unit] = item.content.submissions.where(user_id: @student.id).where("excused is not true")
           end
         end
 
         result
+      end
+
+      def units
+        GetItems.new(course: @course).query
       end
     end
   end
