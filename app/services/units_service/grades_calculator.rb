@@ -10,7 +10,7 @@ module UnitsService
 
       @unit_submissions.each do |unit, submissions|
         next if submissions.count == 0
-        result[unit.id] = weighted_average(submissions)
+        result[unit] = weighted_average(submissions)
       end
 
       result

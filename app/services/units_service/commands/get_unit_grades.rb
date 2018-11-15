@@ -9,6 +9,7 @@ module UnitsService
       def call
         get_submissions
         calculate_grades
+        payload
       end
 
       private
@@ -20,20 +21,22 @@ module UnitsService
         ).query
       end
 
-      # {
-      #   course_id: 1,
-      #   student_id: 13,
-      #   units: {
-      #     { id: 1, score: 80 },
-      #     { id: 2, grade: 83 },
-      #     { id: 3, grade: 74 },
-      #     { id: 4, grade: 56 },
-      #     { id: 5, grade: 99 },
-      #     { id: 6, grade: 12 }
-      #   }
-      # }
+      def payload
+        {
+          school_domain: ENV['CANVAS_DOMAIN'],
+          course_id: @course.id,
+          student_id: @student.id,
+          units: @grades.map {|unit, score| {
+            id: unit.id,
+            position: unit.position,
+            created_at: unit.created_at,
+            score: score
+          }}
+        }
+      end
+
       def calculate_grades
-        UnitsService::GradesCalculator.new(@unit_submissions, @course).call
+        @grades = UnitsService::GradesCalculator.new(@unit_submissions, @course).call
       end
     end
   end
