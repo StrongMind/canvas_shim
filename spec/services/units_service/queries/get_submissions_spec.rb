@@ -1,11 +1,13 @@
 describe UnitsService::Queries::GetSubmissions do
   let(:student) { User.create(course: course) }
   let(:course)  { Course.create(context_modules: [unit]) }
-  let!(:submission) { Submission.create!(user: student, assignment: assignment)}
+  let!(:submission) do
+    allow(PipelineService).to receive(:publish)
+    Submission.create!(user: student, assignment: assignment)
+  end
   let(:assignment) { Assignment.create(course: course, published: true) }
   let(:unit) { ContextModule.create }
   let(:item) { ContentTag.create(content: assignment) }
-  let(:pipeline_service) { class_double(PipelineService) }
 
   let(:units_result) do
     units = {}
@@ -17,17 +19,26 @@ describe UnitsService::Queries::GetSubmissions do
 
   before do
     allow(subject).to receive(:units).and_return(units_result)
+
   end
 
   it 'returns the unit and its submissions' do
+
     result = {}
     result[unit] = [submission]
     expect(subject.query).to eq result
   end
 
   context "with excused submission" do
-    let!(:submission) { Submission.create!(user: student, assignment: assignment)}
-    let!(:excused_submission) { Submission.create!(user: student, assignment: assignment, excused: true)}
+    let(:submission) do
+      allow(PipelineService).to receive(:publish)
+      Submission.create!(user: student, assignment: assignment)
+    end
+
+    let(:excused_submission) do
+      allow(PipelineService).to receive(:publish)
+      Submission.create!(user: student, assignment: assignment, excused: true)
+    end
 
     it 'will not return the excused submission' do
       result = {}
