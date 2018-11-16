@@ -16,22 +16,30 @@ describe Submission do
         assignment.update(course: course)
       end
 
-      let(:assignment) { Assignment.create }
-      let(:user) { User.create }
-      let(:content_tag) { ContentTag.create(content: assignment) }
-      let(:context_module) { ContextModule.create(content_tags: [content_tag]) }
-      let(:course) { Course.create(context_modules: [context_module]) }
-      let(:data_result) { {}.tap { |result| result[context_module.id] = 50} }
+      let(:assignment) {Assignment.create}
+      let(:user) {User.create}
+      let(:content_tag) {ContentTag.create(content: assignment)}
+      let(:context_module) {ContextModule.create(content_tags: [content_tag])}
+      let(:course) {Course.create(context_modules: [context_module])}
+      let(:data_result) {{:course_id => course.id, :school_domain => nil, :student_id => user.id, :units => []}}
+      let(:unit_grade_body) {{ 'school_domain' => nil, 'course_id' => course.id, 'student_id' => user.id, 'units' => [] }.to_json }
 
       it 'posts unit grades to the pipeline' do
         expect(PipelineService::HTTPClient).to receive(:post).with(
-          hash_including(data: data_result, noun: 'unit_grades')
+            hash_including(data: data_result, noun: 'unit_grades')
         )
         Submission.create(user: user, assignment: assignment, score: 50)
       end
 
       it 'sends an event to SIS with the unit grade' do
-        expect(PipelineService::Events::HTTPClient).to receive(:post).with("junk?apiKey=junk", hash_including(:body=>"{\"#{context_module.id}\":50}"))
+        expect(PipelineService::Events::HTTPClient).to receive(:post).with(
+            "junk?apiKey=hunk",
+            {
+              :body => unit_grade_body,
+              :headers => {
+                'Content-Type' => 'application/json'
+              }
+        })
         Submission.create(user: user, assignment: assignment, score: 50)
       end
 
