@@ -4,7 +4,6 @@ module PipelineService
       def initialize args={}
         @object = args[:object]
         @args = args
-        @responder = @args[:responder] || Events::Responders::SIS
       end
 
       def call
