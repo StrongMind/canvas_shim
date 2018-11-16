@@ -8,6 +8,8 @@ describe Submission do
         ENV['PIPELINE_PASSWORD'] = 'password'
         ENV['SIS_ENROLLMENT_UPDATE_API_KEY'] = 'junk'
         ENV['SIS_ENROLLMENT_UPDATE_ENDPOINT'] = 'junk'
+        ENV['SIS_UNIT_GRADE_ENDPOINT_API_KEY'] = 'hunk'
+        ENV['SIS_UNIT_GRADE_ENDPOINT'] = 'junk'
 
         allow(PipelineService::HTTPClient).to receive(:post)
         allow(PipelineService::Events::HTTPClient).to receive(:post)
