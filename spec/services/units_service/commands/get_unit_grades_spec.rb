@@ -5,8 +5,10 @@ describe UnitsService::Commands::GetUnitGrades do
   let(:current_time) { Time.now }
   let(:unit) { double('unit', id: 1, created_at: current_time, position: 3 ) }
   let(:calculator_instance) { double('calculator_instance', call: { unit => 54 }) }
+  let(:submitted_at) { Time.now }
+  let(:submission) { double('submission', submitted_at: submitted_at) }
 
-  subject { described_class.new(course: course, student: user) }
+  subject { described_class.new(course: course, student: user, submission: submission) }
 
   before do
     ENV['CANVAS_DOMAIN'] = 'canvasdomain.com'
@@ -19,6 +21,7 @@ describe UnitsService::Commands::GetUnitGrades do
       course_id: 1,
       school_domain: "canvasdomain.com",
       student_id: 1,
+      submitted_at: submitted_at,
       units: [{
         :score=>54,
         id: unit.id,
