@@ -1,6 +1,3 @@
-class ContentTag;end
-class ContextModule;end
-
 describe CoursesService::Commands::DistributeDueDates do
 
   let(:account_instance) {

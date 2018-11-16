@@ -46,7 +46,6 @@ module PipelineService
         end
 
         def configure_dependencies
-          @message_class = @args[:message_class] || PipelinePublisher::Message
           @fetcher       = @args[:fetcher] || Serializers::Fetcher
           @logger        = @args[:logger] || PipelineService::Logger
           @canvas_domain = ENV['CANVAS_DOMAIN']
@@ -58,11 +57,11 @@ module PipelineService
         end
 
         def build
-          message_class.new(payload.to_hash)
+          payload.to_hash
         end
 
         def noun
-          object.class.to_s.underscore
+          object.class.to_s.split('::').last.underscore
         end
 
         def id

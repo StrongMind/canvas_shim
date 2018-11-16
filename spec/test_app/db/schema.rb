@@ -10,10 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181022215929) do
+ActiveRecord::Schema.define(version: 20181116224443) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "assignment_groups", force: :cascade do |t|
+    t.integer "course_id"
+    t.integer "group_weight"
+    t.string  "name"
+  end
 
   create_table "assignments", force: :cascade do |t|
     t.datetime "due_at"
@@ -21,6 +27,16 @@ ActiveRecord::Schema.define(version: 20181022215929) do
     t.integer  "context_id"
     t.integer  "course_id"
     t.string   "workflow_state"
+  end
+
+  create_table "content_tags", force: :cascade do |t|
+    t.integer "context_module_id"
+    t.integer "content_id"
+    t.string  "content_type"
+  end
+
+  create_table "context_modules", force: :cascade do |t|
+    t.integer "course_id"
   end
 
   create_table "courses", force: :cascade do |t|
@@ -73,6 +89,11 @@ ActiveRecord::Schema.define(version: 20181022215929) do
     t.datetime "expires_at"
   end
 
+  create_table "pseudonyms", force: :cascade do |t|
+    t.integer "sis_user_id"
+    t.integer "user_id"
+  end
+
   create_table "students", force: :cascade do |t|
     t.integer "course_id"
   end
@@ -80,9 +101,15 @@ ActiveRecord::Schema.define(version: 20181022215929) do
   create_table "submissions", force: :cascade do |t|
     t.integer  "assignment_id"
     t.integer  "score"
+    t.boolean  "excused"
+    t.datetime "submitted_at"
     t.string   "workflow_state"
     t.integer  "grade"
-    t.datetime "conclude_at"
+    t.integer  "user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.integer "course_id"
   end
 
 end
