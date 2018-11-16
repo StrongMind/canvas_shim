@@ -6,6 +6,8 @@ module PipelineService
       # Maps any object with a class containing 'enrollment' to the enrollment serializer
       def self.fetch(object:)
         case object.class.to_s
+        when /PipelineService::Nouns::UnitGrades/
+          PipelineService::Serializers::UnitGrades
         when /Enrollment/
           PipelineService::Serializers::Enrollment
         else

@@ -9,3 +9,4 @@ spec/test_app/tmp/
 .DS_Store
 .idea
 test.log
+*.gem
