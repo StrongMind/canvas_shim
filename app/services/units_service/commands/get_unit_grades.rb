@@ -27,11 +27,11 @@ module UnitsService
           school_domain: ENV['CANVAS_DOMAIN'],
           course_id: @course.id,
           student_id: @student.id,
+          sis_user_id: @student.pseudonym.sis_user_id,
           submitted_at: @submission.submitted_at,
           units: @grades.map {|unit, score| {
             id: unit.id,
             position: unit.position,
-            created_at: unit.created_at,
             score: score
           }}
         }

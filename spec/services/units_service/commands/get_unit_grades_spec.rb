@@ -1,6 +1,7 @@
 describe UnitsService::Commands::GetUnitGrades do
   let(:course) { double('course', assignment_groups: [], id: 1) }
-  let(:user) { double('user', id: 1) }
+  let(:pseudonym) { double('pseudonym', sis_user_id: 1001) }
+  let(:user) { double('user', id: 1, pseudonym: pseudonym) }
   let(:query_instance) { double('query instance', query: nil) }
   let(:current_time) { Time.now }
   let(:unit) { double('unit', id: 1, created_at: current_time, position: 3 ) }
@@ -21,11 +22,11 @@ describe UnitsService::Commands::GetUnitGrades do
       course_id: 1,
       school_domain: "canvasdomain.com",
       student_id: 1,
+      sis_user_id: 1001,
       submitted_at: submitted_at,
       units: [{
         :score=>54,
         id: unit.id,
-        created_at: unit.created_at,
         position: unit.position
       }]
     )
