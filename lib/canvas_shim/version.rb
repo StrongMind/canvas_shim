@@ -1,3 +1,3 @@
 module CanvasShim
-  VERSION = '0.1.7rc6'
+  VERSION = '0.1.7'
 end
