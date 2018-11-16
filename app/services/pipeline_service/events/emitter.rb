@@ -10,7 +10,6 @@ module PipelineService
         fetch_serializer
         return unless serializer
         build_message
-        build_responder
         build_subscriptions
         emit
       end
@@ -43,13 +42,6 @@ module PipelineService
             object: object,
             message: message
           )
-        )
-      end
-
-      def build_responder
-        @responder = Events::Responders::SIS.new(
-          object: object,
-          message: message
         )
       end
 
