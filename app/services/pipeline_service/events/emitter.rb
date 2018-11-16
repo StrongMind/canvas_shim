@@ -8,6 +8,8 @@ module PipelineService
       end
 
       def call
+        fetch_serializer
+        return unless serializer
         build_message
         build_responder
         build_subscriptions
@@ -16,7 +18,7 @@ module PipelineService
 
       private
 
-      attr_reader :subscriptions, :object, :responder, :message
+      attr_reader :subscriptions, :object, :responder, :message, :serializer
 
       def events
         {
@@ -52,8 +54,8 @@ module PipelineService
         )
       end
 
-      def serializer
-        case object
+      def fetch_serializer
+        @serializer = case object
         when PipelineService::Nouns::UnitGrades
           Serializers::UnitGrades
         when Enrollment
