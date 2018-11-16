@@ -17,11 +17,12 @@ describe Submission do
       end
 
       let(:assignment) {Assignment.create}
-      let(:user) {User.create}
+      let(:user) {User.create(pseudonym: pseudonym)}
       let(:content_tag) {ContentTag.create(content: assignment)}
+      let(:pseudonym) {Pseudonym.create(sis_user_id: 1001)}
       let(:context_module) {ContextModule.create(content_tags: [content_tag])}
       let(:course) {Course.create(context_modules: [context_module])}
-      let(:data_result) {{submitted_at: nil, :course_id => course.id, :school_domain => nil, :student_id => user.id, :units => []}}
+      let(:data_result) {{submitted_at: nil, :course_id => course.id, :school_domain => nil, :student_id => user.id, :sis_user_id => 1001, :units => []}}
 
 
       it 'posts unit grades to the pipeline' do

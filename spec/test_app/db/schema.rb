@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181114192149) do
+ActiveRecord::Schema.define(version: 20181116224443) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,6 +87,11 @@ ActiveRecord::Schema.define(version: 20181114192149) do
     t.bigint   "original_job_id"
     t.string   "source",          limit: 255
     t.datetime "expires_at"
+  end
+
+  create_table "pseudonyms", force: :cascade do |t|
+    t.integer "sis_user_id"
+    t.integer "user_id"
   end
 
   create_table "students", force: :cascade do |t|
