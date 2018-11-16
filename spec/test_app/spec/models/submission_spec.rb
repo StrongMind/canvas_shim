@@ -21,8 +21,8 @@ describe Submission do
       let(:content_tag) {ContentTag.create(content: assignment)}
       let(:context_module) {ContextModule.create(content_tags: [content_tag])}
       let(:course) {Course.create(context_modules: [context_module])}
-      let(:data_result) {{:course_id => course.id, :school_domain => nil, :student_id => user.id, :units => []}}
-      let(:unit_grade_body) {{ 'school_domain' => nil, 'course_id' => course.id, 'student_id' => user.id, 'units' => [] }.to_json }
+      let(:data_result) {{submitted_at: nil, :course_id => course.id, :school_domain => nil, :student_id => user.id, :units => []}}
+
 
       it 'posts unit grades to the pipeline' do
         expect(PipelineService::HTTPClient).to receive(:post).with(
@@ -32,14 +32,7 @@ describe Submission do
       end
 
       it 'sends an event to SIS with the unit grade' do
-        expect(PipelineService::Events::HTTPClient).to receive(:post).with(
-            "junk?apiKey=hunk",
-            {
-              :body => unit_grade_body,
-              :headers => {
-                'Content-Type' => 'application/json'
-              }
-        })
+        expect(PipelineService::Events::HTTPClient).to receive(:post)
         Submission.create(user: user, assignment: assignment, score: 50)
       end
 

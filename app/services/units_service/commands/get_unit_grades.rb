@@ -1,9 +1,10 @@
 module UnitsService
   module Commands
     class GetUnitGrades
-      def initialize(course:, student:)
+      def initialize(course:, student:, submission:)
         @course = course
         @student = student
+        @submission = submission
       end
 
       def call
@@ -26,6 +27,7 @@ module UnitsService
           school_domain: ENV['CANVAS_DOMAIN'],
           course_id: @course.id,
           student_id: @student.id,
+          submitted_at: @submission.submitted_at,
           units: @grades.map {|unit, score| {
             id: unit.id,
             position: unit.position,
