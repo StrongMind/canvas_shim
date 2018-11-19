@@ -10,7 +10,12 @@ module UnitsService
         result = {}
         units.each do |unit, items|
           items.each do |item|
-            result[unit] = item.content.submissions.where(user_id: @student.id).where("excused is not true")
+            item.content.submissions
+              .where(user_id: @student.id)
+              .where("excused is not true").each do |submission|
+                result[unit] ||= []
+                result[unit] << submission
+              end
           end
         end
 
