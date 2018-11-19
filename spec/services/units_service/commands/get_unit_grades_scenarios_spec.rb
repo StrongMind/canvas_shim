@@ -10,7 +10,6 @@ describe UnitsService::Commands::GetUnitGrades do
 
   it 'calculates a weighted score for each unit' do
     result = described_class.new(course: course, student: user, submission: Submission.first).call
-    byebug
 
     expect(result[:units].count).to eq 6
     result[:units].each do |unit|
