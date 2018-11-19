@@ -5,6 +5,7 @@ describe UnitsService::Queries::GetSubmissions do
   let(:assignment) { Assignment.create(course: course, published: true) }
   let(:unit) { ContextModule.create }
   let(:item) { ContentTag.create(content: assignment) }
+
   let(:units_result) do
     units = {}
     units[unit] = [item]
