@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(version: 20181116224443) do
 
   create_table "assignment_groups", force: :cascade do |t|
     t.integer "course_id"
-    t.integer "group_weight"
+    t.float   "group_weight"
     t.string  "name"
   end
 
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 20181116224443) do
     t.datetime "due_at"
     t.boolean  "published"
     t.integer  "context_id"
+    t.integer  "assignment_group_id"
     t.integer  "course_id"
     t.string   "workflow_state"
   end
@@ -37,6 +38,7 @@ ActiveRecord::Schema.define(version: 20181116224443) do
 
   create_table "context_modules", force: :cascade do |t|
     t.integer "course_id"
+    t.integer "position"
   end
 
   create_table "courses", force: :cascade do |t|
