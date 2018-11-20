@@ -15,6 +15,7 @@ describe UnitsService::Queries::GetSubmissions do
   subject { described_class.new(student: student, course: course) }
 
   before do
+    allow(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => true)
     allow(subject).to receive(:units).and_return(units_result)
     allow(PipelineService).to receive(:publish)
   end
