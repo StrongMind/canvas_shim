@@ -13,6 +13,7 @@ describe Submission do
 
         allow(PipelineService::HTTPClient).to receive(:post)
         allow(PipelineService::Events::HTTPClient).to receive(:post)
+        allow(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => true)
         assignment.update(course: course)
       end
 
@@ -23,7 +24,6 @@ describe Submission do
       let(:context_module) {ContextModule.create(content_tags: [content_tag])}
       let(:course) {Course.create(context_modules: [context_module])}
       let(:data_result) {{submitted_at: nil, :course_id => course.id, :school_domain => nil, :student_id => user.id, :sis_user_id => 1001, :units => []}}
-
 
       it 'posts unit grades to the pipeline' do
         expect(PipelineService::HTTPClient).to receive(:post).with(
@@ -40,6 +40,17 @@ describe Submission do
       it 'wont send if there is no change to the score' do
         expect(PipelineService::Events::HTTPClient).to_not receive(:post)
         Submission.create(user: user, assignment: assignment)
+      end
+
+      context 'setting disabled' do
+        before do
+          expect(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => false)
+        end
+
+        it 'wont fire' do
+          expect(PipelineService::Events::HTTPClient).to_not receive(:post)
+          Submission.create(user: user, assignment: assignment, score: 50)
+        end
       end
     end
   end
