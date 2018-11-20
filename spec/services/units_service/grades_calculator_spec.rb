@@ -59,6 +59,21 @@ describe UnitsService::GradesCalculator do
   end
 
   describe '#call' do
+    context 'an assignment without a score' do
+      let(:submissions) { [checkpoint_submission, discussion_group_submission, no_score_submission] }
+      let(:no_score_submission) do
+        double(
+          :submission,
+          excused?: false,
+          score: nil,
+          assignment: discussion_assignment)
+      end
+
+      it 'wont break the sum of scores' do
+        expect {subject.call}.to_not raise_error
+      end
+    end
+
     context 'scenario 1' do
       it 'scored 63.33' do
         expect(subject.call[unit]).to be_within(0.1).of(63.33)
