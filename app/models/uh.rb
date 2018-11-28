@@ -1,5 +1,5 @@
 class Uh
   def initialize
-    puts 'uh'
+    puts 'uh!'
   end
 end
