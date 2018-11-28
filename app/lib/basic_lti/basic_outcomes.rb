@@ -6,6 +6,9 @@ module BasicLTI
       def create_homework_submission
         puts 'create_homework'
       end
+      def cat
+        puts 'meow'
+      end
     end
   end
 end
