@@ -9,6 +9,9 @@ module BasicLTI
       def cat
         puts 'meow'
       end
+      def 'frog'
+        puts 'jubm'
+      end
     end
   end
 end
