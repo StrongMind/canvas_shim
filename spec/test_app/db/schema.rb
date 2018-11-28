@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181116224443) do
+ActiveRecord::Schema.define(version: 20181128202102) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -98,6 +98,11 @@ ActiveRecord::Schema.define(version: 20181116224443) do
 
   create_table "students", force: :cascade do |t|
     t.integer "course_id"
+  end
+
+  create_table "submission_versions", force: :cascade do |t|
+    t.text    "yaml"
+    t.integer "submission_id"
   end
 
   create_table "submissions", force: :cascade do |t|
