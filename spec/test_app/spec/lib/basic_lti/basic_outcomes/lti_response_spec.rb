@@ -16,7 +16,7 @@ describe BasicLTI::BasicOutcomes::LtiResponse do
       end
 
       it 'should call the shimed method' do
-        expect(subject).to receive(:update_subission_with_best_score)
+        expect(subject).to receive(:update_submission_with_best_score)
         subject.create_homework_submission(1,2,3,4,5,6)
       end
 
@@ -43,7 +43,7 @@ describe BasicLTI::BasicOutcomes::LtiResponse do
       end
 
       it 'should not call the shimed method' do
-        expect(subject).to_not receive(:update_subission_with_best_score)
+        expect(subject).to_not receive(:update_submission_with_best_score)
         subject.create_homework_submission(1,2,3,4,5,6)
       end
     end

@@ -7,13 +7,13 @@ module BasicLTI
         homework_submission_alias(_tool, submission_hash, assignment, user, new_score, raw_score)
 
         if SettingsService.get_settings(object: :school, id: 1)['lti_keep_highest_score']
-          update_subission_with_best_score
+          update_submission_with_best_score
         end
       end
 
       private
 
-      def update_subission_with_best_score
+      def update_submission_with_best_score
         return unless @submission
         best_score = @submission.score
         best_grade = @submission.grade
