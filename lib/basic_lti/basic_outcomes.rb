@@ -15,11 +15,11 @@ module BasicLTI
 
       def update_submission_with_best_score
         return unless @submission
-        best_score = @submission.score
+        best_score = @submission.score || 0
         best_grade = @submission.grade
         versions = @submission.versions
         versions.each do |version|
-          version_score = YAML.load(version.yaml).stringify_keys['score']
+          version_score = YAML.load(version.yaml).stringify_keys['score'] || 0
           if version_score > best_score
             best_score = version_score
             best_grade = YAML.load(version.yaml).stringify_keys['grade']
