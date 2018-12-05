@@ -33,7 +33,11 @@ module CoursesService
         attr_reader :assignment_count, :startdate, :enddate, :days
 
         def first_due_date
-          @args[:course].start_at.in_time_zone(@args[:course].time_zone).at_end_of_day + 1.day
+          if @args[:start_date]
+            @args[:start_date].in_time_zone(@args[:course].time_zone).at_end_of_day + 1.day
+          else
+            @args[:course].start_at.in_time_zone(@args[:course].time_zone).at_end_of_day + 1.day
+          end
         end
 
         def calendar
