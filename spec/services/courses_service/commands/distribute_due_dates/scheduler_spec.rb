@@ -47,6 +47,16 @@ describe CoursesService::Commands::DistributeDueDates::Scheduler do
       expect(subject.course_dates.keys[0].strftime("%H:%M")). to eq "23:59"
     end
 
+    context 'when given a start date' do
+      subject do
+        described_class.new(course: course, assignment_count: 44, start_date: Time.now)
+      end
+
+      it 'will start a day after' do
+        expect(subject.course_dates.keys[0].strftime("%Y-%m-%d")). to eq (Time.now + 1.day).strftime('%Y-%m-%d')
+      end
+    end
+
     context 'when given holidays' do
         before do
           ENV['HOLIDAYS'] = "2018-11-28,2018-11-29"
