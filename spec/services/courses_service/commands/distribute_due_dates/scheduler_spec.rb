@@ -49,11 +49,11 @@ describe CoursesService::Commands::DistributeDueDates::Scheduler do
 
     context 'when given a start date' do
       subject do
-        described_class.new(course: course, assignment_count: 44, start_date: Time.now)
+        described_class.new(course: course, assignment_count: 44, start_date: DateTime.new(2018,12,6))
       end
 
       it 'will start a day after' do
-        expect(subject.course_dates.keys[0].strftime("%Y-%m-%d")). to eq (Time.now + 1.day).strftime('%Y-%m-%d')
+        expect(subject.course_dates.keys[0].strftime("%Y-%m-%d")). to eq (DateTime.new(2018,12,7)).strftime('%Y-%m-%d')
       end
     end
 
