@@ -26,7 +26,7 @@ module BasicLTI
           end
         end
 
-        @submission.update_columns({score: best_score, grade: best_grade})
+        @submission.update_columns({score: best_score, grade: best_grade, published_grade: best_grade, published_score: best_score})
       end
     end
   end
