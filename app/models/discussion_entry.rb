@@ -2,7 +2,6 @@ class DiscussionEntry
   after_save :set_unread_status
 
   def set_unread_status
-    raise 'boom'
     topic = self.discussion_topic
     course = self.discussion_topic.course
     topic_microservice_domain = ENV['TOPIC_MICROSERVICE_DOMAIN']
