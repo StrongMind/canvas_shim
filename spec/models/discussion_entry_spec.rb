@@ -5,12 +5,12 @@ describe DiscussionEntry do
     let(:teacher) { User.create }
 
     let(:endpoint) do
-      "https://endpoint/teachers/#{ENV['CANVAS_DOMAIN']}:#{teacher.id}/topics/#{discussion_topic.id}"
+      "endpoint/teachers/#{ENV['CANVAS_DOMAIN']}:#{teacher.id}/topics/#{discussion_topic.id}"
     end
     let(:headers) { { :"x-api-key"=>"key" } }
 
     before do
-      ENV['TOPIC_MICROSERVICE_DOMAIN'] = 'endpoint'
+      ENV['TOPIC_MICROSERVICE_ENDPOINT'] = 'endpoint'
       ENV['TOPIC_MICROSERVICE_API_KEY'] = 'key'
       ENV['CANVAS_DOMAIN'] = 'test'
 
@@ -46,7 +46,7 @@ describe DiscussionEntry do
 
     context "when the configuration is missing" do
       before do
-        ENV['TOPIC_MICROSERVICE_DOMAIN'] = nil
+        ENV['TOPIC_MICROSERVICE_ENDPOINT'] = nil
         ENV['TOPIC_MICROSERVICE_API_KEY'] = nil
       end
 
