@@ -12,7 +12,7 @@ class DiscussionEntry
 
 
     course.teachers.each do |teacher|
-      endpoint = "http://#{topic_microservice_domain}/teachers/#{teacher.id}/topics/#{topic.id}"
+      endpoint = "https://#{topic_microservice_domain}/teachers/#{ENV['CANVAS_DOMAIN']}:#{teacher.id}/topics/#{topic.id}"
 
       if self.unread?(teacher)
         HTTParty.post(endpoint, headers: { "x-api-key": api_key })

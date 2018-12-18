@@ -5,13 +5,14 @@ describe DiscussionEntry do
     let(:teacher) { User.create }
 
     let(:endpoint) do
-      "http://endpoint/teachers/#{teacher.id}/topics/#{discussion_topic.id}"
+      "https://endpoint/teachers/#{ENV['CANVAS_DOMAIN']}:#{teacher.id}/topics/#{discussion_topic.id}"
     end
     let(:headers) { { :"x-api-key"=>"key" } }
 
     before do
       ENV['TOPIC_MICROSERVICE_DOMAIN'] = 'endpoint'
       ENV['TOPIC_MICROSERVICE_API_KEY'] = 'key'
+      ENV['CANVAS_DOMAIN'] = 'test'
 
       allow(HTTParty).to receive(:post)
       allow(HTTParty).to receive(:delete)
