@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181128202102) do
+ActiveRecord::Schema.define(version: 20181218165523) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,15 @@ ActiveRecord::Schema.define(version: 20181128202102) do
     t.index ["run_at", "tag"], name: "index_delayed_jobs_on_run_at_and_tag", using: :btree
     t.index ["strand", "id"], name: "index_delayed_jobs_on_strand", using: :btree
     t.index ["tag"], name: "index_delayed_jobs_on_tag", using: :btree
+  end
+
+  create_table "discussion_entries", force: :cascade do |t|
+    t.integer "discussion_topic_id"
+  end
+
+  create_table "discussion_topics", force: :cascade do |t|
+    t.integer "context_id"
+    t.string  "context_type"
   end
 
   create_table "failed_jobs", force: :cascade do |t|
