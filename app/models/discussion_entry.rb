@@ -5,14 +5,13 @@ class DiscussionEntry
   def set_unread_status
     topic = self.discussion_topic
     course = self.discussion_topic.course
-    topic_microservice_domain = ENV['TOPIC_MICROSERVICE_DOMAIN']
+    topic_microservice_endpoint = ENV['TOPIC_MICROSERVICE_ENDPOINT']
     api_key = ENV['TOPIC_MICROSERVICE_API_KEY']
 
-    return unless topic_microservice_domain && api_key
-
+    return unless topic_microservice_endpoint && api_key
 
     course.teachers.each do |teacher|
-      endpoint = "https://#{topic_microservice_domain}/teachers/#{ENV['CANVAS_DOMAIN']}:#{teacher.id}/topics/#{topic.id}"
+      endpoint = "#{topic_microservice_endpoint}/teachers/#{ENV['CANVAS_DOMAIN']}:#{teacher.id}/topics/#{topic.id}"
 
       if self.unread?(teacher)
         HTTParty.post(endpoint, headers: { "x-api-key": api_key })
