@@ -6,19 +6,18 @@ class DiscussionEntry
     topic = self.discussion_topic
     course = self.discussion_topic.course
     topic_microservice_domain = ENV['TOPIC_MICROSERVICE_DOMAIN']
-
     api_key = ENV['TOPIC_MICROSERVICE_API_KEY']
 
     return unless topic_microservice_domain && api_key
 
 
     course.teachers.each do |teacher|
-      endpoint = "http://#{topic_microservice_domain}/teachers/#{teacher.id}/topics/#{topic.id}?api_key=#{}"
+      endpoint = "http://#{topic_microservice_domain}/teachers/#{teacher.id}/topics/#{topic.id}"
 
       if self.unread?(teacher)
-        HTTParty.post(endpoint)
+        HTTParty.post(endpoint, headers: { "x-api-key": api_key })
       else
-        HTTParty.delete(endpoint)
+        HTTParty.delete(endpoint, headers: { "x-api-key": api_key })
       end
     end
   end

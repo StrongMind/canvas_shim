@@ -3,10 +3,11 @@ describe DiscussionEntry do
     let(:course) { Course.create(users: [teacher]) }
     let(:discussion_topic) { DiscussionTopic.create(context: course) }
     let(:teacher) { User.create }
-    let(:endpoint) do
-      "http://endpoint/teachers/#{teacher.id}/topics/#{discussion_topic.id}?api_key="
-    end
 
+    let(:endpoint) do
+      "http://endpoint/teachers/#{teacher.id}/topics/#{discussion_topic.id}"
+    end
+    let(:headers) { { :"x-api-key"=>"key" } }
 
     before do
       ENV['TOPIC_MICROSERVICE_DOMAIN'] = 'endpoint'
@@ -24,7 +25,7 @@ describe DiscussionEntry do
 
     context "when the entry has not been read" do
       it 'posts to the endpoint on save' do
-        expect(HTTParty).to receive(:post).with(endpoint)
+        expect(HTTParty).to receive(:post).with(endpoint, headers: headers)
         subject.save
       end
     end
@@ -32,7 +33,7 @@ describe DiscussionEntry do
     context "when the entry has been read" do
       it 'delete to the endpoint on save' do
         subject.unread = false
-        expect(HTTParty).to receive(:delete)
+        expect(HTTParty).to receive(:delete).with(endpoint, headers: headers)
         subject.save
       end
 
