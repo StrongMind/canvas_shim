@@ -3,6 +3,10 @@ describe DiscussionEntry do
     let(:course) { Course.create(users: [teacher]) }
     let(:discussion_topic) { DiscussionTopic.create(context: course) }
     let(:teacher) { User.create }
+    let(:endpoint) do
+      "http://endpoint/teachers/#{teacher.id}/topics/#{discussion_topic.id}?api_key="
+    end
+
 
     before do
       ENV['TOPIC_MICROSERVICE_DOMAIN'] = 'endpoint'
@@ -20,7 +24,7 @@ describe DiscussionEntry do
 
     context "when the entry has not been read" do
       it 'posts to the endpoint on save' do
-        expect(HTTParty).to receive(:post)
+        expect(HTTParty).to receive(:post).with(endpoint)
         subject.save
       end
     end
