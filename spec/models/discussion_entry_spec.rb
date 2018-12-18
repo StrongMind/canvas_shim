@@ -1,34 +1,52 @@
 describe DiscussionEntry do
   describe '#set_unread_status' do
-    let(:course) { Course.create }
+    let(:course) { Course.create(users: [teacher]) }
     let(:discussion_topic) { DiscussionTopic.create(context: course) }
     let(:teacher) { User.create }
 
     before do
-      allow(ENV).to receive(:[]).with('TOPIC_MICROSERVICE_DOMAIN').and_return "endpoint"
-      allow(ENV).to receive(:[]).with('TOPIC_MICROSERVICE_API_KEY').and_return "key"
-      allow(course).to receive(:teachers).and_return([teacher])
+      ENV['TOPIC_MICROSERVICE_DOMAIN'] = 'endpoint'
+      ENV['TOPIC_MICROSERVICE_API_KEY'] = 'key'
+
+      allow(HTTParty).to receive(:post)
+      allow(HTTParty).to receive(:delete)
+
+      subject.unread = true
     end
 
     subject do
       DiscussionEntry.create(discussion_topic: discussion_topic)
     end
 
-    context "unread" do
-      it 'requires an endpoint' do
+    context "when the entry has not been read" do
+      it 'posts to the endpoint on save' do
         expect(HTTParty).to receive(:post)
-        subject
+        subject.save
       end
     end
 
-    context "missing configuration" do
-      before do
-        allow(ENV).to receive(:[]).with('TOPIC_MICROSERVICE_DOMAIN').and_return nil
-        allow(ENV).to receive(:[]).with('TOPIC_MICROSERVICE_API_KEY').and_return nil
+    context "when the entry has been read" do
+      it 'delete to the endpoint on save' do
+        subject.unread = false
+        expect(HTTParty).to receive(:delete)
+        subject.save
       end
 
-      it 'requires an endpoint' do
-        expect(course).to_not receive(:teachers)
+      it 'delete to the endpoint on find' do
+        expect(HTTParty).to receive(:delete)
+        described_class.last
+      end
+    end
+
+    context "when the configuration is missing" do
+      before do
+        ENV['TOPIC_MICROSERVICE_DOMAIN'] = nil
+        ENV['TOPIC_MICROSERVICE_API_KEY'] = nil
+      end
+
+      it 'wont post to the service' do
+        expect(HTTParty).to_not receive(:delete)
+        expect(HTTParty).to_not receive(:post)
         subject
       end
     end
