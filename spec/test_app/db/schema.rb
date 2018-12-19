@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 20181218165523) do
 
   create_table "discussion_entries", force: :cascade do |t|
     t.integer "discussion_topic_id"
+    t.boolean "unread"
   end
 
   create_table "discussion_topics", force: :cascade do |t|

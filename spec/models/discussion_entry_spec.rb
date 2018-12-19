@@ -7,6 +7,7 @@ describe DiscussionEntry do
     let(:endpoint) do
       "endpoint/teachers/#{ENV['CANVAS_DOMAIN']}:#{teacher.id}/topics/#{discussion_topic.id}"
     end
+
     let(:headers) { { :"x-api-key"=>"key" } }
 
     before do
@@ -16,12 +17,12 @@ describe DiscussionEntry do
 
       allow(HTTParty).to receive(:post)
       allow(HTTParty).to receive(:delete)
+      DiscussionEntry.create(discussion_topic: discussion_topic, unread: true)
 
-      subject.unread = true
     end
 
     subject do
-      DiscussionEntry.create(discussion_topic: discussion_topic)
+      DiscussionEntry.create(discussion_topic: discussion_topic, unread: true)
     end
 
     context "when the entry has not been read" do
@@ -32,15 +33,18 @@ describe DiscussionEntry do
     end
 
     context "when the entry has been read" do
+      subject do
+        DiscussionEntry.create(discussion_topic: discussion_topic, unread: false)
+      end
+
       it 'delete to the endpoint on save' do
-        subject.unread = false
         expect(HTTParty).to receive(:delete).with(endpoint, headers: headers)
         subject.save
       end
 
       it 'delete to the endpoint on find' do
         expect(HTTParty).to receive(:delete)
-        described_class.last
+        result = described_class.find(subject.id)
       end
     end
 
