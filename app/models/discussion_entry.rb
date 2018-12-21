@@ -3,6 +3,7 @@ class DiscussionEntry
   after_find :set_unread_status
 
   def set_unread_status
+    puts "***** SET UNREAD STATUS *****"
     topic = self.discussion_topic
     course = self.discussion_topic.course
     topic_microservice_endpoint = ENV['TOPIC_MICROSERVICE_ENDPOINT']
