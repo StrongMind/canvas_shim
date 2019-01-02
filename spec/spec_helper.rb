@@ -3,6 +3,7 @@
 # or `rails plugin new ENGINE_NAME --dummy-path=spec/dummy --skip-test-unit --mountable --database=mysql`
 # Configure spec_helper.rb
 ENV["RAILS_ENV"] = "test"
+ENV['CANVAS_DOMAIN'] = 'canvasdomain.com'
 require File.expand_path("../test_app/config/environment.rb",  __FILE__)
 require 'rspec/rails'
 ENGINE_RAILS_ROOT=File.join(File.dirname(__FILE__), '../')
