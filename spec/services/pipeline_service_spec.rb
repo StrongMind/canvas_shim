@@ -40,11 +40,3 @@ describe PipelineService do
   end
 end
 
-module PipelineService
-  module Delayed
-    module Job
-      def self.enqueue(job)
-      end
-    end
-  end
-end
