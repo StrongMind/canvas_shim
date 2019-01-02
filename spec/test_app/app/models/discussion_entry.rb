@@ -2,6 +2,7 @@ class DiscussionEntry < ActiveRecord::Base
   belongs_to :discussion_topic
 
   def unread?(teacher)
+    raise 'boom'
     self[:unread] == true
   end
 end
