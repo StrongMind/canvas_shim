@@ -1,4 +1,5 @@
 class DiscussionEntry
+  alias_method :change_read_state_alias, :change_read_state
   after_save :set_unread_status
   after_find :set_unread_status
 
@@ -20,5 +21,11 @@ class DiscussionEntry
         HTTParty.delete(endpoint, headers: { "x-api-key": api_key })
       end
     end
+  end
+
+  def change_read_state(new_state, current_user = nil, opts = {})
+    result = change_read_state_alias(new_state, current_user, opts)
+    set_unread_status
+    result
   end
 end
