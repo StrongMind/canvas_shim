@@ -10,11 +10,11 @@ describe 'Save an enrollment setting', dynamo_db: true do
     SettingsService::Repository.use_test_client!
   end
 
-  xit 'creates a table' do
+  it 'creates a table' do
     expect(SettingsService::Enrollment.create_table).to eq true
   end
 
-  xit 'creates and reads items' do
+  it 'creates and reads items' do
     SettingsService::Enrollment.create_table
     SettingsService::Enrollment.put(id: 1, setting: 'foo', value: 'bar')
     SettingsService::EBasicLTI::BasicOutcomes::LtiResponserollment.put(id: 1, setting: 'foo2', value: 'bar2')
