@@ -19,6 +19,8 @@ class DiscussionEntry
         HTTParty.post(endpoint, headers: { "x-api-key": api_key })
       else
         HTTParty.delete(endpoint, headers: { "x-api-key": api_key })
+        Rails.cache.delete(ShimCache.safe_cache_key([teacher, nil, 'to_do_list_view']))
+        Rails.cache.delete(ShimCache.safe_cache_key([teacher, [course], 'to_do_list_view']))
       end
     end
   end
