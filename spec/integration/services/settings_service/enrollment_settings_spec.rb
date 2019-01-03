@@ -17,7 +17,7 @@ describe 'Save an enrollment setting', dynamo_db: true do
   it 'creates and reads items' do
     SettingsService::Enrollment.create_table
     SettingsService::Enrollment.put(id: 1, setting: 'foo', value: 'bar')
-    SettingsService::EBasicLTI::BasicOutcomes::LtiResponserollment.put(id: 1, setting: 'foo2', value: 'bar2')
+    SettingsService::Enrollment.put(id: 1, setting: 'foo2', value: 'bar2')
 
     expect( SettingsService::Enrollment.get(id: 1) ).to be == {
       "foo" => 'bar',
