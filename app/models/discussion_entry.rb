@@ -1,10 +1,8 @@
 class DiscussionEntry
   alias_method :change_read_state_alias, :change_read_state
   after_save :set_unread_status
-  after_find :set_unread_status
 
   def set_unread_status
-    puts "***** SET UNREAD STATUS *****"
     topic = self.discussion_topic
     course = self.discussion_topic.course
     topic_microservice_endpoint = ENV['TOPIC_MICROSERVICE_ENDPOINT']
