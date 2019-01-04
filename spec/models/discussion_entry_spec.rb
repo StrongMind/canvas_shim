@@ -8,7 +8,7 @@ describe DiscussionEntry do
       "endpoint/teachers/#{ENV['CANVAS_DOMAIN']}:#{teacher.id}/topics/#{discussion_topic.id}"
     end
 
-    let(:headers) { { :"x-api-key"=>"key" } }
+    let(:headers) { { :"x-api-key"=>'key' } }
 
     before do
       ENV['TOPIC_MICROSERVICE_ENDPOINT'] = 'endpoint'
@@ -27,14 +27,14 @@ describe DiscussionEntry do
       DiscussionEntry.create(discussion_topic: discussion_topic, unread: true)
     end
 
-    context "when the entry has not been read" do
+    context 'when the entry has not been read' do
       it 'posts to the endpoint on save' do
         expect(HTTParty).to receive(:post).with(endpoint, headers: headers)
         subject.save
       end
     end
 
-    context "when the entry has been read" do
+    context 'when the entry has been read' do
       subject do
         DiscussionEntry.create(discussion_topic: discussion_topic, unread: false)
       end
@@ -50,7 +50,7 @@ describe DiscussionEntry do
       end
     end
 
-    context "when the configuration is missing" do
+    context 'when the configuration is missing' do
       before do
         ENV['TOPIC_MICROSERVICE_ENDPOINT'] = nil
         ENV['TOPIC_MICROSERVICE_API_KEY'] = nil
