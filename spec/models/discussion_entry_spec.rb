@@ -17,6 +17,8 @@ describe DiscussionEntry do
 
       allow(HTTParty).to receive(:post)
       allow(HTTParty).to receive(:delete)
+      allow(SettingsService).to receive(:get_settings).and_return('show_unread_discussions' => true)
+
       DiscussionEntry.create(discussion_topic: discussion_topic, unread: true)
 
     end
@@ -52,6 +54,18 @@ describe DiscussionEntry do
       before do
         ENV['TOPIC_MICROSERVICE_ENDPOINT'] = nil
         ENV['TOPIC_MICROSERVICE_API_KEY'] = nil
+      end
+
+      it 'wont post to the service' do
+        expect(HTTParty).to_not receive(:delete)
+        expect(HTTParty).to_not receive(:post)
+        subject
+      end
+    end
+
+    context 'when unread discussion feature flag is off' do
+      before do
+        allow(SettingsService).to receive(:get_settings).and_return('show_unread_discussions' => false)
       end
 
       it 'wont post to the service' do
