@@ -8,5 +8,6 @@ class DiscussionEntry < ActiveRecord::Base
   def change_read_state
     'implemented in LMS'
   end
+
+  include CanvasShim::DiscussionEntry
 end
-require File.expand_path('../../app/models/discussion_entry', CanvasShim::Engine.called_from)
