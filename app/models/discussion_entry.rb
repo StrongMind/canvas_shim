@@ -17,7 +17,6 @@ class DiscussionEntry
         HTTParty.post(endpoint, headers: { "x-api-key": api_key })
       else
         HTTParty.delete(endpoint, headers: { "x-api-key": api_key })
-        teacher.touch
       end
     end
   end
