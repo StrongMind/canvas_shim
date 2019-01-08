@@ -8,4 +8,5 @@ class DiscussionEntry < ActiveRecord::Base
   def change_read_state
     'implemented in LMS'
   end
+  include CanvasShim::DiscussionEntry
 end

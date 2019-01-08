@@ -10,7 +10,6 @@ require 'aws-sdk-s3'
 require 'pg'
 require "pipeline_publisher_ruby"
 
-
 module CanvasShim
   class Engine < ::Rails::Engine
     isolate_namespace CanvasShim
