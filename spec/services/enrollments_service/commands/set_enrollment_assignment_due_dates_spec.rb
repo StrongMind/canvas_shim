@@ -1,30 +1,54 @@
 describe CoursesService::Commands::SetEnrollmentAssignmentDueDates do
   subject { described_class.new(enrollment: enrollment) }
 
-  let(:enrollment) { double('Enrollment', start_at: Time.now, course: course) }
-  let(:student) { double('Student') }
-  let(:submission) { double('submission', student: student) }
+  let(:enrollment_start_time) { Time.now }
+  let(:new_time_1) { Time.now }
+  let(:new_time_2) { Time.now }
+  let(:enrollment) { double('Enrollment', start_at: enrollment_start_time, course: course, user: student) }
+  let(:student) { User.create }
+  let(:submission) { Submission.create(user: student) }
+  let(:submission2) { Submission.create(user: student) }
+  let(:assignment_override) { AssignmentOverride.create }
+
   let(:course) do
-    double('Course',
+    Course.create(
       start_at: Time.now,
-      assignments: [assignment],
-      enrollments: [enrollment]
+      end_at: Time.now + 60.days,
+      assignments: [assignment, assignment2]
     )
   end
-  let(:assignment) { double('Assignment', submissions: [submission]) }
+
+  let(:assignment) { Assignment.create(submissions: [submission]) }
+  let(:assignment2) { Assignment.create(submissions: [submission2]) }
+
+
+  before do
+    allow(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => false)
+    allow(AssignmentOverride).to receive(:create).and_return(assignment_override)
+  end
 
   describe "#call" do
     it 'creates assignment override' do
-      expect(AssignmentOverride).to receive(:create).with(assignment)
+      expect(AssignmentOverride).to receive(:create).with(
+        assignment: assignment,
+        due_at: Time.parse('2019-01-09 23:59:59.999999999 -0700')
+      )
+
+      expect(AssignmentOverride).to receive(:create).with(
+        assignment: assignment2,
+        due_at: Time.parse('2019-01-10 23:59:59.999999999 -0700')
+      )
+
       subject.call
     end
 
-    it 'creates a student override' do
+    xit 'creates a student override' do
       expect(AssignmentOverrideStudent).to receive(:create).with(
         assignment_override: assignment_override,
         assignment: assignment,
         user: student
       )
+      subject.call
     end
   end
 end
