@@ -1,28 +1,30 @@
-describe EnrollmentsService::Commands::SetEnrollmentAssignmentDueDates do
-  subject { described_class.new }
+describe CoursesService::Commands::SetEnrollmentAssignmentDueDates do
+  subject { described_class.new(enrollment: enrollment) }
 
-  let(:enrollment) {
-    double('Enrollment')
-  }
-
-  it 'exists' do
+  let(:enrollment) { double('Enrollment', start_at: Time.now, course: course) }
+  let(:student) { double('Student') }
+  let(:submission) { double('submission', student: student) }
+  let(:course) do
+    double('Course',
+      start_at: Time.now,
+      assignments: [assignment],
+      enrollments: [enrollment]
+    )
   end
+  let(:assignment) { double('Assignment', submissions: [submission]) }
 
   describe "#call" do
-    context 'when feature is on' do
-      before do
-        allow(SettingsService).to receive(:get_settings).and_return('set_individual_due_dates' => 'on')
-      end
+    it 'creates assignment override' do
+      expect(AssignmentOverride).to receive(:create).with(assignment)
+      subject.call
     end
-    context 'when feature is off' do
-      before do
-        allow(SettingsService).to receive(:get_settings).and_return('set_individual_due_dates' => 'off')
-      end
 
-      it 'will not distribute the due dates' do
-        expect(enrollment).to_not(receive(:update))
-        subject.call
-      end
+    it 'creates a student override' do
+      expect(AssignmentOverrideStudent).to receive(:create).with(
+        assignment_override: assignment_override,
+        assignment: assignment,
+        user: student
+      )
     end
   end
 end
