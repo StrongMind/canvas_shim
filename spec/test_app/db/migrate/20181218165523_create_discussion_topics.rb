@@ -3,6 +3,7 @@ class CreateDiscussionTopics < ActiveRecord::Migration[5.0]
     create_table :discussion_topics do |t|
       t.integer :context_id
       t.string :context_type
+      t.integer :assignment_id
     end
   end
 end
