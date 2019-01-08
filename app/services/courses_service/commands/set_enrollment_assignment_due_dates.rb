@@ -18,12 +18,6 @@ module CoursesService
           )
         )
 
-
-
-
-        #   update_assignments(course_assignments.slice!(0..count - 1), date)
-        # end
-
         offset = 0
         assignments = @course.assignments.order(:due_at).all
 
