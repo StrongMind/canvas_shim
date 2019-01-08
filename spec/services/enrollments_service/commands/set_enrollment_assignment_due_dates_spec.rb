@@ -9,11 +9,13 @@ describe CoursesService::Commands::SetEnrollmentAssignmentDueDates do
   let(:submission) { Submission.create(user: student) }
   let(:submission2) { Submission.create(user: student) }
   let(:assignment_override) { AssignmentOverride.create }
+  let(:assignment_override2) { AssignmentOverride.create }
+  let(:course_start_date) { Time.parse('2019-01-09 23:59:59.999999999 -0700') }
 
   let(:course) do
     Course.create(
-      start_at: Time.now,
-      end_at: Time.now + 60.days,
+      start_at: course_start_date,
+      end_at: course_start_date + 1.day,
       assignments: [assignment, assignment2]
     )
   end
@@ -21,10 +23,10 @@ describe CoursesService::Commands::SetEnrollmentAssignmentDueDates do
   let(:assignment) { Assignment.create(submissions: [submission]) }
   let(:assignment2) { Assignment.create(submissions: [submission2]) }
 
-
   before do
     allow(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => false)
     allow(AssignmentOverride).to receive(:create).and_return(assignment_override)
+    allow(AssignmentOverride).to receive(:create).and_return(assignment_override2)
   end
 
   describe "#call" do
@@ -42,10 +44,15 @@ describe CoursesService::Commands::SetEnrollmentAssignmentDueDates do
       subject.call
     end
 
-    xit 'creates a student override' do
+    it 'creates a student override' do
       expect(AssignmentOverrideStudent).to receive(:create).with(
         assignment_override: assignment_override,
         assignment: assignment,
+        user: student
+      )
+      expect(AssignmentOverrideStudent).to receive(:create).with(
+        assignment_override: assignment_override,
+        assignment: assignment2,
         user: student
       )
       subject.call
