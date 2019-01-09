@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    canvas_shim (0.1.29)
+    canvas_shim (0.1.30)
       aws-sdk-dynamodb (= 1.15.0)
       business
       grape (~> 1)
