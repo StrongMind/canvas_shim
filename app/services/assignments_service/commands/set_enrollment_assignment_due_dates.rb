@@ -9,6 +9,10 @@ module AssignmentsService
          @assignment_count = @course.assignments.count
       end
 
+      def perform
+        self.call
+      end
+
       def call
         scheduler = Scheduler.new(
           @args.merge(
