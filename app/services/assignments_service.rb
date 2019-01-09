@@ -7,7 +7,8 @@ module AssignmentsService
     when :course
       Commands::DistributeDueDates.new(course: args[:course]).call
     when :enrollment
-      Commands::SetEnrollmentAssignmentDueDates.new(enrollment: args[:enrollment]).call
+      command = Commands::SetEnrollmentAssignmentDueDates.new(enrollment: args[:enrollment])
+      Delayed::Job.enqueue(command)
     end
   end
 end
