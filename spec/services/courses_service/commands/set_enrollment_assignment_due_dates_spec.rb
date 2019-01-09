@@ -1,9 +1,7 @@
 describe CoursesService::Commands::SetEnrollmentAssignmentDueDates do
   subject { described_class.new(enrollment: enrollment) }
 
-  let(:enrollment_start_time) { Time.now }
-  let(:new_time_1) { Time.now }
-  let(:new_time_2) { Time.now }
+  let(:enrollment_start_time) { course_start_date + 1.day }
   let(:enrollment) { double('Enrollment', start_at: enrollment_start_time, course: course, user: student) }
   let(:student) { User.create }
   let(:submission) { Submission.create(user: student) }
@@ -15,7 +13,7 @@ describe CoursesService::Commands::SetEnrollmentAssignmentDueDates do
   let(:course) do
     Course.create(
       start_at: course_start_date,
-      end_at: course_start_date + 1.day,
+      end_at: course_start_date + 60.days,
       assignments: [assignment, assignment2]
     )
   end
@@ -33,12 +31,12 @@ describe CoursesService::Commands::SetEnrollmentAssignmentDueDates do
     it 'creates assignment override' do
       expect(AssignmentOverride).to receive(:create).with(
         assignment: assignment,
-        due_at: Time.parse('2019-01-09 23:59:59.999999999 -0700')
+        due_at: Time.parse('2019-01-11 23:59:59.999999999 -0700')
       )
 
       expect(AssignmentOverride).to receive(:create).with(
         assignment: assignment2,
-        due_at: Time.parse('2019-01-10 23:59:59.999999999 -0700')
+        due_at: Time.parse('2019-01-14 23:59:59.999999999 -0700')
       )
 
       subject.call
