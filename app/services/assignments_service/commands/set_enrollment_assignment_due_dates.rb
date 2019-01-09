@@ -1,4 +1,4 @@
-module CoursesService
+module AssignmentsService
   module Commands
     class SetEnrollmentAssignmentDueDates
       def initialize(args = {})
