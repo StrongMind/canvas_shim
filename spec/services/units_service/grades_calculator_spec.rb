@@ -1,4 +1,3 @@
-
 describe UnitsService::GradesCalculator do
   let(:unit) { double('unit', id: 1, position: 1) }
   let(:course) { double('course') }
@@ -120,7 +119,6 @@ describe UnitsService::GradesCalculator do
       let(:submissions) do
         [checkpoint_submission, checkpoint_submission_2, discussion_group_submission, exam_submission]
       end
-
 
       # 77.5% average checkpoint grade ((70+85) / 2), weighted at 20% (divided by a sum category weight of 55%)
       # 77.5 * (20/55)  = 28.18
