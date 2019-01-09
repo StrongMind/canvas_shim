@@ -23,7 +23,7 @@ describe Submission do
       let(:pseudonym) {Pseudonym.create(sis_user_id: 1001)}
       let(:context_module) {ContextModule.create(content_tags: [content_tag])}
       let(:course) {Course.create(context_modules: [context_module])}
-      let(:data_result) {{submitted_at: nil, :course_id => course.id, :school_domain => nil, :student_id => user.id, :sis_user_id => 1001, :units => []}}
+      let(:data_result) {{submitted_at: nil, :course_id => course.id, :school_domain => 'canvasdomain.com', :student_id => user.id, :sis_user_id => 1001, :units => []}}
 
       it 'posts unit grades to the pipeline' do
         expect(PipelineService::HTTPClient).to receive(:post).with(

@@ -84,6 +84,16 @@ ActiveRecord::Schema.define(version: 20190108231125) do
     t.index ["tag"], name: "index_delayed_jobs_on_tag", using: :btree
   end
 
+  create_table "discussion_entries", force: :cascade do |t|
+    t.integer "discussion_topic_id"
+    t.boolean "unread"
+  end
+
+  create_table "discussion_topics", force: :cascade do |t|
+    t.integer "context_id"
+    t.string  "context_type"
+  end
+
   create_table "enrollments", force: :cascade do |t|
     t.integer  "course_id"
     t.integer  "user_id"

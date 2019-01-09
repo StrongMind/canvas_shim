@@ -15,13 +15,13 @@ describe BasicLTI::BasicOutcomes::LtiResponse do
         subject.instance_variable_set('@submission', submission)
       end
 
-      it 'should call the shimed method' do
+      it 'should call the shimmed method' do
         expect(subject).to receive(:update_submission_with_best_score)
         subject.create_homework_submission(1,2,3,4,5,6)
       end
 
       it 'sets the score and grade to the highest in the submission history' do
-        expect(submission).to receive(:update).with(grade: 100, score: 100)
+        expect(submission).to receive(:update_columns).with({grade: 100, score: 100, published_grade: 100, published_score: 100})
         subject.create_homework_submission(1,2,3,4,5,6)
       end
 
@@ -42,7 +42,7 @@ describe BasicLTI::BasicOutcomes::LtiResponse do
         allow(SettingsService).to receive(:get_settings).and_return('lti_keep_highest_score' => false)
       end
 
-      it 'should not call the shimed method' do
+      it 'should not call the shimmed method' do
         expect(subject).to_not receive(:update_submission_with_best_score)
         subject.create_homework_submission(1,2,3,4,5,6)
       end
