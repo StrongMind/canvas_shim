@@ -12,6 +12,6 @@ class Enrollment < ActiveRecord::Base
 
   def distribute_due_dates
     return if self.changes[:start_at].nil?
-    CoursesService::Commands::SetEnrollmentAssignmentDueDates.new(enrollment: self).call
+    AssignmentsService.distribute_due_dates(enrollment: self)
   end
 end

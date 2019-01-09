@@ -1,4 +1,4 @@
-describe CoursesService::Commands::SetEnrollmentAssignmentDueDates do
+describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
   subject { described_class.new(enrollment: enrollment) }
 
   let(:enrollment_start_time) { course_start_date + 1.day }

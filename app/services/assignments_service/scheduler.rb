@@ -1,4 +1,4 @@
-module CoursesService
+module AssignmentsService
   class Scheduler
     WORKING_DAYS = %w( mon tue wed thu fri )
 

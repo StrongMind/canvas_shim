@@ -1,4 +1,4 @@
-describe CoursesService::Commands::DistributeDueDates::Scheduler do
+describe AssignmentsService::Commands::DistributeDueDates::Scheduler do
   let(:start_at) { DateTime.parse("Mon Nov 26 2018") }
   let(:end_at) { start_at + 30.days }
   let(:course) { double(:course, start_at: start_at, end_at: end_at, time_zone: 'UTC') }
