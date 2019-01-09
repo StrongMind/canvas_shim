@@ -3,6 +3,7 @@ class DiscussionEntry
   after_save :set_unread_status
 
   def set_unread_status
+    return unless SettingsService.get_settings(object: 'school', id: 1)['show_unread_discussions']
     topic = self.discussion_topic
     course = self.discussion_topic.course
     topic_microservice_endpoint = ENV['TOPIC_MICROSERVICE_ENDPOINT']

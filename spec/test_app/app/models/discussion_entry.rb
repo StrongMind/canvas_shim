@@ -5,7 +5,7 @@ class DiscussionEntry < ActiveRecord::Base
     self[:unread] == true
   end
 
-  def change_read_state
+  def change_read_state(new_state, current_user = nil, opts = {})
     'implemented in LMS'
   end
 end
