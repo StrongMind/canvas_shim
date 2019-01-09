@@ -1,7 +1,7 @@
 describe AssignmentsService do
   describe '#distribute_due_dates' do
     let(:instance_with_course) { double(:command_instance, call: nil) }
-    let(:instance_with_enrollment) { double(:command_instance, call: nil) }
+    let(:instance_with_enrollment) { double(:command_instance, perform: nil) }
     let(:course)   { double(:course) }
     let(:enrollment)   { double(:enrollment) }
     let(:command_with_course)  { AssignmentsService::Commands::DistributeDueDates }
@@ -19,7 +19,7 @@ describe AssignmentsService do
     end
 
     it 'can receive an enrollment' do
-      expect(instance_with_enrollment).to receive(:call)
+      expect(instance_with_enrollment).to receive(:perform)
       described_class.distribute_due_dates(enrollment: enrollment)
     end
   end
