@@ -16,6 +16,7 @@ module AssignmentsService
       end
 
       def call
+        return self unless @course.start_at
         distribute_due_dates if @enrollment.start_at > @course.start_at
         self
       end
