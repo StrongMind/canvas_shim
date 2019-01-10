@@ -19,6 +19,10 @@ module UnitsService
     private
 
     def weighted_average(submissions)
+      category_weights = submissions.map do |submission|
+        submission.assignment.assignment_group
+      end.map { |ag| [ag.name, ag.group_weight] }.to_h
+
       result = {}
       submissions.group_by do |submission|
         submission.assignment.assignment_group
@@ -30,10 +34,6 @@ module UnitsService
       end
 
       result.sum { |r, weighted| weighted.sum }
-    end
-
-    def category_weights
-      Queries::GetCategoryWeights.new(@course).query
     end
   end
 end
