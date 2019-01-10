@@ -1,4 +1,4 @@
-module CoursesService
+module AssignmentsService
   module Commands
     class DistributeDueDates
       def initialize(args)
