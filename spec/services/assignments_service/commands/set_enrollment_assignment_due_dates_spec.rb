@@ -2,7 +2,7 @@ describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
   subject { described_class.new(enrollment: enrollment) }
 
   let(:enrollment_start_time) { course_start_date + 1.day }
-  let(:enrollment) { double('Enrollment', start_at: enrollment_start_time, course: course, user: student) }
+  let(:enrollment) { double('Enrollment', created_at: enrollment_start_time, course: course, user: student) }
   let(:student) { User.create }
   let(:submission) { Submission.create(user: student) }
   let(:submission2) { Submission.create(user: student) }
