@@ -7,6 +7,8 @@ module AssignmentsService
          @user = @enrollment.user
          @course = @enrollment.course
          @assignment_count = @course.assignments.count
+         @offset = 0
+         @assignments = @course.assignments.order(:due_at).all
       end
 
       def perform
@@ -14,20 +16,16 @@ module AssignmentsService
       end
 
       def call
-        scheduler = Scheduler.new(
-          @args.merge(
-            assignment_count: @assignment_count,
-            start_date: @enrollment.start_at,
-            course: @course
-          )
-        )
+        distribute_due_dates if @enrollment.start_at > @course.start_at
+        self
+      end
 
-        offset = 0
-        assignments = @course.assignments.order(:due_at).all
+      private
 
+      def distribute_due_dates
         scheduler.course_dates.each do |date, count|
-          (offset..(offset + count - 1)).each do |i|
-            assignment = assignments[i]
+          (@offset..(@offset + count - 1)).each do |i|
+            assignment = @assignments[i]
 
             ao = AssignmentOverride.create(
               assignment: assignment,
@@ -40,8 +38,18 @@ module AssignmentsService
             )
           end
 
-          offset = offset + count
+          @offset = @offset + count
         end
+      end
+
+      def scheduler
+        Scheduler.new(
+          @args.merge(
+            assignment_count: @assignment_count,
+            start_date: @enrollment.start_at,
+            course: @course
+          )
+        )
       end
     end
   end

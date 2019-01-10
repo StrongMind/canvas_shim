@@ -55,5 +55,15 @@ describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
       )
       subject.call
     end
+
+
+    context 'enrollment starts before course' do
+      let(:enrollment_start_time) { course_start_date - 1.day }
+
+      it 'wont run unless enrolled after course start' do
+        expect(AssignmentOverrideStudent).to_not receive(:create)
+        subject.call
+      end
+    end
   end
 end
