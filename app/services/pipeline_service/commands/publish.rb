@@ -16,7 +16,6 @@ module PipelineService
       end
 
       def call
-        return
         return if SettingsService.get_settings(object: :school, id: 1)['disable_pipeline']
         post_to_pipeline
         publish_events unless changes.nil?

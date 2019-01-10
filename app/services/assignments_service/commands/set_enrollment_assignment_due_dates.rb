@@ -17,7 +17,7 @@ module AssignmentsService
 
       def call
         return self unless @course.start_at
-        distribute_due_dates if @enrollment.start_at > @course.start_at
+        distribute_due_dates if @enrollment.created_at > @course.start_at
         self
       end
 
@@ -47,7 +47,7 @@ module AssignmentsService
         Scheduler.new(
           @args.merge(
             assignment_count: @assignment_count,
-            start_date: @enrollment.start_at,
+            start_date: @enrollment.created_at,
             course: @course
           )
         )
