@@ -4,11 +4,7 @@ module AssignmentsService
       def initialize(args = {})
          @args = args
          @enrollment = args[:enrollment]
-         @user = @enrollment.user
-         @course = @enrollment.course
-         @assignment_count = @course.assignments.count
          @offset = 0
-         @assignments = @course.assignments.order(:due_at).all
       end
 
       def perform
@@ -16,7 +12,11 @@ module AssignmentsService
       end
 
       def call
+        @course = @enrollment.course
         return self unless @course.start_at
+        @user = @enrollment.user
+        @assignment_count = @course.assignments.count
+        @assignments = @course.assignments.order(:due_at).all
         distribute_due_dates if @enrollment.created_at > @course.start_at
         self
       end
