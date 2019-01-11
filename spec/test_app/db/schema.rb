@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190103215722) do
+ActiveRecord::Schema.define(version: 20190108231125) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,16 @@ ActiveRecord::Schema.define(version: 20190103215722) do
     t.integer "course_id"
     t.float   "group_weight"
     t.string  "name"
+  end
+
+  create_table "assignment_override_students", force: :cascade do |t|
+    t.integer "assignment_id"
+    t.integer "assignment_override_id"
+    t.integer "user_id"
+  end
+
+  create_table "assignment_overrides", force: :cascade do |t|
+    t.integer "assignment_id"
   end
 
   create_table "assignments", force: :cascade do |t|
@@ -42,6 +52,9 @@ ActiveRecord::Schema.define(version: 20190103215722) do
   end
 
   create_table "courses", force: :cascade do |t|
+    t.datetime "start_at"
+    t.string   "time_zone"
+    t.datetime "end_at"
     t.datetime "conclude_at"
   end
 
@@ -79,7 +92,12 @@ ActiveRecord::Schema.define(version: 20190103215722) do
   create_table "discussion_topics", force: :cascade do |t|
     t.integer "context_id"
     t.string  "context_type"
-    t.integer "assignment_id"
+  end
+
+  create_table "enrollments", force: :cascade do |t|
+    t.integer  "course_id"
+    t.integer  "user_id"
+    t.datetime "start_at"
   end
 
   create_table "failed_jobs", force: :cascade do |t|

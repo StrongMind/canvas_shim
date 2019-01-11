@@ -1,4 +1,3 @@
-
 describe UnitsService::GradesCalculator do
   let(:unit) { double('unit', id: 1, position: 1) }
   let(:course) { double('course') }
@@ -21,27 +20,27 @@ describe UnitsService::GradesCalculator do
   end
 
   let(:checkpoint_assignment_group) do
-    double(:checkpoint_assignment_group, name: 'checkpoints')
+    double(:checkpoint_assignment_group, name: 'checkpoints', group_weight: 0.2)
   end
 
   let(:discussion_assignment_group) do
-    double(:checkpoint_assignment_group, name: 'discussion_groups')
+    double(:discussion_assignment_group, name: 'discussion_groups', group_weight: 0.1)
   end
 
   let(:exam_assignment_group) do
-    double(:checkpoint_assignment_group, name: 'exams')
+    double(:exam_assignment_group, name: 'exams', group_weight: 0.25)
   end
 
   let(:checkpoint_assignment) do
-    double(:assignment, assignment_group: checkpoint_assignment_group)
+    double(:checkpoint_assignment, assignment_group: checkpoint_assignment_group)
   end
 
   let(:discussion_assignment) do
-    double(:assignment, assignment_group: discussion_assignment_group)
+    double(:discussion_assignment, assignment_group: discussion_assignment_group)
   end
 
   let(:exam) do
-    double(:assignment, assignment_group: exam_assignment_group)
+    double(:exam, assignment_group: exam_assignment_group)
   end
 
   let(:unit_submissions) do
@@ -51,12 +50,6 @@ describe UnitsService::GradesCalculator do
   end
 
   subject { described_class.new(unit_submissions, course) }
-
-  before do
-    allow(subject).to receive(:category_weights).and_return(
-      { "checkpoints" => 0.2, "discussion_groups" => 0.1}
-    )
-  end
 
   describe '#call' do
     context 'an assignment without a score' do
@@ -89,12 +82,6 @@ describe UnitsService::GradesCalculator do
     # Then, you add the categories:
     # 46.667 + 16.667 = 63.33% Unit Grade for the student
     context 'scenario 2' do
-      before do
-        allow(subject).to receive(:category_weights).and_return(
-          { "checkpoints" => 0.2, "discussion_groups" => 0.1, "exams" => 0.25 }
-        )
-      end
-
       let(:checkpoint_submission) do
         double(
           :submission,
@@ -132,7 +119,6 @@ describe UnitsService::GradesCalculator do
       let(:submissions) do
         [checkpoint_submission, checkpoint_submission_2, discussion_group_submission, exam_submission]
       end
-
 
       # 77.5% average checkpoint grade ((70+85) / 2), weighted at 20% (divided by a sum category weight of 55%)
       # 77.5 * (20/55)  = 28.18

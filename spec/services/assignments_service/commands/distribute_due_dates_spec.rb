@@ -1,4 +1,4 @@
-describe CoursesService::Commands::DistributeDueDates do
+describe AssignmentsService::Commands::DistributeDueDates do
 
   let(:account_instance) {
     double(
