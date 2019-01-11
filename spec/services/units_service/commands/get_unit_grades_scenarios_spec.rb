@@ -2,13 +2,13 @@
 describe UnitsService::Commands::GetUnitGrades do
   let(:course) { Course.create }
   let(:user) { User.create(pseudonym: Pseudonym.create) }
-  let(:enrollment) {double('enrollment', computed_current_score: 90)}
+  let!(:enrollment) { Enrollment.create(course: course, user: user) }
 
 
   before do
     allow(PipelineService).to receive(:publish)
     allow(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => true)
-    allow(Enrollment).to receive(:where).and_return([enrollment])
+    allow(Enrollment).to receive(:computed_current_score).and_return(90)
     seed
   end
 

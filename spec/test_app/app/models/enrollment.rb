@@ -8,6 +8,10 @@ class Enrollment < ActiveRecord::Base
     Account.new
   end
 
+  def computed_current_score
+    rand(50..100)
+  end
+
   private
 
   def distribute_due_dates
