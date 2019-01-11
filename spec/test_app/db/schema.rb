@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190111190846) do
+ActiveRecord::Schema.define(version: 20190111203536) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 20190111190846) do
     t.integer  "assignment_id"
     t.datetime "due_at"
     t.string   "title"
+    t.boolean  "due_at_overridden"
   end
 
   create_table "assignments", force: :cascade do |t|

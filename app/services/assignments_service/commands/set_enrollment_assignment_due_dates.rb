@@ -32,7 +32,10 @@ module AssignmentsService
 
             AssignmentOverrideStudent.create(
               assignment_override: AssignmentOverride
-                .create_with(assignment: assignment)
+                .create_with(
+                  assignment: assignment,
+                  due_at_overridden: true
+                )
                 .find_or_create_by(due_at: date),
               user: @user,
               assignment: assignment

@@ -13,7 +13,7 @@ describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
   let(:course) do
     Course.create(
       start_at: course_start_date,
-      end_at: course_start_date + 4.days, 
+      end_at: course_start_date + 4.days,
       assignments: [assignment, assignment2]
     )
   end
@@ -47,6 +47,7 @@ describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
         subject.call
         expect(AssignmentOverride.count).to eq 1
         expect(AssignmentOverride.first.assignment_override_students.count).to eq 2
+        expect(AssignmentOverride.first.due_at_overridden).to eq true
       end
 
       it 'creates a student override' do
