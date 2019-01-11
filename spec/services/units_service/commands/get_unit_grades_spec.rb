@@ -1,8 +1,8 @@
 describe UnitsService::Commands::GetUnitGrades do
-  let(:course) { double('course', assignment_groups: [], id: 1) }
-  let(:pseudonym) { double('pseudonym', sis_user_id: 1001) }
-  let(:user) { double('user', id: 1, pseudonym: pseudonym) }
-  let(:enrollment) {double('enrollment', computed_current_score: 90)}
+  let(:course) { Course.create(assignment_groups: []) }
+  let(:pseudonym) { Pseudonym.create(sis_user_id: 1001) }
+  let(:user) { User.create(pseudonym: pseudonym) }
+  let!(:enrollment) { Enrollment.create(user: user, course: course) }
   let(:query_instance) { double('query instance', query: nil) }
   let(:current_time) { Time.now }
   let(:unit) { double('unit', id: 1, created_at: current_time, position: 3 ) }
@@ -16,15 +16,16 @@ describe UnitsService::Commands::GetUnitGrades do
     ENV['CANVAS_DOMAIN'] = 'canvasdomain.com'
     allow(UnitsService::Queries::GetSubmissions).to receive(:new).and_return(query_instance)
     allow(UnitsService::GradesCalculator).to receive(:new).and_return(calculator_instance)
-    allow(Enrollment).to receive(:where).and_return([enrollment])
+    allow_any_instance_of(Enrollment).to receive(:computed_current_score).and_return(90)
   end
 
   it 'returns the calculator results' do
+    puts enrollment.computed_current_score
     expect(subject.call).to eq(
-      course_id: 1,
+      course_id: course.id,
       course_score: 90,
       school_domain: "canvasdomain.com",
-      student_id: 1,
+      student_id: user.id,
       sis_user_id: 1001,
       submitted_at: submitted_at,
       units: [{
