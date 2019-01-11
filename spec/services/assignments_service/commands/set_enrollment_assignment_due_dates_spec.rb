@@ -25,6 +25,8 @@ describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
     allow(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => false)
     allow(AssignmentOverride).to receive(:create).and_return(assignment_override)
     allow(AssignmentOverride).to receive(:create).and_return(assignment_override2)
+    instance = double(:query_instance, query: [assignment, assignment2])
+    allow(AssignmentsService::Queries::AssignmentsWithDueDates).to receive(:new).and_return(instance)
   end
 
   describe "#call" do
