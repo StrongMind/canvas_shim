@@ -8,7 +8,7 @@ module AssignmentsService
 
       def query
         assignment_list = []
-        
+
         @modules.each do |context_module|
           context_module.content_tags
             .where(:content_type => ['Assignment', 'DiscussionTopic'])
