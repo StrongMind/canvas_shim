@@ -28,6 +28,7 @@ module AssignmentsService
         scheduler.course_dates.each do |date, count|
           (@offset..(@offset + count - 1)).each do |i|
             assignment = @assignments[i]
+            next unless assignment.due_at
 
             ao = AssignmentOverride.create(
               assignment: assignment,

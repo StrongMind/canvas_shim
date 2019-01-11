@@ -18,8 +18,8 @@ describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
     )
   end
 
-  let(:assignment) { Assignment.create(submissions: [submission]) }
-  let(:assignment2) { Assignment.create(submissions: [submission2]) }
+  let(:assignment) { Assignment.create(submissions: [submission], due_at: Time.now) }
+  let(:assignment2) { Assignment.create(submissions: [submission2], due_at: Time.now) }
 
   before do
     allow(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => false)
@@ -44,7 +44,7 @@ describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
       before do
         allow(SettingsService).to receive(:get_settings).and_return('auto_enrollment_due_dates' => "on")
       end
-      
+
       it 'creates assignment override' do
         expect(AssignmentOverride).to receive(:create).with(
           assignment: assignment,
@@ -84,6 +84,16 @@ describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
 
       context 'enrollment starts before course' do
         let(:enrollment_start_time) { course_start_date - 1.day }
+
+        it 'wont run' do
+          expect(AssignmentOverrideStudent).to_not receive(:create)
+          subject.call
+        end
+      end
+
+      context 'assignment has no due date' do
+        let(:assignment) { Assignment.create(submissions: [submission]) }
+        let(:assignment2) { Assignment.create(submissions: [submission2]) }
 
         it 'wont run' do
           expect(AssignmentOverrideStudent).to_not receive(:create)
