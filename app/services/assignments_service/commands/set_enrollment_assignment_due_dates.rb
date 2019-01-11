@@ -30,17 +30,22 @@ module AssignmentsService
             assignment = @assignments[i]
             next unless assignment.due_at
 
+            ao = AssignmentOverride
+              .create_with(
+                assignment: assignment,
+                due_at_overridden: true
+              )
+              .find_or_create_by(due_at: date)
+
+            ao.title = nil
+
             AssignmentOverrideStudent.create(
-              assignment_override: AssignmentOverride
-                .create_with(
-                  assignment: assignment,
-                  due_at_overridden: true
-                )
-                .find_or_create_by(due_at: date),
+              assignment_override: ao,
               user: @user,
               assignment: assignment
             )
 
+            ao.save
           end
 
           @offset = @offset + count
