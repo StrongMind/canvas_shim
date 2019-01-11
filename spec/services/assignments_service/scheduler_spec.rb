@@ -1,4 +1,4 @@
-describe CoursesService::Commands::DistributeDueDates::Scheduler do
+describe AssignmentsService::Commands::DistributeDueDates::Scheduler do
   let(:start_at) { DateTime.parse("Mon Nov 26 2018") }
   let(:end_at) { start_at + 30.days }
   let(:course) { double(:course, start_at: start_at, end_at: end_at, time_zone: 'UTC') }
@@ -45,6 +45,16 @@ describe CoursesService::Commands::DistributeDueDates::Scheduler do
 
     it 'will have a due time of 23:59' do
       expect(subject.course_dates.keys[0].strftime("%H:%M")). to eq "23:59"
+    end
+
+    context 'when given a start date' do
+      subject do
+        described_class.new(course: course, assignment_count: 44, start_date: DateTime.new(2018,12,6))
+      end
+
+      it 'will start a day after' do
+        expect(subject.course_dates.keys[0].strftime("%Y-%m-%d")). to eq (DateTime.new(2018,12,7)).strftime('%Y-%m-%d')
+      end
     end
 
     context 'when given holidays' do
