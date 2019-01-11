@@ -72,7 +72,7 @@ describe AssignmentsService::Commands::DistributeDueDates do
   end
 
   describe "#call" do
-    context 'feature not enabled' do
+    context 'auto_due_dates feature not enabled' do
       before do
         allow(SettingsService).to receive(:get_settings).and_return('auto_due_dates' => 'off')
       end
