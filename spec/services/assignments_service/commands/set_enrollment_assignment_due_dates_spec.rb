@@ -23,8 +23,6 @@ describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
 
   before do
     allow(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => false)
-    allow(AssignmentOverride).to receive(:create).and_return(assignment_override)
-    allow(AssignmentOverride).to receive(:create).and_return(assignment_override2)
     instance = double(:query_instance, query: [assignment, assignment2])
     allow(AssignmentsService::Queries::AssignmentsWithDueDates).to receive(:new).and_return(instance)
   end
@@ -47,30 +45,20 @@ describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
 
       it 'creates assignment override' do
         expect(AssignmentOverride).to receive(:create).with(
-          assignment: assignment,
-          due_at: Time.parse('2019-01-11 23:59:59.999999999 -0700')
+          hash_including(due_at: Time.parse('2019-01-11 23:59:59.999999999 -0700'))
         )
 
         expect(AssignmentOverride).to receive(:create).with(
-          assignment: assignment2,
-          due_at: Time.parse('2019-01-14 23:59:59.999999999 -0700')
+          hash_including(due_at: Time.parse('2019-01-14 23:59:59.999999999 -0700'))
         )
 
         subject.call
+
       end
 
       it 'creates a student override' do
-        expect(AssignmentOverrideStudent).to receive(:create).with(
-          assignment_override: assignment_override,
-          assignment: assignment,
-          user: student
-        )
-        expect(AssignmentOverrideStudent).to receive(:create).with(
-          assignment_override: assignment_override,
-          assignment: assignment2,
-          user: student
-        )
         subject.call
+        expect(AssignmentOverrideStudent.count).to eq 2
       end
 
       context 'course has no start date' do
