@@ -28,49 +28,65 @@ describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
   end
 
   describe "#call" do
-    it 'creates assignment override' do
-      expect(AssignmentOverride).to receive(:create).with(
-        assignment: assignment,
-        due_at: Time.parse('2019-01-11 23:59:59.999999999 -0700')
-      )
-
-      expect(AssignmentOverride).to receive(:create).with(
-        assignment: assignment2,
-        due_at: Time.parse('2019-01-14 23:59:59.999999999 -0700')
-      )
-
-      subject.call
-    end
-
-    it 'creates a student override' do
-      expect(AssignmentOverrideStudent).to receive(:create).with(
-        assignment_override: assignment_override,
-        assignment: assignment,
-        user: student
-      )
-      expect(AssignmentOverrideStudent).to receive(:create).with(
-        assignment_override: assignment_override,
-        assignment: assignment2,
-        user: student
-      )
-      subject.call
-    end
-
-    context 'course has no start date' do
-      let(:course) { Course.create(start_at: nil) }
-
-      it 'wont run' do
+    context 'auto_enrollment_due_dates feature is not switched on' do
+      before do
+        allow(SettingsService).to receive(:get_settings).and_return({})
+      end
+      it 'does not create an assignment override' do
         expect(AssignmentOverrideStudent).to_not receive(:create)
         subject.call
       end
     end
 
-    context 'enrollment starts before course' do
-      let(:enrollment_start_time) { course_start_date - 1.day }
+    context 'auto_enrollment_due_dates feature is switched on' do
+      before do
+        allow(SettingsService).to receive(:get_settings).and_return('auto_enrollment_due_dates' => "on")
+      end
+      
+      it 'creates assignment override' do
+        expect(AssignmentOverride).to receive(:create).with(
+          assignment: assignment,
+          due_at: Time.parse('2019-01-11 23:59:59.999999999 -0700')
+        )
 
-      it 'wont run' do
-        expect(AssignmentOverrideStudent).to_not receive(:create)
+        expect(AssignmentOverride).to receive(:create).with(
+          assignment: assignment2,
+          due_at: Time.parse('2019-01-14 23:59:59.999999999 -0700')
+        )
+
         subject.call
+      end
+
+      it 'creates a student override' do
+        expect(AssignmentOverrideStudent).to receive(:create).with(
+          assignment_override: assignment_override,
+          assignment: assignment,
+          user: student
+        )
+        expect(AssignmentOverrideStudent).to receive(:create).with(
+          assignment_override: assignment_override,
+          assignment: assignment2,
+          user: student
+        )
+        subject.call
+      end
+
+      context 'course has no start date' do
+        let(:course) { Course.create(start_at: nil) }
+
+        it 'wont run' do
+          expect(AssignmentOverrideStudent).to_not receive(:create)
+          subject.call
+        end
+      end
+
+      context 'enrollment starts before course' do
+        let(:enrollment_start_time) { course_start_date - 1.day }
+
+        it 'wont run' do
+          expect(AssignmentOverrideStudent).to_not receive(:create)
+          subject.call
+        end
       end
     end
   end
