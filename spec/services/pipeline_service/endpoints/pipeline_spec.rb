@@ -1,5 +1,3 @@
-class Enrollment
-end
 describe PipelineService::Endpoints::Pipeline do
   let(:message) { { noun: 'ARRecord', id: 1 } }
   let(:http_client) { double('http_client', messages_post: nil) }
