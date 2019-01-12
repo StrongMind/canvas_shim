@@ -17,17 +17,20 @@ describe Submission do
         assignment.update(course: course)
       end
 
+      # Enrollment.where(course_id: @course.id, user_id: @student.id).first
+      let!(:enrollment) {Enrollment.create(course: course, user: user)}
+
       let(:assignment) {Assignment.create}
       let(:user) {User.create(pseudonym: pseudonym)}
       let(:content_tag) {ContentTag.create(content: assignment)}
       let(:pseudonym) {Pseudonym.create(sis_user_id: 1001)}
       let(:context_module) {ContextModule.create(content_tags: [content_tag])}
       let(:course) {Course.create(context_modules: [context_module])}
-      let(:data_result) {{submitted_at: nil, :course_id => course.id, :school_domain => 'canvasdomain.com', :student_id => user.id, :sis_user_id => 1001, :units => []}}
+      let(:data_result) {{:course_score=>10, submitted_at: nil, :course_id => course.id, :school_domain => 'canvasdomain.com', :student_id => user.id, :sis_user_id => 1001, :units => []}}
 
       it 'posts unit grades to the pipeline' do
         expect(PipelineService::HTTPClient).to receive(:post).with(
-            hash_including(data: data_result, noun: 'unit_grades')
+            hash_including(data: data_result)
         )
         Submission.create(user: user, assignment: assignment, score: 50)
       end

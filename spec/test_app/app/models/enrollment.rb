@@ -9,7 +9,7 @@ class Enrollment < ActiveRecord::Base
   end
 
   def computed_current_score
-    rand(50..100)
+    10
   end
 
   private
