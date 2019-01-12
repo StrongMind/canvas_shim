@@ -1,14 +1,3 @@
-class Enrollment
-  def id;1;end
-
-  def changes
-  end
-
-  def root_account
-    Struct.new(:id).new(1)
-  end
-end
-
 describe PipelineService::Commands::Publish do
   let(:object)              { Enrollment.new }
   let(:user)                { double('user') }
