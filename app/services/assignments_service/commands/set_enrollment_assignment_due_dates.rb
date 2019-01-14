@@ -18,7 +18,7 @@ module AssignmentsService
         return self unless @course.start_at
         @user = @enrollment.user
         @assignment_count = @course.assignments.count
-        @assignments = Queries::AssignmentsWithDueDates.new(course: @course).query
+        @assignments = Queries::AssignmentsWithDueDates.new(course: @course).query.compact
         distribute_due_dates if @enrollment.created_at > @course.start_at
         self
       end
@@ -26,9 +26,12 @@ module AssignmentsService
       private
 
       def distribute_due_dates
-        scheduler.course_dates.each do |date, count|
-          (@offset..(@offset + count - 1)).each do |i|
+        scheduler.course_dates.each do |date, daily_assignment_count|
+          (@offset..(@offset + daily_assignment_count - 1)).each do |i|
+
             assignment = @assignments[i]
+            @offset = @offset + 1
+
             next unless assignment.due_at
 
             ao = AssignmentOverride
@@ -48,18 +51,14 @@ module AssignmentsService
 
             ao.save
           end
-
-          @offset = @offset + count
         end
       end
 
       def scheduler
         Scheduler.new(
-          @args.merge(
-            assignment_count: @assignment_count,
-            start_date: @enrollment.created_at,
-            course: @course
-          )
+          assignment_count: @assignment_count,
+          start_date: @enrollment.created_at,
+          course: @course
         )
       end
     end
