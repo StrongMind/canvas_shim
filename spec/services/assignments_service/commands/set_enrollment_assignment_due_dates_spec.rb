@@ -28,19 +28,37 @@ describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
   end
 
   describe "#call" do
-    context 'auto_enrollment_due_dates feature is not switched on' do
-      before do
-        allow(SettingsService).to receive(:get_settings).and_return({})
+    context 'feature flags' do
+      context 'auto due dates' do
+        before do
+          allow(SettingsService).to receive(:get_settings).and_return('auto_due_dates' => 'on')
+        end
+
+        it 'does not create an assignment override' do
+          expect(AssignmentOverrideStudent).to_not receive(:create)
+          subject.call
+        end
       end
-      it 'does not create an assignment override' do
-        expect(AssignmentOverrideStudent).to_not receive(:create)
-        subject.call
+
+      context 'auto enrollment due dates' do
+        before do
+          allow(SettingsService).to receive(:get_settings).and_return('auto_enrollment_due_dates' => 'on')
+        end
+
+        it 'does not create an assignment override' do
+          expect(AssignmentOverrideStudent).to_not receive(:create)
+          subject.call
+        end
       end
+
     end
 
-    context 'auto_enrollment_due_dates feature is switched on' do
+    context 'auto_enrollment_due_dates and auto_due_dates feature is switched on' do
       before do
-        allow(SettingsService).to receive(:get_settings).and_return('auto_enrollment_due_dates' => "on")
+        allow(SettingsService).to receive(:get_settings).and_return(
+          'auto_due_dates' => 'on',
+          'auto_enrollment_due_dates' => 'on'
+        )
       end
 
       it 'creates assignment override' do
