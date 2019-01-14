@@ -12,6 +12,7 @@ module AssignmentsService
       end
 
       def call
+        return unless SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on'
         return unless SettingsService.get_settings(object: :school, id: 1)['auto_enrollment_due_dates'] == 'on'
         @course = @enrollment.course
         return self unless @course.start_at
