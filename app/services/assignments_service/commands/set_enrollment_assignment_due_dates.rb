@@ -18,7 +18,7 @@ module AssignmentsService
         return self unless @course.start_at
         @user = @enrollment.user
         @assignment_count = @course.assignments.count
-        @assignments = Queries::AssignmentsWithDueDates.new(course: @course).query.compact
+        @assignments = Queries::AssignmentsWithDueDates.new(course: @course).query
         distribute_due_dates if @enrollment.created_at > @course.start_at
         self
       end

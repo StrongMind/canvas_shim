@@ -15,7 +15,7 @@ module AssignmentsService
             .order(:position)
             .map { |tag| assignment_list.push(tag.assignment) }
         end
-        assignment_list
+        assignment_list.compact
       end
     end
   end
