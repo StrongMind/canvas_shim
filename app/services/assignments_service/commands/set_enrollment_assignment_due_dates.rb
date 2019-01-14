@@ -4,7 +4,7 @@ module AssignmentsService
       def initialize(args = {})
          @args = args
          @enrollment = args[:enrollment]
-         @offset = 0
+         @current_assignment_position = 0
       end
 
       def perform
@@ -27,10 +27,9 @@ module AssignmentsService
 
       def distribute_due_dates
         scheduler.course_dates.each do |date, daily_assignment_count|
-          (@offset..(@offset + daily_assignment_count - 1)).each do |i|
-
+          (@current_assignment_position..(@current_assignment_position + daily_assignment_count - 1)).each do |i|
             assignment = @assignments[i]
-            @offset = @offset + 1
+            @current_assignment_position = @current_assignment_position + 1
 
             next unless assignment.due_at
 
