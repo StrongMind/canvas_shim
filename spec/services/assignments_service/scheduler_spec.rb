@@ -43,6 +43,10 @@ describe AssignmentsService::Commands::DistributeDueDates::Scheduler do
       expect(subject.course_dates.keys[0]).to_not eq start_at
     end
 
+    it 'will start a day after' do
+      expect(subject.course_dates.keys[0]).to eq start_at.in_time_zone(course.time_zone).at_end_of_day + 1.day
+    end
+
     it 'will have a due time of 23:59' do
       expect(subject.course_dates.keys[0].strftime("%H:%M")). to eq "23:59"
     end
