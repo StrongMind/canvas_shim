@@ -35,10 +35,12 @@ module AssignmentsService
 
             ao = AssignmentOverride
               .create_with(
-                assignment: assignment,
                 due_at_overridden: true
               )
-              .find_or_create_by(due_at: date)
+              .find_or_create_by(
+                due_at: date,
+                assignment: assignment
+              )
 
             ao.title = nil
 
