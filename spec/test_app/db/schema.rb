@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190108231125) do
+ActiveRecord::Schema.define(version: 20190111203536) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,7 +28,10 @@ ActiveRecord::Schema.define(version: 20190108231125) do
   end
 
   create_table "assignment_overrides", force: :cascade do |t|
-    t.integer "assignment_id"
+    t.integer  "assignment_id"
+    t.datetime "due_at"
+    t.string   "title"
+    t.boolean  "due_at_overridden"
   end
 
   create_table "assignments", force: :cascade do |t|
@@ -44,11 +47,16 @@ ActiveRecord::Schema.define(version: 20190108231125) do
     t.integer "context_module_id"
     t.integer "content_id"
     t.string  "content_type"
+    t.integer "assignment_id"
+    t.integer "position"
   end
 
   create_table "context_modules", force: :cascade do |t|
     t.integer "course_id"
     t.integer "position"
+    t.integer "context_id"
+    t.string  "context_type"
+    t.string  "name"
   end
 
   create_table "courses", force: :cascade do |t|
