@@ -4,11 +4,7 @@ module AssignmentsService
       def initialize(args)
         @args = args
         @course = args[:course]
-        @modules = ContextModule
-                    .where(
-                      'context_modules.context_id = ? AND context_modules.context_type = \'Course\' AND context_modules.name IS NOT NULL',
-                      @course.id)
-                    .order(:position)
+        @assignment_query = Queries::AssignmentsWithDueDates.new(course: @course)
       end
 
       def call
@@ -36,14 +32,7 @@ module AssignmentsService
       end
 
       def assignments
-        assignment_list = []
-        @modules.each do |context_module|
-          context_module.content_tags
-            .where(:content_type => ['Assignment', 'DiscussionTopic'])
-            .order(:position)
-            .map { |tag| assignment_list.push(tag.assignment) }
-        end
-        assignment_list
+        @assignment_query.query
       end
     end
   end
