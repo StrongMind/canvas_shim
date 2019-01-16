@@ -2,13 +2,16 @@
 describe UnitsService::Commands::GetUnitGrades do
   let(:course) { Course.create }
   let(:user) { User.create(pseudonym: Pseudonym.create) }
-  let!(:enrollment) { Enrollment.create(course: course, user: user) }
-
 
   before do
-    allow(UnitsService::Queries::GetEnrollment).to receive(:query).and_return(enrollment)
+    allow(SettingsService).to receive(:get_settings).and_return('auto_due_dates' => nil, 'auto_enrollment_due_dates' => nil)
+    @enrollment = Enrollment.create(course: course, user: user)
+    allow(UnitsService::Queries::GetEnrollment).to receive(:query).and_return(@enrollment)
     allow(PipelineService).to receive(:publish)
-    allow(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => true)
+    allow(SettingsService).to receive(:get_settings).and_return(
+      'enable_unit_grade_calculations' => true
+    )
+
     allow(Enrollment).to receive(:computed_current_score).and_return(90)
     seed
   end
