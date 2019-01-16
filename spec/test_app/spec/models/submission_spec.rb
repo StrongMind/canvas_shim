@@ -14,8 +14,12 @@ describe Submission do
         allow(PipelineService::HTTPClient).to receive(:post)
         allow(PipelineService::Events::HTTPClient).to receive(:post)
         allow(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => true)
+        allow(UnitsService::Queries::GetEnrollment).to receive(:query).and_return(enrollment)
         assignment.update(course: course)
       end
+
+      # Enrollment.where(course_id: @course.id, user_id: @student.id).first
+      let!(:enrollment) {Enrollment.create(course: course, user: user)}
 
       let(:assignment) {Assignment.create}
       let(:user) {User.create(pseudonym: pseudonym)}
@@ -23,11 +27,11 @@ describe Submission do
       let(:pseudonym) {Pseudonym.create(sis_user_id: 1001)}
       let(:context_module) {ContextModule.create(content_tags: [content_tag])}
       let(:course) {Course.create(context_modules: [context_module])}
-      let(:data_result) {{submitted_at: nil, :course_id => course.id, :school_domain => 'canvasdomain.com', :student_id => user.id, :sis_user_id => 1001, :units => []}}
+      let(:data_result) {{:course_score=>10, submitted_at: nil, :course_id => course.id, :school_domain => 'canvasdomain.com', :student_id => user.id, :sis_user_id => 1001, :units => []}}
 
       it 'posts unit grades to the pipeline' do
         expect(PipelineService::HTTPClient).to receive(:post).with(
-            hash_including(data: data_result, noun: 'unit_grades')
+            hash_including(data: data_result)
         )
         Submission.create(user: user, assignment: assignment, score: 50)
       end
