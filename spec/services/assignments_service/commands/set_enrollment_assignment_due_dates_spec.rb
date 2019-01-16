@@ -61,10 +61,10 @@ describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
         )
       end
 
-      it 'creates assignment override' do
+      it 'creates assignment overrides' do
         subject.call
-        expect(AssignmentOverride.count).to eq 1
-        expect(AssignmentOverride.first.assignment_override_students.count).to eq 2
+        expect(AssignmentOverride.count).to eq 2
+        expect(AssignmentOverride.first.assignment_override_students.count).to eq 1
         expect(AssignmentOverride.first.due_at_overridden).to eq true
       end
 
