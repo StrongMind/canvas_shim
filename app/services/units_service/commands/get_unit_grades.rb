@@ -23,7 +23,7 @@ module UnitsService
       end
 
       def student_enrollment
-        Enrollment.where(course_id: @course.id, user_id: @student.id).first
+        UnitsService::Queries::GetEnrollment.query(course: @course, user: @user)
       end
 
       def payload

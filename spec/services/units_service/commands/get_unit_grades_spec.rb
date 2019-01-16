@@ -16,11 +16,12 @@ describe UnitsService::Commands::GetUnitGrades do
     ENV['CANVAS_DOMAIN'] = 'canvasdomain.com'
     allow(UnitsService::Queries::GetSubmissions).to receive(:new).and_return(query_instance)
     allow(UnitsService::GradesCalculator).to receive(:new).and_return(calculator_instance)
-    allow_any_instance_of(Enrollment).to receive(:computed_current_score).and_return(90)
+
+    allow(UnitsService::Queries::GetEnrollment).to receive(:query).and_return(enrollment)
+    allow(enrollment).to receive(:computed_current_score).and_return(90)
   end
 
   it 'returns the calculator results' do
-    puts enrollment.computed_current_score
     expect(subject.call).to eq(
       course_id: course.id,
       course_score: 90,
@@ -29,7 +30,7 @@ describe UnitsService::Commands::GetUnitGrades do
       sis_user_id: 1001,
       submitted_at: submitted_at,
       units: [{
-        :score=>54,
+        score: 54,
         id: unit.id,
         position: unit.position
       }]

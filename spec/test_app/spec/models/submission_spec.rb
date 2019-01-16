@@ -14,6 +14,7 @@ describe Submission do
         allow(PipelineService::HTTPClient).to receive(:post)
         allow(PipelineService::Events::HTTPClient).to receive(:post)
         allow(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => true)
+        allow(UnitsService::Queries::GetEnrollment).to receive(:query).and_return(enrollment)
         assignment.update(course: course)
       end
 
