@@ -37,10 +37,12 @@ module AssignmentsService
               .create_with(
                 due_at_overridden: true
               )
-              .find_or_create_by(
+              .find_or_initialize_by(
                 due_at: date,
                 assignment: assignment
               )
+
+            ao.save_without_broadcasting if ao.new_record?
 
             ao.title = nil
 
