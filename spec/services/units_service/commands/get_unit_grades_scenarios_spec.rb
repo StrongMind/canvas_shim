@@ -6,6 +6,7 @@ describe UnitsService::Commands::GetUnitGrades do
 
 
   before do
+    allow(UnitsService::Queries::GetEnrollment).to receive(:query).and_return(enrollment)
     allow(PipelineService).to receive(:publish)
     allow(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => true)
     allow(Enrollment).to receive(:computed_current_score).and_return(90)
