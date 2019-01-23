@@ -10,7 +10,7 @@ module PipelineService
       end
 
       def call
-        @api_client.get_single_submission_courses(@course.id, @assignment.id, @user.id)
+        @api_client.get_single_submission_courses(@course.id, @assignment.id, @user.id, include: ['submission_history'])
       end
 
       def identifiers
