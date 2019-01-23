@@ -1,6 +1,5 @@
 module PipelineService
   module Serializers
-    # This ugly thing lets us call the canvas user api
     class Submission
       def initialize object:
         @object = object

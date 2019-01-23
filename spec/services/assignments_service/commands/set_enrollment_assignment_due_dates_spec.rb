@@ -22,6 +22,7 @@ describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
   let(:assignment2) { Assignment.create(submissions: [submission2], due_at: Time.now) }
 
   before do
+    allow(PipelineService).to receive(:publish)
     allow(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations' => false)
     instance = double(:query_instance, query: [assignment, assignment2])
     allow(AssignmentsService::Queries::AssignmentsWithDueDates).to receive(:new).and_return(instance)
