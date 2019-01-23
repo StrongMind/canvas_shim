@@ -6,7 +6,7 @@ module PipelineService
         @course = object.assignment.course
         @assignment = object.assignment
         @user = object.user
-        @api_client = Pandarus::Client.new(prefix: "https://#{ENV['CANVAS_DOMAIN']}/api", token: ENV['STRONGMIND_INTEGRATION_KEY'])
+        @api_client = Pandarus::Client.new(prefix: prefix, token: ENV['STRONGMIND_INTEGRATION_KEY'])
       end
 
       def call
@@ -18,6 +18,14 @@ module PipelineService
       end
 
       private
+
+      def prefix
+        if Rails.env == 'development'
+          "http://#{ENV['CANVAS_DOMAIN']}:3000/api"
+        else
+          "https://#{ENV['CANVAS_DOMAIN']}/api"
+        end
+      end
 
       attr_reader :object, :course, :assignment, :user
     end

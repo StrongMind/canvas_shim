@@ -46,7 +46,6 @@ describe PipelineService::Serializers::Submission do
   let(:canvas_api_client) { double("Canvas API Client") }
   let(:canvas_api_client_result) { { "user_id" => user.id } }
 
-
   before do
     allow(PipelineService).to receive(:publish)
     ENV['CANVAS_DOMAIN'] = canvas_domain
