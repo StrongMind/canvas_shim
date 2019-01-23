@@ -24,7 +24,11 @@ module PipelineService
         attr_reader :message_class, :object, :fetcher, :serializer, :canvas_domain, :logger, :serialized_object
 
         def serialize
-          @serialized_object = serializer.new(object: object).call
+          @serialized_object = serializer_instance.call
+        end
+
+        def serializer_instance
+          serializer.new(object: object)
         end
 
         def log
@@ -40,9 +44,15 @@ module PipelineService
               api_version: 1,
               status: object.try(:state)
             },
-            identifiers: { id: id },
+            identifiers: { id: id }.merge(additional_identifiers),
             data: serialized_object
           }
+        end
+
+        def additional_identifiers
+          return {} unless serializer_instance.respond_to?(:identifiers)
+
+          serializer_instance.identifiers
         end
 
         def configure_dependencies
