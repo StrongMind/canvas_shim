@@ -12,7 +12,7 @@ class Account
 end
 
 describe PipelineService::Endpoints::Pipeline::MessageBuilder do
-  let(:serializer_instance) { double('serializer_instance', call: nil) }
+  let(:serializer_instance) { double('serializer_instance', call: {id: 1}) }
   let(:serializer_class) { double('serializer_class', new: serializer_instance) }
 
   before do
@@ -71,8 +71,24 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
         double('serializer_instance', call: nil, identifiers: { course_id: 2 })
       end
 
-      it 'it includes the identifiers in the message' do
+      it 'includes the identifiers in the message' do
         expect(message[:identifiers][:course_id]).to eq 2
+      end
+    end
+
+    context "when a record has been deleted" do
+      let(:object) do
+        double(
+          'object',
+          id: 1,
+          changes: {},
+          class: 'Enrollment',
+          state: 'deleted'
+        )
+      end
+
+      it 'sends an empty data field in the message' do
+        expect(message[:data]).to eq({})
       end
     end
   end
