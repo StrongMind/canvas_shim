@@ -48,6 +48,7 @@ describe PipelineService::Serializers::Submission do
 
 
   before do
+    allow(PipelineService).to receive(:publish)
     ENV['CANVAS_DOMAIN'] = canvas_domain
     ENV['STRONGMIND_INTEGRATION_KEY'] = integration_key
     allow(SettingsService).to receive(:get_settings).and_return('enable_unit_grade_calculations': true)

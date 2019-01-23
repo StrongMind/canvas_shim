@@ -58,7 +58,7 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
     end
 
     it '#data' do
-      expect(message[:data]).to be_nil
+      expect(message[:data]).to eq(:id=>1)
     end
 
 
