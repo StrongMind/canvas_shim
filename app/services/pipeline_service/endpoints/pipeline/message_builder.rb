@@ -45,7 +45,7 @@ module PipelineService
               status: object.try(:state)
             },
             identifiers: { id: id }.merge(additional_identifiers),
-            data: serialized_object
+            data: data
           }
         end
 
@@ -59,6 +59,11 @@ module PipelineService
           @fetcher       = @args[:fetcher] || Serializers::Fetcher
           @logger        = @args[:logger] || PipelineService::Logger
           @canvas_domain = ENV['CANVAS_DOMAIN']
+        end
+
+        def data
+          return {} if object.try(:state) == 'deleted'
+          serialized_object
         end
 
         def fetch_serializer
