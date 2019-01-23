@@ -58,7 +58,12 @@ describe PipelineService::Serializers::Submission do
     ).and_return(expected_api_result)
 
     allow(Pandarus::Client).to receive(:new).and_return(canvas_api_client)
-    allow(canvas_api_client).to receive(:get_single_submission_courses).with(course.id, assignment.id, user.id).and_return(canvas_api_client_result)
+    allow(canvas_api_client).to receive(:get_single_submission_courses).with(
+        course.id,
+        assignment.id,
+        user.id,
+        {:include=>["submission_history"]}
+    ).and_return(canvas_api_client_result)
   end
 
   it 'returns an enrollment object with a user id' do
