@@ -61,8 +61,19 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
       expect(message[:data]).to be_nil
     end
 
+
     it '#identifiers' do
-      expect(message[:identifiers]).to eq id: 1
+      expect(message[:identifiers][:id]).to eq 1
+    end
+
+    context "when there are additional identifiers in the serializer" do
+      let(:serializer_instance) do
+        double('serializer_instance', call: nil, identifiers: { course_id: 2 })
+      end
+
+      it 'it includes the identifiers in the message' do
+        expect(message[:identifiers][:course_id]).to eq 2
+      end
     end
   end
 

@@ -10,20 +10,17 @@ module PipelineService
         @api_client = Pandarus::Client.new(prefix: "https://#{ENV['CANVAS_DOMAIN']}/api", token: ENV['STRONGMIND_INTEGRATION_KEY'])
       end
 
-
       def call
-        # HTTPClient.get(endpoint, headers: { Authorization: "Bearer #{ENV['STRONGMIND_INTEGRATION_KEY']}"})
-        @api_client.get_single_submission_courses(1, 2, 3)
+        @api_client.get_single_submission_courses(@course.id, @assignment.id, @user.id)
+      end
+
+      def identifiers
+        { assignment_id: @assignment.id, course_id: @course.id }
       end
 
       private
 
       attr_reader :object, :course, :assignment, :user
-
-      def endpoint
-        # https://#{ENV['CANVAS_DOMAIN']}/api/v1
-        "/courses/#{course.id}/assignments/#{assignment.id}/submissions/#{user.id}"
-      end
     end
   end
 end

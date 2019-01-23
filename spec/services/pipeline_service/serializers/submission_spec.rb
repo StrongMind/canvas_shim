@@ -43,7 +43,7 @@ describe PipelineService::Serializers::Submission do
   let(:submission) { Submission.create(submitted_at: Time.now, assignment: assignment, user: user) }
   let(:integration_key) { rand.to_s }
   let(:canvas_domain) { Faker::Internet.domain_name }
-  let(:canvas_api_client) { double("Canvas API Client", get_single_submission_courses: canvas_api_client_result) }
+  let(:canvas_api_client) { double("Canvas API Client") }
   let(:canvas_api_client_result) { { "user_id" => user.id } }
 
 
@@ -57,10 +57,16 @@ describe PipelineService::Serializers::Submission do
     ).and_return(expected_api_result)
 
     allow(Pandarus::Client).to receive(:new).and_return(canvas_api_client)
+    allow(canvas_api_client).to receive(:get_single_submission_courses).with(course.id, assignment.id, user.id).and_return(canvas_api_client_result)
   end
 
   it 'returns an enrollment object with a user id' do
     result = subject.call
     expect(result['user_id']).to eq(user.id)
+  end
+
+  it 'provides additional identifiers' do
+    subject.call
+    expect(subject.identifiers).to eq(course_id: course.id, assignment_id: assignment.id )
   end
 end
