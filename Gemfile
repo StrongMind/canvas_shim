@@ -19,3 +19,4 @@ gem 'aws-sdk-s3'
 gem 'pg'
 gem 'faker'
 gem "rails", "~> 5.0.4"
+
