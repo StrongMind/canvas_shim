@@ -17,4 +17,6 @@ gem 'delayed_job_active_record'
 gem 'aws-sdk-core'
 gem 'aws-sdk-s3'
 gem 'pg'
+gem 'faker'
 gem "rails", "~> 5.0.4"
+

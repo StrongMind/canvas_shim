@@ -9,6 +9,7 @@ require 'aws-sdk-core'
 require 'aws-sdk-s3'
 require 'pg'
 require "pipeline_publisher_ruby"
+require "pandarus"
 
 
 module CanvasShim
