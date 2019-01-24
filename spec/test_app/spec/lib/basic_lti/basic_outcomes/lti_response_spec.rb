@@ -11,6 +11,7 @@ describe BasicLTI::BasicOutcomes::LtiResponse do
       let(:version3) { SubmissionVersion.create(yaml: {score: 80, grade: 80}.to_yaml) }
 
       before do
+        allow(PipelineService).to receive(:publish)
         allow(SettingsService).to receive(:get_settings).and_return('lti_keep_highest_score' => true)
         subject.instance_variable_set('@submission', submission)
       end

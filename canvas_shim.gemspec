@@ -24,4 +24,5 @@ Gem::Specification.new do |s|
   s.add_dependency "business"
   s.add_dependency 'httparty'
   s.add_dependency "loofah", "2.2.3"
+  s.add_dependency 'pandarus', '0.7.0'
 end
