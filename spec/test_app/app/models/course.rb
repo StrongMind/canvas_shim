@@ -13,7 +13,7 @@ class Course < ActiveRecord::Base
     true
   end
 
-  def user_is_student?(one, two)
+  def user_is_student?(one, options={})
     true
   end
 end

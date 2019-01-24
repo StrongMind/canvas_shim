@@ -1,7 +1,5 @@
 module CanvasShim
   module CourseProgress
-    alias_method :initialize_alias, :initialize
-
     def module_progressions
       @_module_progressions ||= course.context_module_progressions.
                                     where(user_id: User.find(find_user_id), context_module_id: modules).to_a
