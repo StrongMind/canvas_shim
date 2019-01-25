@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190123234229) do
+ActiveRecord::Schema.define(version: 20190125160404) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -111,6 +111,8 @@ ActiveRecord::Schema.define(version: 20190123234229) do
     t.integer  "course_id"
     t.integer  "user_id"
     t.datetime "start_at"
+    t.string   "type"
+    t.integer  "associated_user_id"
   end
 
   create_table "failed_jobs", force: :cascade do |t|
@@ -131,6 +133,9 @@ ActiveRecord::Schema.define(version: 20190123234229) do
     t.bigint   "original_job_id"
     t.string   "source",          limit: 255
     t.datetime "expires_at"
+  end
+
+  create_table "observer_enrollments", force: :cascade do |t|
   end
 
   create_table "pseudonyms", force: :cascade do |t|
