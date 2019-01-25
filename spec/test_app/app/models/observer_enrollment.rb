@@ -1,0 +1,2 @@
+class ObserverEnrollment < Enrollment
+end

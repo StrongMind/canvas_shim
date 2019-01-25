@@ -47,12 +47,10 @@ module CanvasShim
       end
     end
 
-
     private
 
     def find_user_id
-      @observed_user ||= observed_user
-      @observed_user ? @observed_user.associated_user_id : @user.id
+      observed_user ? observed_user.associated_user_id : @user.id
     end
 
     def observed_user

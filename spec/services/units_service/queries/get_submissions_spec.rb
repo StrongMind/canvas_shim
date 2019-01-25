@@ -1,5 +1,5 @@
 describe UnitsService::Queries::GetSubmissions do
-  let(:student) { User.create(course: course) }
+  let(:student) { User.create }
   let(:course)  { Course.create(context_modules: [unit]) }
   let(:submission) { Submission.create!(user: student, assignment: assignment) }
   let(:assignment) { Assignment.create(course: course, published: true) }
