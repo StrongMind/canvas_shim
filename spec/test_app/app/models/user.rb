@@ -7,8 +7,9 @@ class User < ActiveRecord::Base
            dependent: :destroy,
            inverse_of: :observer
   has_many :observed_users, :through => :user_observees, :source => :user
+  has_many :enrollments
+  has_many :courses, through: :enrollments
 
-  belongs_to :course
   has_one :pseudonym
 end
 require File.expand_path('../../app/models/user', CanvasShim::Engine.called_from)
