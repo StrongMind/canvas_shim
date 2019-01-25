@@ -52,11 +52,11 @@ module CanvasShim
 
     def find_user_id
       @observed_user ||= observed_user
-      @observed_user ? @observed_user.id : @user.id
+      @observed_user ? @observed_user.associated_user_id : @user.id
     end
 
     def observed_user
-      @user.observed_users.any? ? @user.observed_users[0] : nil
+      @user.enrollments.where(type: 'ObserverEnrollment', course: course).where.not(associated_user_id: nil).first
     end
 
     def allow_course_progress?
