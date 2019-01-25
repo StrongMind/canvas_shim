@@ -47,21 +47,19 @@ module CanvasShim
       end
     end
 
-
     private
 
     def find_user_id
-      @observed_user ||= observed_user
-      @observed_user ? @observed_user.id : @user.id
+      observer_enrollment ? observer_enrollment.associated_user_id : @user.id
     end
 
-    def observed_user
-      @user.observed_users.any? ? @user.observed_users[0] : nil
+    def observer_enrollment
+      @user.enrollments.where(type: 'ObserverEnrollment', course: course).where.not(associated_user_id: nil).first
     end
 
     def allow_course_progress?
       (course.module_based? && course.user_is_student?(user, include_all: true)) ||
-      (course.module_based? && observed_user && course.user_is_student?(observed_user, include_all: true))
+      (course.module_based? && observer_enrollment && course.user_is_student?(User.find(find_user_id), include_all: true))
     end
   end
 end
