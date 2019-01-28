@@ -32,6 +32,11 @@ module CanvasShim
         end
     end
 
+    def requirement_count
+      count = requirements.size - excused_submission_count
+      count <= 0 ? 0 : count
+    end
+
     def to_json
       if allow_course_progress?
         {
@@ -60,6 +65,10 @@ module CanvasShim
     def allow_course_progress?
       (course.module_based? && course.user_is_student?(user, include_all: true)) ||
       (course.module_based? && observer_enrollment && course.user_is_student?(User.find(find_user_id), include_all: true))
+    end
+
+    def excused_submission_count
+      course.submissions.where(user: user, excused: true).count
     end
   end
 end
