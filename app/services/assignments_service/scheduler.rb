@@ -13,9 +13,13 @@ module AssignmentsService
       (assignment_count / business_days_count)
     end
 
+    def assignments_per_day_float
+      (assignment_count.to_f / business_days_count.to_f)
+    end
+
     def course_dates
       get_days
-      populate_assignment_counts
+      assignment_count < business_days_count ? spread_dates : populate_assignment_counts
     end
 
     def business_days_count
@@ -58,14 +62,27 @@ module AssignmentsService
       result = {}
       days.each do |day|
         result[day] = assignments_per_day
-        byebug
       end
 
       (assignment_count % business_days_count).times.each do |num|
         result[days[num]] = result[days[num]] + 1
-        byebug
       end
 
+      result
+    end
+
+    def spread_dates
+      skip_factor = 0.00
+      result = {}
+      days.each do |day|
+        if skip_factor > 1
+          result[day] = 0
+          skip_factor -= 1
+        else
+          skip_factor += assignments_per_day_float
+          result[day] = 1
+        end
+      end
       result
     end
   end
