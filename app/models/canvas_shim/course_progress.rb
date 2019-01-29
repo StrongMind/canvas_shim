@@ -19,7 +19,7 @@ module CanvasShim
             []
           else
             fm = modules.first # the visibilites are the same for all the modules - load them all now and reuse them
-            user_ids = [find_user_id]
+            user_ids = [course_progress_user.id]
             opts = {
               :is_teacher => false,
               :assignment_visibilities => true, # fm.assignment_visibilities_for_users(user_ids),
