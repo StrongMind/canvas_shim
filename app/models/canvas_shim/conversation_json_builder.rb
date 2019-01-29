@@ -3,7 +3,8 @@ module CanvasShim
     self.table_name = "conversations"
 
     def self.call(id:)
-      ConversationJSONBuilder.find(id).to_json(include_root: false)
+      # Dont include root.  See active record initializer
+      ConversationJSONBuilder.find(id).to_json(root: false)
     end
   end
 end
