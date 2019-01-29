@@ -32,13 +32,8 @@ module CanvasShim
         end
     end
 
-    def requirement_count
-      count = requirements.size - excused_submission_count
-      count <= 0 ? 0 : count
-    end
-
     def requirement_completed_count
-      requirements_completed.size - submitted_and_excused_count
+      requirements_completed.size + excused_submission_count
     end
 
     def to_json
@@ -81,10 +76,6 @@ module CanvasShim
 
     def excused_submission_count
       excused_submissions.count
-    end
-
-    def submitted_and_excused_count
-      excused_submissions.where.not(submitted_at: nil).count
     end
   end
 end
