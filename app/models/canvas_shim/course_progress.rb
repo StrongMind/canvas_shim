@@ -32,8 +32,9 @@ module CanvasShim
         end
     end
 
-    def requirement_completed_count
-      requirements_completed.size + excused_submission_count
+    def requirement_count
+      count = requirements_completed.size - excused_submission_count
+      count < 1 ? 0 : count
     end
 
     def to_json
