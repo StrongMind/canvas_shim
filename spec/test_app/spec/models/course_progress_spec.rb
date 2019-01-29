@@ -72,7 +72,7 @@ describe CourseProgress do
     end
   end
 
-  describe "#requirement_count" do
+  describe "#submitted_and_excused_count" do
     context "with excused submission" do
       before do
         allow(SettingsService).to receive(:get_settings).and_return({'disable_pipeline' => true})
@@ -81,17 +81,12 @@ describe CourseProgress do
         end
       end
 
-      let(:excused_submission_count) { rand(2..5) }
+      let(:excused_submission_count) { 6 }
       let(:fake_requirements) { [nil, nil, nil, nil, nil, nil] }
 
-      it "subtracts submissions" do
+      it "adds excused submissions to completed requirement count" do
         allow(course_progress_student).to receive(:requirements).and_return(fake_requirements)
-        expect(course_progress_student.requirement_count).to eq fake_requirements.size - excused_submission_count
-      end
-
-      it "guards against negatives" do
-        allow(course_progress_student).to receive(:requirements).and_return([])
-        expect(course_progress_student.requirement_count.zero?).to be
+        expect(course_progress_student.requirement_completed_count).to eq fake_requirements.size
       end
     end
   end
