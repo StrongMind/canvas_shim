@@ -4,7 +4,7 @@ module CanvasShim
 
     def self.call(id:)
       # Dont include root.  See active record initializer
-      ConversationParticipantJSONBuilder.find(id).to_json(root: false)
+      ConversationParticipantJSONBuilder.find(id).to_json(include_root: false)
     end
   end
 end
