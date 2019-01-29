@@ -58,10 +58,12 @@ module AssignmentsService
       result = {}
       days.each do |day|
         result[day] = assignments_per_day
+        byebug
       end
 
       (assignment_count % business_days_count).times.each do |num|
         result[days[num]] = result[days[num]] + 1
+        byebug
       end
 
       result
