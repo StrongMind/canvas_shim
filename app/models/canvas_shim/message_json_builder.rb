@@ -3,7 +3,7 @@ module CanvasShim
     self.table_name = "messages"
 
     def self.call(id:)
-      MessageJSONBuilder.find(id).to_json
+      MessageJSONBuilder.find(id).to_json(include_root: false)
     end
   end
 end
