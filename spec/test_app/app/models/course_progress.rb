@@ -17,6 +17,10 @@ class CourseProgress
     1
   end
 
+  def requirements_completed
+    []
+  end
+
   def requirement_completed_count
     1
   end

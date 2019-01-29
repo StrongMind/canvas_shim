@@ -53,4 +53,41 @@ describe CourseProgress do
       expect(course_progress_observer.send(:allow_course_progress?)).to be true
     end
   end
+
+  describe "#excused_submission_count" do
+    context "with excused submission" do
+      before do
+        allow(SettingsService).to receive(:get_settings).and_return({'disable_pipeline' => true})
+      end
+
+      let(:excused_submission_count) { rand(2..5) }
+
+      it "counts excused submissions" do
+        excused_submission_count.times do
+          Submission.create!(user: user, assignment: Assignment.create(course: course), excused: true)
+        end
+
+        expect(course_progress_student.send(:excused_submission_count)).to eq excused_submission_count
+      end
+    end
+  end
+
+  describe "#submitted_and_excused_count" do
+    context "with excused submission" do
+      before do
+        allow(SettingsService).to receive(:get_settings).and_return({'disable_pipeline' => true})
+        excused_submission_count.times do
+          Submission.create!(user: user, assignment: Assignment.create(course: course), excused: true)
+        end
+      end
+
+      let(:excused_submission_count) { 6 }
+      let(:fake_requirements) { [nil, nil, nil, nil, nil, nil] }
+
+      it "adds excused submissions to completed requirement count" do
+        allow(course_progress_student).to receive(:requirements).and_return(fake_requirements)
+        expect(course_progress_student.requirement_completed_count).to eq fake_requirements.size
+      end
+    end
+  end
 end
