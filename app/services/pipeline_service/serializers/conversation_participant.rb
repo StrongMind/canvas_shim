@@ -1,13 +1,13 @@
 module PipelineService
   module Serializers
-    class Conversation
+    class ConversationParticipant
       def initialize object:
-        @conversation = object
+        @conversation_participant = object
         @api_client = Pandarus::Client.new(prefix: prefix, token: ENV['STRONGMIND_INTEGRATION_KEY'])
       end
 
       def call
-        CanvasShim::ConversationJSON.call(id: conversation.id)
+        CanvasShim::ConversationParticipantJSONBuilder.call(id: conversation_participant.id)
       end
 
       private
@@ -20,7 +20,7 @@ module PipelineService
         end
       end
 
-      attr_reader :conversation, :api_client
+      attr_reader :conversation_participant, :api_client
     end
   end
 end

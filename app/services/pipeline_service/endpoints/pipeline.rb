@@ -35,7 +35,7 @@ module PipelineService
         @message_builder = @args[:message_builder] || MessageBuilder
         @publisher   = @args[:publisher] || PipelinePublisher
         @endpoint    = ENV['PIPELINE_ENDPOINT']
-        @username    = ENV['PIPELINE_USER_NAME']
+        @username    = ENV['PIPELINE_ENDPOINT']
         @password    = ENV['PIPELINE_PASSWORD']
       end
 
