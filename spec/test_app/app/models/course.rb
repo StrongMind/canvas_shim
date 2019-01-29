@@ -5,7 +5,6 @@ class Course < ActiveRecord::Base
   has_many :context_module_progressions, through: :context_modules
   has_many :assignment_groups
   has_many :assignments
-  has_many :submissions, through: :assignments
 
   def teachers
     users
