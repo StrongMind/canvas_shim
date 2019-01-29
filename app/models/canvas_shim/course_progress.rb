@@ -33,7 +33,7 @@ module CanvasShim
     end
 
     def requirement_count
-      count = requirements_completed.size - excused_submission_count
+      count = requirements.size - excused_submission_count
       count < 1 ? 0 : count
     end
 
