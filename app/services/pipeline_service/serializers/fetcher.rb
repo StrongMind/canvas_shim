@@ -8,8 +8,6 @@ module PipelineService
         case object.class.to_s
         when /PipelineService::Nouns::UnitGrades/
           PipelineService::Serializers::UnitGrades
-        when /Enrollment/
-          PipelineService::Serializers::Enrollment
         else
           "PipelineService::Serializers::#{object.class.to_s}".constantize
         end
