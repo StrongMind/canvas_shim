@@ -83,7 +83,6 @@ describe CourseProgress do
 
       let(:excused_submission_count) { 6 }
       let(:fake_requirements) { Array.new(excused_submission_count + 1) }
-
       it "subtracts excused submissions from requirement count" do
         allow(course_progress_student).to receive(:requirements).and_return(fake_requirements)
         expect(course_progress_student.requirement_count).to eq 1
