@@ -3,7 +3,6 @@ module PipelineService
     class ConversationMessage
       def initialize object:
         @conversation_message = object
-        @api_client = Pandarus::Client.new(prefix: prefix, token: ENV['STRONGMIND_INTEGRATION_KEY'])
       end
 
       def call
