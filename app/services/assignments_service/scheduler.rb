@@ -13,10 +13,6 @@ module AssignmentsService
       (assignment_count / business_days_count)
     end
 
-    def assignments_per_day_float
-      (assignment_count.to_f / business_days_count.to_f)
-    end
-
     def course_dates
       get_days
       assignment_count < business_days_count ? spread_dates : populate_assignment_counts
@@ -72,17 +68,13 @@ module AssignmentsService
     end
 
     def spread_dates
-      skip_factor = 0.00
-      result = {}
-      days.each do |day|
-        if skip_factor > 1
-          result[day] = 0
-          skip_factor -= 1
-        else
-          skip_factor += assignments_per_day_float
-          result[day] = 1
-        end
+      result = Hash[days.map { |day| [day, 0] }]
+      l_index = assignment_count - 1
+      step = days.length.to_f / l_index
+      (0...l_index).each do |int|
+        result[days[int * step]] = 1
       end
+      result[days.last] = 1
       result
     end
   end
