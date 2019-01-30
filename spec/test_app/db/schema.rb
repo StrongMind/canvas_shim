@@ -11,7 +11,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 20190129181431) do
-
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -77,6 +76,7 @@ ActiveRecord::Schema.define(version: 20190129181431) do
     t.string   "time_zone"
     t.datetime "end_at"
     t.datetime "conclude_at"
+    t.string   "workflow_state"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|

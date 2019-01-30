@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    canvas_shim (0.1.46)
+    canvas_shim (0.1.49)
       aws-sdk-dynamodb (= 1.15.0)
       business
       grape (~> 1)
@@ -54,7 +54,7 @@ GEM
       tzinfo (~> 1.1)
     arel (7.1.4)
     aws-eventstream (1.0.1)
-    aws-partitions (1.134.0)
+    aws-partitions (1.136.0)
     aws-sdk-core (3.46.0)
       aws-eventstream (~> 1.0)
       aws-partitions (~> 1.0)
@@ -82,7 +82,7 @@ GEM
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
     builder (3.2.3)
-    business (1.15.0)
+    business (1.16.0)
     byebug (10.0.2)
     coderay (1.1.2)
     coercible (1.0.0)
