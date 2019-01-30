@@ -1,6 +1,7 @@
 class Submission < ActiveRecord::Base
   belongs_to :assignment
   belongs_to :user
+  belongs_to :course
   has_many :versions, class_name: 'SubmissionVersion'
 
   after_save :send_submission_to_pipeline
