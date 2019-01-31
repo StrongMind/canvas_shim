@@ -13,7 +13,7 @@ describe ConversationBackfiller do
 
       expect(PipelineService).to receive(:publish).with(an_instance_of(Conversation))
       expect(PipelineService).to receive(:publish).with(an_instance_of(ConversationMessage)).once
-      # expect(PipelineService).to receive(:publish).with(an_instance_of(ConversationParticipant)).twice
+      expect(PipelineService).to receive(:publish).with(an_instance_of(ConversationParticipant)).twice
 
       ConversationBackfiller.call
     end
