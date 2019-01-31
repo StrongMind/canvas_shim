@@ -12,6 +12,7 @@ module AssignmentsService
         return unless course.start_at && course.end_at
         course_assignments = assignments
         scheduler.course_dates.each do |date, count|
+          next if count.zero?
           update_assignments(course_assignments.slice!(0..count - 1), date)
         end
       end
