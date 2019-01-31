@@ -11,9 +11,19 @@ module AssignmentsService
         return unless SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on'
         return unless course.start_at && course.end_at
         course_assignments = assignments
+        offset = 0
         scheduler.course_dates.each do |date, count|
-          next if count.zero?
-          update_assignments(course_assignments.slice!(0..count - 1), date)
+          puts course_assignments.slice(0..count - 1)
+          puts "See Above ^^^ #{offset}"
+
+          if count.zero?
+            offset += 1
+            next
+          else
+            offset = 0
+          end
+
+          update_assignments(course_assignments.slice!(offset..count - 1), date)
         end
       end
 
