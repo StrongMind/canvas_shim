@@ -13,8 +13,6 @@ module AssignmentsService
         course_assignments = assignments
         offset = 0
         scheduler.course_dates.each do |date, count|
-          puts course_assignments.slice(0..count - 1)
-          puts "See Above ^^^ #{offset}"
 
           if count.zero?
             offset += 1
