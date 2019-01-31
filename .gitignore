@@ -10,3 +10,4 @@ spec/test_app/tmp/
 .idea
 test.log
 *.gem
+.env
