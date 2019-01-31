@@ -61,6 +61,94 @@ describe AssignmentsService::Commands::DistributeDueDates::Scheduler do
       end
     end
 
+    context 'when given less assignments than days' do
+      subject do
+        described_class.new(course: course, assignment_count: 10)
+      end
+
+      it 'distibutes correctly' do
+        result = {
+          "Tue, 27 Nov 2018 23:59:59 UTC +00:00".to_datetime=>1,
+          "Wed, 28 Nov 2018 23:59:59 UTC +00:00".to_datetime=>0,
+          "Thu, 29 Nov 2018 23:59:59 UTC +00:00".to_datetime=>1,
+          "Fri, 30 Nov 2018 23:59:59 UTC +00:00".to_datetime=>0,
+          "Mon, 03 Dec 2018 23:59:59 UTC +00:00".to_datetime=>1,
+          "Tue, 04 Dec 2018 23:59:59 UTC +00:00".to_datetime=>0,
+          "Wed, 05 Dec 2018 23:59:59 UTC +00:00".to_datetime=>0,
+          "Thu, 06 Dec 2018 23:59:59 UTC +00:00".to_datetime=>1,
+          "Fri, 07 Dec 2018 23:59:59 UTC +00:00".to_datetime=>0,
+          "Mon, 10 Dec 2018 23:59:59 UTC +00:00".to_datetime=>1,
+          "Tue, 11 Dec 2018 23:59:59 UTC +00:00".to_datetime=>0,
+          "Wed, 12 Dec 2018 23:59:59 UTC +00:00".to_datetime=>1,
+          "Thu, 13 Dec 2018 23:59:59 UTC +00:00".to_datetime=>0,
+          "Fri, 14 Dec 2018 23:59:59 UTC +00:00".to_datetime=>0,
+          "Mon, 17 Dec 2018 23:59:59 UTC +00:00".to_datetime=>1,
+          "Tue, 18 Dec 2018 23:59:59 UTC +00:00".to_datetime=>0,
+          "Wed, 19 Dec 2018 23:59:59 UTC +00:00".to_datetime=>1,
+          "Thu, 20 Dec 2018 23:59:59 UTC +00:00".to_datetime=>0,
+          "Fri, 21 Dec 2018 23:59:59 UTC +00:00".to_datetime=>1,
+          "Mon, 24 Dec 2018 23:59:59 UTC +00:00".to_datetime=>0,
+          "Tue, 25 Dec 2018 23:59:59 UTC +00:00".to_datetime=>1
+        }
+
+        actual = subject.course_dates
+
+        expect(actual.keys[0].day).to eq(27)
+        expect(actual[actual.keys[0]]).to eq(1)
+        expect(actual.keys[1].day).to eq(28)
+        expect(actual[actual.keys[1]]).to eq(0)
+        expect(actual.keys[2].day).to eq(29)
+        expect(actual[actual.keys[2]]).to eq(1)
+        expect(actual.keys[3].day).to eq(30)
+        expect(actual[actual.keys[3]]).to eq(0)
+        expect(actual.keys[4].day).to eq(3)
+        expect(actual[actual.keys[4]]).to eq(1)
+        expect(actual.keys[5].day).to eq(4)
+        expect(actual[actual.keys[5]]).to eq(0)
+        expect(actual.keys[6].day).to eq(5)
+        expect(actual[actual.keys[6]]).to eq(0)
+        expect(actual.keys[7].day).to eq(6)
+        expect(actual[actual.keys[7]]).to eq(1)
+        expect(actual.keys[8].day).to eq(7)
+        expect(actual[actual.keys[8]]).to eq(0)
+        expect(actual.keys[9].day).to eq(10)
+        expect(actual[actual.keys[9]]).to eq(1)
+        expect(actual.keys[10].day).to eq(11)
+        expect(actual[actual.keys[10]]).to eq(0)
+        expect(actual.keys[11].day).to eq(12)
+        expect(actual[actual.keys[11]]).to eq(1)
+        expect(actual.keys[12].day).to eq(13)
+        expect(actual[actual.keys[12]]).to eq(0)
+        expect(actual.keys[13].day).to eq(14)
+        expect(actual[actual.keys[13]]).to eq(0)
+        expect(actual.keys[14].day).to eq(17)
+        expect(actual[actual.keys[14]]).to eq(1)
+        expect(actual.keys[15].day).to eq(18)
+        expect(actual[actual.keys[15]]).to eq(0)
+        expect(actual.keys[16].day).to eq(19)
+        expect(actual[actual.keys[16]]).to eq(1)
+        expect(actual.keys[17].day).to eq(20)
+        expect(actual[actual.keys[17]]).to eq(0)
+        expect(actual.keys[18].day).to eq(21)
+        expect(actual[actual.keys[18]]).to eq(1)
+        expect(actual.keys[19].day).to eq(24)
+        expect(actual[actual.keys[19]]).to eq(0)
+        expect(actual.keys[20].day).to eq(25)
+        expect(actual[actual.keys[20]]).to eq(1)
+      end
+    end
+
+    context 'when given more assignments than days' do
+      subject do
+        described_class.new(course: course, assignment_count: 35)
+      end
+
+      it 'runs the default ' do
+        actual = subject.course_dates
+        expect(actual.values.select { |v| v > 1 }.any?).to be
+      end
+    end
+
     context 'when given holidays' do
         before do
           ENV['HOLIDAYS'] = "2018-11-28,2018-11-29"

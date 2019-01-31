@@ -15,7 +15,7 @@ module AssignmentsService
 
     def course_dates
       get_days
-      populate_assignment_counts
+      assignment_count < business_days_count ? spread_dates : populate_assignment_counts
     end
 
     def business_days_count
@@ -64,6 +64,17 @@ module AssignmentsService
         result[days[num]] = result[days[num]] + 1
       end
 
+      result
+    end
+
+    def spread_dates
+      result = Hash[days.map { |day| [day, 0] }]
+      l_index = assignment_count - 1
+      step = days.length.to_f / l_index
+      (0...l_index).each do |int|
+        result[days[int * step]] = 1
+      end
+      result[days.last] = 1
       result
     end
   end
