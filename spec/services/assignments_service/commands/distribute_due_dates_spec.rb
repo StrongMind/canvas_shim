@@ -144,5 +144,22 @@ describe AssignmentsService::Commands::DistributeDueDates do
       end
     end
 
+    context 'Has less assignments than days' do
+      let(:course) do
+        double(
+          :course,
+          start_at: start_at,
+          end_at: end_at + 1.year,
+          id: 1,
+          time_zone: Time.zone
+        )
+      end
+
+      it 'assigns the last assignment on the last day' do
+        expect(assignment10).to(receive(:update)).with(due_at: Time.parse('2019-11-29 23:59:59.999999999 +0000'))
+        dates = subject.call
+        expect(dates.values.last).to eq 1
+      end
+    end
   end
 end
