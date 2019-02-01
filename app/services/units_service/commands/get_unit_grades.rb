@@ -15,6 +15,10 @@ module UnitsService
 
       private
 
+      def get_sis_user_id
+        @student.respond_to?(:pseudonym) ? @student.pseudonym.sis_user_id : ''
+      end
+
       def get_submissions
         @unit_submissions = UnitsService::Queries::GetSubmissions.new(
           course: @course,
@@ -32,7 +36,7 @@ module UnitsService
           course_id: @course.id,
           course_score: student_enrollment.computed_current_score,
           student_id: @student.id,
-          sis_user_id: @student.pseudonym.sis_user_id || '',
+          sis_user_id: get_sis_user_id,
           submitted_at: @submission.submitted_at,
           units: @grades.map {|unit, score| {
             id: unit.id,
