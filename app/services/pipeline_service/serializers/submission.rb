@@ -13,7 +13,7 @@ module PipelineService
         @api_client.get_single_submission_courses(@course.id, @assignment.id, @user.id, include: ['submission_history'])
       end
 
-      def identifiers
+      def additional_identifiers
         { assignment_id: @assignment.id, course_id: @course.id }
       end
 

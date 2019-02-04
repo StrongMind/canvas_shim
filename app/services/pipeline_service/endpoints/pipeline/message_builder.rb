@@ -50,9 +50,9 @@ module PipelineService
         end
 
         def additional_identifiers
-          return {} unless serializer_instance.respond_to?(:identifiers)
+          return {} unless serializer_instance.respond_to?(:additional_identifiers)
 
-          serializer_instance.identifiers
+          serializer_instance.additional_identifiers
         end
 
         def configure_dependencies
