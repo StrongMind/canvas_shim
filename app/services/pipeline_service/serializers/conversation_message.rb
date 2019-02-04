@@ -19,7 +19,7 @@ module PipelineService
         end
       end
 
-      attr_reader :conversation_message, :api_client
+      attr_reader :conversation_message
     end
   end
 end
