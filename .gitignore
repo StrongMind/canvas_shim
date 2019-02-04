@@ -10,4 +10,6 @@ spec/test_app/tmp/
 .idea
 test.log
 *.gem
-.env*
+.env
+.env.development
+.env.production
