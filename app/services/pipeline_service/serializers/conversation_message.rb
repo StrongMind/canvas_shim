@@ -11,14 +11,6 @@ module PipelineService
 
       private
 
-      def prefix
-        if Rails.env == 'development'
-          "http://#{ENV['CANVAS_DOMAIN']}:3000/api"
-        else
-          "https://#{ENV['CANVAS_DOMAIN']}/api"
-        end
-      end
-
       attr_reader :conversation_message
     end
   end
