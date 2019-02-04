@@ -5,7 +5,7 @@ describe PipelineService::Serializers::ConversationMessage do
 
   let(:conversation_message_model) { ConversationMessage.create! }
 
-  it 'calls the canvas api for a conversation_message' do
+  it 'Return a json hash of the noun' do
     expect(JSON.parse(subject.call)).to include( { 'id' => conversation_message_model.id } )
   end
 end
