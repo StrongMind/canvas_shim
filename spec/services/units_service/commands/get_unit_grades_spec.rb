@@ -36,4 +36,16 @@ describe UnitsService::Commands::GetUnitGrades do
       }]
     )
   end
+
+  describe "#submissions_graded?" do
+    it "does the thing" do
+      # expect subject.send(:submissions_graded?).to be
+    end
+
+    context "student has no grades" do
+      it 'does not do the thing' do
+        # expect subject.send(:submissions_graded?).to be
+      end
+    end
+  end
 end

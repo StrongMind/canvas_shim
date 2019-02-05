@@ -49,6 +49,10 @@ module UnitsService
       def calculate_grades
         @grades = UnitsService::GradesCalculator.new(@unit_submissions, @course).call
       end
+
+      def submissions_graded?
+        #
+      end
     end
   end
 end
