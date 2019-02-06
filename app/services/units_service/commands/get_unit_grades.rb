@@ -51,7 +51,7 @@ module UnitsService
       end
 
       def submissions_graded?(unit, score)
-        score unless unit_submissions[unit].none? { |sub| sub.graded_at }
+        score if unit_submissions[unit].any? { |sub| sub.graded_at && sub.grader_id != 1 }
       end
     end
   end

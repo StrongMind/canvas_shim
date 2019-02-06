@@ -8,7 +8,7 @@ describe UnitsService::Commands::GetUnitGrades do
   let(:unit) { double('unit', id: 1, created_at: current_time, position: 3 ) }
   let(:calculator_instance) { double('calculator_instance', call: { unit => 54 }) }
   let(:submitted_at) { Time.now }
-  let(:submission) { double('submission', submitted_at: submitted_at, graded_at: current_time) }
+  let(:submission) { double('submission', submitted_at: submitted_at, graded_at: current_time, grader_id: 2) }
   let(:cm) {ContextModule.create()}
   let(:unit_submissions) { Hash.new }
 
@@ -45,7 +45,7 @@ describe UnitsService::Commands::GetUnitGrades do
 
   describe "#submissions_graded?" do
     it "does the thing" do
-      unit_submissions[cm] = [Submission.create(graded_at: current_time)]
+      unit_submissions[cm] = [Submission.create(graded_at: current_time, grader_id: 2)]
       expect(subject.send(:submissions_graded?, cm, 54)).to eq 54
     end
 
