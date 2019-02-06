@@ -1,4 +1,5 @@
 describe UnitsService::Commands::GetUnitGrades do
+  include_context "pipeline_context"
   let(:course) { Course.create(assignment_groups: []) }
   let(:pseudonym) { Pseudonym.create(sis_user_id: 1001) }
   let(:user) { User.create(pseudonym: pseudonym) }
@@ -7,7 +8,7 @@ describe UnitsService::Commands::GetUnitGrades do
   let(:unit) { double('unit', id: 1, created_at: current_time, position: 3 ) }
   let(:calculator_instance) { double('calculator_instance', call: { unit => 54 }) }
   let(:submitted_at) { Time.now }
-  let(:submission) { double('submission', submitted_at: submitted_at) }
+  let(:submission) { double('submission', submitted_at: submitted_at, graded_at: current_time) }
 
   subject { described_class.new(course: course, student: user, submission: submission) }
 
@@ -21,7 +22,13 @@ describe UnitsService::Commands::GetUnitGrades do
     allow(@enrollment).to receive(:computed_current_score).and_return(90)
   end
 
+  let(:cm) {ContextModule.create()}
+  let(:unit_submissions) { Hash.new }
+
   it 'returns the calculator results' do
+
+    unit_submissions[unit] = [submission]
+    allow(subject).to receive(:unit_submissions).and_return(unit_submissions)
     expect(subject.call).to eq(
       course_id: course.id,
       course_score: 90,
@@ -38,13 +45,24 @@ describe UnitsService::Commands::GetUnitGrades do
   end
 
   describe "#submissions_graded?" do
+    let(:cm) {ContextModule.create()}
+    let(:unit_submissions) { Hash.new }
+
     it "does the thing" do
-      # expect subject.send(:submissions_graded?).to be
+      unit_submissions[cm] = [Submission.create(graded_at: current_time)]
+      allow(subject).to receive(:unit_submissions).and_return(unit_submissions)
+      expect(subject.send(:submissions_graded?, cm, 54)).to eq 54
     end
 
-    context "student has no grades" do
+    context "student has no graded submissions" do
+      let(:cm) {ContextModule.create()}
+      let(:unit_submissions) { Hash.new }
+
+
       it 'does not do the thing' do
-        # expect subject.send(:submissions_graded?).to be
+        unit_submissions[cm] = [Submission.create]
+        allow(subject).to receive(:unit_submissions).and_return(unit_submissions)
+        expect(subject.send(:submissions_graded?, cm, 54)).to eq nil
       end
     end
   end
