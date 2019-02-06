@@ -52,7 +52,14 @@ describe UnitsService::Commands::GetUnitGrades do
     context "student has no graded submissions" do
       it 'does not do the thing' do
         unit_submissions[cm] = [Submission.create]
-        expect(subject.send(:submissions_graded?, cm, 54)).to eq nil
+        expect(subject.send(:submissions_graded?, cm, 0)).to eq nil
+      end
+    end
+
+    context "student has graded submissions from zerograder" do
+      it 'does not do the thing' do
+        unit_submissions[cm] = [Submission.create(score: 0, graded_at: current_time, grader_id: 1)]
+        expect(subject.send(:submissions_graded?, cm, 0)).to eq nil
       end
     end
   end
