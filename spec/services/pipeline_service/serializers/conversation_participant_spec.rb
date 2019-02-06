@@ -9,7 +9,7 @@ describe PipelineService::Serializers::ConversationParticipant do
     expect(subject.call).to include( "id" => conversation_participant_model.id )
   end
 
-  it '#additional_identifers' do
-    expect(subject.additional_identifers).to include( conversation_id: conversation_participant_model.conversation_id)
+  it '#additional_identifiers' do
+    expect(subject.additional_identifiers).to include( conversation_id: conversation_participant_model.conversation_id)
   end
 end

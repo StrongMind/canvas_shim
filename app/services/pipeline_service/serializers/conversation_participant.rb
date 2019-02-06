@@ -9,7 +9,7 @@ module PipelineService
         CanvasShim::ConversationParticipantJSONBuilder.call(id: conversation_participant.id)
       end
 
-      def additional_identifers
+      def additional_identifiers
         { conversation_id: @conversation_participant.conversation_id }
       end
 
