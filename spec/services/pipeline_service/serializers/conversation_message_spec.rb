@@ -3,15 +3,9 @@ describe PipelineService::Serializers::ConversationMessage do
 
   subject { described_class.new(object: conversation_message_model) }
 
-  let(:conversation_message_model) { ConversationMessage.create!(conversation: Conversation.create!) }
+  let(:conversation_message_model) { ConversationMessage.create! }
 
-  it 'Return an attribute hash of the noun' do
-    expect(subject.call).to include( { 'id' => conversation_message_model.id } )
-  end
-
-  it 'has the conversation message' do
-    expect(subject.additional_identifiers).to eq(
-      conversation_id: conversation_message_model.conversation_id
-    )
+  it 'Return a json hash of the noun' do
+    expect(JSON.parse(subject.call)).to include( { 'id' => conversation_message_model.id } )
   end
 end

@@ -3,7 +3,7 @@ describe PipelineService::Serializers::Conversation do
   subject { described_class.new(object: conversation_model) }
   let(:conversation_model) { Conversation.create }
 
-  it 'returns an attribute hash for the noun' do
-    expect(subject.call).to eq( { "id" => conversation_model.id } )
+  it 'calls the canvas api for a conversation' do
+    expect(subject.call).to eq( { id: conversation_model.id }.to_json )
   end
 end

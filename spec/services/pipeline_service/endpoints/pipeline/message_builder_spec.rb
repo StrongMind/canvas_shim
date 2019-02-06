@@ -62,16 +62,16 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
     end
 
 
-    it '#additional_identifiers' do
+    it '#identifiers' do
       expect(message[:identifiers][:id]).to eq 1
     end
 
     context "when there are additional identifiers in the serializer" do
       let(:serializer_instance) do
-        double('serializer_instance', call: nil, additional_identifiers: { course_id: 2 })
+        double('serializer_instance', call: nil, identifiers: { course_id: 2 })
       end
 
-      it 'includes the additional_identifiers in the message' do
+      it 'includes the identifiers in the message' do
         expect(message[:identifiers][:course_id]).to eq 2
       end
     end

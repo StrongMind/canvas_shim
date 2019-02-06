@@ -4,7 +4,7 @@ ActiveRecord::Base.include_root_in_json = true
 
 module ActiveRecord
   class Base
-    def as_json(options={})
+    def to_json(options={})
       options[:root] = options[:include_root] if options.has_key? :include_root
       super(options)
     end
