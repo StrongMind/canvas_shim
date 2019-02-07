@@ -3,10 +3,13 @@ describe PipelineService::Serializers::ConversationParticipant do
 
   subject { described_class.new(object: conversation_participant_model) }
 
-  let(:conversation_participant_model) { ConversationParticipant.create }
-  let(:api_instance) { double('api_instance') }
+  let(:conversation_participant_model) { ConversationParticipant.create(conversation: Conversation.create) }
 
-  it 'calls the canvas api for a conversation_participant' do
-    expect(JSON.parse(subject.call)).to include( "id" => conversation_participant_model.id )
+  it 'Return a json hash of the noun' do
+    expect(subject.call).to include( "id" => conversation_participant_model.id )
+  end
+
+  it '#additional_identifiers' do
+    expect(subject.additional_identifiers).to include( conversation_id: conversation_participant_model.conversation_id)
   end
 end

@@ -72,6 +72,6 @@ describe PipelineService::Serializers::Submission do
 
   it 'provides additional identifiers' do
     subject.call
-    expect(subject.identifiers).to eq(course_id: course.id, assignment_id: assignment.id )
+    expect(subject.additional_identifiers).to eq(course_id: course.id, assignment_id: assignment.id )
   end
 end
