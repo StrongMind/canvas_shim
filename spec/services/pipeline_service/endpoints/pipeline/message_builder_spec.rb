@@ -83,7 +83,23 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
           id: 1,
           changes: {},
           class: 'Enrollment',
-          state: 'deleted'
+          state: :deleted
+        )
+      end
+
+      it 'sends an empty data field in the message' do
+        expect(message[:data]).to eq({})
+      end
+    end
+
+    context "when a worflow state is deleted" do
+      let(:object) do
+        double(
+          'object',
+          id: 1,
+          changes: {},
+          class: 'Enrollment',
+          workflow_state: 'deleted'
         )
       end
 

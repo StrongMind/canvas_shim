@@ -62,7 +62,7 @@ module PipelineService
         end
 
         def data
-          return {} if object.try(:state) == 'deleted'
+          return {} if object.try(:state) == :deleted || object.try(:workflow_state) == 'deleted'
           serialized_object
         end
 
