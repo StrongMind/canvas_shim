@@ -28,7 +28,7 @@ module PipelineService
         end
 
         def serializer_instance
-          serializer.new(object: object)
+          @serializer_instance ||= serializer.new(object: object)
         end
 
         def log

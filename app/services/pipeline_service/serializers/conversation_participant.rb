@@ -15,7 +15,7 @@ module PipelineService
 
       private
 
-      attr_reader :conversation_participant, :api_client
+      attr_reader :conversation_participant
     end
   end
 end
