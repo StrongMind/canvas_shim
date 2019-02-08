@@ -10,6 +10,7 @@ describe PipelineService::Serializers::ConversationParticipant do
   end
 
   it '#additional_identifiers' do
-    expect(subject.additional_identifiers).to include( conversation_id: conversation_participant_model.conversation_id)
+    subject.call
+    expect(subject.additional_identifiers).to include( 'conversation_id' => conversation_participant_model.conversation_id)
   end
 end
