@@ -6,4 +6,9 @@ describe PipelineService::Serializers::Conversation do
   it 'returns an attribute hash for the noun' do
     expect(subject.call).to eq( { "id" => conversation_model.id } )
   end
+
+  it 'returns an empty hash if the conversation can not be found' do
+    conversation_model.destroy
+    expect(subject.call).to eq( {} )
+  end
 end

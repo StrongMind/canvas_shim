@@ -6,7 +6,7 @@ module PipelineService
       end
 
       def call
-        CanvasShim::ConversationJSONBuilder.call(id: conversation.id)
+        Builders::ConversationJSONBuilder.call(conversation)
       end
 
       private

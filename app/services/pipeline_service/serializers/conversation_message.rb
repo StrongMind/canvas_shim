@@ -6,11 +6,11 @@ module PipelineService
       end
 
       def call
-        CanvasShim::ConversationMessageJSONBuilder.call(id: conversation_message.id)
+        @payload = Builders::ConversationMessageJSONBuilder.call(conversation_message) || {}
       end
 
       def additional_identifiers
-        { conversation_id: @conversation_message.conversation_id }
+        Helpers::AdditionalIdentifiers.call(payload: @payload, fields: [:conversation_id])
       end
 
       private
