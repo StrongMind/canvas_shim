@@ -3,5 +3,5 @@ class ConversationMessage < ApplicationRecord
   belongs_to :conversation
   belongs_to :author, :class_name => 'User'
 
-  after_save { PipelineService.publish(self) }
+  after_commit { PipelineService.publish(self) }
 end

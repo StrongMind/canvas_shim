@@ -80,8 +80,8 @@ module PipelineService
         end
 
         def id
-          return object.id unless object.is_a?(Hash)
-          object[:id]
+          return object[:id] if object.is_a?(Hash)
+          return object.id
         end
       end
     end

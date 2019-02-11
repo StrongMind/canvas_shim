@@ -32,7 +32,6 @@ module PipelineService
         @queue         = @args[:queue] || Delayed::Job
       end
 
-
       def subscriptions
         Events::Subscription.new(
           event: 'graded_out',
@@ -42,11 +41,18 @@ module PipelineService
 
       def command
         command_class.new(
-          object: object,
+          object: get_noun,
           event_subscriptions: subscriptions,
           noun: noun,
           changes: changes
         )
+      end
+
+      private
+
+      def get_noun
+        return object unless object.destroyed?
+        Helpers::DeletedNoun.new(object)
       end
     end
   end
