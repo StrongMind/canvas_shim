@@ -41,11 +41,11 @@ describe PipelineService::API::Publish do
   context 'publishes deleted records' do
     include_context 'pipeline_context'
     let(:conversation) { double('conversation', destroyed?: true) }  
-    let(:deleted_noun_class) { PipelineService::Helpers::DeletedNoun }
+    let(:deleted_noun_class) { PipelineService::Models::Noun }
     let(:deleted_noun_instance) { double('deleted_noun_instance') }
 
     before do
-      allow(PipelineService::Helpers::DeletedNoun)
+      allow(PipelineService::Models::Noun)
         .to receive(:new)
         .and_return(deleted_noun_instance)
     end

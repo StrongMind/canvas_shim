@@ -52,7 +52,7 @@ module PipelineService
 
       def get_noun
         return object unless object.destroyed?
-        Helpers::DeletedNoun.new(object)
+        Models::Noun.new(object)
       end
     end
   end
