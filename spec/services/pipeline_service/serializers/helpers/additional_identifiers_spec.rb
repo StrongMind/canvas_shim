@@ -1,4 +1,4 @@
-describe PipelineService::Serializers::Helpers::AdditionalIdentifiers do
+describe PipelineService::Helpers::AdditionalIdentifiers do
     subject { described_class }
 
     let(:payload) { { 'conversation_id' => 1 } }
