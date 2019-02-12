@@ -21,7 +21,7 @@ module PipelineService
 
         private
 
-        attr_reader :message_class, :object, :fetcher, :serializer, :canvas_domain, :logger, :serialized_object
+        attr_reader :message_class, :object, :serializer, :canvas_domain, :logger, :serialized_object
 
         def serialize
           @serialized_object = serializer_instance.call
@@ -37,7 +37,7 @@ module PipelineService
 
         def payload
           {
-            noun: noun,
+            noun: noun.downcase,
             meta: {
               source: SOURCE,
               domain_name: canvas_domain,
@@ -56,19 +56,18 @@ module PipelineService
         end
 
         def configure_dependencies
-          @fetcher       = @args[:fetcher] || Serializers::Fetcher
           @logger        = @args[:logger] || PipelineService::Logger
           @canvas_domain = ENV['CANVAS_DOMAIN']
         end
 
         def data
-          return {} if object.try(:state) == :deleted || object.try(:workflow_state) == 'deleted'
+          return {} if object.destroyed?
           serialized_object
         end
 
         def fetch_serializer
           return if @serializer
-          @serializer = fetcher.fetch(object: object)
+          @serializer = object.serializer
         end
 
         def build
@@ -76,7 +75,7 @@ module PipelineService
         end
 
         def noun
-          object.class.to_s.split('::').last.underscore
+          object.name
         end
 
         def id

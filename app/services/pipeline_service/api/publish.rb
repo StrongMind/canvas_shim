@@ -41,18 +41,11 @@ module PipelineService
 
       def command
         command_class.new(
-          object: get_noun,
+          object: Models::Noun.new(object),
           event_subscriptions: subscriptions,
           noun: noun,
           changes: changes
         )
-      end
-
-      private
-
-      def get_noun
-        return object unless object.destroyed?
-        Models::Noun.new(object)
       end
     end
   end

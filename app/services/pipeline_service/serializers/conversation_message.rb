@@ -10,7 +10,10 @@ module PipelineService
       end
 
       def additional_identifiers
-        Helpers::AdditionalIdentifiers.call(payload: @payload, fields: [:conversation_id])
+        Helpers::AdditionalIdentifiers.call(
+          payload: @payload, 
+          fields: [:conversation_id]
+        )
       end
 
       private
