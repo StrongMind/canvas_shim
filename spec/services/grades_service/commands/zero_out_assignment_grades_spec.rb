@@ -5,7 +5,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       "assignment",
       grade_student: nil,
       published?: true,
-      due_at: 1.hour.ago,
+      due_at: nil,
       context: course,
       mute!: nil,
       unmute!: nil
@@ -32,7 +32,8 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       workflow_state: 'unsubmitted',
       score: nil,
       grade: nil,
-      grader: nil
+      grader: nil,
+      cached_due_date: 1.hour.ago
     )
   end
 
@@ -72,8 +73,8 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
     end
 
     context 'will not grade' do
-      it 'when there is no due date on the assignment' do
-        allow(assignment).to receive(:due_at).and_return(nil)
+      it 'when there is no due date on the submission' do
+        allow(submission).to receive(:cached_due_date).and_return(nil)
         expect(assignment).to_not receive(:grade_student)
         subject.call!(log_file: 'logfile')
       end
