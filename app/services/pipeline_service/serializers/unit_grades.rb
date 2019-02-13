@@ -2,9 +2,9 @@ module PipelineService
   module Serializers
     class UnitGrades
       def initialize(object:)
-        @course = object.course
-        @student = object.student
-        @submission = object.submission
+        @submission = ::Submission.find(object.id)
+        @course = @submission.course
+        @student = @submission.user
       end
 
       def call

@@ -3,9 +3,9 @@ module PipelineService
     class ConversationParticipantJSONBuilder < ActiveRecord::Base
       self.table_name = "conversation_participants"
 
-      def self.call(active_record_object)
+      def self.call(noun)
         # Dont include root.  See active record initializer
-        Queries::FindByID.query(active_record_object)
+        Queries::FindByID.query(noun)
       end
     end
   end

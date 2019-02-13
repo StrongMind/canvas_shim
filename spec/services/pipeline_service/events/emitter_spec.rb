@@ -14,14 +14,20 @@ describe PipelineService::Events::Emitter do
     allow(subject).to receive(:events).and_return({ grade_changed: event_class })
   end
 
-
-  subject { described_class.new(object: object, responder: responder_class) }
+  subject { described_class.new(object: PipelineService::Models::Noun.new(object), responder: responder_class) }
 
   context 'unhandled noun' do
     class UnhandledNoun
+      def id
+        1
+      end
+
+      def destroyed?
+        false
+      end
     end
 
-    let(:object) { UnhandledNoun.new }
+    let(:object) { PipelineService::Models::Noun.new(UnhandledNoun.new) }
     before do
       allow(subject).to receive(:serializer).and_return(nil)
     end
@@ -44,8 +50,6 @@ describe PipelineService::Events::Emitter do
   end
 
   context 'grade_changed_event' do
-    let(:object) { Submission.new }
-
     describe '#call' do
       it 'emits an event' do
         expect(event).to receive(:emit)

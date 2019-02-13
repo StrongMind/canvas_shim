@@ -4,17 +4,21 @@ module PipelineService
       attr_reader :id, :name, :object
       
       def initialize(object)
-          @id = object.id
-          @name = object.class.to_s.split('::').last
-          @destroyed = object.try(:state) == :deleted || object.try(:workflow_state) == 'deleted' || object.destroyed?
+        @id = object.id
+        @name = object.class.to_s
+        @destroyed = object.try(:state) == :deleted || object.try(:workflow_state) == 'deleted' || object.destroyed?
       end
 
       def destroyed?
         @destroyed
       end
 
+      def noun_class
+        name.constantize
+      end
+
       def serializer
-          case name
+          case name.split('::').last
           when /Enrollment/
             PipelineService::Serializers::Enrollment
           else

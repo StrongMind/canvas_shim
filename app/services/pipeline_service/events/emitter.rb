@@ -46,7 +46,7 @@ module PipelineService
       end
 
       def fetch_serializer
-        @serializer = case object
+        @serializer = case object.noun_class
         when PipelineService::Nouns::UnitGrades
           Serializers::UnitGrades
         when Enrollment
@@ -55,6 +55,7 @@ module PipelineService
       end
 
       def build_message
+        return {} if object.destroyed?
         @message = serializer.new(object: object).call
       end
 

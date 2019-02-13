@@ -32,6 +32,13 @@ describe PipelineService::Models::Noun do
         end
     end
 
+    describe '#noun_class' do
+        it 'returns an active record class so we can query' do
+            expect(conversation_noun.noun_class).to eq Conversation
+        end
+    end
+
+
     describe '#serializer' do
         it 'Conversations' do
             expect(conversation_noun.serializer).to eq PipelineService::Serializers::Conversation

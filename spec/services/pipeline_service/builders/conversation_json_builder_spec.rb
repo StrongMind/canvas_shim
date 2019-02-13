@@ -4,8 +4,9 @@ describe PipelineService::Builders::ConversationJSONBuilder do
     include_context('pipeline_context')
 
     let!(:ar_object) { c = Conversation.create; c.destroy }
+    let(:noun) { PipelineService::Models::Noun.new(ar_object) }
   
     it "Return empty hash body if the record can't be found" do
-      expect(subject.call(ar_object)).to eq({})
+      expect(subject.call(noun)).to eq({})
     end
 end
