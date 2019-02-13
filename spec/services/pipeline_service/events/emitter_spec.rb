@@ -25,6 +25,10 @@ describe PipelineService::Events::Emitter do
       def destroyed?
         false
       end
+
+      def changes
+        {}
+      end
     end
 
     let(:object) { PipelineService::Models::Noun.new(UnhandledNoun.new) }
