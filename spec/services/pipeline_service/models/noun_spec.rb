@@ -8,9 +8,12 @@ describe PipelineService::Models::Noun do
     let(:deleted_conversation_noun) { described_class.new(deleted_conversation) }
     let(:teacher_enrollment_noun) { described_class.new(teacher_enrollment) }
 
+    let(:changes) { {'workflow_state' => ['active', 'completed']} }
+
     before do
         allow(deleted_conversation).to receive('workflow_state').and_return 'deleted'
         allow(deleted_conversation).to receive('state').and_return 'deleted'
+        allow(conversation).to receive(:changes).and_return(changes)
         class_double("PipelineService::Serializers::Enrollment").as_stubbed_const
     end
 
@@ -23,6 +26,12 @@ describe PipelineService::Models::Noun do
     describe '#id' do
         it 'uses the passed in object id' do
             expect(conversation_noun.id).to eq conversation.id
+        end
+    end
+
+    describe '#changes' do
+        it 'uses the passed in object changes' do
+            expect(conversation_noun.changes).to eq changes
         end
     end
 

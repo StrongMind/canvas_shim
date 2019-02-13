@@ -1,11 +1,12 @@
 module PipelineService
   module Models
     class Noun
-      attr_reader :id, :name, :object
+      attr_reader :id, :name, :object, :changes
       
       def initialize(object)
         @id = object.id
         @name = object.class.to_s
+        @changes = object.changes
         @destroyed = object.try(:state) == :deleted || object.try(:workflow_state) == 'deleted' || object.destroyed?
       end
 
