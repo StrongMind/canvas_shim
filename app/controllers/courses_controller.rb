@@ -8,7 +8,7 @@ class CoursesController
     end
   end
 
-   def conclude_users
+  def conclude_users
     get_context
     if @current_user && @current_user.can_create_enrollment_for?(@context, session, "TeacherEnrollment")
       begin
@@ -31,7 +31,7 @@ class CoursesController
     end
   end
 
-   def _conclude_user(id)
+  def _conclude_user(id)
     @enrollment = @context.enrollments.find(id)
 
      if @enrollment.can_be_concluded_by(@current_user, @context, session)
