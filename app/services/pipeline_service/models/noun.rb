@@ -7,7 +7,7 @@ module PipelineService
         @id = object.id
         @name = object.class.to_s
         @changes = object.changes
-        @destroyed = object.try(:state) == :deleted || object.try(:workflow_state) == 'deleted' || object.destroyed?
+        @destroyed = object.try(:state) == :deleted || object.try(:workflow_state) == 'deleted' || object.try(:destroyed?)
       end
 
       def destroyed?
@@ -19,12 +19,18 @@ module PipelineService
       end
 
       def serializer
-          case name.split('::').last
+          case short_class_name
           when /Enrollment/
             PipelineService::Serializers::Enrollment
           else
-            "PipelineService::Serializers::#{name}".constantize
+            "PipelineService::Serializers::#{short_class_name}".constantize
           end
+      end
+
+      private
+
+      def short_class_name
+        name.split('::').last
       end
     end
   end

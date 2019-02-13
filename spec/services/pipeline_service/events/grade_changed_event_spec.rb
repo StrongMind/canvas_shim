@@ -1,8 +1,10 @@
 describe PipelineService::Events::GradeChangedEvent do
   describe '#emit' do
-    let(:subscription) { double(:subscription, responder: responder) }
+    let(:subscription) { double(:subscription, responder: responder, id: 1, changes: {}) }
     let(:responder) { double(:responder, call: nil) }
-    let(:object) { double('UnitGrades') }
+    let(:submission) { 
+      double('submission', assignment: double('assignment', course: double('course')), user: double('user'), id: 1, changes: {} ) }
+    let(:object) { PipelineService::Models::Noun.new(PipelineService::Nouns::UnitGrades.new(submission)) }
     let(:changes) { {'score' => 10} }
 
 
