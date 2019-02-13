@@ -13,6 +13,6 @@ describe PipelineService::Serializers::ConversationParticipant do
 
   it '#additional_identifiers' do
     subject.call
-    expect(subject.additional_identifiers).to include( 'conversation_id' => 5)
+    expect(subject.additional_identifiers).to include('conversation_id' => 5)
   end
 end
