@@ -34,7 +34,7 @@ class CoursesController
   def _conclude_user(id)
     @enrollment = @context.enrollments.find(id)
 
-     if @enrollment.can_be_concluded_by(@current_user, @context, session)
+    if @enrollment.can_be_concluded_by(@current_user, @context, session)
       @enrollment.conclude
     else
       authorized_action(@context, @current_user, :permission_fail)
