@@ -11,3 +11,4 @@ spec/test_app/tmp/
 test.log
 *.gem
 .env
+.env.*
