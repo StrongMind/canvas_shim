@@ -9,7 +9,6 @@ module PipelineService
       def initialize(object, args={})
         @object = object
         @changes = object.try(:changes)
-        @noun = args[:noun]
         @args = args
         configure_dependencies
       end
@@ -25,7 +24,7 @@ module PipelineService
 
       private
 
-      attr_reader :object, :jobs, :command_class, :queue, :noun, :changes
+      attr_reader :object, :jobs, :command_class, :queue :changes
 
       def configure_dependencies
         @command_class = @args[:command_class] || Commands::Publish
@@ -43,7 +42,6 @@ module PipelineService
         command_class.new(
           object: Models::Noun.new(object),
           event_subscriptions: subscriptions,
-          noun: noun,
           changes: changes
         )
       end

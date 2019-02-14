@@ -44,7 +44,7 @@ module PipelineService
               api_version: 1,
               status: object.try(:state)
             },
-            identifiers: { id: id }.merge(additional_identifiers),
+            identifiers: { id: object.id }.merge(additional_identifiers),
             data: data
           }
         end
@@ -76,11 +76,6 @@ module PipelineService
 
         def noun_name
           object.name.underscore
-        end
-
-        def id
-          return object[:id] if object.is_a?(Hash)
-          return object.id
         end
       end
     end
