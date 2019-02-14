@@ -45,31 +45,38 @@ describe "Playground" do
         end
 
         it 'enrollment' do
+            expect(PipelineService::HTTPClient).to receive(:post)
             PipelineService.publish(enrollment)
         end
 
 
         it 'conversation message' do
+            expect(PipelineService::HTTPClient).to receive(:post)
             PipelineService.publish(conversation_message)
         end
         
         it 'conversation participant' do
+            expect(PipelineService::HTTPClient).to receive(:post)
             PipelineService.publish(conversation_participant)
         end
 
         it 'conversation' do
+            expect(PipelineService::HTTPClient).to receive(:post)
             PipelineService.publish(conversation)
         end
 
         it 'submission' do
+            expect(PipelineService::HTTPClient).to receive(:post)
             PipelineService.publish(conversation)
         end
 
         it 'unit_grades' do
+            expect(PipelineService::HTTPClient).to receive(:post)
             PipelineService.publish(unit_grades)
         end
 
         it 'user' do
+            expect(PipelineService::HTTPClient).to receive(:post)
             PipelineService.publish(user)
         end
     end

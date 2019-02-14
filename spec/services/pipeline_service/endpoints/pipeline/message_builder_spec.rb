@@ -34,8 +34,19 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
   let(:message) { subject.call }
 
   describe "#message" do
-    it '#noun' do
-      expect(message[:noun]).to eq('enrollment')
+    context 'Conversation Participant' do
+      subject do
+        described_class.new(
+          id: 1,
+          object: PipelineService::Models::Noun.new(ConversationParticipant.new)
+        )
+      end
+      
+      describe '#noun' do
+        it 'should use an underscored version of the noun' do
+          expect(message[:noun]).to eq('conversation_participant')
+        end
+      end
     end
 
     describe '#meta' do

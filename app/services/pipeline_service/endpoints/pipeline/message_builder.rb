@@ -37,7 +37,7 @@ module PipelineService
 
         def payload
           {
-            noun: noun.downcase,
+            noun: noun_name,
             meta: {
               source: SOURCE,
               domain_name: canvas_domain,
@@ -74,8 +74,8 @@ module PipelineService
           payload.to_hash
         end
 
-        def noun
-          object.name
+        def noun_name
+          object.name.underscore
         end
 
         def id
