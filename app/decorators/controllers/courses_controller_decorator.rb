@@ -1,4 +1,5 @@
-class CoursesController
+CoursesController.class_eval do
+
   helper_method :enrollment_name
 
   def show_course_enrollments

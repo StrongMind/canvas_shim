@@ -1,4 +1,4 @@
-class User
+User.class_eval do
   def get_teacher_unread_discussion_topics(course)
     topic_microservice_endpoint = ENV['TOPIC_MICROSERVICE_ENDPOINT']
     api_key = ENV['TOPIC_MICROSERVICE_API_KEY']

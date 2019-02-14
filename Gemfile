@@ -20,3 +20,5 @@ gem 'pg'
 gem 'faker'
 gem "rails", "~> 5.0.4"
 gem 'dotenv-rails'
+gem 'pry-byebug'
+gem 'decorators'
