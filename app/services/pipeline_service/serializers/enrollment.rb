@@ -26,11 +26,12 @@ module PipelineService
         @params = {}
         @request = OpenStruct.new
         @object = object
+        @enrollment = ::Enrollment.find(object.id)
         @admin = account_admin
       end
 
       def call
-        enrollment_json(@object, @admin, {})
+        enrollment_json(@enrollment, @admin, {})
       end
     end
   end

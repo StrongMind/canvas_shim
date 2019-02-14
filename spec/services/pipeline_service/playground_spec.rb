@@ -40,6 +40,7 @@ describe "Playground" do
         let(:conversation) { Conversation.create }
         
         it 'assignment' do
+            expect(PipelineService::HTTPClient).to receive(:post)
             PipelineService.publish(assignment)
         end
 

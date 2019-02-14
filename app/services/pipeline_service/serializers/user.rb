@@ -20,6 +20,7 @@ module PipelineService
         @params = {}
         @request = OpenStruct.new
         @object = object
+        @user = ::User.find(object.id)
         @admin = account_admin
       end
 
@@ -30,7 +31,7 @@ module PipelineService
       end
 
       def call
-        user_json(@object, @admin, {})
+        user_json(@user, @admin, {})
       end
     end
   end
