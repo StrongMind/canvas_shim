@@ -27,7 +27,7 @@ describe "Playground" do
         end
 
         it 'Publishes enrollment grade out events for SIS' do
-            allow(submission).to receive(:changes).and_return( { 'score' => [10, 15]} )
+            allow(submission).to receive(:changes).and_return( { 'score' => [10, 15] } )
             expect(PipelineService::Events::HTTPClient).to receive(:post).with('unit_grade_endpoint?apiKey=unit_grade_key', any_args)
             PipelineService.publish(PipelineService::Nouns::UnitGrades.new(submission))
         end

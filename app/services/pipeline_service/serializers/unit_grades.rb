@@ -3,7 +3,7 @@ module PipelineService
     class UnitGrades
       def initialize(object:)
         @submission = ::Submission.find(object.id)
-        @course = @submission.course
+        @course = @submission.assignment.course
         @student = @submission.user
       end
 
