@@ -24,7 +24,7 @@ module PipelineService
 
       private
 
-      attr_reader :object, :jobs, :command_class, :queue :changes
+      attr_reader :object, :jobs, :command_class, :queue, :changes
 
       def configure_dependencies
         @command_class = @args[:command_class] || Commands::Publish
