@@ -258,6 +258,7 @@ DEPENDENCIES
   dotenv-rails
   faker
   pg
+  pry
   pry-byebug
   pry-rails
   rails (~> 5.0.4)
