@@ -3,7 +3,7 @@ module PipelineService
     class Assignment
       def initialize(object:)
         @object = ::Assignment.find(object.id)
-        @course_id = @object.course_id
+        @course_id = @object.course.id
       end
 
       def call

@@ -4,9 +4,11 @@ describe PipelineService::Queries::FindByID do
     subject { described_class }
     let(:conversation) { Conversation.create }
     let(:noun) { PipelineService::Models::Noun.new(conversation) }
+    let(:builder)  {PipelineService::Builders::ConversationJSONBuilder}
     
     it 'returns a ruby hash of the object' do
-        expect(subject.query(noun))
+        expect(subject
+            .query(builder, noun))
             .to eq(conversation.as_json(include_root: false))
     end
 end
