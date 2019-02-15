@@ -75,7 +75,7 @@ module PipelineService
         end
 
         def noun_name
-          object.name.underscore
+          object.name
         end
       end
     end

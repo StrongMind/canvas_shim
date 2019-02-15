@@ -1,11 +1,11 @@
 module PipelineService
   module Models
     class Noun
-      attr_reader :id, :name, :object, :changes
+      attr_reader :id, :name, :changes, :noun_class
       
       def initialize(object)
         @id = object.id
-        @name = object.class.to_s
+        @noun_class = object.class
         @changes = object.changes
         @destroyed = object.try(:state) == :deleted || object.try(:workflow_state) == 'deleted' || object.try(:destroyed?)
       end
@@ -14,9 +14,10 @@ module PipelineService
         @destroyed
       end
 
-      def noun_class
-        name.constantize
+      def name
+        short_class_name.underscore
       end
+
 
       def serializer
           case short_class_name
@@ -30,7 +31,7 @@ module PipelineService
       private
 
       def short_class_name
-        name.split('::').last
+        @noun_class.to_s.split('::').last
       end
     end
   end

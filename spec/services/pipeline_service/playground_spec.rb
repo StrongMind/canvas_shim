@@ -9,8 +9,8 @@ describe "Playground" do
     let(:unit_grades) { PipelineService::Nouns::UnitGrades.new(submission) }
 
     before do
-        allow(PipelineService::Events::HTTPClient).to receive(:post)
         allow(PipelineService::HTTPClient).to receive(:post)
+        allow(PipelineService::Events::HTTPClient).to receive(:post)
         allow(enrollment).to receive(:changes).and_return({'workflow_state' => ['active', 'completed']})
         allow(Pandarus::Client).to receive(:new).and_return(api_client)
         

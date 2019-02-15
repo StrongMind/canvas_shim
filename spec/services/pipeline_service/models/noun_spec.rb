@@ -2,11 +2,15 @@ describe PipelineService::Models::Noun do
     include_context('pipeline_context')
 
     let(:conversation) { Conversation.create }
+    let(:submission) { Submission.create(assignment: assignment) }
+    let(:assignment) { Assignment.create }
     let(:deleted_conversation) { Conversation.create() }
     let(:teacher_enrollment) { TeacherEnrollment.new}
     let(:conversation_noun) { described_class.new(conversation) }
     let(:deleted_conversation_noun) { described_class.new(deleted_conversation) }
     let(:teacher_enrollment_noun) { described_class.new(teacher_enrollment) }
+    let(:unit_grades) { PipelineService::Nouns::UnitGrades.new(submission) }
+    let(:unit_grades_noun) { described_class.new(unit_grades) }
 
     let(:changes) { {'workflow_state' => ['active', 'completed']} }
 
@@ -19,7 +23,7 @@ describe PipelineService::Models::Noun do
 
     describe '#name' do
         it 'uses the passed in class name as the name' do
-            expect(conversation_noun.name).to eq conversation.class.to_s
+            expect(unit_grades_noun.name).to eq 'unit_grades'
         end
     end
 
