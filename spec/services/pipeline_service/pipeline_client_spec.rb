@@ -3,10 +3,11 @@ describe PipelineService::PipelineClient do
   let(:endpoint_class) { double('endpoint_class', new: endpoint_instance) }
   let(:logger_class) { double('logger_class', new: logger_instance) }
   let(:logger_instance) { double('logger_class', call: nil) }
+  let(:enrollment) { Enrollment.create }
 
   subject do
     described_class.new(
-      object: Enrollment.new,
+      object: PipelineService::Models::Noun.new(enrollment),
       noun: '',
       id: 1,
       endpoint: endpoint_class,

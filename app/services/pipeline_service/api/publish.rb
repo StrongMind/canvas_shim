@@ -10,7 +10,8 @@ module PipelineService
         @object = object
         @changes = object.try(:changes)
         @args = args
-        configure_dependencies
+        @command_class = @args[:command_class] || Commands::Publish
+        @queue         = @args[:queue] || Delayed::Job
       end
 
       def call
@@ -18,6 +19,7 @@ module PipelineService
         queue.enqueue(self, priority: 1000000)
       end
 
+      # Perform method automatically gets called by the queue
       def perform
         command.call
       end
@@ -26,22 +28,9 @@ module PipelineService
 
       attr_reader :object, :jobs, :command_class, :queue, :changes
 
-      def configure_dependencies
-        @command_class = @args[:command_class] || Commands::Publish
-        @queue         = @args[:queue] || Delayed::Job
-      end
-
-      def subscriptions
-        Events::Subscription.new(
-          event: 'graded_out',
-          responder: Events::Responders::SIS
-        )
-      end
-
       def command
         command_class.new(
           object: Models::Noun.new(object),
-          event_subscriptions: subscriptions,
           changes: changes
         )
       end

@@ -12,13 +12,13 @@ module PipelineService
         @args       = args
         @object     = args[:object]
         @changes    = args[:changes]
-        configure_dependencies
+        @client     = @args[:client] || PipelineClient
       end
 
       def call
-        return if SettingsService.get_settings(object: :school, id: 1)['disable_pipeline']
+        return if disabled?
         post_to_pipeline
-        publish_events unless changes.nil?
+        publish_events
         self
       end
 
@@ -26,11 +26,12 @@ module PipelineService
 
       attr_reader :object, :client, :responder, :changes
 
-      def configure_dependencies
-        @client     = @args[:client] || PipelineClient
+      def disabled?
+        SettingsService.get_settings(object: :school, id: 1)['disable_pipeline']
       end
 
       def publish_events
+        return if changes.nil?
         Commands::PublishEvents.new(@args).call
       end
 

@@ -10,7 +10,7 @@ module PipelineService
     def initialize(args)
       @args = args
       @object = args[:object]
-      configure_dependencies
+      @endpoint = args[:endpoint] || pipeline_endpoint 
     end
 
     def call
@@ -22,8 +22,8 @@ module PipelineService
 
     attr_reader :endpoint, :object
 
-    def configure_dependencies
-      @endpoint = @args[:endpoint] || Endpoints::Pipeline
+    def pipeline_endpoint
+      Endpoints::Pipeline
     end
 
     def post
