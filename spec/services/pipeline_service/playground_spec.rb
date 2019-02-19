@@ -33,6 +33,28 @@ describe "Playground" do
         end
     end
 
+    context do
+        xit do 
+            c = Conversation.create!
+            PipelineService.publish(ConversationMessage.last)
+            PipelineService.publish(ConversationParticipant.last)
+            PipelineService.publish(Enrollment.last)
+
+            User.all.each do |u|
+                if !u.pseudonyms.empty? && !u.submissions.empty?
+                    @submission = u.submissions.last
+                    @user = u
+                    break
+                end
+            end
+
+            PipelineService.publish(@submission)
+            PipelineService.publish(PipelineService::Nouns::UnitGrades.new(@submission))
+            PipelineService.publish(@user)
+            c.destroy
+        end
+    end
+
     context 'nouns' do
         let(:assignment) { Assignment.create(course: course) }
         let(:conversation_message) { ConversationMessage.create }
