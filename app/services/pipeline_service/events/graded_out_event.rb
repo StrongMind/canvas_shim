@@ -18,8 +18,7 @@ module PipelineService
       attr_accessor :subscription, :object, :changes
 
       def should_trigger?
-
-        return unless object.noun_class == ::Enrollment
+        return unless object.noun_class == ::StudentEnrollment
         recently_completed?
       end
 

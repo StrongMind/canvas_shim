@@ -1,7 +1,7 @@
 describe "Playground" do
     let(:api_client) { double('client', get_single_submission_courses: nil) }
     let!(:user) { User.create }    
-    let(:enrollment) { Enrollment.create(course: course, user: user) }  
+    let(:enrollment) { StudentEnrollment.create(course: course, user: user) }
     let(:course) { Course.create }
     let(:user) { User.create(pseudonym: Pseudonym.create) }
     let(:assignment) { Assignment.create(course: course) }

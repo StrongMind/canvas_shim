@@ -1,20 +1,19 @@
 describe PipelineService::Events::Emitter do
-  let(:object) { Enrollment.new }
-  let(:serializer_class) { double(:serializer_class, new: serializer) }
-  let(:serializer) { double(:serializer) }
+  let(:object) { StudentEnrollment.create }
   let(:responder_class) { double(:responder_class, new: responder) }
   let(:responder) { double(:class) }
   let(:event_class) { double('event_class') }
   let(:event) { double(:event, emit: nil) }
+  let(:noun) { PipelineService::Models::Noun.new(object) }
 
   before do
-    allow(subject).to receive(:serializer).and_return(serializer_class)
-    allow(serializer).to receive(:call).and_return({})
     allow(event_class).to receive(:new).and_return(event)
     allow(subject).to receive(:events).and_return({ grade_changed: event_class })
   end
 
-  subject { described_class.new(object: PipelineService::Models::Noun.new(object), responder: responder_class) }
+  subject do 
+    described_class.new(object: noun, responder: responder_class)
+  end
 
   context 'unhandled noun' do
     class UnhandledNoun
