@@ -64,17 +64,9 @@ ActiveRecord::Schema.define(version: 20190206205358) do
     t.integer "context_module_progression_id"
   end
 
-  create_table "conversation_messages", force: :cascade do |t|
-    t.integer  "author_id"
-    t.integer  "conversation_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-  end
-
   create_table "conversation_participants", force: :cascade do |t|
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.integer  "conversation_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "conversations", force: :cascade do |t|
