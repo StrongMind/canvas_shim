@@ -46,7 +46,7 @@ module GradesService
       end
 
       def late?
-        return @assignment.due_at.present? && 1.hour.ago > @assignment.due_at
+        return @submission.cached_due_date.present? && 1.hour.ago > @submission.cached_due_date
       end
 
       def unscored?
