@@ -1,17 +1,17 @@
 CoursesController.class_eval do
 
-  helper_method :enrollment_name
+  helper_method :enrollment_name, :user_can_conclude_enrollments?
 
   def show_course_enrollments
     get_context
-    unless @current_user && @current_user.can_create_enrollment_for?(@context, session, "TeacherEnrollment")
+    unless user_can_conclude_enrollments?
       authorized_action(@context, @current_user, :permission_fail)
     end
   end
 
   def conclude_users
     get_context
-    if @current_user && @current_user.can_create_enrollment_for?(@context, session, "TeacherEnrollment")
+    if user_can_conclude_enrollments?
       begin
         if grade_out_users_params[:enrollment_ids]
           Enrollment.transaction do
@@ -55,6 +55,11 @@ CoursesController.class_eval do
     when "DesignerEnrollment"
       "Designer"
     end
+  end
+
+  def user_can_conclude_enrollments?
+    sample_enrollment = @context.student_enrollments.first
+    @current_user && sample_enrollment && sample_enrollment.can_be_concluded_by(@current_user, @context, session)
   end
 
   private
