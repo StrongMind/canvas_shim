@@ -3,7 +3,7 @@ describe PipelineService::Helpers::AdditionalIdentifiers do
 
     let(:payload) { { 'conversation_id' => 1 } }
     let(:additional_identifiers) {
-        subject.call(
+        subject.from_payload(
             payload: payload, 
             fields: [:conversation_id]
         )
@@ -15,7 +15,7 @@ describe PipelineService::Helpers::AdditionalIdentifiers do
 
     context 'empty payload' do
         let(:additional_identifiers) {
-            subject.call(
+            subject.from_payload(
                 payload: {}, 
                 fields: [:foo]
             )

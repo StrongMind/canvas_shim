@@ -1,3 +1,18 @@
+    class UnhandledNoun
+      def id
+        1
+      end
+
+      def destroyed?
+        false
+      end
+
+      def changes
+        {}
+      end
+    end
+
+
 describe PipelineService::Events::Emitter do
   let(:object) { StudentEnrollment.create }
   let(:responder_class) { double(:responder_class, new: responder) }
@@ -16,21 +31,8 @@ describe PipelineService::Events::Emitter do
   end
 
   context 'unhandled noun' do
-    class UnhandledNoun
-      def id
-        1
-      end
-
-      def destroyed?
-        false
-      end
-
-      def changes
-        {}
-      end
-    end
-
-    let(:object) { PipelineService::Models::Noun.new(UnhandledNoun.new) }
+    let(:unhandled_noun) {double('unhandled_noun', id: 1, changes: {})}
+    let(:object) { PipelineService::Models::Noun.new(unhandled_noun) }
     before do
       allow(subject).to receive(:serializer).and_return(nil)
     end

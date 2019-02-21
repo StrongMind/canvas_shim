@@ -7,7 +7,9 @@ describe PipelineService::API::Publish do
       id: 1, 
       class: 'Submission', 
       assignment: double('assignment'),
-      changes: {}
+      changes: {},
+      assignment_id: 1,
+      course_id: 1
     )
   }  
 
