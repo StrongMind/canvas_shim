@@ -22,7 +22,7 @@ module PipelineService
       end
 
       def self.additional_identifier_fields
-        [:assignment_id, :course_id]
+        [:assignment_id]
       end
 
       private
