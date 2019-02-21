@@ -103,10 +103,6 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
       it 'sets the status in meta to "deleted"' do
         expect(message[:meta][:status]).to eq('deleted')
       end
-
-      it '#status' do
-        expect(message[:meta][:status]).to eq 'deleted'
-      end
     end
   end
 end
