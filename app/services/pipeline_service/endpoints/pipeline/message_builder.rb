@@ -8,7 +8,8 @@ module PipelineService
           @object        = args[:object]
           @serializer    = args[:serializer]
           @args          = args
-          configure_dependencies
+          @logger        = @args[:logger] || PipelineService::Logger
+          @canvas_domain = ENV['CANVAS_DOMAIN']
         end
 
         def call
@@ -57,10 +58,6 @@ module PipelineService
           object.additional_identifiers
         end
 
-        def configure_dependencies
-          @logger        = @args[:logger] || PipelineService::Logger
-          @canvas_domain = ENV['CANVAS_DOMAIN']
-        end
 
         def data
           serialized_object
