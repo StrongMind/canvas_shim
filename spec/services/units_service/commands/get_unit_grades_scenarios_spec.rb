@@ -41,8 +41,8 @@ describe UnitsService::Commands::GetUnitGrades do
 
       course.assignments << assignment1
       course.assignments << assignment2
-      assignment1.submissions << Submission.create(user: user, assignment: assignment1, score: 50)
-      assignment2.submissions << Submission.create(user: user, assignment: assignment2, score: 100)
+      assignment1.submissions << Submission.create(user: user, assignment: assignment1, score: 50, graded_at: Time.now)
+      assignment2.submissions << Submission.create(user: user, assignment: assignment2, score: 100, graded_at: Time.now)
     end
   end
 end
