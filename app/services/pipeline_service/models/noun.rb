@@ -48,7 +48,7 @@ module PipelineService
 
       def get_additional_identifiers(object)
         return {} unless serializer.try(:additional_identifier_fields)
-        Helpers::AdditionalIdentifiers.from_instance(
+        Helpers::AdditionalIdentifiers.call(
           instance: object,
           fields: serializer.additional_identifier_fields
         ) 
