@@ -4,7 +4,11 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
 
   before do
     allow(PipelineService::Serializers::Enrollment).to receive(:additional_identifier_fields).and_return([:course_id])
+    
     ENV['CANVAS_DOMAIN'] = 'someschool.com'
+    ENV['PIPELINE_ENDPOINT'] ='endpoint'
+    ENV['PIPELINE_USER_NAME'] ='canvas_stage'
+    ENV['PIPELINE_PASSWORD'] ='password'
   end
 
   subject do 
@@ -22,6 +26,10 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
 
   describe "#message" do
     context 'Conversation Participant' do
+      before do
+        allow(PipelineService::HTTPClient).to receive(:post)
+      end
+      
       let(:conversation_participant) { 
         ConversationParticipant.create
       }
