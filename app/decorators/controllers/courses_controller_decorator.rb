@@ -58,8 +58,8 @@ CoursesController.class_eval do
   end
 
   def user_can_conclude_enrollments?
-    sample_enrollment = @context.enrollments.find_by(type: "StudentEnrollment")
-    @current_user && sample_enrollment && sample_enrollment.can_be_concluded_by(@current_user, @context, session)
+    first_student_enrollment = @context.enrollments.find_by(type: "StudentEnrollment")
+    @current_user && first_student_enrollment && first_student_enrollment.can_be_concluded_by(@current_user, @context, session)
   end
 
   private
