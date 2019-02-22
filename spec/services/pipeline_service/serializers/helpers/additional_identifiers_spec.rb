@@ -9,6 +9,11 @@ describe PipelineService::Helpers::AdditionalIdentifiers do
         )
     }
 
+    before do
+        allow(PipelineService::HTTPClient).to receive(:post)
+        allow(PipelineService::PipelineClient).to receive(:post)
+    end
+
     it 'returns the instance' do
         expect(additional_identifiers).to eq(:conversation_id => conversation.id)
     end

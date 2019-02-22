@@ -9,12 +9,14 @@ module UnitsService
 
       def call
         get_sis_user_id
-        get_submissions
+        get_unit_submissions
         calculate_grades
         payload
       end
 
       private
+
+      attr_accessor :unit_submissions
 
       def get_sis_user_id
         @sis_user_id = nil && return unless @student.respond_to?(:pseudonym)
@@ -25,8 +27,8 @@ module UnitsService
         UnitsService::Queries::GetSubmissions
       end
 
-      def get_submissions
-        @unit_submissions = get_submissions_query.new(
+      def get_unit_submissions
+        @unit_submissions = UnitsService::Queries::GetSubmissions.new(
           course: @course,
           student: @student
         ).query
@@ -50,13 +52,17 @@ module UnitsService
           units: @grades.map {|unit, score| {
             id: unit.id,
             position: unit.position,
-            score: score
+            score: submissions_graded?(unit, score)
           }}
         }
       end
 
       def calculate_grades
-        @grades = UnitsService::GradesCalculator.new(@unit_submissions, @course).call
+        @grades = UnitsService::GradesCalculator.new(unit_submissions, @course).call
+      end
+
+      def submissions_graded?(unit, score)
+        score if unit_submissions[unit].any? { |sub| sub.graded_at && sub.grader_id != 1 }
       end
     end
   end
