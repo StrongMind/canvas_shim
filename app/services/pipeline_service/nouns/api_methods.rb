@@ -1,6 +1,6 @@
 module PipelineService
-  module Serializers
-    module BaseMethods
+  module Nouns
+    module APIMethods
       private
 
       def protocol

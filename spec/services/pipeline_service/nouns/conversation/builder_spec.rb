@@ -1,4 +1,4 @@
-describe PipelineService::Builders::ConversationJSONBuilder do
+describe PipelineService::Nouns::Conversation::Builder do
     subject { described_class }
 
     include_context('pipeline_context')
