@@ -1,8 +1,15 @@
 describe UnitsService::Queries::GetItems do
   let(:course) { Course.create(context_modules: [context_module]) }
-  let(:context_module) { ContextModule.create(content_tags: [content_tag]) }
   let(:content_tag) { ContentTag.create(content: assignment) }
+  let(:context_module) { ContextModule.create(content_tags: [content_tag]) }
   let(:assignment) { Assignment.create(workflow_state: 'published') }
+
+  let!(:discussion_course) { Course.create(context_modules: [discussion_context_module]) }
+  let!(:discussion_topic) { DiscussionTopic.create(workflow_state: 'active') }
+  let!(:discussion_context_module) { ContextModule.create(content_tags: [discussion_content_tag]) }
+  let!(:discussion_assignment) { Assignment.create(discussion_topic: discussion_topic, workflow_state: 'published') }
+  let!(:discussion_content_tag) { ContentTag.create(content: discussion_topic) }
+
   let(:submission) { Submission.create(assignment: assgnment) }
 
   # {<context_module>: []}
@@ -18,6 +25,16 @@ describe UnitsService::Queries::GetItems do
     it 'returns a content tag' do
       result = {}
       result[context_module] = [content_tag]
+      expect(subject.query).to eq(result)
+    end
+  end
+
+  context 'content is a discussion topic' do
+    subject { described_class.new(course: discussion_course) }
+
+    it 'returns a content tag' do
+      result = {}
+      result[discussion_context_module] = [discussion_content_tag]
       expect(subject.query).to eq(result)
     end
   end

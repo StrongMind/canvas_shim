@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190206205358) do
+ActiveRecord::Schema.define(version: 20190226215704) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -122,6 +122,8 @@ ActiveRecord::Schema.define(version: 20190206205358) do
   create_table "discussion_topics", force: :cascade do |t|
     t.integer "context_id"
     t.string  "context_type"
+    t.integer "assignment_id"
+    t.string  "workflow_state"
   end
 
   create_table "enrollments", force: :cascade do |t|
