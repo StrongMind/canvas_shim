@@ -181,10 +181,6 @@ ActiveRecord::Schema.define(version: 20190212234646) do
     t.string   "workflow_state"
     t.integer  "grade"
     t.integer  "user_id"
-<<<<<<< HEAD
-    t.integer  "course_id"
-=======
->>>>>>> shim_decorating_and_moved_gradeout
     t.datetime "graded_at"
     t.integer  "grader_id"
   end
