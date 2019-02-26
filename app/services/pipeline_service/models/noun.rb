@@ -1,21 +1,30 @@
 module PipelineService
   module Models
     class Noun
-      attr_reader :id, :name, :object, :changes
+      attr_reader :id, :name, :changes, :noun_class, :additional_identifiers
       
       def initialize(object)
         @id = object.id
-        @name = object.class.to_s
+        @noun_class = object.class
         @changes = object.changes
-        @destroyed = object.try(:state) == :deleted || object.try(:workflow_state) == 'deleted' || object.try(:destroyed?)
+        @state = object.try(:state)
+        @destroyed = status == :deleted || object.try(:workflow_state) == 'deleted'
+        @additional_identifiers = get_additional_identifiers(object)
+        
       end
 
       def destroyed?
         @destroyed
       end
 
-      def noun_class
-        name.constantize
+      def status 
+        return 'deleted' if destroyed?
+        return if @state.nil?
+        @state.to_s
+      end
+
+      def name
+        short_class_name.underscore
       end
 
       def serializer
@@ -23,14 +32,26 @@ module PipelineService
           when /Enrollment/
             PipelineService::Serializers::Enrollment
           else
-            "PipelineService::Serializers::#{short_class_name}".constantize
+            begin
+              "PipelineService::Serializers::#{short_class_name}".constantize
+            rescue
+              nil
+            end
           end
       end
 
       private
 
       def short_class_name
-        name.split('::').last
+        @noun_class.to_s.split('::').last
+      end
+
+      def get_additional_identifiers(object)
+        return {} unless serializer.try(:additional_identifier_fields)
+        Helpers::AdditionalIdentifiers.call(
+          instance: object,
+          fields: serializer.additional_identifier_fields
+        ) 
       end
     end
   end

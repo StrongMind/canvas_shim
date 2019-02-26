@@ -46,10 +46,11 @@ module PipelineService
       end
 
       def fetch_serializer
+        @serializer =
         if object.noun_class == PipelineService::Nouns::UnitGrades
-          @serializer = Serializers::UnitGrades
-        elsif object.noun_class == Enrollment
-          @serializer = Serializers::CanvasAPIEnrollment
+          Serializers::UnitGrades
+        elsif object.noun_class == StudentEnrollment
+          Serializers::CanvasAPIEnrollment
         end
       end
 

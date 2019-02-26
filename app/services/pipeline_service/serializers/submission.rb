@@ -13,7 +13,6 @@ module PipelineService
       end
 
       def call
-        
         @api_client.get_single_submission_courses(
           @course.id, 
           @assignment.id, 
@@ -22,8 +21,8 @@ module PipelineService
         )
       end
 
-      def additional_identifiers
-        { assignment_id: @assignment.id, course_id: @course.id }
+      def self.additional_identifier_fields
+        [:assignment_id]
       end
 
       private

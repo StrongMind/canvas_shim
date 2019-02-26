@@ -21,7 +21,7 @@ module GradesService
           .where('submissions.workflow_state = ?', 'unsubmitted')
           .where(score: nil)
           .where(grade: nil)
-          .where('assignments.due_at < ?', 1.hour.ago)
+          .where('submissions.cached_due_date < ?', 1.hour.ago)
           .where('courses.conclude_at > ?', Time.now)
           .where('assignments.workflow_state = ?', 'published')
       end

@@ -7,11 +7,10 @@ module PipelineService
   module API
     class Publish
       def initialize(object, args={})
-        @object = object
+        @object = Models::Noun.new(object)
         @changes = object.try(:changes)
-        @args = args
-        @command_class = @args[:command_class] || Commands::Publish
-        @queue         = @args[:queue] || Delayed::Job
+        @command_class = args[:command_class] || Commands::Publish
+        @queue         = args[:queue] || Delayed::Job
       end
 
       def call

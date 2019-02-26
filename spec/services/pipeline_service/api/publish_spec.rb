@@ -1,7 +1,29 @@
 describe PipelineService::API::Publish do
   let(:publish_command_class)       { double('publish_command_class', new: publish_command_instance) }
   let(:publish_command_instance)    { double('publish_command_instance', call: nil) }
-  let(:submission)          { double('submission', id: 1, class: 'Submission', assignment: double('assignment')) }  
+  let(:submission) { 
+    double(
+      'submission', 
+      id: 1, 
+      class: 'Submission', 
+      assignment: double('assignment'),
+      changes: {},
+      assignment_id: 1,
+      course_id: 1
+    )
+  }  
+
+  context 'When deserializing' do
+    it 'the object is a noun' do
+      Delayed::Worker.delay_jobs = true
+      conversation = Conversation.create
+      PipelineService.publish(conversation)
+    
+      object = YAML.load(Delayed::Job.first.handler).instance_variable_get(:@object)
+      expect(object.class).to eq PipelineService::Models::Noun
+      Delayed::Worker.delay_jobs = false
+    end
+  end
 
   context 'publish non-deletes' do
     let(:queue)                 { double('queue') }

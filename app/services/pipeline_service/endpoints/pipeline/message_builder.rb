@@ -8,7 +8,8 @@ module PipelineService
           @object        = args[:object]
           @serializer    = args[:serializer]
           @args          = args
-          configure_dependencies
+          @logger        = @args[:logger] || PipelineService::Logger
+          @canvas_domain = ENV['CANVAS_DOMAIN']
         end
 
         def call
@@ -35,6 +36,10 @@ module PipelineService
           logger.new(source: 'pipeline', message: payload).call
         end
 
+        def status
+          @object.status
+        end
+
         def payload
           {
             noun: noun_name,
@@ -42,7 +47,7 @@ module PipelineService
               source: SOURCE,
               domain_name: canvas_domain,
               api_version: 1,
-              status: object.try(:state)
+              status: status
             },
             identifiers: { id: object.id }.merge(additional_identifiers),
             data: data
@@ -50,18 +55,11 @@ module PipelineService
         end
 
         def additional_identifiers
-          return {} unless serializer_instance.respond_to?(:additional_identifiers)
-
-          serializer_instance.additional_identifiers
+          object.additional_identifiers
         end
 
-        def configure_dependencies
-          @logger        = @args[:logger] || PipelineService::Logger
-          @canvas_domain = ENV['CANVAS_DOMAIN']
-        end
 
         def data
-          return {} if object.destroyed?
           serialized_object
         end
 
@@ -75,7 +73,7 @@ module PipelineService
         end
 
         def noun_name
-          object.name.underscore
+          object.name
         end
       end
     end
