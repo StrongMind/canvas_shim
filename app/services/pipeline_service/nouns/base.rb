@@ -1,6 +1,6 @@
 module PipelineService
-  module Models
-    class Noun
+  module Nouns
+    class Base
       attr_reader :id, :name, :changes, :noun_class, :additional_identifiers
       
       def initialize(object)
@@ -26,17 +26,14 @@ module PipelineService
         short_class_name.underscore
       end
 
-      def serializer
-          case short_class_name
-          when /Enrollment/
-            PipelineService::Serializers::Enrollment
-          else
-            begin
-              "PipelineService::Serializers::#{short_class_name}".constantize
-            rescue
-              nil
-            end
-          end
+      def as_json
+        builder.new(object: self).call
+      end
+
+      def self.build(ar_object)
+        "PipelineService::Nouns::#{ar_object.class.to_s}"
+          .constantize
+          .new(ar_object)
       end
 
       private
@@ -45,11 +42,15 @@ module PipelineService
         @noun_class.to_s.split('::').last
       end
 
+      def builder
+      end
+
       def get_additional_identifiers(object)
-        return {} unless serializer.try(:additional_identifier_fields)
+        return unless builder
+        return {} unless self.class::ADDITIONAL_IDENTIFIER_FIELDS
         Helpers::AdditionalIdentifiers.call(
           instance: object,
-          fields: serializer.additional_identifier_fields
+          fields: self.class::ADDITIONAL_IDENTIFIER_FIELDS
         ) 
       end
     end

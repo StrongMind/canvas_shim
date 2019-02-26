@@ -7,7 +7,7 @@ module PipelineService
   module API
     class Publish
       def initialize(object, args={})
-        @object = Models::Noun.new(object)
+        @object = Nouns::Base.build(object)
         @changes = object.try(:changes)
         @command_class = args[:command_class] || Commands::Publish
         @queue         = args[:queue] || Delayed::Job
@@ -28,10 +28,7 @@ module PipelineService
       attr_reader :object, :jobs, :command_class, :queue, :changes
 
       def command
-        command_class.new(
-          object: object,
-          changes: changes
-        )
+        command_class.new(object: object, changes: changes)
       end
     end
   end

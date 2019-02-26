@@ -1,4 +1,4 @@
-describe PipelineService::Models::Noun do
+describe PipelineService::Nouns::Base do
     include_context('pipeline_context')
     
     let(:submission) { Submission.create(assignment: assignment, course: course) }
@@ -13,7 +13,7 @@ describe PipelineService::Models::Noun do
     let(:unit_grades_noun) { described_class.new(unit_grades) }
     let(:changes) { {'workflow_state' => ['active', 'completed']} }
     let(:conversation) { Conversation.create }
-    let(:conversation_participant_noun) { described_class.new(conversation_participant) }
+    let(:conversation_participant_noun) { described_class.build(conversation_participant) }
     let(:conversation_participant) { ConversationParticipant.create(conversation: conversation) }
 
     before do
@@ -21,6 +21,12 @@ describe PipelineService::Models::Noun do
         allow(deleted_conversation).to receive('state').and_return 'deleted'
         allow(conversation).to receive(:changes).and_return(changes)
         class_double("PipelineService::Serializers::Enrollment").as_stubbed_const
+    end
+
+    describe '.build' do
+        it do
+            described_class.build(submission)
+        end
     end
 
     describe '#name' do
@@ -70,16 +76,6 @@ describe PipelineService::Models::Noun do
     end
 
 
-    describe '#serializer' do
-        it 'Conversations' do
-            expect(conversation_noun.serializer).to eq PipelineService::Serializers::Conversation
-        end
-
-        it 'TeacherEnrollments' do
-            expect(teacher_enrollment_noun.serializer).to eq PipelineService::Serializers::Enrollment
-        end
-    end
-
     describe '#additional_identifiers' do
         it 'contains required linking ids' do
             expect(
@@ -88,7 +84,7 @@ describe PipelineService::Models::Noun do
         end
 
         it 'works with a submission' do
-            noun = PipelineService::Models::Noun.new(submission)
+            noun = PipelineService::Nouns::Base.build(submission)
             expect(noun.additional_identifiers).to eq(
                 :assignment_id => assignment.id
             )

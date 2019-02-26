@@ -20,7 +20,7 @@ describe PipelineService::API::Publish do
       PipelineService.publish(conversation)
     
       object = YAML.load(Delayed::Job.first.handler).instance_variable_get(:@object)
-      expect(object.class).to eq PipelineService::Models::Noun
+      expect(object.class).to eq PipelineService::Nouns::Conversation
       Delayed::Worker.delay_jobs = false
     end
   end
@@ -63,11 +63,11 @@ describe PipelineService::API::Publish do
   context 'publishes deleted records' do
     include_context 'pipeline_context'
     let(:conversation) { double('conversation', destroyed?: true) }  
-    let(:deleted_noun_class) { PipelineService::Models::Noun }
+    let(:deleted_noun_class) { PipelineService::Nouns::Base }
     let(:deleted_noun_instance) { double('deleted_noun_instance') }
 
     before do
-      allow(PipelineService::Models::Noun)
+      allow(PipelineService::Nouns::Base)
         .to receive(:new)
         .and_return(deleted_noun_instance)
     end
