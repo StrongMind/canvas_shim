@@ -1,13 +1,15 @@
 module PipelineService
   module Nouns
     class ConversationParticipant      
-      class Builder
+      class Builder < ActiveRecord::Base
+        self.table_name = "conversation_participants"
+        
         def initialize object:
           @conversation_participant = object
         end
 
         def call
-          @payload = Builders::ConversationParticipantJSONBuilder.call(conversation_participant)
+          Queries::FindByID.query(self, @conversation_participant)
         end
 
         private
