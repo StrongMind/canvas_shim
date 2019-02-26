@@ -12,4 +12,3 @@ class User < ActiveRecord::Base
 
   has_one :pseudonym
 end
-require File.expand_path('../../app/models/user', CanvasShim::Engine.called_from)

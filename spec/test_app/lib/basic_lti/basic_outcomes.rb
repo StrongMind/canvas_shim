@@ -6,4 +6,3 @@ module BasicLTI
     end
   end
 end
-require File.expand_path('../../lib/basic_lti/basic_outcomes', CanvasShim::Engine.called_from)

@@ -1,4 +1,4 @@
-class DiscussionEntry
+DiscussionEntry.class_eval do
   alias_method :change_read_state_alias, :change_read_state
   after_save :set_unread_status
 
