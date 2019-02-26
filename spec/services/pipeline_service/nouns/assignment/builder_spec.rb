@@ -1,5 +1,5 @@
 module PipelineService
-    describe Serializers::Assignment do
+    describe Nouns::Assignment::Builder do
         let(:assignment) { Assignment.new(course: Course.new) }
         subject { described_class.new(object: Models::Noun.new(assignment)) }
 

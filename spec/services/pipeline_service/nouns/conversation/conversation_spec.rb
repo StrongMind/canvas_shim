@@ -1,4 +1,4 @@
-describe PipelineService::Serializers::Conversation do
+describe PipelineService::Nouns::Conversation::Builder do
   include_context "pipeline_context"
   subject { described_class.new(object: noun) }
 

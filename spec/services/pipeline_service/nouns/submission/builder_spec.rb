@@ -1,4 +1,4 @@
-describe PipelineService::Serializers::Submission do
+describe PipelineService::Nouns::Submission::Builder do
   subject do
     described_class.new object: submission
   end
