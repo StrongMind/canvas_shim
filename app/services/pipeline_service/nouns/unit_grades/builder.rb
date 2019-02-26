@@ -1,0 +1,21 @@
+module PipelineService
+  module Nouns
+    class UnitGrades
+      class Builder
+        def initialize(object:)
+          @submission = ::Submission.find(object.id)
+          @course = @submission.assignment.course
+          @student = @submission.user
+        end
+
+        def call
+          UnitsService::Commands::GetUnitGrades.new(
+            course: @course,
+            student: @student,
+            submission: @submission,
+          ).call
+        end
+      end
+    end
+  end
+end

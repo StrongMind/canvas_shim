@@ -1,4 +1,4 @@
-describe PipelineService::Serializers::UnitGrades do
+describe PipelineService::Nouns::UnitGrades::Builder do
   include_context 'pipeline_context'
   describe 'Unit grade serializer' do
     context 'when given a submission' do

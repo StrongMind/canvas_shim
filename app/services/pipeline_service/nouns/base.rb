@@ -2,6 +2,7 @@ module PipelineService
   module Nouns
     class Base
       attr_reader :id, :name, :changes, :noun_class, :additional_identifiers
+      ADDITIONAL_IDENTIFIER_FIELDS = []
       
       def initialize(object)
         @id = object.id
