@@ -29,7 +29,7 @@ module PipelineService
 
       def command
         command_class.new(
-          object: Models::Noun.new(object),
+          object: object,
           changes: changes
         )
       end

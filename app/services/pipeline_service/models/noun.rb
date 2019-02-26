@@ -10,7 +10,6 @@ module PipelineService
         @state = object.try(:state)
         @destroyed = status == :deleted || object.try(:workflow_state) == 'deleted'
         @additional_identifiers = get_additional_identifiers(object)
-        
       end
 
       def destroyed?

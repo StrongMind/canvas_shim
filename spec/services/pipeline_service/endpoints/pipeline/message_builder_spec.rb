@@ -22,7 +22,9 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
     PipelineService::Models::Noun.new(enrollment)
   end
 
-  let(:message) { subject.call }
+  let(:message) do 
+    subject.call 
+  end
 
   describe "#message" do
     context 'Conversation Participant' do
@@ -30,9 +32,7 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
         allow(PipelineService::HTTPClient).to receive(:post)
       end
       
-      let(:conversation_participant) { 
-        ConversationParticipant.create
-      }
+      let(:conversation_participant) { ConversationParticipant.create }
       
       subject do
         described_class.new(

@@ -1,4 +1,6 @@
 class ConversationParticipant < ApplicationRecord
   belongs_to :conversation
-  after_save { PipelineService.publish(self) }
+  after_commit { 
+    PipelineService.publish(self) 
+  }
 end
