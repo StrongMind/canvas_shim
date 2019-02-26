@@ -3,11 +3,12 @@ describe PipelineService::Queries::FindByID do
     
     subject { described_class }
     let(:conversation)  { Conversation.create }
-    let(:noun)          { PipelineService::Models::Noun.new(conversation) }
-    let(:builder)       { PipelineService::Builders::ConversationJSONBuilder }
+    let(:noun)          { PipelineService::Nouns::Base.build(conversation) }
+    let(:builder)       { PipelineService::Nouns::Conversation::Builder.new }
     
     it 'returns a ruby hash of the object' do
-        expect(subject.query(builder, noun))
-            .to eq(builder.call(noun))
+        builder.object = conversation
+        expect(subject.query(builder.class, noun))
+            .to eq('id' => conversation.id)
     end
 end

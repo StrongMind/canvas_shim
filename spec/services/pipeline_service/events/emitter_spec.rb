@@ -19,7 +19,7 @@ describe PipelineService::Events::Emitter do
   let(:responder) { double(:class) }
   let(:event_class) { double('event_class') }
   let(:event) { double(:event, emit: nil) }
-  let(:noun) { PipelineService::Models::Noun.new(object) }
+  let(:noun) { PipelineService::Nouns::Base.new(object) }
 
   before do
     allow(event_class).to receive(:new).and_return(event)
@@ -32,7 +32,7 @@ describe PipelineService::Events::Emitter do
 
   context 'unhandled noun' do
     let(:unhandled_noun) {double('unhandled_noun', id: 1, changes: {})}
-    let(:object) { PipelineService::Models::Noun.new(unhandled_noun) }
+    let(:object) { PipelineService::Nouns::Base.new(unhandled_noun) }
     before do
       allow(subject).to receive(:serializer).and_return(nil)
     end

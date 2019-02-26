@@ -3,7 +3,7 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
   let(:enrollment) { Enrollment.create(course: course) }
 
   before do
-    allow(PipelineService::Serializers::Enrollment).to receive(:additional_identifier_fields).and_return([:course_id])
+    allow(PipelineService::Nouns::Enrollment).to receive(:additional_identifier_fields).and_return([:course_id])
     
     ENV['CANVAS_DOMAIN'] = 'someschool.com'
     ENV['PIPELINE_ENDPOINT'] ='endpoint'
@@ -19,7 +19,7 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
   end
 
   let(:object) do 
-    PipelineService::Models::Noun.new(enrollment)
+    PipelineService::Nouns::Base.new(enrollment)
   end
 
   let(:message) do 
@@ -37,7 +37,7 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
       subject do
         described_class.new(
           id: conversation_participant.id,
-          object: PipelineService::Models::Noun.new(conversation_participant)
+          object: PipelineService::Nouns::Base.new(conversation_participant)
         )
       end
       
@@ -79,7 +79,7 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
 
     context "when a record has been deleted" do
       let(:object) do
-        PipelineService::Models::Noun.new(enrollment)
+        PipelineService::Nouns::Base.new(enrollment)
       end
 
       before do
@@ -93,7 +93,7 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
 
     context "when a worflow state is deleted" do
       let(:object) do
-        PipelineService::Models::Noun.new(enrollment)
+        PipelineService::Nouns::Base.new(enrollment)
       end
 
       before do

@@ -6,14 +6,12 @@ module PipelineService
 
         def initialize(args)
           @object        = args[:object]
-          @serializer    = args[:serializer]
           @args          = args
           @logger        = @args[:logger] || PipelineService::Logger
           @canvas_domain = ENV['CANVAS_DOMAIN']
         end
 
         def call
-          fetch_serializer
           serialize
           result = build
           log
@@ -22,14 +20,10 @@ module PipelineService
 
         private
 
-        attr_reader :message_class, :object, :serializer, :canvas_domain, :logger, :serialized_object
+        attr_reader :message_class, :object, :canvas_domain, :logger, :json
 
         def serialize
-          @serialized_object = serializer_instance.call
-        end
-
-        def serializer_instance
-          @serializer_instance ||= serializer.new(object: object)
+          @json = object.as_json
         end
 
         def log
@@ -60,12 +54,7 @@ module PipelineService
 
 
         def data
-          serialized_object
-        end
-
-        def fetch_serializer
-          return if @serializer
-          @serializer = object.serializer
+          json
         end
 
         def build

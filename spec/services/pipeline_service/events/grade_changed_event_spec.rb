@@ -4,7 +4,7 @@ describe PipelineService::Events::GradeChangedEvent do
     let(:responder) { double(:responder, call: nil) }
     let(:submission) { 
       double('submission', assignment: double('assignment', course: double('course')), user: double('user'), id: 1, changes: {} ) }
-    let(:object) { PipelineService::Models::Noun.new(PipelineService::Nouns::UnitGrades.new(submission)) }
+    let(:object) { PipelineService::Nouns::Base.new(PipelineService::Nouns::UnitGrades.new(submission)) }
     let(:changes) { {'score' => 10} }
 
 

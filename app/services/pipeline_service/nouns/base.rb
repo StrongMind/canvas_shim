@@ -3,7 +3,7 @@ module PipelineService
     class Base
       attr_reader :id, :name, :changes, :noun_class, :additional_identifiers
       ADDITIONAL_IDENTIFIER_FIELDS = []
-      
+
       def initialize(object)
         @id = object.id
         @noun_class = object.class
@@ -28,6 +28,7 @@ module PipelineService
       end
 
       def as_json
+        return {} unless builder
         builder.new(object: self).call
       end
 
@@ -48,7 +49,7 @@ module PipelineService
 
       def get_additional_identifiers(object)
         return unless builder
-        return {} unless self.class::ADDITIONAL_IDENTIFIER_FIELDS
+        return {} if self.class::ADDITIONAL_IDENTIFIER_FIELDS.empty?
         Helpers::AdditionalIdentifiers.call(
           instance: object,
           fields: self.class::ADDITIONAL_IDENTIFIER_FIELDS

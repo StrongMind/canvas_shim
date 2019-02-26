@@ -4,17 +4,11 @@ module PipelineService
             class Builder < ActiveRecord::Base
                 self.table_name = "conversations"
 
-                def initialize object:
-                    @conversation = object
-                end
+                attr_accessor :object
         
                 def call
-                    Queries::FindByID.query(self, conversation)
+                    Queries::FindByID.query(self.class, object)
                 end
-        
-                private
-        
-                attr_reader :conversation
             end
         end
     end

@@ -2,7 +2,7 @@ describe PipelineService::Nouns::Conversation::Builder do
   include_context "pipeline_context"
   subject { described_class.new(object: noun) }
 
-  let(:noun) { PipelineService::Models::Noun.new(conversation_model) }
+  let(:noun) { PipelineService::Nouns::Base.new(conversation_model) }
   let(:conversation_model) { Conversation.create }
 
   it 'returns an attribute hash for the noun' do

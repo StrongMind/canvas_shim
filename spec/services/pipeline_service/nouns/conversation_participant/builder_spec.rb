@@ -5,7 +5,7 @@ describe PipelineService::Nouns::ConversationParticipant::Builder do
 
   let(:conversation_participant_model) { ConversationParticipant.create(conversation_id: 5) }
 
-  let(:noun) { PipelineService::Models::Noun.new(conversation_participant_model) }
+  let(:noun) { PipelineService::Nouns::Base.new(conversation_participant_model) }
 
   it 'Return a json hash of the noun' do
     expect(subject.call).to include( "id" => conversation_participant_model.id )

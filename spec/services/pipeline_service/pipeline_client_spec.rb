@@ -7,7 +7,7 @@ describe PipelineService::PipelineClient do
 
   subject do
     described_class.new(
-      object: PipelineService::Models::Noun.new(enrollment),
+      object: PipelineService::Nouns::Base.new(enrollment),
       noun: '',
       id: 1,
       endpoint: endpoint_class,

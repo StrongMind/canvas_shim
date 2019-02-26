@@ -1,7 +1,7 @@
 module PipelineService
     describe Nouns::Assignment::Builder do
         let(:assignment) { Assignment.new(course: Course.new) }
-        subject { described_class.new(object: Models::Noun.new(assignment)) }
+        subject { described_class.new(object: Nouns::Base.new(assignment)) }
 
         before do
             allow(::Assignment).to receive(:find).and_return(assignment)
