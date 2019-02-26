@@ -9,7 +9,7 @@ module PipelineService
         end
 
         def call
-          Queries::FindByID.query(self, @conversation_participant)
+          Queries::FindByID.query(self, @conversation_message)
         end
 
         def self.additional_identifier_fields
