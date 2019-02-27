@@ -186,6 +186,7 @@ ActiveRecord::Schema.define(version: 20190226215704) do
     t.integer  "user_id"
     t.datetime "graded_at"
     t.integer  "grader_id"
+    t.integer  "course_id"
   end
 
   create_table "user_observers", force: :cascade do |t|

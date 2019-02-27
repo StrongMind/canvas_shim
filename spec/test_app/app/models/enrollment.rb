@@ -8,6 +8,10 @@ class Enrollment < ActiveRecord::Base
     Account.new
   end
 
+  def root_account_id
+    1
+  end
+
   def computed_current_score
     10
   end
