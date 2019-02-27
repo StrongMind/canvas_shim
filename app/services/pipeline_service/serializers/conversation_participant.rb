@@ -1,6 +1,6 @@
 module PipelineService
   module Serializers
-    class ConversationParticipant
+    class ConversationParticipant      
       def initialize object:
         @conversation_participant = object
       end
@@ -9,8 +9,8 @@ module PipelineService
         @payload = Builders::ConversationParticipantJSONBuilder.call(conversation_participant)
       end
 
-      def additional_identifiers
-        Helpers::AdditionalIdentifiers.call(payload: @payload, fields: [:conversation_id])
+      def self.additional_identifier_fields
+        [:conversation_id]
       end
 
       private

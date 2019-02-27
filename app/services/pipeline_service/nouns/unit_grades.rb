@@ -5,9 +5,9 @@ module PipelineService
       def initialize(submission)
         @course = submission.assignment.course
         @student = submission.user
+        @submission = submission
         @id = submission.id
         @changes = submission.changes
-        @submission = submission
       end
     end
   end

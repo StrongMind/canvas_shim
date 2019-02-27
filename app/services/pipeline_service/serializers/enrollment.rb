@@ -7,6 +7,12 @@ module PipelineService
 
       attr_accessor :services_enabled, :context, :current_user, :params, :request
 
+      def account_admin
+        account = ::Account.default.account_users.find do |account_user|
+          account_user.role.name == 'AccountAdmin'
+        end.try(:user)
+      end
+
       def service_enabled?(service); @services_enabled.include? service; end
 
       def avatar_image_url(*args); "avatar_image_url(#{args.first})"; end
@@ -20,11 +26,12 @@ module PipelineService
         @params = {}
         @request = OpenStruct.new
         @object = object
-        @admin = PipelineService::Account.account_admin
+        @enrollment = ::Enrollment.find(object.id)
+        @admin = account_admin
       end
 
       def call
-        enrollment_json(@object, @admin, {})
+        enrollment_json(@enrollment, @admin, {})
       end
     end
   end

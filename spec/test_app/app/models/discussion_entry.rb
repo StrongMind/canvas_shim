@@ -9,4 +9,3 @@ class DiscussionEntry < ActiveRecord::Base
     'implemented in LMS'
   end
 end
-require File.expand_path('../../app/models/discussion_entry', CanvasShim::Engine.called_from)
