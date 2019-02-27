@@ -2,27 +2,19 @@ module PipelineService
   module Serializers
     class Submission
       def initialize object:
-        @object = ::Submission.find(object.id)
-        @course = @object.assignment.course
-        @assignment = @object.assignment
-        @user = @object.user
-        @api_client = Pandarus::Client.new(
-          prefix: prefix, 
-          token: ENV['STRONGMIND_INTEGRATION_KEY']
-        )
+        @object = object
+        @course = object.assignment.course
+        @assignment = object.assignment
+        @user = object.user
+        @api_client = Pandarus::Client.new(prefix: prefix, token: ENV['STRONGMIND_INTEGRATION_KEY'])
       end
 
       def call
-        @api_client.get_single_submission_courses(
-          @course.id, 
-          @assignment.id, 
-          @user.id, 
-          include: ['submission_history']
-        )
+        @api_client.get_single_submission_courses(@course.id, @assignment.id, @user.id, include: ['submission_history'])
       end
 
-      def self.additional_identifier_fields
-        [:assignment_id]
+      def additional_identifiers
+        { assignment_id: @assignment.id, course_id: @course.id }
       end
 
       private

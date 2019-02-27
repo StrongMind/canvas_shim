@@ -46,18 +46,16 @@ module PipelineService
       end
 
       def fetch_serializer
-        @serializer =
-        if object.noun_class == PipelineService::Nouns::UnitGrades
+        @serializer = case object
+        when PipelineService::Nouns::UnitGrades
           Serializers::UnitGrades
-        elsif object.noun_class == StudentEnrollment
+        when Enrollment
           Serializers::CanvasAPIEnrollment
         end
       end
 
       def build_message
-        return {} if object.destroyed?
-        instance = serializer.new(object: object)
-        @message = instance.call
+        @message = serializer.new(object: object).call
       end
 
       def emit

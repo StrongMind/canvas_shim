@@ -17,7 +17,7 @@ module PipelineService
 
       def should_trigger?
         return false unless @changes['score']
-        @object.noun_class == PipelineService::Nouns::UnitGrades
+        @object.is_a?(PipelineService::Nouns::UnitGrades)
       end
     end
   end

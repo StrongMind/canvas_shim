@@ -1,7 +1,7 @@
 describe PipelineService::Events::GradedOutEvent do
   let(:subscription) { double(:subscription, responder: responder) }
   let(:responder) { double(:responder, call: nil) }
-  let(:object) { PipelineService::Models::Noun.new(StudentEnrollment.new) }
+  let(:object) { Enrollment.new }
   let(:changes) { {} }
 
   subject do

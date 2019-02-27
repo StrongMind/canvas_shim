@@ -20,18 +20,11 @@ module PipelineService
         @params = {}
         @request = OpenStruct.new
         @object = object
-        @user = ::User.find(object.id)
-        @admin = account_admin
-      end
-
-      def account_admin
-        account = ::Account.default.account_users.find do |account_user|
-          account_user.role.name == 'AccountAdmin'
-        end.try(:user)
+        @admin = PipelineService::Account.account_admin
       end
 
       def call
-        user_json(@user, @admin, {})
+        user_json(@object, @admin, {})
       end
     end
   end

@@ -1,20 +1,28 @@
-describe PipelineService::Helpers::AdditionalIdentifiers do
+describe PipelineService::Serializers::Helpers::AdditionalIdentifiers do
     subject { described_class }
-    let(:conversation) { Conversation.create }
-    let(:instance) { ConversationParticipant.create(conversation: conversation) }
+
+    let(:payload) { { 'conversation_id' => 1 } }
     let(:additional_identifiers) {
         subject.call(
-            instance: instance, 
+            payload: payload, 
             fields: [:conversation_id]
         )
     }
 
-    before do
-        allow(PipelineService::HTTPClient).to receive(:post)
-        allow(PipelineService::PipelineClient).to receive(:post)
+    it 'returns the payload ' do
+        expect(additional_identifiers).to eq(payload)
     end
 
-    it 'returns the instance' do
-        expect(additional_identifiers).to eq(:conversation_id => conversation.id)
+    context 'empty payload' do
+        let(:additional_identifiers) {
+            subject.call(
+                payload: {}, 
+                fields: [:foo]
+            )
+        }
+
+        it 'returns an empty payload' do
+            expect(additional_identifiers).to eq({})
+        end
     end
 end

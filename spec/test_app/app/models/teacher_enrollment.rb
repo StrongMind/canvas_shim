@@ -1,2 +1,0 @@
-class TeacherEnrollment < Enrollment
-end
