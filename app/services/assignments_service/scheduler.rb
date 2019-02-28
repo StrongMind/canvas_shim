@@ -5,7 +5,7 @@ module AssignmentsService
     def initialize(args = {})
       @args = args
       @startdate = first_due_date
-      @enddate = args[:course].end_at
+      @enddate = args[:course].end_at - 1.day
       @assignment_count = args[:assignment_count]
     end
 

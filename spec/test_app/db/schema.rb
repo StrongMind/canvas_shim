@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190206205358) do
+ActiveRecord::Schema.define(version: 20190228184350) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -184,6 +184,7 @@ ActiveRecord::Schema.define(version: 20190206205358) do
     t.integer  "user_id"
     t.datetime "graded_at"
     t.integer  "grader_id"
+    t.datetime "cached_due_date"
   end
 
   create_table "user_observers", force: :cascade do |t|
