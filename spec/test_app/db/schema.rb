@@ -122,6 +122,8 @@ ActiveRecord::Schema.define(version: 20190228184350) do
   create_table "discussion_topics", force: :cascade do |t|
     t.integer "context_id"
     t.string  "context_type"
+    t.integer "assignment_id"
+    t.string  "workflow_state"
   end
 
   create_table "enrollments", force: :cascade do |t|
