@@ -21,7 +21,12 @@ module GradesService
           return
         end
 
-        log_operation
+        if SettingsService.get_settings(object: :school, id: 1)['zero_out_extended_log'] == 'on'
+          extended_log_operation
+        else
+          log_operation
+        end
+
         @assignment.grade_student(@student, score: 0, grader: @grader)
       end
 
@@ -39,6 +44,23 @@ module GradesService
         begin
           csv = CSV.open('/tmp/' + @options[:log_file], 'a+')
           csv << [@submission.id, @previous_score]
+          csv.close
+        rescue => e
+          raise e, 'error opening log file'
+        end
+      end
+
+      def extended_log_operation
+        return unless @options[:log_file]
+
+        begin
+          csv = CSV.open('/tmp/' + @options[:log_file], 'a+')
+          csv << [@submission.id,
+                  @previous_score,
+                  @submission.cached_due_date,
+                  @assignment.due_at,
+                  @assignment.overridden ? "true" : "false",
+                  @assignment.external_tool_tag.try(:url)]
           csv.close
         rescue => e
           raise e, 'error opening log file'
