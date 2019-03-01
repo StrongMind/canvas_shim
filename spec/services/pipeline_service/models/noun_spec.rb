@@ -17,6 +17,8 @@ describe PipelineService::Models::Noun do
     let(:conversation_participant) { ConversationParticipant.create(conversation: conversation) }
 
     before do
+        allow(conversation).to receive(:try).with(:workflow_state).and_return(nil)
+        allow(conversation).to receive(:try).with(:destroyed?).and_return(false)
         allow(deleted_conversation).to receive('workflow_state').and_return 'deleted'
         allow(deleted_conversation).to receive('state').and_return 'deleted'
         allow(conversation).to receive(:changes).and_return(changes)
@@ -52,9 +54,8 @@ describe PipelineService::Models::Noun do
             expect(conversation_noun.status).to be_nil
         end
 
-        it 'matches the workflow state' do      
-            expect(conversation).to receive(:try).with(:workflow_state).and_return('active')
-            expect(conversation).to receive(:try).with(:state).and_return(:active)
+        it 'matches the workflow state' do
+            allow(conversation).to receive(:try).with(:workflow_state).and_return('active')
             expect(conversation_noun.status).to eq 'active'
         end
 

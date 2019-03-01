@@ -7,20 +7,18 @@ module PipelineService
         @id = object.id
         @noun_class = object.class
         @changes = object.changes
-        @state = object.try(:state)
-        @destroyed = status == :deleted || object.try(:workflow_state) == 'deleted'
+        @workflow_state = object.try(:workflow_state)
+        @object_is_destroyed = object.try(:destroyed?)
         @additional_identifiers = get_additional_identifiers(object)
-        
       end
 
       def destroyed?
-        @destroyed
+        @workflow_state == 'deleted' || @object_is_destroyed
       end
 
       def status 
         return 'deleted' if destroyed?
-        return if @state.nil?
-        @state.to_s
+        @workflow_state
       end
 
       def name
