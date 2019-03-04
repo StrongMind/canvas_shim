@@ -10,4 +10,11 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require_tree .
+//= require jquery/dist/jquery
+//= require d3/d3
+//
+// THIS IS SOMEONES FORK TO USE D3 V4, SEE YARN LOCK
+// https://github.com/hypercharge-code/cal-heatmap/tree/d3-v4
+//= require cal-heatmap/cal-heatmap
+//
+//= require canvas_shim/roster_user_usage

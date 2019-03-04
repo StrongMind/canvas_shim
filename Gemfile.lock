@@ -2,10 +2,12 @@ PATH
   remote: .
   specs:
     canvas_shim (0.0.0)
+      aws-sdk-core
       aws-sdk-dynamodb (= 1.15.0)
+      aws-sdk-s3
       business
       decorators
-      grape (~> 1)
+      groupdate
       httparty
       loofah (= 2.2.3)
       pandarus (= 0.7.0)
@@ -53,8 +55,8 @@ GEM
       tzinfo (~> 1.1)
     arel (7.1.4)
     aws-eventstream (1.0.1)
-    aws-partitions (1.136.0)
-    aws-sdk-core (3.46.0)
+    aws-partitions (1.141.0)
+    aws-sdk-core (3.46.2)
       aws-eventstream (~> 1.0)
       aws-partitions (~> 1.0)
       aws-sigv4 (~> 1.0)
@@ -119,13 +121,8 @@ GEM
       link_header (>= 0.0.7)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
-    grape (1.2.3)
-      activesupport
-      builder
-      mustermann-grape (~> 1.0.0)
-      rack (>= 1.3.0)
-      rack-accept
-      virtus (>= 1.0.0)
+    groupdate (4.1.1)
+      activesupport (>= 4.2)
     httparty (0.16.4)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
@@ -134,7 +131,7 @@ GEM
     ice_nine (0.11.2)
     inflecto (0.0.2)
     jmespath (1.4.0)
-    json (2.1.0)
+    json (2.2.0)
     link_header (0.0.8)
     loofah (2.2.3)
       crass (~> 1.0.2)
@@ -150,9 +147,6 @@ GEM
     minitest (5.11.3)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
-    mustermann (1.0.3)
-    mustermann-grape (1.0.0)
-      mustermann (~> 1.0.0)
     nio4r (2.3.1)
     nokogiri (1.10.1)
       mini_portile2 (~> 2.4.0)
@@ -174,8 +168,6 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     rack (2.0.6)
-    rack-accept (0.4.5)
-      rack (>= 0.4)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (5.0.7.1)
@@ -245,13 +237,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  aws-sdk-core
-  aws-sdk-s3
   better_errors
   binding_of_caller
   byebug
   canvas_shim!
-  decorators
   delayed_job_active_record
   dotenv-rails
   faker
