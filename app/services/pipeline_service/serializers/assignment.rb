@@ -6,7 +6,7 @@ module PipelineService
         @course_id = @object.course.id
       end
 
-      def additional_identifier_fields
+      def self.additional_identifier_fields
         [:course_id]
       end
 
