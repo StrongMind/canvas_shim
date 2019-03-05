@@ -2,7 +2,6 @@
 #
 # Class methods map to Commands
 # ie: PipelineService::API::Publish calls PipelineService::Commands::Publish
-#
 module PipelineService
   module API
     class Publish

@@ -16,7 +16,7 @@ module PipelineService
         @workflow_state == 'deleted' || @object_is_destroyed
       end
 
-      def status 
+      def status
         return 'deleted' if destroyed?
         @workflow_state
       end
@@ -36,6 +36,14 @@ module PipelineService
               nil
             end
           end
+      end
+
+      def fetch
+        self.class.new(noun_class.find_by(id: id))
+      end
+
+      def valid?
+        !additional_identifiers.values.any?(&:nil?)
       end
 
       private
