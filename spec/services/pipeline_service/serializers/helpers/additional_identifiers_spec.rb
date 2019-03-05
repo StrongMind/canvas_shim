@@ -23,11 +23,17 @@ describe PipelineService::Helpers::AdditionalIdentifiers do
         let(:instance) { Assignment.create(context: course) }
         let(:course) { Course.create }
 
-        let(:additional_identifiers) {
+        let(:additional_identifiers) do
             subject.call(
                 instance: instance, 
-                fields: [ PipelineService::Models::Identifier.new(:course_id, alias: :context_id) ]
+                fields: [ 
+                    PipelineService::Models::Identifier.new(:context_id, alias: :course_id)
+                ]
             )
-        }        
+        end    
+
+        it 'returns the field and value' do
+            expect(additional_identifiers).to eq(:course_id => course.id)
+        end
     end
 end
