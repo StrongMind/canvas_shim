@@ -8,7 +8,10 @@ module PipelineService
       attr_accessor :services_enabled, :context, :current_user, :params, :request
 
       def self.additional_identifier_fields
-        [:course_id, :user_id]
+        [
+          Models::Identifier.new(:course_id),
+          Models::Identifier.new(:user_id)
+        ]
       end
 
       def account_admin

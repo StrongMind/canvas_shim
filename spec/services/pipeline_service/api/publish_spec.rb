@@ -3,13 +3,14 @@ describe PipelineService::API::Publish do
   let(:publish_command_instance)    { double('publish_command_instance', call: nil) }
   let(:submission) { 
     double(
-      'submission', 
+      'submission',
       id: 1, 
-      class: 'Submission', 
+      class: 'Submission',
       assignment: double('assignment'),
       changes: {},
       assignment_id: 1,
-      course_id: 1
+      course_id: 1, 
+      user_id: 1
     )
   }  
 

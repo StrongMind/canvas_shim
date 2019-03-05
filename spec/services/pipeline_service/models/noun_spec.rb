@@ -1,7 +1,8 @@
 describe PipelineService::Models::Noun do
     include_context('pipeline_context')
     
-    let(:submission) { Submission.create(assignment: assignment, course: course) }
+    let(:user) { User.create }
+    let(:submission) { Submission.create(assignment: assignment, user: user) }
     let(:course) { Course.create }
     let(:assignment) { Assignment.create }
     let(:deleted_conversation) { Conversation.create() }
@@ -91,7 +92,8 @@ describe PipelineService::Models::Noun do
         it 'works with a submission' do
             noun = PipelineService::Models::Noun.new(submission)
             expect(noun.additional_identifiers).to eq(
-                :assignment_id => assignment.id
+                :assignment_id => assignment.id,
+                :user_id => user.id
             )
         end
     end

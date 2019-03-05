@@ -8,7 +8,7 @@ module PipelineService
         end
 
         it '#additional_identifier_fields' do
-            expect(described_class.additional_identifier_fields).to eq [:course_id]
+            expect(described_class.additional_identifier_fields.map(&:to_h)).to eq [{:context_id=>:course_id}]
         end
     end
 end
