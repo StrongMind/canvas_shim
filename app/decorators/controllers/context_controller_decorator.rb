@@ -1,14 +1,17 @@
 ContextController.class_eval do
-  # Adding page view talleys
+  #
+  # Decorate action/view to graph student activity via PageViews for course
+  #
   def roster_user_usage
+    Chronic.time_class = Time.zone
+
     if authorized_action(@context, @current_user, :read_reports)
       @user     = @context.users.find(params[:user_id])
       contexts  = [@context] + @user.group_memberships_for(@context).to_a
       @accesses = AssetUserAccess.for_user(@user).polymorphic_where(:context => contexts).most_recent
 
-      js_env({
-        PAGE_VIEWS_BY_HOUR: PageView.group_by_hour(:created_at, format: "%s").for_users([User.last]).count
-      })
+      @report = PageViewReporter.new(@current_user, @context)
+      @report.run
 
       respond_to do |format|
         format.html do

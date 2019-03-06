@@ -9,6 +9,7 @@ require 'httparty'
 require 'pandarus'
 require 'pipeline_publisher_ruby'
 require 'pg'
+require 'chronic'
 
 module CanvasShim
   class Engine < ::Rails::Engine

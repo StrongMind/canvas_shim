@@ -11,10 +11,7 @@
 // about supported directives.
 //
 //= require jquery/dist/jquery
-//= require d3/d3
 //
-// THIS IS SOMEONES FORK TO USE D3 V4, SEE YARN LOCK
-// https://github.com/hypercharge-code/cal-heatmap/tree/d3-v4
-//= require cal-heatmap/cal-heatmap
-//
-//= require canvas_shim/roster_user_usage
+// Add some Shim asset require directives here
+// i.e.
+// require canvas_shim/roster_user_usage
