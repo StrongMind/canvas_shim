@@ -20,7 +20,7 @@ module PipelineService
       end
 
       def perform
-        retry_if_invalid
+        retry_if_invalid unless object.valid?
         command.call
       end
 
@@ -28,11 +28,12 @@ module PipelineService
 
       attr_reader :jobs, :command_class, :queue, :changes
 
+      # If an object makes it here that is not valid, fetch it again and see if it is valid now.
+      # Otherwise, raise an error to renqueue the command
       def retry_if_invalid
-        return if @object.valid?
-        new_object = @object.fetch
-        raise "#{@object.name} noun with id=#{@object.id} is invalid" unless new_object.valid?
-        @object = new_object
+        @object = object.fetch
+        return if object.valid?
+        raise "#{object.name} noun with id=#{object.id} is invalid"
       end
 
       def subscriptions

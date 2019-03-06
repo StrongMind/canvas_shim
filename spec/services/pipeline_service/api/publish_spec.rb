@@ -88,7 +88,7 @@ describe PipelineService::API::Publish do
     end
 
     context 'the noun is invalid' do
-      let(:new_noun) { double('new_noun', valid?: false) }
+      let(:new_noun) { double('new_noun', valid?: false, name: 'assignment', id: 1) }
       let(:deleted_noun_instance) do 
         double('deleted_noun_instance', valid?: false, fetch: new_noun, name: 'assignment', id: 1) 
       end
@@ -98,7 +98,7 @@ describe PipelineService::API::Publish do
       end
       
       context 'valid after fetch' do
-        let(:new_noun) { double('new_noun', valid?: true) }
+        let(:new_noun) { double('new_noun', valid?: true, name: 'assignment') }
 
         it 'resets the object if it comes back valid' do
           subject.call
