@@ -1,4 +1,5 @@
 describe PipelineService::API::Publish do
+  let(:queue)                 { double('queue') }
   let(:publish_command_class)       { double('publish_command_class', new: publish_command_instance) }
   let(:publish_command_instance)    { double('publish_command_instance', call: nil) }
   let(:submission) { 
@@ -27,7 +28,7 @@ describe PipelineService::API::Publish do
   end
 
   context 'publish non-deletes' do
-    let(:queue)                 { double('queue') }
+    
     let(:deleted_wrapper_instance) {}
 
     subject do
@@ -65,7 +66,7 @@ describe PipelineService::API::Publish do
     include_context 'pipeline_context'
     let(:conversation) { double('conversation', destroyed?: true) }  
     let(:deleted_noun_class) { PipelineService::Models::Noun }
-    let(:deleted_noun_instance) { double('deleted_noun_instance') }
+    let(:deleted_noun_instance) { double('deleted_noun_instance', valid?: true) }
 
     before do
       allow(PipelineService::Models::Noun)
@@ -84,6 +85,26 @@ describe PipelineService::API::Publish do
           .and_return(publish_command_instance)
         
       subject.call
+    end
+
+    context 'the noun is invalid' do
+      let(:new_noun) { double('new_noun', valid?: false) }
+      let(:deleted_noun_instance) do 
+        double('deleted_noun_instance', valid?: false, fetch: new_noun, name: 'assignment', id: 1) 
+      end
+
+      it 'Raises an error if it cant get a valid noun ' do
+        expect{ subject.call }.to raise_error(RuntimeError, "assignment noun with id=1 is invalid")
+      end
+      
+      context 'valid after fetch' do
+        let(:new_noun) { double('new_noun', valid?: true) }
+
+        it 'resets the object if it comes back valid' do
+          subject.call
+          expect(subject.object).to eq new_noun
+        end
+      end
     end
   end
 end

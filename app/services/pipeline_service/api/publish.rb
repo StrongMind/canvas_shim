@@ -5,6 +5,8 @@
 module PipelineService
   module API
     class Publish
+      attr_reader :object
+
       def initialize(object, args={})
         @object = Models::Noun.new(object)
         @changes = object.try(:changes)
@@ -18,13 +20,20 @@ module PipelineService
       end
 
       def perform
+        retry_if_invalid
         command.call
       end
 
       private
 
-      attr_reader :object, :jobs, :command_class, :queue, :changes
+      attr_reader :jobs, :command_class, :queue, :changes
 
+      def retry_if_invalid
+        return if @object.valid?
+        new_object = @object.fetch
+        raise "#{@object.name} noun with id=#{@object.id} is invalid" unless new_object.valid?
+        @object = new_object
+      end
 
       def subscriptions
         Events::Subscription.new(

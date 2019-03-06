@@ -30,7 +30,7 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
       end
       
       let(:conversation_participant) { 
-        ConversationParticipant.create
+        ConversationParticipant.create(conversation_id: 2)
       }
       
       subject do
