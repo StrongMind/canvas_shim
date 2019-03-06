@@ -48,7 +48,7 @@
         <div class="hour">
           <% if hour != 0 %>
             <label class="col-label">
-              <%= hour_start.strftime("%l %p") %>
+              <%= hour_start.strftime("%l%p").strip.downcase[0...-1] %>
             </label>
             <% hour_start += 1.hour %>
           <% end %>

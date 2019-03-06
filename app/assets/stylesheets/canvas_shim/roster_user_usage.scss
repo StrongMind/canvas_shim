@@ -4,18 +4,16 @@
     flex-direction: row;
     justify-content: space-around;
 
-    height: 50px;
+    height: 20px;
 
     .hour {
-      position: relative;
       width: 50px;
 
       .col-label {
-        position: absolute;
-        top: 15px;
-        left: 8px;
-        transform: rotate(-45deg);
-        width: 45px;
+        font-size: 0.575rem;
+        margin: 0 auto;
+        display: block;
+        width: 17px;
       }
     }
   }
@@ -24,6 +22,7 @@
 .week {
   .day-label {
     min-width: 32px;
+    font-size: 0.575rem;
   }
 
   .day {
@@ -43,7 +42,6 @@
     .hour {
       width: 50px;
       border: 1px solid #fff;
-      // #e6e6e6
       border-radius: 3px;
       text-align: center;
     }
