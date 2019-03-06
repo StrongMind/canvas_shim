@@ -22,7 +22,7 @@ describe BasicLTI::BasicOutcomes::LtiResponse do
       end
 
       it 'sets the score and grade to the highest in the submission history' do
-        expect(submission).to receive(:update_columns).with({grade: 100, score: 100, published_grade: 100, published_score: 100})
+        expect(submission).to receive(:update_columns).with({ grade: 100, score: 100, published_grade: 100, published_score: 100 })
         subject.create_homework_submission(1,2,3,4,5,6)
       end
 

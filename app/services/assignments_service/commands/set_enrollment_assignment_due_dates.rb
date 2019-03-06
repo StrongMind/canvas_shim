@@ -15,6 +15,7 @@ module AssignmentsService
         return unless SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on'
         return unless SettingsService.get_settings(object: :school, id: 1)['auto_enrollment_due_dates'] == 'on'
         @course = @enrollment.course
+        return unless @course
         return self unless @course.start_at
         @user = @enrollment.user
         @assignment_count = @course.assignments.count

@@ -1,3 +1,0 @@
-[submodule "spec/test_app/public/swagger"]
-	path = spec/test_app/public/swagger
-	url = git@github.com:wordnik/swagger-ui.git
