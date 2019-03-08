@@ -1,7 +1,8 @@
 describe PipelineService::Models::Noun do
     include_context('pipeline_context')
     
-    let(:submission) { Submission.create(assignment: assignment, course: course) }
+    let(:submission) { Submission.create(assignment: assignment, user: user) }
+    let(:user) { User.create }
     let(:course) { Course.create }
     let(:assignment) { Assignment.create }
     let(:deleted_conversation) { Conversation.create() }

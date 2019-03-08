@@ -19,7 +19,7 @@ describe AssignmentsService::Commands::DistributeDueDates do
   end
 
   let(:start_at) { Date.parse("Mon Nov 26 2018") }
-  let(:end_at)   { start_at + 5.days }
+  let(:end_at)   { start_at + 7.days }
   let(:course) do
     double(
       :course,

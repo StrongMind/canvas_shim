@@ -1,12 +1,16 @@
 module PipelineService
     module Helpers
         class AdditionalIdentifiers
-            def self.call(instance:, fields:)
-                return {} if instance.nil?
+            def self.call(payload:, fields:)
+                return {} if payload.empty?
                 
+                result = {}
+
                 fields.map do |field|
-                    [field, instance.send(field.to_s)]
-                end.to_h
+                    result[field.to_s] = payload[field.to_s]
+                end
+
+                result
             end
         end
     end

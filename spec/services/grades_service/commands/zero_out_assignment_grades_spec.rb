@@ -1,5 +1,13 @@
 describe GradesService::Commands::ZeroOutAssignmentGrades do
   subject {described_class.new(submission)}
+
+  let(:external_tool_tag) do
+    double(
+      "external_tool_tag",
+      url: 'http://bob.bob'
+    )
+  end
+
   let(:assignment) do
     double(
       "assignment",
@@ -8,7 +16,9 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       due_at: nil,
       context: course,
       mute!: nil,
-      unmute!: nil
+      unmute!: nil,
+      overridden: true,
+      external_tool_tag: external_tool_tag
     )
   end
 
@@ -71,6 +81,28 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
         expect {subject.call!(log_file: 'logfile')}.to raise_error(RuntimeError)
       end
     end
+
+    context 'extended operation logging' do
+      before do
+        allow(SettingsService).to receive('get_settings').and_return({'zero_out_extended_log' => 'on', 'zero_out_past_due' => 'on'})
+      end
+
+      it 'logs the operation with additional details' do
+        fh = File.open('test.log', 'a+')
+        expect(File).to receive(:open).and_return(fh)
+        expect(fh).to receive(:close)
+        expect(fh).to receive(:write).with("1,,#{submission.cached_due_date},#{assignment.due_at},true,http://bob.bob\n")
+
+        subject.call!(log_file: 'logfile')
+      end
+
+      it 'dies if the file can not be opened' do
+        allow(CSV).to receive(:open).and_raise
+        expect(assignment).to_not receive(:grade_student)
+        expect {subject.call!(log_file: 'logfile')}.to raise_error(RuntimeError)
+      end
+    end
+
 
     context 'will not grade' do
       it 'when there is no due date on the submission' do

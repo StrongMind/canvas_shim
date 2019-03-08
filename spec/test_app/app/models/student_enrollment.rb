@@ -1,2 +1,0 @@
-class StudentEnrollment < Enrollment
-end

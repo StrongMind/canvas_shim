@@ -43,7 +43,7 @@ module PipelineService
       end
 
       def account_id
-        ::Enrollment.find(object.id).root_account_id
+        object.root_account.id
       end
 
       def protocol
