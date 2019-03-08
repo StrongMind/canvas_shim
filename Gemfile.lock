@@ -2,14 +2,20 @@ PATH
   remote: .
   specs:
     canvas_shim (0.0.0)
+      aws-sdk-core
       aws-sdk-dynamodb (= 1.15.0)
+      aws-sdk-s3
       business
+      chronic
+      coffee-rails
       decorators
-      grape (~> 1)
+      groupdate
       httparty
       loofah (= 2.2.3)
       pandarus (= 0.7.0)
       pipeline_publisher_ruby
+      sass-rails
+      uglifier
 
 GEM
   remote: https://rubygems.org/
@@ -53,7 +59,7 @@ GEM
       tzinfo (~> 1.1)
     arel (7.1.4)
     aws-eventstream (1.0.1)
-    aws-partitions (1.141.0)
+    aws-partitions (1.142.0)
     aws-sdk-core (3.46.2)
       aws-eventstream (~> 1.0)
       aws-partitions (~> 1.0)
@@ -74,7 +80,7 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
-    better_errors (2.5.1)
+    better_errors (2.5.0)
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
@@ -82,10 +88,18 @@ GEM
       debug_inspector (>= 0.0.1)
     builder (3.2.3)
     business (1.16.0)
-    byebug (11.0.0)
+    byebug (10.0.2)
+    chronic (0.10.2)
     coderay (1.1.2)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
+    coffee-rails (4.2.2)
+      coffee-script (>= 2.2.0)
+      railties (>= 4.0.0)
+    coffee-script (2.4.1)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.12.2)
     concurrent-ruby (1.1.4)
     crass (1.0.4)
     debug_inspector (0.0.3)
@@ -99,16 +113,17 @@ GEM
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.3)
-    dotenv (2.7.1)
-    dotenv-rails (2.7.1)
-      dotenv (= 2.7.1)
-      railties (>= 3.2, < 6.1)
+    dotenv (2.6.0)
+    dotenv-rails (2.6.0)
+      dotenv (= 2.6.0)
+      railties (>= 3.2, < 6.0)
     equalizer (0.0.11)
     erubi (1.8.0)
     erubis (2.7.0)
     ethon (0.12.0)
       ffi (>= 1.3.0)
-    faker (1.9.3)
+    execjs (2.7.0)
+    faker (1.9.1)
       i18n (>= 0.7)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
@@ -119,13 +134,8 @@ GEM
       link_header (>= 0.0.7)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
-    grape (1.2.3)
-      activesupport
-      builder
-      mustermann-grape (~> 1.0.0)
-      rack (>= 1.3.0)
-      rack-accept
-      virtus (>= 1.0.0)
+    groupdate (4.1.1)
+      activesupport (>= 4.2)
     httparty (0.16.4)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
@@ -150,9 +160,6 @@ GEM
     minitest (5.11.3)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
-    mustermann (1.0.3)
-    mustermann-grape (1.0.0)
-      mustermann (~> 1.0.0)
     nio4r (2.3.1)
     nokogiri (1.10.1)
       mini_portile2 (~> 2.4.0)
@@ -168,14 +175,12 @@ GEM
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
-    pry-byebug (3.7.0)
-      byebug (~> 11.0)
+    pry-byebug (3.6.0)
+      byebug (~> 10.0)
       pry (~> 0.10)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     rack (2.0.6)
-    rack-accept (0.4.5)
-      rack (>= 0.4)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (5.0.7.1)
@@ -202,6 +207,9 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (12.3.2)
+    rb-fsevent (0.10.3)
+    rb-inotify (0.10.0)
+      ffi (~> 1.0)
     rspec-core (3.8.0)
       rspec-support (~> 3.8.0)
     rspec-expectations (3.8.2)
@@ -219,6 +227,17 @@ GEM
       rspec-mocks (~> 3.8.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
+    sass (3.7.3)
+      sass-listen (~> 4.0.0)
+    sass-listen (4.0.0)
+      rb-fsevent (~> 0.9, >= 0.9.4)
+      rb-inotify (~> 0.9, >= 0.9.7)
+    sass-rails (5.0.7)
+      railties (>= 4.0.0, < 6)
+      sass (~> 3.1)
+      sprockets (>= 2.8, < 4.0)
+      sprockets-rails (>= 2.0, < 4.0)
+      tilt (>= 1.1, < 3)
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
@@ -228,10 +247,13 @@ GEM
       sprockets (>= 3.0.0)
     thor (0.20.3)
     thread_safe (0.3.6)
+    tilt (2.0.9)
     typhoeus (1.3.1)
       ethon (>= 0.9.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
+    uglifier (4.1.20)
+      execjs (>= 0.3.0, < 3)
     virtus (1.0.5)
       axiom-types (~> 0.1)
       coercible (~> 1.0)
@@ -245,13 +267,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  aws-sdk-core
-  aws-sdk-s3
   better_errors
   binding_of_caller
   byebug
   canvas_shim!
-  decorators
   delayed_job_active_record
   dotenv-rails
   faker
@@ -262,4 +281,4 @@ DEPENDENCIES
   rspec-rails (~> 3)
 
 BUNDLED WITH
-   1.15.4
+   2.0.1

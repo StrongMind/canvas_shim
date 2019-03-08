@@ -10,4 +10,8 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require_tree .
+//= require jquery/dist/jquery
+//
+// Add some Shim asset require directives here
+// i.e.
+// require canvas_shim/roster_user_usage

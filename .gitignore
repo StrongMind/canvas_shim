@@ -12,3 +12,4 @@ test.log
 *.gem
 .env
 .env.*
+/node_modules
