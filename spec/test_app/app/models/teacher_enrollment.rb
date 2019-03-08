@@ -1,0 +1,2 @@
+class TeacherEnrollment < Enrollment
+end
