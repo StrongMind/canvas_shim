@@ -1,4 +1,6 @@
 describe PipelineService::Endpoints::Pipeline::MessageBuilder do
+  include_context "pipeline_context"
+
   let(:course) { Course.create }
   let(:user) { User.create }
   let(:enrollment) { Enrollment.create(user: user, course: course)}

@@ -1,4 +1,6 @@
 describe PipelineService::API::Publish do
+  include_context "pipeline_context"
+
   let(:queue)                 { double('queue') }
   let(:publish_command_class)       { double('publish_command_class', new: publish_command_instance) }
   let(:publish_command_instance)    { double('publish_command_instance', call: nil) }
@@ -16,14 +18,13 @@ describe PipelineService::API::Publish do
   }  
 
   context 'When deserializing' do
+
     it 'the object is a noun' do
-      Delayed::Worker.delay_jobs = true
+      allow(Delayed::Job).to receive(:enqueue)
       conversation = Conversation.create
-      PipelineService.publish(conversation)
-    
-      object = YAML.load(Delayed::Job.first.handler).instance_variable_get(:@object)
-      expect(object.class).to eq PipelineService::Models::Noun
-      Delayed::Worker.delay_jobs = false
+      expect(PipelineService::Models::Noun).to receive(:new).with(conversation).and_return(
+          PipelineService::Models::Noun.new(double('noun', valid?: true, id: 1, changes: [])))
+      PipelineService::API::Publish.new(conversation).call
     end
   end
 

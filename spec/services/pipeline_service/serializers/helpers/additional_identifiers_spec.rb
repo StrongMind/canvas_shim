@@ -1,4 +1,6 @@
 describe PipelineService::Helpers::AdditionalIdentifiers do
+    include_context "pipeline_context"
+
     subject { described_class }
     let(:conversation) { Conversation.create }
     let(:instance) { ConversationParticipant.create(conversation: conversation) }
