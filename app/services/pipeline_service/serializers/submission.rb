@@ -22,7 +22,10 @@ module PipelineService
       end
 
       def self.additional_identifier_fields
-        [:assignment_id]
+        [
+          Models::Identifier.new(:assignment_id), 
+          Models::Identifier.new(:user_id)
+        ]
       end
 
       private

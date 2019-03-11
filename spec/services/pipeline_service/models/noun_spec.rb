@@ -1,14 +1,17 @@
 describe PipelineService::Models::Noun do
     include_context('pipeline_context')
     
-    let(:submission) { Submission.create(assignment: assignment, course: course) }
+    let(:user) { User.create }
+    let(:submission) { Submission.create(assignment: assignment, user: user) }
+    let(:submission_noun) { described_class.new(submission) }
     let(:course) { Course.create }
     let(:assignment) { Assignment.create }
     let(:deleted_conversation) { Conversation.create() }
     let(:teacher_enrollment) { TeacherEnrollment.new }
+    let(:teacher_enrollment_noun) { described_class.new(teacher_enrollment)}
     let(:conversation_noun) { described_class.new(conversation) }
     let(:deleted_conversation_noun) { described_class.new(deleted_conversation) }
-    let(:teacher_enrollment_noun) { described_class.new(teacher_enrollment) }
+    
     let(:unit_grades) { PipelineService::Nouns::UnitGrades.new(submission) }
     let(:unit_grades_noun) { described_class.new(unit_grades) }
     let(:changes) { {'workflow_state' => ['active', 'completed']} }
@@ -70,6 +73,23 @@ describe PipelineService::Models::Noun do
         end
     end
 
+    describe '#fetch' do
+        it 'returns a new instance fetched from the database' do
+            submission.update(workflow_state: 'newstate')
+            new_noun = submission_noun.fetch
+            expect(new_noun.status).to eq 'newstate'
+        end
+    end
+
+    describe '#valid?' do
+        it 'is valid if all of the additional ids are present' do
+            expect(submission_noun).to be_valid
+        end
+
+        it 'is not valid if any of the additional ids are missing' do
+            expect(described_class.new(Submission.new)).to_not be_valid
+        end
+    end
 
     describe '#serializer' do
         it 'Conversations' do
@@ -91,7 +111,8 @@ describe PipelineService::Models::Noun do
         it 'works with a submission' do
             noun = PipelineService::Models::Noun.new(submission)
             expect(noun.additional_identifiers).to eq(
-                :assignment_id => assignment.id
+                :assignment_id => assignment.id,
+                :user_id => user.id
             )
         end
     end

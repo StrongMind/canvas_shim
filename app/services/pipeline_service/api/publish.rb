@@ -2,10 +2,11 @@
 #
 # Class methods map to Commands
 # ie: PipelineService::API::Publish calls PipelineService::Commands::Publish
-#
 module PipelineService
   module API
     class Publish
+      attr_reader :object
+
       def initialize(object, args={})
         @object = Models::Noun.new(object)
         @changes = object.try(:changes)
@@ -19,13 +20,21 @@ module PipelineService
       end
 
       def perform
+        retry_if_invalid unless object.valid?
         command.call
       end
 
       private
 
-      attr_reader :object, :jobs, :command_class, :queue, :changes
+      attr_reader :jobs, :command_class, :queue, :changes
 
+      # If an object makes it here that is not valid, fetch it again and see if it is valid now.
+      # Otherwise, raise an error to renqueue the command
+      def retry_if_invalid
+        @object = object.fetch
+        return if object.valid?
+        raise "#{object.name} noun with id=#{object.id} is invalid"
+      end
 
       def subscriptions
         Events::Subscription.new(

@@ -10,7 +10,7 @@ module PipelineService
       end
 
       def self.additional_identifier_fields
-        [:conversation_id]
+        [Models::Identifier.new(:conversation_id)]
       end
 
       private

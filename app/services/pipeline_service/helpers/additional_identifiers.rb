@@ -5,7 +5,7 @@ module PipelineService
                 return {} if instance.nil?
                 
                 fields.map do |field|
-                    [field, instance.send(field.to_s)]
+                    field.to_a(instance)
                 end.to_h
             end
         end

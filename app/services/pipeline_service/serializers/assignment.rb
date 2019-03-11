@@ -6,8 +6,8 @@ module PipelineService
         @course_id = @object.course.id
       end
 
-      def additional_identifier_fields
-        [:course_id]
+      def self.additional_identifier_fields
+        [Models::Identifier.new(:context_id, alias: :course_id)]
       end
 
       def call
