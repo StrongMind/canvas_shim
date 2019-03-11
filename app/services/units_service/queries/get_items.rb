@@ -13,8 +13,8 @@ module UnitsService
           result[context_module] =
             context_module.content_tags.select do |ct|
               ct.content.present? &&
-              ct.content.respond_to?(:submissions) &&
-              ct.content.workflow_state == 'published'
+              (ct.content.respond_to?(:submissions) || ct.content.try(:assignment).respond_to?(:submissions)) &&
+              ['published', 'active'].include?(ct.content.workflow_state)
             end
         end
         result

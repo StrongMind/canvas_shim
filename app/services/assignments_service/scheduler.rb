@@ -5,7 +5,7 @@ module AssignmentsService
     def initialize(args = {})
       @args = args
       @startdate = first_due_date
-      @enddate = args[:course].end_at
+      @enddate = last_due_date
       @assignment_count = args[:assignment_count]
     end
 
@@ -36,6 +36,10 @@ module AssignmentsService
       else
         @args[:course].start_at.in_time_zone(@args[:course].time_zone).at_end_of_day + 1.day
       end
+    end
+
+    def last_due_date
+      @args[:course].end_at.in_time_zone(@args[:course].time_zone).at_end_of_day - 1.day
     end
 
     def calendar
