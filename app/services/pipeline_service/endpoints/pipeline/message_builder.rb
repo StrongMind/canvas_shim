@@ -8,7 +8,8 @@ module PipelineService
           @object        = args[:object]
           @serializer    = args[:serializer]
           @args          = args
-          configure_dependencies
+          @logger        = @args[:logger] || PipelineService::Logger
+          @canvas_domain = ENV['CANVAS_DOMAIN']
         end
 
         def call
@@ -21,7 +22,7 @@ module PipelineService
 
         private
 
-        attr_reader :message_class, :object, :fetcher, :serializer, :canvas_domain, :logger, :serialized_object
+        attr_reader :message_class, :object, :serializer, :canvas_domain, :logger, :serialized_object
 
         def serialize
           @serialized_object = serializer_instance.call
@@ -35,53 +36,44 @@ module PipelineService
           Logger.new(source: 'pipeline', message: payload).call
         end
 
+        def status
+          @object.status
+        end
+
         def payload
           {
-            noun: noun,
+            noun: noun_name,
             meta: {
               source: SOURCE,
               domain_name: canvas_domain,
               api_version: 1,
-              status: object.try(:state)
+              status: status
             },
-            identifiers: { id: id }.merge(additional_identifiers),
+            identifiers: { id: object.id }.merge(additional_identifiers),
             data: data
           }
         end
 
         def additional_identifiers
-          return {} unless serializer_instance.respond_to?(:additional_identifiers)
-
-          serializer_instance.additional_identifiers
+          object.additional_identifiers
         end
 
-        def configure_dependencies
-          @fetcher       = @args[:fetcher] || Serializers::Fetcher
-          @logger        = @args[:logger] || PipelineService::Logger
-          @canvas_domain = ENV['CANVAS_DOMAIN']
-        end
 
         def data
-          return {} if object.try(:state) == :deleted || object.try(:workflow_state) == 'deleted'
           serialized_object
         end
 
         def fetch_serializer
           return if @serializer
-          @serializer = fetcher.fetch(object: object)
+          @serializer = object.serializer
         end
 
         def build
           payload.to_hash
         end
 
-        def noun
-          object.class.to_s.split('::').last.underscore
-        end
-
-        def id
-          return object.id unless object.is_a?(Hash)
-          object[:id]
+        def noun_name
+          object.name
         end
       end
     end

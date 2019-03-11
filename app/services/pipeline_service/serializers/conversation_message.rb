@@ -9,8 +9,8 @@ module PipelineService
         @payload = Builders::ConversationMessageJSONBuilder.call(conversation_message) || {}
       end
 
-      def additional_identifiers
-        Helpers::AdditionalIdentifiers.call(payload: @payload, fields: [:conversation_id])
+      def self.additional_identifier_fields
+        [Models::Identifier.new(:conversation_id)]
       end
 
       private

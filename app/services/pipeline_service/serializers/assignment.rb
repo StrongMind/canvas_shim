@@ -2,7 +2,12 @@ module PipelineService
   module Serializers
     class Assignment
       def initialize(object:)
-        @object = object
+        @object = ::Assignment.find(object.id)
+        @course_id = @object.course.id
+      end
+
+      def self.additional_identifier_fields
+        [Models::Identifier.new(:context_id, alias: :course_id)]
       end
 
       def call
@@ -43,7 +48,7 @@ module PipelineService
       end
 
       def course_id
-        object.course.id
+        @course_id
       end
 
       def protocol
