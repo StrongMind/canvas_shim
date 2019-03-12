@@ -6,7 +6,6 @@
   "author": "Chris Irish <supairish@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "cal-heatmap": "https://github.com/hypercharge-code/cal-heatmap.git",
     "jquery": "^3.3.1"
   }
 }
