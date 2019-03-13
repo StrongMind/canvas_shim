@@ -1,10 +1,11 @@
 describe PipelineService::Endpoints::Pipeline::MessageBuilder do
+  include_context "pipeline_context"
+
   let(:course) { Course.create }
-  let(:enrollment) { Enrollment.create(course: course) }
+  let(:user) { User.create }
+  let(:enrollment) { Enrollment.create(user: user, course: course)}
 
   before do
-    allow(PipelineService::Serializers::Enrollment).to receive(:additional_identifier_fields).and_return([:course_id])
-    
     ENV['CANVAS_DOMAIN'] = 'someschool.com'
     ENV['PIPELINE_ENDPOINT'] ='endpoint'
     ENV['PIPELINE_USER_NAME'] ='canvas_stage'
@@ -31,7 +32,7 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
       end
       
       let(:conversation_participant) { 
-        ConversationParticipant.create
+        ConversationParticipant.create(conversation_id: 2)
       }
       
       subject do
@@ -71,9 +72,10 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
       expect(message[:data]).to eq(:id=>1)
     end
 
-    context "when there are additional identifiers in the serializer" do
-      it 'includes the additional_identifiers in the message' do
+    context "when there are additional identifiers in the serializer" do      
+      it 'adds ids to the message identifiers' do
         expect(message[:identifiers][:course_id]).to eq course.id
+        expect(message[:identifiers][:user_id]).to eq user.id
       end
     end
 

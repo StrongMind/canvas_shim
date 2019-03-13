@@ -1,0 +1,11 @@
+{
+  "name": "canvas_shim",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:StrongMind/canvas_shim.git",
+  "author": "Chris Irish <supairish@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "^3.3.1"
+  }
+}

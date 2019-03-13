@@ -7,6 +7,13 @@ module PipelineService
 
       attr_accessor :services_enabled, :context, :current_user, :params, :request
 
+      def self.additional_identifier_fields
+        [
+          Models::Identifier.new(:course_id),
+          Models::Identifier.new(:user_id)
+        ]
+      end
+
       def account_admin
         account = ::Account.default.account_users.find do |account_user|
           account_user.role.name == 'AccountAdmin'

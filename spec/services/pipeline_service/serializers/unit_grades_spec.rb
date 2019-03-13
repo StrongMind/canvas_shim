@@ -7,7 +7,7 @@ describe PipelineService::Serializers::UnitGrades do
       let(:course) { Course.create }
       let(:pseudonym) { Pseudonym.create }
       let(:student) { User.create(pseudonym: pseudonym) }
-      let(:submission) { Submission.create(assignment: assignment, course: course, user: student) }
+      let(:submission) { Submission.create(assignment: assignment, user: student) }
       let(:unit_grades) { PipelineService::Nouns::UnitGrades.new(submission) }
       let(:random_string) { rand.to_s }
       let(:command_instance) { double('CommandInstance', call: { foo: random_string }) }

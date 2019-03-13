@@ -1,32 +1,35 @@
 describe PipelineService::API::Publish do
+  include_context "pipeline_context"
+
+  let(:queue)                 { double('queue') }
   let(:publish_command_class)       { double('publish_command_class', new: publish_command_instance) }
   let(:publish_command_instance)    { double('publish_command_instance', call: nil) }
   let(:submission) { 
     double(
-      'submission', 
+      'submission',
       id: 1, 
-      class: 'Submission', 
+      class: 'Submission',
       assignment: double('assignment'),
       changes: {},
       assignment_id: 1,
-      course_id: 1
+      course_id: 1, 
+      user_id: 1
     )
   }  
 
   context 'When deserializing' do
+
     it 'the object is a noun' do
-      Delayed::Worker.delay_jobs = true
+      allow(Delayed::Job).to receive(:enqueue)
       conversation = Conversation.create
-      PipelineService.publish(conversation)
-    
-      object = YAML.load(Delayed::Job.first.handler).instance_variable_get(:@object)
-      expect(object.class).to eq PipelineService::Models::Noun
-      Delayed::Worker.delay_jobs = false
+      expect(PipelineService::Models::Noun).to receive(:new).with(conversation).and_return(
+          PipelineService::Models::Noun.new(double('noun', valid?: true, id: 1, changes: [])))
+      PipelineService::API::Publish.new(conversation).call
     end
   end
 
   context 'publish non-deletes' do
-    let(:queue)                 { double('queue') }
+    
     let(:deleted_wrapper_instance) {}
 
     subject do
@@ -64,7 +67,7 @@ describe PipelineService::API::Publish do
     include_context 'pipeline_context'
     let(:conversation) { double('conversation', destroyed?: true) }  
     let(:deleted_noun_class) { PipelineService::Models::Noun }
-    let(:deleted_noun_instance) { double('deleted_noun_instance') }
+    let(:deleted_noun_instance) { double('deleted_noun_instance', valid?: true) }
 
     before do
       allow(PipelineService::Models::Noun)
@@ -83,6 +86,26 @@ describe PipelineService::API::Publish do
           .and_return(publish_command_instance)
         
       subject.call
+    end
+
+    context 'the noun is invalid' do
+      let(:new_noun) { double('new_noun', valid?: false, name: 'assignment', id: 1) }
+      let(:deleted_noun_instance) do 
+        double('deleted_noun_instance', valid?: false, fetch: new_noun, name: 'assignment', id: 1) 
+      end
+
+      it 'Raises an error if it cant get a valid noun ' do
+        expect{ subject.call }.to raise_error(RuntimeError, "assignment noun with id=1 is invalid")
+      end
+      
+      context 'valid after fetch' do
+        let(:new_noun) { double('new_noun', valid?: true, name: 'assignment') }
+
+        it 'resets the object if it comes back valid' do
+          subject.call
+          expect(subject.object).to eq new_noun
+        end
+      end
     end
   end
 end

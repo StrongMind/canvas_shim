@@ -1,0 +1,147 @@
+.hour-labels {
+  .day {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    height: 20px;
+
+    .hour {
+      width: 50px;
+
+      .col-label {
+        font-size: 0.575rem;
+        margin: 0 auto;
+        display: block;
+        width: 17px;
+      }
+    }
+  }
+}
+
+.week {
+  .day-label {
+    min-width: 32px;
+    font-size: 0.575rem;
+  }
+
+  .day {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    height: 25px;
+
+    .col-label {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 45px;
+    }
+
+    .hour {
+      width: 50px;
+      border: 1px solid #fff;
+      border-radius: 3px;
+      text-align: center;
+    }
+
+    .hour--no-border {
+      border: none !important;
+    }
+  }
+}
+
+.student-activity-chart-legend {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+
+  margin: 10px 0 0 33px;
+
+  height: 20px;
+
+  div {
+    width: 20px;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+  }
+}
+
+.band-0 {
+  background-color: #eee;
+}
+
+.band-1 {
+  background-color: #DBEAC0;
+}
+
+.band-2 {
+  background-color: #C3DD96;
+}
+
+.band-3 {
+  background-color: #ABCF6C;
+}
+
+.band-4 {
+  background-color: #93C242;
+}
+
+.band-5 {
+  background-color: #7CB518;
+}
+
+.band-6 {
+  background-color: #669514;
+}
+
+.band-7 {
+  background-color: #4F7410;
+}
+
+.band-8 {
+  background-color: #39530B;
+}
+
+.band-9 {
+  background-color: #223207;
+}
+
+// Alternate pendo style colors --
+
+// .band-0 {
+//   background-color: #fff;
+// }
+
+// .band-1 {
+//   background-color: #DBEAC0;
+// }
+
+// .band-2 {
+//   background-color: #C3DD96;
+// }
+
+// .band-3 {
+//   background-color: #ABCF6C;
+// }
+
+// .band-4 {
+//   background-color: #93C242;
+// }
+
+// .band-5 {
+//   background-color: #7CB518;
+// }
+
+// .band-6 {
+//   background-color: #669514;
+// }
+
+// .band-7 {
+//   background-color: #4F7410;
+// }
+
+// .band-8 {
+//   background-color: #39530B;
+// }

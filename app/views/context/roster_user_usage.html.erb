@@ -1,0 +1,133 @@
+<%
+# Copyright (C) 2011 - present Instructure, Inc.
+#
+# This file is part of Canvas.
+#
+# Canvas is free software: you can redistribute it and/or modify it under
+# the terms of the GNU Affero General Public License as published by the Free
+# Software Foundation, version 3 of the License.
+#
+# Canvas is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+# details.
+#
+# You should have received a copy of the GNU Affero General Public License along
+# with this program. If not, see <http://www.gnu.org/licenses/>.
+%>
+
+<% content_for :strongmind_assets do %>
+  <%= stylesheet_link_tag    "canvas_shim/application", media: "all" %>
+  <%= javascript_include_tag 'canvas_shim/application' %>
+<% end %>
+
+<% content_for :page_title, t('titles.access_report', 'Access Report') %>
+<% add_crumb(t('#crumbs.people', 'People'), context_url(@context, :context_users_url))
+  add_crumb(@user.name, context_url(@context, :context_user_url, @user))
+  @active_tab="people"
+  add_crumb(t('#crumbs.access_report', "Access Report"))
+  css_bundle :roster_user_usage
+%>
+<% content_for :right_side do %>
+  <a class="btn button-sidebar-wide" href="<%= context_url(@context, :context_user_url, @user) %>">
+    <i class="icon-arrow-left"></i>
+    <%= t('links.back_to_user', %{Back to User Page}) %>
+  </a>
+<% end %>
+<h1><%= t 'headings.user_access_report', '%{user} Access Report', :user => @user.name %></h1>
+
+<!-- StrongMind Added -->
+<div class="student-activity-chart">
+  <% week_start = @report.start_date %>
+
+  <div class="hour-labels">
+    <div class="day">
+      <% hour_start = Time.current.beginning_of_day %>
+
+      <% 25.times do |hour| %>
+        <div class="hour">
+          <% if hour != 0 %>
+            <label class="col-label">
+              <%= hour_start.strftime("%l%p").strip.downcase[0...-1] %>
+            </label>
+            <% hour_start += 1.hour %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="week">
+    <% @report.dataset.keys.sort.reverse.each do |day_key| %>
+      <div class="day">
+        <div class="hour hour--no-border">
+          <label class="day-label">
+            <%= Chronic.parse(day_key).strftime("%a") %>
+          </label>
+        </div>
+
+        <% @report.dataset[day_key].each do |hour, count| %>
+          <div class="hour <%= @report.class_for_databand(count) %>">
+            <%#= count %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="student-activity-chart-legend">
+  <div class="band-0"></div>
+  <div class="band-1"></div>
+  <div class="band-2"></div>
+  <div class="band-3"></div>
+  <div class="band-4"></div>
+  <div class="band-5"></div>
+  <div class="band-6"></div>
+  <div class="band-7"></div>
+  <div class="band-8"></div>
+</div>
+
+<div>
+  <%#= debug @report.page_views_by_hour %>
+  <%# debug @report.dataset_for_day_of_page_views.map {|pv| pv.page_views_count } %>
+</div>
+
+<div id="usage_report">
+  <table class="ic-Table">
+    <thead>
+      <tr>
+        <th><%= t('table_headings.content', %{Content}) %></th>
+        <th style="text-align: right;"><%= t('table_headings.num_times_viewed', %{Times Viewed}) %></th>
+        <th style="text-align: right;"><%= t('table_headings.num_times_participated', %{Times Participated}) %></th>
+        <th><%= t('table_headings.last_viewed_time', %{Last Viewed}) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @accesses.each do |access| %>
+        <tr class="access <%= access.asset_class_name %>">
+          <td class="name_holder">
+            <i class="icon <%= access.icon %>" aria-hidden="true"></i>
+            <span class="readable_name"><%= access.readable_name %></span>
+          </td>
+          <td class="view_score"><%= round_if_whole(access.corrected_view_score) %></td>
+          <td class="participate_score"><%= access.participate_score %></td>
+          <td class="last_viewed time_ago_date" data-timestamp="<%= access.last_access.try_rescue(:iso8601) %>"><%= datetime_string(access.last_access) %></td>
+        </tr>
+      <% end %>
+      <tr class="access blank" style="display: none;">
+        <td class="name_holder">
+          <i class="icon" aria-hidden="true"></i>
+          <span class="readable_name">&nbsp;</span>
+        </td>
+        <td class="view_score">&nbsp;</td>
+        <td class="participate_score">&nbsp;</td>
+        <td class="last_viewed time_ago_date">&nbsp;</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<%= will_paginate(@accesses) %>
+
+<% js_bundle 'legacy/context_roster_usage' %>

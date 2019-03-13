@@ -10,15 +10,14 @@ gemspec
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 
-# To use a debugger
-gem 'byebug', groups: ['development', 'test']
-gem "rspec-rails", "~> 3"
 gem 'delayed_job_active_record'
-gem 'aws-sdk-core'
-gem 'aws-sdk-s3'
 gem 'pg'
-gem 'faker'
-gem "rails", "~> 5.0.4"
-gem 'dotenv-rails'
-gem 'pry-byebug'
-gem 'decorators'
+gem 'rails', '~> 5.0.4'
+
+group :development, :test do
+  gem 'byebug', groups: ['development', 'test']
+  gem 'dotenv-rails'
+  gem 'faker'
+  gem 'pry-byebug'
+  gem 'rspec-rails', '~> 3'
+end
