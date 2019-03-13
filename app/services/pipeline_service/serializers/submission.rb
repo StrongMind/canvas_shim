@@ -24,11 +24,16 @@ module PipelineService
       def self.additional_identifier_fields
         [
           Models::Identifier.new(:assignment_id), 
-          Models::Identifier.new(:user_id)
+          Models::Identifier.new(:user_id),
+          Models::Identifier.new(course_identifier)
         ]
       end
 
       private
+
+      def self.course_identifier
+        Proc.new {|submission| [:course_id, submission.assignment.course.id]}
+      end
 
       def prefix
         if Rails.env == 'development'

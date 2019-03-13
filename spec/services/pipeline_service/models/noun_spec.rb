@@ -2,10 +2,10 @@ describe PipelineService::Models::Noun do
     include_context('pipeline_context')
     
     let(:user) { User.create }
-    let(:submission) { Submission.create(assignment: assignment, user: user) }
+    let(:submission) { Submission.create(assignment: assignment, user: user, course: course) }
     let(:submission_noun) { described_class.new(submission) }
     let(:course) { Course.create }
-    let(:assignment) { Assignment.create }
+    let(:assignment) { Assignment.create(course: course) }
     let(:deleted_conversation) { Conversation.create() }
     let(:teacher_enrollment) { TeacherEnrollment.new }
     let(:teacher_enrollment_noun) { described_class.new(teacher_enrollment)}
@@ -87,7 +87,7 @@ describe PipelineService::Models::Noun do
         end
 
         it 'is not valid if any of the additional ids are missing' do
-            expect(described_class.new(Submission.new)).to_not be_valid
+            expect(described_class.new(Submission.new(assignment: Assignment.new(course: Course.new)))).to_not be_valid
         end
     end
 
@@ -112,7 +112,8 @@ describe PipelineService::Models::Noun do
             noun = PipelineService::Models::Noun.new(submission)
             expect(noun.additional_identifiers).to eq(
                 :assignment_id => assignment.id,
-                :user_id => user.id
+                :user_id => user.id,
+                :course_id => course.id
             )
         end
     end

@@ -4,15 +4,15 @@ describe PipelineService::API::Publish do
   let(:queue)                 { double('queue') }
   let(:publish_command_class)       { double('publish_command_class', new: publish_command_instance) }
   let(:publish_command_instance)    { double('publish_command_instance', call: nil) }
+  let(:course) { double('course', id: 1) }
   let(:submission) { 
     double(
       'submission',
       id: 1, 
       class: 'Submission',
-      assignment: double('assignment'),
+      assignment: double('assignment', course: course),
       changes: {},
       assignment_id: 1,
-      course_id: 1, 
       user_id: 1
     )
   }  
