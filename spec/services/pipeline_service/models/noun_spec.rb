@@ -112,7 +112,6 @@ describe PipelineService::Models::Noun do
             noun = PipelineService::Models::Noun.new(submission)
             expect(noun.additional_identifiers).to eq(
                 :assignment_id => assignment.id,
-                :user_id => user.id,
                 :course_id => course.id
             )
         end

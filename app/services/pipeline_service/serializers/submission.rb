@@ -24,7 +24,6 @@ module PipelineService
       def self.additional_identifier_fields
         [
           Models::Identifier.new(:assignment_id), 
-          Models::Identifier.new(:user_id),
           Models::Identifier.new(course_identifier)
         ]
       end
@@ -32,7 +31,12 @@ module PipelineService
       private
 
       def self.course_identifier
-        Proc.new {|submission| [:course_id, submission.assignment.course.id]}
+        Proc.new do |submission|
+          return [:course_id, nil] unless 
+            submission.assignment && 
+            submission.assignment.course
+          [:course_id, submission.assignment.course.id] 
+        end
       end
 
       def prefix
