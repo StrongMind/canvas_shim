@@ -2,7 +2,9 @@
 Pipeline service publishes lifecycle changes over a pipeline to federate our data and make it available widely to the organization
 
 ## Usage
+```ruby
 PipelineService.publish(submission)
+```
 
 ## Serializers
 Active record objects are transformed via "serializers" into "nouns" that are published.  Currently there are two ways that the noun is built, throuh a generic ActiveRecord JSON serializer or a call to the Canvas API (depricated).
@@ -15,12 +17,13 @@ Nouns are built with a serializer and a builder.  A serializer receives a Noun t
 module Serializers
   class Dog
     def initialize(noun:)
-    @noun = noun
-    @object = Dog.find(noun.id)
-  end
+      @noun = noun
+      @object = Dog.find(noun.id)
+    end
   
-  def call
-    @object.to_json
+    def call
+      @object.to_json
+    end
   end
 end
 ```
@@ -29,10 +32,21 @@ end
 Optionally, a serializer can provide a class property named #additional_identifers that provides ids that help link the noun to other entities.  An identifer is represented as an object in the pipeline.
 
 ### Usage
-  Identifier.new(:owner_id)
+Standard usage.  Just pass a symbol of the field you want.
+```ruby
+Identifier.new(:owner_id)
+```
 
-####
-  Identifier.new(:context_id, alias: :course_id)
+Or you can alias it.  
+```ruby
+Identifier.new(:context_id, alias: :course_id)
+```
+Would result in 
+
+```ruby
+[:course_id, 32]
+```
+
 ```ruby
 module Serializers
   class Dog
