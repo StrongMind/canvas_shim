@@ -3,9 +3,9 @@ module PipelineService
         class Identifier
             attr_accessor :field_alias, :field, :instance
             
-            # field can be a symbol or a proc.  The proc should return
-            # an array with the field name and call a value from the 
-            # instance passed into #to_a
+            # the field parameter can be a symbol or a proc.  A proc 
+            # should return an array with the field name and call a 
+            # value from the instance passed into #to_a
             #
             # Proc.new do |submission| 
             #   [:course_id, submission.assignment.course.id]}
