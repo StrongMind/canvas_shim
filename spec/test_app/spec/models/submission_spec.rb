@@ -39,9 +39,7 @@ describe Submission do
         assignment.update(course: course)
       end
 
-      # Enrollment.where(course_id: @course.id, user_id: @student.id).first
       let!(:enrollment) {Enrollment.create(course: course, user: user)}
-
       let(:assignment) {Assignment.create}
       let(:user) {User.create(pseudonym: pseudonym)}
       let(:content_tag) {ContentTag.create(content: assignment)}

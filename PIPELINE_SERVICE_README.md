@@ -1,15 +1,14 @@
-# CanvasShim
-Canvas Shim is a rails engine that allows us to add functionality to Canvas LMS without changing the code base.  Additionally it provides services like Pipeline, see corresponding docs like PIPELINE_SERVICE_README.md to learn more about services.
+# PipelineService
+Pipeline service publishes lifecycle changes over a pipeline to federate our data and make it available widely to the organization
 
 ## Usage
-This Rails engine now allows decorating classes/modules/etc in Canvas LMS without altering Canvas's files
+PipelineService.publish(submission)
 
-It can also be used as a standard Rails engine with it's own routes/controllers/views/etc
+## Serializers
+Active record objects are transformed via "serializers" into "nouns" that are published.  Currently there are two ways that the noun is built, throuh a generic ActiveRecord JSON serializer or a call to the Canvas API (depricated).
 
-**To decorate controllers, helpers, models, lib stuff from CanvasLMS**
+### Submission
 
-- Create an **_almost same named_** file using format "{filename}_decorator.rb" under Shim's /app/decorators following the same CanvasLMS path
-- Then use .class_eval to override/extend the class being decorated or use Rails concerns
 
 **To decorate a view from CanvasLMS**
 
