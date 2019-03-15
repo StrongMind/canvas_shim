@@ -3,16 +3,15 @@ Pipeline service publishes lifecycle changes over a pipeline to federate our dat
 
 ## Usage
 ```ruby
-PipelineService.publish(submission)
+PipelineService.publish(Submission.last)
 ```
 
 ## Serializers
 Active record objects are transformed via "serializers" into "nouns" that are published.  Currently there are two ways that the noun is built, throuh a generic ActiveRecord JSON serializer or a call to the Canvas API (depricated).
 
-## Events
 
-## Adding new nouns
-Nouns are built with a serializer and a builder.  A serializer receives a Noun through the #call method and returns json.  In its simplest form a serializer looks like this:
+## Adding new nouns with Serializers
+Nouns are built with a serializers.  These should match the name of the active record model you want to update.  The serializer will automatically be looked up with this convention.  A serializer is initialized with Models::Noun and the `#call` method and returns json.  In its simplest form a serializer looks like this:
 ```ruby
 module Serializers
   class Dog
@@ -39,14 +38,19 @@ Identifier.new(:owner_id)
 
 Or you can alias it.  
 ```ruby
-Identifier.new(:context_id, alias: :course_id)
-```
-Would result in 
-
-```ruby
+Identifier.new(:context_id, alias: :course_id).to_a
+# Would result in:
 [:course_id, 32]
 ```
 
+Or you can pass in a proc.  Sometimes we need to traverse relationships on the active record instance.  That's what a proc is for!
+
+```ruby
+myproc = Proc.new {|dog| [:owner_spouse_id, dog.owner.spouse_id]}
+Identifier.new(my_proc)
+```
+
+Return Identifiers from the additional_identifiers method in the serializer:
 ```ruby
 module Serializers
   class Dog
@@ -54,15 +58,23 @@ module Serializers
     def self.additional_identifers
       [
         Identifier.new(:owner_id),
-        Identifier.new(:breed_id)
+        Identifier.new(:breed_id, alias: :doggy_id),
+        Identifier.new(
+          Proc.new do |dog| 
+            [:owner_spouse_id, dog.owner.spouse_id]
+          end
+        )
       ]
     end
   end
 end
 ```
 
+## Events
+COMING SOON!
+
 ## Noun Payloads
-When an ActiveRecord object is published, it is serialized into a payload that includes additional_identifiers and JSON data that represent the model.
+When an ActiveRecord object is published, it is serialized into a payload that includes additional_identifiers and JSON data that represent the model.  The following are examples of those payloads.
 
 ### Assignment
 ```json
@@ -208,7 +220,11 @@ When an ActiveRecord object is published, it is serialized into a payload that i
         }
     }
 }
+```
+
+
 ### Conversation
+```json
 {
     "source": "pipeline",
     "message": {
