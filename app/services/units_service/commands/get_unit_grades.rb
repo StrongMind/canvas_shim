@@ -16,11 +16,8 @@ module UnitsService
       private
 
       def get_sis_user_id
-        return unless
-          @student.respond_to?(:pseudonym) && 
-          @student.pseudonym &&
-          @student.pseudonym.sis_user_id
-        @student.pseudonym.sis_user_id
+        return unless @student.respond_to?(:pseudonym)
+        @student.pseudonym.try(:sis_user_id)
       end
 
       def unit_submissions
