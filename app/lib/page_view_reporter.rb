@@ -63,16 +63,11 @@ class PageViewReporter
   end
 
   def calc_databand_length
-    # puts "max_page_views: #{max_page_views}"
-    # puts "banding_divisor: #{banding_divisor}"
-
     # We're using 9 color bands in graph
     @band_length = max_page_views / 9.0
   end
 
   def class_for_databand(count_for_day)
-    # puts "Day count: #{count_for_day} - Band length: #{@band_length}"
-
     case count_for_day
     when 0
       'band-0'

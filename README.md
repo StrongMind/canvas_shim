@@ -1,5 +1,5 @@
 # CanvasShim
-Short description and motivation.
+Canvas Shim is a rails engine that allows us to add functionality to Canvas LMS without changing the code base.  Additionally it provides services like Pipeline, see corresponding docs like PIPELINE_SERVICE_README.md to learn more about services.
 
 ## Usage
 This Rails engine now allows decorating classes/modules/etc in Canvas LMS without altering Canvas's files
