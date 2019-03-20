@@ -3,6 +3,7 @@ class Enrollment < ActiveRecord::Base
   belongs_to :course
 
   after_create :distribute_due_dates
+  after_commit { PipelineService.publish(self)}
 
   def root_account
     Account.new
