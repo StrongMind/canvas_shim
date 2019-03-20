@@ -1,4 +1,5 @@
 describe Enrollment do
+  include_context "pipeline_context"
   let(:assignment) { Assignment.create }
   let(:course) { Course.create(assignments: [assignment]) }
   let(:command) { double("Command", perform: nil)}
@@ -11,7 +12,7 @@ describe Enrollment do
 
 
   it 'will run in the background' do
-    expect(Delayed::Job).to receive(:enqueue).exactly(2).times
+    expect(Delayed::Job).to receive(:enqueue)
     described_class.create(course: course, user: user)
   end
 end
