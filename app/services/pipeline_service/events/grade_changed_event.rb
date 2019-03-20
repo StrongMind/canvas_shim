@@ -9,14 +9,14 @@ module PipelineService
       end
 
       def emit
-        return unless should_trigger?
+        # return unless should_trigger?
         @subscription.responder.call
       end
 
       private
 
       def should_trigger?
-        return false unless @changes['score']
+        # return false unless @changes['score']
         @object.noun_class == PipelineService::Nouns::UnitGrades
       end
     end

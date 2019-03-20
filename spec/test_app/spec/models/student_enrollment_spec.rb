@@ -5,7 +5,7 @@ describe StudentEnrollment do
   let(:user) { User.create }
 
   it 'publishes pipeline events' do
-    expect(PipelineService::Events::HTTPClient).to receive(:post)
+    expect(PipelineService::Events::HTTPClient).to receive(:post).exactly(2).times
     described_class.create(course: course, user: user)
   end
 end
