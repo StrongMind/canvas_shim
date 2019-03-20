@@ -9,23 +9,12 @@ module PipelineService
       end
 
       def emit
-        return unless should_trigger?
         subscription.responder.call
       end
 
       private
 
-      attr_accessor :subscription, :object, :changes
-
-      def should_trigger?
-        return unless object.noun_class == ::StudentEnrollment
-        recently_completed?
-      end
-
-      def recently_completed?
-        return false unless changes['workflow_state']
-        changes['workflow_state'][1] == 'completed'
-      end
+      attr_accessor :subscription
     end
   end
 end
