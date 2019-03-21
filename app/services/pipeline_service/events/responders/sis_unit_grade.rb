@@ -11,6 +11,7 @@ module PipelineService
         end
 
         def call
+          return unless SettingsService.get_settings(object: :school, id: 1)['enable_unit_grade_calculations'] == true
           raise 'Missing config' if missing_config?
           queue.enqueue(self)
         end
