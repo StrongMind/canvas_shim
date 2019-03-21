@@ -1,4 +1,5 @@
 describe CourseProgress do
+  include_context 'pipeline_context'
   let(:user) { User.create }
   let(:user_2) { User.create }
   let(:observer) { User.create(observed_users: [user]) }
@@ -13,13 +14,6 @@ describe CourseProgress do
   let(:course_progress_student_2) { CourseProgress.new(course, user_2) }
 
   describe "#find_user_id" do
-    before do
-      allow(SettingsService).to receive(:get_settings).and_return({
-        'auto_due_dates' => nil,
-        'auto_enrollment_due_dates' => nil
-      })
-    end
-
     it 'returns the first observed user' do
       Enrollment.create(user: observer, course: course, type: 'ObserverEnrollment', associated_user_id: user.id)
       Enrollment.create(user: observer_2, course: course, type: 'ObserverEnrollment', associated_user_id: user.id)
@@ -34,10 +28,6 @@ describe CourseProgress do
 
   describe "#allow_course_progress?" do
     before do
-      allow(SettingsService).to receive(:get_settings).and_return({
-        'auto_due_dates' => nil,
-        'auto_enrollment_due_dates' => nil
-      })
       Enrollment.create(user: observer, course: course, type: 'ObserverEnrollment', associated_user_id: user.id)
       Enrollment.create(user: observer_2, course: course, type: 'ObserverEnrollment', associated_user_id: user.id)
     end
@@ -56,10 +46,6 @@ describe CourseProgress do
 
   describe "#excused_submission_count" do
     context "with excused submission" do
-      before do
-        allow(SettingsService).to receive(:get_settings).and_return({'disable_pipeline' => true})
-      end
-
       let(:excused_submission_count) { rand(2..5) }
 
       it "counts excused submissions" do
@@ -75,7 +61,6 @@ describe CourseProgress do
   describe "#requirement_count" do
     context "with excused submission" do
       before do
-        allow(SettingsService).to receive(:get_settings).and_return({'disable_pipeline' => true})
         excused_submission_count.times do
           Submission.create!(user: user, assignment: Assignment.create(course: course), excused: true)
         end

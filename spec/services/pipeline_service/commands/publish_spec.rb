@@ -1,5 +1,5 @@
 describe PipelineService::Commands::Publish do
-  let(:object)              { Enrollment.new }
+  let(:object)              { PipelineService::Models::Noun.new(Enrollment.new) }
   let(:user)                { double('user') }
   let(:test_message)        { {} }
   let(:client_instance)     { double('pipeline_client', call: double('call_result', message: test_message)) }
