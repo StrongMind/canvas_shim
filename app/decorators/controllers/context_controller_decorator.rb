@@ -10,7 +10,7 @@ ContextController.class_eval do
       contexts  = [@context] + @user.group_memberships_for(@context).to_a
       @accesses = AssetUserAccess.for_user(@user).polymorphic_where(:context => contexts).most_recent
 
-      @report = PageViewReporter.new(@current_user, @context)
+      @report = PageViewReporter.new(@user, @context)
       @report.run
 
       respond_to do |format|
