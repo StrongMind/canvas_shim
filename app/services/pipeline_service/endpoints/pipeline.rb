@@ -9,11 +9,7 @@ module PipelineService
 
       def call
         return if SettingsService.get_settings(object: :school, id: 1)['disable_pipeline']
-        if PipelineService.perform_synchronously?
-          perform
-        else
-          Delayed::Job.enqueue(self, priority: 1000000)
-        end
+        Delayed::Job.enqueue(self, priority: 1000000)
         self
       end
 
