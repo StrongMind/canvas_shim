@@ -24,4 +24,8 @@ module PipelineService
       raise 'unknown queue mode: ' + mode
     end
   end
+
+  def self.republish(range)
+    API::Republish.new(range).call
+  end
 end
