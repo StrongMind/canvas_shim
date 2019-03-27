@@ -1,5 +1,13 @@
 module PipelineService
   module API
+
+    # Republish all models given a class and a time range
+    #
+    # Usage: 
+    # > Republish.call(User, range: 3.days.ago...DateTime.now)
+    #
+    # Notes: 
+    # A submission will also cause a "UnitGrades" to be published
     class Republish
       def initialize(model, options)
         @range = options[:range]
