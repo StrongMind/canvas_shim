@@ -1,5 +1,5 @@
 describe PipelineService::Models::Noun do
-    include_context('pipeline_context')
+    include_context('stubbed_network')
     
     let(:user) { User.create }
     let(:submission) { Submission.create(assignment: assignment, user: user) }

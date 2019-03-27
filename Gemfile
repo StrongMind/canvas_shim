@@ -14,6 +14,10 @@ gem 'delayed_job_active_record'
 gem 'pg'
 gem 'rails', '~> 5.0.4'
 
+group :test do
+  gem 'webmock'
+end
+
 group :development, :test do
   gem 'byebug', groups: ['development', 'test']
   gem 'dotenv-rails'

@@ -1,5 +1,5 @@
 describe PipelineService::API::Republish do
-  include_context "pipeline_context"
+  include_context "stubbed_network"
   subject do 
     described_class.new(
       model: PipelineService::Nouns::UnitGrades, 
@@ -19,11 +19,11 @@ describe PipelineService::API::Republish do
     )
   end
 
-  let(:unit_grades) { double('unit_grades') }
+  let(:unit_grades_instance) { double('unit_grades_instance') }
   
   before do
     class_double("Submission", where: [submission]).as_stubbed_const
-    class_double("PipelineService::Nouns::UnitGrades", new: unit_grades).as_stubbed_const
+    class_double("PipelineService::Nouns::UnitGrades", new: unit_grades_instance).as_stubbed_const
   end
 
   describe '#call' do
@@ -66,8 +66,15 @@ describe PipelineService::API::Republish do
     end
 
     context 'when publishing a submission' do
-      it 'also publishes unit grades' do
-        expect(PipelineService).to receive(:publish).with(unit_grades)
+      subject do 
+        described_class.new(
+          model: Submission, 
+          range: 3.days.ago...DateTime.now
+        )
+      end
+
+      it 'wraps submissions in a unit grade instance' do
+        expect(PipelineService).to receive(:publish).with(unit_grades_instance)
         subject.call
       end
     end

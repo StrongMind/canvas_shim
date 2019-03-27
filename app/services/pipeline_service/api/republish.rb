@@ -37,11 +37,11 @@ module PipelineService
         end
       end
 
-      def publish_model     
+      def publish_model
         model.where(updated_at: range).each do |record|
-          PipelineService.publish(Nouns::UnitGrades.new(record)) if @model == Nouns::UnitGrades
+          PipelineService.publish(Nouns::UnitGrades.new(record)) if @model == Nouns::UnitGrades || @model == Submission
           PipelineService.publish(record)
-        end
+        end 
       end
 
       def model

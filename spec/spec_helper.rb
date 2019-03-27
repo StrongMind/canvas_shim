@@ -3,7 +3,9 @@
 # or `rails plugin new ENGINE_NAME --dummy-path=spec/dummy --skip-test-unit --mountable --database=mysql`
 # Configure spec_helper.rb
 
+require 'webmock/rspec'
 require 'dotenv'
+
 Dotenv.load('.env.development')
 
 ENV["RAILS_ENV"] = "test"

@@ -1,5 +1,5 @@
 describe Enrollment do
-  include_context "pipeline_context"
+  include_context "stubbed_network"
   let(:assignment) { Assignment.create }
   let(:course) { Course.create(assignments: [assignment]) }
   let(:command) { double("Command", perform: nil)}
