@@ -12,15 +12,12 @@ User.class_eval do
     Assignment.joins(:discussion_topic).where('discussion_topics.id' => ids).where('context_id' => course.id)
   end
 
-  def recent_feedback(opts={})
-    context_codes = opts[:context_codes]
-    context_codes ||= if opts[:contexts]
-                        setup_context_lookups(opts[:contexts])
-                      else
-                        self.participating_student_course_ids.map { |id| "course_#{id}" }
-                      end
-    filter_feedback(submissions_for_context_codes(context_codes, opts))
+  def recent_feedback_with_wrap(opts={})
+    filter_feedback(recent_feedback_without_wrap(opts))
   end
+
+  alias_method :recent_feedback_without_wrap, :recent_feedback
+  alias_method :recent_feedback, :recent_feedback_with_wrap
 
   private
 

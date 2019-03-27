@@ -64,8 +64,7 @@ describe User do
     let(:submission_comment) { SubmissionComment.create() }
 
     before do
-      allow(subject).to receive(:participating_student_course_ids).and_return(all_courses)
-      allow(subject).to receive(:submissions_for_context_codes).and_return(all_submissions)
+      subject.submissions = all_submissions
     end
 
     it "returns teacher-graded feedback" do
