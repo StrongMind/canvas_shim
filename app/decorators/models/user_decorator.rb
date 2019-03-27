@@ -11,4 +11,20 @@ User.class_eval do
 
     Assignment.joins(:discussion_topic).where('discussion_topics.id' => ids).where('context_id' => course.id)
   end
+
+  def recent_feedback(opts={})
+    context_codes = opts[:context_codes]
+    context_codes ||= if opts[:contexts]
+                        setup_context_lookups(opts[:contexts])
+                      else
+                        self.participating_student_course_ids.map { |id| "course_#{id}" }
+                      end
+    filter_feedback(submissions_for_context_codes(context_codes, opts))
+  end
+
+  private
+
+  def filter_feedback(submissions)
+    submissions.select { |sub| sub.grader_id > 1 }
+  end
 end
