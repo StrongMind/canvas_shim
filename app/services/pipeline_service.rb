@@ -25,7 +25,7 @@ module PipelineService
     end
   end
 
-  def self.republish(model_class, range=nil)
-    API::Republish.new(model_class, range).call
+  def self.republish(options)
+    API::Republish.new(options).call
   end
 end

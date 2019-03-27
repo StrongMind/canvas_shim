@@ -49,10 +49,10 @@ describe PipelineService do
     
     it 'calls the api instance' do
       expect(PipelineService::API::Republish).to receive(:new).with(
-        :user, 
+        model: User,
         range: range
       )
-      subject.republish(:user, range: range)
+      subject.republish(model: User, range: range)
     end
   end
 end
