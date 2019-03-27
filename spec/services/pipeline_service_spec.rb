@@ -41,14 +41,18 @@ describe PipelineService do
 
   describe '#republish' do
     let(:instance) { double('instance', call: nil) }
+    let(:range) { (DateTime.now...1.hour.from_now) }
     
     before do
       class_double("PipelineService::API::Republish", new: instance).as_stubbed_const
     end
     
     it 'calls the api instance' do
-      expect(instance).to receive(:call)
-      subject.republish((DateTime.now...1.hour.from_now))
+      expect(PipelineService::API::Republish).to receive(:new).with(
+        :user, 
+        range: range
+      )
+      subject.republish(:user, range: range)
     end
   end
 end
