@@ -3,6 +3,7 @@ class Submission < ActiveRecord::Base
   belongs_to :user
   belongs_to :course
   has_many :versions, class_name: 'SubmissionVersion'
+  has_many :submission_comments
 
   after_save :send_submission_to_pipeline
   after_save :send_unit_grades_to_pipeline

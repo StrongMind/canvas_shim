@@ -56,15 +56,25 @@ describe User do
   describe "#recent_feedback" do
     include_context "pipeline_context"
 
-    it "returns only teacher-graded feedback" do
-      computer_graded_submission = Submission.create(grader_id: 1)
-      teacher_graded_submission = Submission.create(grader_id: 2)
-      all_submissions = [computer_graded_submission, teacher_graded_submission]
-      all_courses = [Course.create, Course.create]
+    let(:computer_graded_submission) { Submission.create(grader_id: 1) }
+    let(:lti_graded_submission) { Submission.create(grader_id: -6, submission_comments: [submission_comment]) }
+    let(:teacher_graded_submission) { Submission.create(grader_id: 2) }
+    let(:all_submissions) { [computer_graded_submission, teacher_graded_submission, lti_graded_submission] }
+    let(:all_courses) { [Course.create, Course.create] }
+    let(:submission_comment) { SubmissionComment.create() }
+
+    before do
       allow(subject).to receive(:participating_student_course_ids).and_return(all_courses)
       allow(subject).to receive(:submissions_for_context_codes).and_return(all_submissions)
+    end
+
+    it "returns teacher-graded feedback" do
       grader_ids = subject.recent_feedback.map(&:grader_id)
       expect(grader_ids).not_to include(1)
+    end
+
+    it "returns teacher-commented feedback" do
+      expect(subject.recent_feedback).to include(lti_graded_submission)
     end
   end
 end
