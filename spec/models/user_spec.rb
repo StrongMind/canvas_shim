@@ -2,7 +2,7 @@ describe User do
   let(:subject) { User.create }
   let(:enrollment) { double('enrollment') }
   let(:enrollments) { double('enrollments', where: [enrollment])}
-  let(:response) { double('response', body: [discussion_topic.id].to_json) }
+  let(:response) { double('response', body: [discussion_topic.id].to_json, code: 200) }
 
   let(:discussion_topic) { DiscussionTopic.create}
   let!(:assignment) do
