@@ -10,9 +10,6 @@ module PipelineService
     self
   end
 
-  def self.republish(start_at, end_at)
-    API::Republish.new(start_at, end_at)
-  end
 
   def self.republish(options)
     API::Republish.new(options).call
