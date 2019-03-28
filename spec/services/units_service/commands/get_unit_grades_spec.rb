@@ -1,5 +1,5 @@
 describe UnitsService::Commands::GetUnitGrades do
-  include_context "pipeline_context"
+  include_context "stubbed_network"
   let(:course) { Course.create(assignment_groups: []) }
   let(:pseudonym) { Pseudonym.create(sis_user_id: 1001) }
   let(:user) { User.create(pseudonym: pseudonym) }

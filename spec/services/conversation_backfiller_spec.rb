@@ -1,5 +1,5 @@
 describe ConversationBackfiller do
-  include_context 'pipeline_context'
+  include_context 'stubbed_network'
 
   describe '.call' do
     it do

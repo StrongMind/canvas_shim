@@ -7,21 +7,12 @@ module PipelineService
   def self.publish(object, api: API::Publish, noun: nil)
     return if SettingsService.get_settings(object: :school, id: 1)['disable_pipeline']
     api.new(object, noun: noun).call
+    self
   end
 
-  def self.perform_synchronously?
-    queue_mode == 'synchronous'
-  end
 
-  @@queue_mode = ENV['SYNCHRONOUS_PIPELINE_JOBS'] == 'true' ? 'synchronous' : 'asynchronous'
-  def self.queue_mode=(mode)
-    case mode
-    when 'synchronous'
-      @@queue_mode = 'synchronous'
-    when 'asynchronous'
-      @@queue_mode = 'asynchronous'
-    else
-      raise 'unknown queue mode: ' + mode
-    end
+  def self.republish(options)
+    API::Republish.new(options).call
+    self
   end
 end

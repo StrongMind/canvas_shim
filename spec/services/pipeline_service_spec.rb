@@ -25,17 +25,22 @@ describe PipelineService do
       expect(api_instance).to_not receive(:call)
       subject.publish(enrollment, api: api)
     end
+  end
 
-    context 'when the object is a hash' do
-      it 'works' do
-        expect do
-          subject.publish(
-            { id: 1, last_activity_at: Time.now },
-            api: api,
-            noun: 'enrollment'
-          )
-        end.to_not raise_error
-      end
+  describe '#republish' do
+    let(:instance) { double('instance', call: nil) }
+    let(:range) { (DateTime.now...1.hour.from_now) }
+    
+    before do
+      class_double("PipelineService::API::Republish", new: instance).as_stubbed_const
+    end
+    
+    it 'calls the api instance' do
+      expect(PipelineService::API::Republish).to receive(:new).with(
+        model: User,
+        range: range
+      )
+      subject.republish(model: User, range: range)
     end
   end
 end
