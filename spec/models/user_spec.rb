@@ -54,7 +54,7 @@ describe User do
   end
 
   describe "#recent_feedback" do
-    include_context "pipeline_context"
+    include_context "stubbed_network"
 
     let(:computer_graded_submission) { Submission.create(grader_id: 1) }
     let(:lti_graded_submission) { Submission.create(grader_id: -6, submission_comments: [submission_comment]) }
