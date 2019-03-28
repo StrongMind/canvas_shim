@@ -14,7 +14,7 @@
 
 
 describe PipelineService::Events::Emitter do
-  include_context "pipeline_context"
+  include_context "stubbed_network"
 
   let(:object) { StudentEnrollment.create }
   let(:responder_class) { double(:responder_class, new: responder) }

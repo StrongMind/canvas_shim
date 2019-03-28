@@ -1,5 +1,5 @@
 describe PipelineService::Serializers::UnitGrades do
-  include_context 'pipeline_context'
+  include_context 'stubbed_network'
   describe 'Unit grade serializer' do
     context 'when given a submission' do
       subject { described_class.new(object: unit_grades)}

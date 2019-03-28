@@ -1,5 +1,5 @@
 describe PipelineService::Helpers::AdditionalIdentifiers do
-    include_context "pipeline_context"
+    include_context "stubbed_network"
 
     subject { described_class }
     let(:conversation) { Conversation.create }

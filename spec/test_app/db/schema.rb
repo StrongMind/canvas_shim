@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190327203518) do
+ActiveRecord::Schema.define(version: 20190327223313) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 20190327203518) do
     t.integer  "assignment_group_id"
     t.integer  "course_id"
     t.string   "workflow_state"
+    t.datetime "updated_at"
   end
 
   create_table "content_tags", force: :cascade do |t|
@@ -78,6 +79,7 @@ ActiveRecord::Schema.define(version: 20190327203518) do
   end
 
   create_table "conversations", force: :cascade do |t|
+    t.datetime "updated_at"
   end
 
   create_table "courses", force: :cascade do |t|
@@ -133,6 +135,7 @@ ActiveRecord::Schema.define(version: 20190327203518) do
     t.string   "type"
     t.integer  "associated_user_id"
     t.string   "workflow_state"
+    t.datetime "updated_at"
   end
 
   create_table "failed_jobs", force: :cascade do |t|
@@ -193,6 +196,7 @@ ActiveRecord::Schema.define(version: 20190327203518) do
     t.datetime "graded_at"
     t.integer  "grader_id"
     t.datetime "cached_due_date"
+    t.datetime "updated_at"
   end
 
   create_table "user_observers", force: :cascade do |t|
@@ -201,7 +205,8 @@ ActiveRecord::Schema.define(version: 20190327203518) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.integer "course_id"
+    t.integer  "course_id"
+    t.datetime "updated_at"
   end
 
 end

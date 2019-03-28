@@ -26,5 +26,22 @@ describe PipelineService do
       subject.publish(enrollment, api: api)
     end
   end
+
+  describe '#republish' do
+    let(:instance) { double('instance', call: nil) }
+    let(:range) { (DateTime.now...1.hour.from_now) }
+    
+    before do
+      class_double("PipelineService::API::Republish", new: instance).as_stubbed_const
+    end
+    
+    it 'calls the api instance' do
+      expect(PipelineService::API::Republish).to receive(:new).with(
+        model: User,
+        range: range
+      )
+      subject.republish(model: User, range: range)
+    end
+  end
 end
 

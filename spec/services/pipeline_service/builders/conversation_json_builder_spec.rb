@@ -1,7 +1,7 @@
 describe PipelineService::Builders::ConversationJSONBuilder do
     subject { described_class }
 
-    include_context('pipeline_context')
+    include_context('stubbed_network')
 
     let!(:ar_object) { c = Conversation.create; c.destroy }
     let(:noun) { PipelineService::Models::Noun.new(ar_object) }

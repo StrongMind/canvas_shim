@@ -1,4 +1,5 @@
 describe StudentEnrollment do
+  
   before do
     ENV['PIPELINE_ENDPOINT'] = 'blah'
     ENV['PIPELINE_USER_NAME'] = 'blah'
@@ -7,9 +8,11 @@ describe StudentEnrollment do
     ENV['SIS_ENROLLMENT_UPDATE_ENDPOINT'] = 'blah'
     ENV['SIS_UNIT_GRADE_ENDPOINT_API_KEY'] = 'blah'
     ENV['SIS_UNIT_GRADE_ENDPOINT'] = 'blah'
-    allow(SettingsService).to receive(:get_settings).and_return({'enable_unit_grade_calculations' => true})
-    
+    allow(SettingsService).to receive(:get_settings).and_return({'enable_unit_grade_calculations' => true})    
     allow(PipelineService::HTTPClient).to receive(:post)
+    allow(PipelineService::HTTPClient).to receive(:get).and_return(double('response', parsed_response: ''))
+    allow(PipelineService::Events::HTTPClient).to receive(:post)
+    allow(HTTParty).to receive(:post)
   end
 
   let(:assignment) { Assignment.create }

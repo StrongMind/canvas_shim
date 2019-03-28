@@ -7,9 +7,12 @@ module PipelineService
   def self.publish(object, api: API::Publish, noun: nil)
     return if SettingsService.get_settings(object: :school, id: 1)['disable_pipeline']
     api.new(object, noun: noun).call
+    self
   end
 
-  def self.republish(start_at, end_at)
-    API::Republish.new(start_at, end_at)
+
+  def self.republish(options)
+    API::Republish.new(options).call
+    self
   end
 end
