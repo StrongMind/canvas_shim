@@ -59,12 +59,17 @@ describe User do
     let(:computer_graded_submission) { Submission.create(grader_id: 1) }
     let(:lti_graded_submission) { Submission.create(grader_id: -6, submission_comments: [submission_comment]) }
     let(:teacher_graded_submission) { Submission.create(grader_id: 2) }
-    let(:all_submissions) { [computer_graded_submission, teacher_graded_submission, lti_graded_submission] }
+    let(:nil_submission) { Submission.create(grader_id: nil) }
+    let(:all_submissions) { [computer_graded_submission, teacher_graded_submission, lti_graded_submission, nil_submission] }
     let(:all_courses) { [Course.create, Course.create] }
     let(:submission_comment) { SubmissionComment.create() }
 
     before do
       subject.submissions = all_submissions
+    end
+
+    it "guards for nil grader_id" do
+      expect{ subject.recent_feedback }.not_to raise_error
     end
 
     it "returns teacher-graded feedback" do
