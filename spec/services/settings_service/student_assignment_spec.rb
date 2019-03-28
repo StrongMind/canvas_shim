@@ -1,5 +1,3 @@
-require ENGINE_RAILS_ROOT + 'spec/dynamodb_helper'
-
 describe SettingsService::StudentAssignment do
   subject {
     described_class.new
