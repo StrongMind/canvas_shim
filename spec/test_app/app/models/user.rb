@@ -9,6 +9,11 @@ class User < ActiveRecord::Base
   has_many :observed_users, :through => :user_observees, :source => :user
   has_many :enrollments
   has_many :courses, through: :enrollments
+  has_many :submissions
 
   has_one :pseudonym
+
+  def recent_feedback(opts={})
+    self.submissions
+  end
 end

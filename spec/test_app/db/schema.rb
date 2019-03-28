@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190320194210) do
+ActiveRecord::Schema.define(version: 20190327203518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -172,6 +172,10 @@ ActiveRecord::Schema.define(version: 20190320194210) do
     t.integer "course_id"
   end
 
+  create_table "submission_comments", force: :cascade do |t|
+    t.integer "submission_id"
+  end
+
   create_table "submission_versions", force: :cascade do |t|
     t.text    "yaml"
     t.integer "submission_id"
@@ -185,10 +189,10 @@ ActiveRecord::Schema.define(version: 20190320194210) do
     t.string   "workflow_state"
     t.integer  "grade"
     t.integer  "user_id"
+    t.integer  "course_id"
     t.datetime "graded_at"
     t.integer  "grader_id"
     t.datetime "cached_due_date"
-    t.integer  "course_id"
   end
 
   create_table "user_observers", force: :cascade do |t|

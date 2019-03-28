@@ -1,4 +1,6 @@
 describe DiscussionEntry do
+  include_context "pipeline_context"
+
   describe '#set_unread_status' do
     let(:course) { Course.create(users: [teacher]) }
     let(:discussion_topic) { DiscussionTopic.create(context: course) }

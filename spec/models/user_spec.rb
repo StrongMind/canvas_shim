@@ -2,7 +2,7 @@ describe User do
   let(:subject) { User.create }
   let(:enrollment) { double('enrollment') }
   let(:enrollments) { double('enrollments', where: [enrollment])}
-  let(:response) { double('response', body: [discussion_topic.id].to_json) }
+  let(:response) { double('response', body: [discussion_topic.id].to_json, code: 200) }
 
   let(:discussion_topic) { DiscussionTopic.create}
   let!(:assignment) do
@@ -50,6 +50,30 @@ describe User do
         expect(HTTParty).to_not receive(:get)
         subject.get_teacher_unread_discussion_topics(course)
       end
+    end
+  end
+
+  describe "#recent_feedback" do
+    include_context "pipeline_context"
+
+    let(:computer_graded_submission) { Submission.create(grader_id: 1) }
+    let(:lti_graded_submission) { Submission.create(grader_id: -6, submission_comments: [submission_comment]) }
+    let(:teacher_graded_submission) { Submission.create(grader_id: 2) }
+    let(:all_submissions) { [computer_graded_submission, teacher_graded_submission, lti_graded_submission] }
+    let(:all_courses) { [Course.create, Course.create] }
+    let(:submission_comment) { SubmissionComment.create() }
+
+    before do
+      subject.submissions = all_submissions
+    end
+
+    it "returns teacher-graded feedback" do
+      grader_ids = subject.recent_feedback.map(&:grader_id)
+      expect(grader_ids).not_to include(1)
+    end
+
+    it "returns teacher-commented feedback" do
+      expect(subject.recent_feedback).to include(lti_graded_submission)
     end
   end
 end
