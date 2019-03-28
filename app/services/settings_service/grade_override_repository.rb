@@ -26,7 +26,7 @@ module SettingsService
     end
 
     def get(table_name:, id:)
-      course = ::Course.find(id[:assignment_id])
+      course = ::Course.find(id[:course_id])
       student = ::User.find(id[:student_id])
       grade_override_id = "#{course_id}:#{id[:student_id]}"
 
