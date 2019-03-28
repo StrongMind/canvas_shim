@@ -25,18 +25,6 @@ describe PipelineService do
       expect(api_instance).to_not receive(:call)
       subject.publish(enrollment, api: api)
     end
-
-    context 'when the object is a hash' do
-      it 'works' do
-        expect do
-          subject.publish(
-            { id: 1, last_activity_at: Time.now },
-            api: api,
-            noun: 'enrollment'
-          )
-        end.to_not raise_error
-      end
-    end
   end
 
   describe '#republish' do
