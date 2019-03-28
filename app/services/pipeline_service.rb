@@ -9,19 +9,7 @@ module PipelineService
     api.new(object, noun: noun).call
   end
 
-  def self.perform_synchronously?
-    queue_mode == 'synchronous'
-  end
-
-  @@queue_mode = ENV['SYNCHRONOUS_PIPELINE_JOBS'] == 'true' ? 'synchronous' : 'asynchronous'
-  def self.queue_mode=(mode)
-    case mode
-    when 'synchronous'
-      @@queue_mode = 'synchronous'
-    when 'asynchronous'
-      @@queue_mode = 'asynchronous'
-    else
-      raise 'unknown queue mode: ' + mode
-    end
+  def self.republish(start_at, end_at)
+    API::Republish.new(start_at, end_at)
   end
 end

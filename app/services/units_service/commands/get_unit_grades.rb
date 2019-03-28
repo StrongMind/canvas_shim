@@ -8,7 +8,6 @@ module UnitsService
       end
 
       def call
-        unit_submissions
         calculate_grades
         payload
       end
