@@ -38,7 +38,7 @@ module PipelineService
       end
 
       def publish_model
-        model.where(updated_at: range).each do |record|
+        model.where(updated_at: range).find_each do |record|
           PipelineService.publish(Nouns::UnitGrades.new(record)) if model == Nouns::UnitGrades || model == Submission
           PipelineService.publish(record)
         end 

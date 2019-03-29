@@ -19,11 +19,15 @@ describe PipelineService::API::Republish do
     )
   end
 
+  let(:submission_collection) {[submission]}
+
+
   let(:unit_grades_instance) { double('unit_grades_instance') }
   
   before do
-    class_double("Submission", where: [submission]).as_stubbed_const
+    class_double("Submission", where: submission_collection).as_stubbed_const
     class_double("PipelineService::Nouns::UnitGrades", new: unit_grades_instance).as_stubbed_const
+    allow(submission_collection).to receive(:find_each).and_yield(submission)
   end
 
   describe '#call' do
@@ -59,7 +63,7 @@ describe PipelineService::API::Republish do
       
       it 'publishes all records' do
         PipelineService::API::Republish.models.each do |model_class|
-          expect(model_class).to receive(:where)
+          expect(model_class).to receive(:where).and_return(submission_collection)
         end
         subject.call
       end
