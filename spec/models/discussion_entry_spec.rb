@@ -1,5 +1,5 @@
 describe DiscussionEntry do
-  include_context "pipeline_context"
+  include_context "stubbed_network"
 
   describe '#set_unread_status' do
     let(:course) { Course.create(users: [teacher]) }

@@ -1,5 +1,5 @@
 describe UnitsService::Queries::GetSubmissions do
-  include_context "pipeline_context"
+  include_context "stubbed_network"
   let(:student) { User.create }
   let(:course)  { Course.create(context_modules: [unit]) }
   let(:submission) { Submission.create!(user: student, assignment: assignment) }

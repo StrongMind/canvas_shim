@@ -22,6 +22,6 @@ User.class_eval do
   private
 
   def filter_feedback(submissions)
-    submissions.select { |sub| sub.grader_id > 1 || sub.submission_comments.any? }
+    submissions.select { |sub| sub.submission_comments.any? || (sub.grader_id && sub.grader_id > 1) }
   end
 end

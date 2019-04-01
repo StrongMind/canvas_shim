@@ -1,5 +1,5 @@
 describe PipelineService::API::Publish do
-  include_context "pipeline_context"
+  include_context "stubbed_network"
 
   let(:queue)                 { double('queue') }
   let(:publish_command_class)       { double('publish_command_class', new: publish_command_instance) }
@@ -64,7 +64,7 @@ describe PipelineService::API::Publish do
   end
 
   context 'publishes deleted records' do
-    include_context 'pipeline_context'
+    include_context 'stubbed_network'
     let(:conversation) { double('conversation', destroyed?: true) }  
     let(:deleted_noun_class) { PipelineService::Models::Noun }
     let(:deleted_noun_instance) { double('deleted_noun_instance', valid?: true) }

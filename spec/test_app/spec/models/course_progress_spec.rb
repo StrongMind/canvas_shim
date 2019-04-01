@@ -1,5 +1,5 @@
 describe CourseProgress do
-  include_context 'pipeline_context'
+  include_context 'stubbed_network'
   let(:user) { User.create }
   let(:user_2) { User.create }
   let(:observer) { User.create(observed_users: [user]) }

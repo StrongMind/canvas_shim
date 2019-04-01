@@ -12,12 +12,7 @@ module PipelineService
 
         def call
           raise 'Missing config' if missing_config?
-
-          if PipelineService.perform_synchronously?
-             perform
-          else
-            queue.enqueue(self)
-          end
+          queue.enqueue(self)
         end
 
         def perform

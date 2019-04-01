@@ -1,5 +1,5 @@
 describe ConversationMessage do
-    include_context "pipeline_context"
+    include_context "stubbed_network"
     describe '#delete' do
         it 'should publish the delete to the pipeline' do
             ConversationMessage.create

@@ -1,5 +1,5 @@
 describe PipelineService::Endpoints::Pipeline::MessageBuilder do
-  include_context "pipeline_context"
+  include_context "stubbed_network"
 
   let(:course) { Course.create }
   let(:user) { User.create }
