@@ -15,7 +15,7 @@ RDoc::Task.new(:rdoc) do |rdoc|
 end
 
 APP_RAKEFILE = File.expand_path("../spec/test_app/Rakefile", __FILE__)
-task :default => ['app:spec:services', 'app:spec:models', 'app:spec:test_app']
+task :default => ['app:spec']
 
 load 'rails/tasks/engine.rake'
 load 'rails/tasks/statistics.rake'
