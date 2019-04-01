@@ -21,14 +21,17 @@ module PipelineService
       end
       
       def call
-        publish_model and return self if model
-        publish_all
+        if model
+          publish_model
+        else
+          publish_all
+        end
         self
       end
 
       private
 
-      attr_accessor :range
+      attr_accessor :range, :query
 
       def publish_all
         self.class.models.each do |model|
@@ -37,11 +40,25 @@ module PipelineService
         end
       end
 
+      def build_query
+        @query = {}.tap {|query| query[date_field] = range}
+      end
+
       def publish_model
-        model.where(updated_at: range).find_each do |record|
+        build_query
+        return unless query
+        model.where(query).find_each do |record|
           PipelineService.publish(Nouns::UnitGrades.new(record)) if model == Nouns::UnitGrades || model == Submission
           PipelineService.publish(record)
         end 
+      end
+
+      def date_field
+        if model.column_names.include?('updated_at')
+          :updated_at
+        elsif model.column_names.include?('created_at')
+          :created_at
+        end
       end
 
       def model

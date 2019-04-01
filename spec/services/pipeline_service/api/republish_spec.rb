@@ -3,9 +3,10 @@ describe PipelineService::API::Republish do
   subject do 
     described_class.new(
       model: PipelineService::Nouns::UnitGrades, 
-      range: 3.days.ago...DateTime.now
+      range: range
     )
   end
+  let(:range) {3.days.ago...DateTime.now}
   
   let(:submission) do
     double(
@@ -19,18 +20,30 @@ describe PipelineService::API::Republish do
     )
   end
 
-  let(:submission_collection) {[submission]}
+  let(:collection) {double('collection')}
 
 
   let(:unit_grades_instance) { double('unit_grades_instance') }
   
   before do
-    class_double("Submission", where: submission_collection).as_stubbed_const
+    class_double('::Assignment', where: collection, column_names: ['updated_at']).as_stubbed_const
+    class_double('::ConversationMessage', where: collection, column_names: ['updated_at']).as_stubbed_const
+    class_double('::ConversationParticipant', where: collection, column_names: ['updated_at']).as_stubbed_const
+    class_double('::Conversation', where: collection, column_names: ['updated_at']).as_stubbed_const
+    class_double('::Enrollment', where: collection, column_names: ['updated_at']).as_stubbed_const
+    class_double('::User', where: collection, column_names: ['updated_at']).as_stubbed_const
+    
+    class_double("Submission", where: collection, column_names: ['created_at']).as_stubbed_const
     class_double("PipelineService::Nouns::UnitGrades", new: unit_grades_instance).as_stubbed_const
-    allow(submission_collection).to receive(:find_each).and_yield(submission)
+    allow(collection).to receive(:find_each).and_yield(submission)
   end
 
   describe '#call' do
+    it 'uses #created_at if #updated_at does not exist' do
+      expect(Submission).to receive(:where).with(hash_including(created_at: range)).and_return(collection)
+      subject.call
+    end
+
     it 'publishes specific records' do
       expect(PipelineService).to receive(:publish).with(submission)
       subject.call
@@ -48,22 +61,12 @@ describe PipelineService::API::Republish do
 
     context 'when no model specified' do
       subject do
-        described_class.new(range: 3.days.ago...DateTime.now)
-      end
-
-      before do
-        class_double('::Assignment', where: []).as_stubbed_const
-        class_double('::ConversationMessage', where: []).as_stubbed_const
-        class_double('::ConversationParticipant', where: []).as_stubbed_const
-        class_double('::Conversation', where: []).as_stubbed_const
-        class_double('::Enrollment', where: []).as_stubbed_const
-        class_double('::Submission', where: []).as_stubbed_const
-        class_double('::User', where: []).as_stubbed_const
+        described_class.new(range: range)
       end
       
       it 'publishes all records' do
         PipelineService::API::Republish.models.each do |model_class|
-          expect(model_class).to receive(:where).and_return(submission_collection)
+          expect(model_class).to receive(:where).and_return(collection)
         end
         subject.call
       end
@@ -73,7 +76,7 @@ describe PipelineService::API::Republish do
       subject do 
         described_class.new(
           model: Submission, 
-          range: 3.days.ago...DateTime.now
+          range: range
         )
       end
 
