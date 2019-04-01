@@ -26,14 +26,14 @@ describe PipelineService::API::Republish do
   let(:unit_grades_instance) { double('unit_grades_instance') }
   
   before do
-    class_double('::Assignment', where: collection, column_names: [:updated_at]).as_stubbed_const
-    class_double('::ConversationMessage', where: collection, column_names: [:updated_at]).as_stubbed_const
-    class_double('::ConversationParticipant', where: collection, column_names: [:updated_at]).as_stubbed_const
-    class_double('::Conversation', where: collection, column_names: [:updated_at]).as_stubbed_const
-    class_double('::Enrollment', where: collection, column_names: [:updated_at]).as_stubbed_const
-    class_double('::User', where: collection, column_names: [:updated_at]).as_stubbed_const
+    class_double('::Assignment', where: collection, column_names: ['updated_at']).as_stubbed_const
+    class_double('::ConversationMessage', where: collection, column_names: ['updated_at']).as_stubbed_const
+    class_double('::ConversationParticipant', where: collection, column_names: ['updated_at']).as_stubbed_const
+    class_double('::Conversation', where: collection, column_names: ['updated_at']).as_stubbed_const
+    class_double('::Enrollment', where: collection, column_names: ['updated_at']).as_stubbed_const
+    class_double('::User', where: collection, column_names: ['updated_at']).as_stubbed_const
     
-    class_double("Submission", where: collection, column_names: [:created_at]).as_stubbed_const
+    class_double("Submission", where: collection, column_names: ['created_at']).as_stubbed_const
     class_double("PipelineService::Nouns::UnitGrades", new: unit_grades_instance).as_stubbed_const
     allow(collection).to receive(:find_each).and_yield(submission)
   end

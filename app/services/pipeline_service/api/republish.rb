@@ -21,9 +21,11 @@ module PipelineService
       end
       
       def call
-        publish_model and return self if model
-        publish_all
-
+        if model
+          publish_model
+        else
+          publish_all
+        end
         self
       end
 
@@ -52,9 +54,9 @@ module PipelineService
       end
 
       def date_field
-        if model.column_names.include?(:updated_at)
+        if model.column_names.include?('updated_at')
           :updated_at
-        elsif model.column_names.include?(:created_at)
+        elsif model.column_names.include?('created_at')
           :created_at
         end
       end
