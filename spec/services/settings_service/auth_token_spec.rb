@@ -1,4 +1,3 @@
-
 describe SettingsService::AuthToken do
   let(:role)  { 'root_admin' }
   let(:user)  { double('User', user_roles: [role]) }

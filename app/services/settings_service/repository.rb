@@ -1,6 +1,6 @@
 require 'forwardable'
 module SettingsService
-  class Repository
+  class Repository < Base
     include Singleton
 
     class << self
@@ -52,20 +52,7 @@ module SettingsService
       )
     end
 
-    def self.use_test_client!
-      instance.use_test_client!
-    end
-
-    def use_test_client!
-      Aws.config = {}
-      @dynamodb = Aws::DynamoDB::Client.new(endpoint: 'http://localhost:8000')
-    end
-
     private
-
-    def dynamodb
-      @dynamodb || Aws::DynamoDB::Client.new
-    end
 
     def creds
       Aws::Credentials.new(@id_key, @secret_key)

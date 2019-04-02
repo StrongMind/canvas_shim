@@ -13,3 +13,4 @@ test.log
 .env
 .env.*
 /node_modules
+/spec/support/example_failures.txt

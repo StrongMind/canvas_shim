@@ -1,5 +1,4 @@
 describe StudentEnrollment do
-  
   before do
     ENV['PIPELINE_ENDPOINT'] = 'blah'
     ENV['PIPELINE_USER_NAME'] = 'blah'
