@@ -9,7 +9,7 @@ module SettingsService
       @dynamodb = Aws::DynamoDB::Client.new(endpoint: 'http://localhost:8000')
     end
 
-    def self.dynamodb
+    def dynamodb
       @dynamodb || Aws::DynamoDB::Client.new
     end
   end
