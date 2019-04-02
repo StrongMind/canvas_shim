@@ -1,8 +1,10 @@
 describe PipelineService::Serializers::UnitGrades do
   include_context 'stubbed_network'
+
   describe 'Unit grade serializer' do
     context 'when given a submission' do
       subject { described_class.new(object: unit_grades)}
+
       let(:assignment) { Assignment.create(course: course) }
       let(:course) { Course.create }
       let(:pseudonym) { Pseudonym.create }
@@ -22,6 +24,7 @@ describe PipelineService::Serializers::UnitGrades do
         it 'returns a hash' do
           expect(subject.call.class).to eq(Hash)
         end
+
         it 'returns results from the UnitService' do
           expect(subject.call[:foo]).to eq(random_string)
         end

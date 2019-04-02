@@ -1,5 +1,5 @@
 describe GradesService::Commands::ZeroOutAssignmentGradesRollback do
-  subject {described_class.new}
+  subject { described_class.new }
 
   let(:user) { double('user', id: 1) }
   let(:assignment) { double('assignment') }
