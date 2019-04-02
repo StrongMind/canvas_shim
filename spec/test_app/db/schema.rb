@@ -192,10 +192,10 @@ ActiveRecord::Schema.define(version: 20190327223313) do
     t.string   "workflow_state"
     t.integer  "grade"
     t.integer  "user_id"
-    t.integer  "course_id"
     t.datetime "graded_at"
     t.integer  "grader_id"
     t.datetime "cached_due_date"
+    t.integer  "course_id"
     t.datetime "updated_at"
   end
 
