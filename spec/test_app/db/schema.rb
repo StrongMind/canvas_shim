@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190327223313) do
+ActiveRecord::Schema.define(version: 20190402202809) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 20190327223313) do
 
   create_table "context_module_progressions", force: :cascade do |t|
     t.integer "user_id"
+    t.integer "context_module_id"
   end
 
   create_table "context_modules", force: :cascade do |t|
@@ -192,10 +193,10 @@ ActiveRecord::Schema.define(version: 20190327223313) do
     t.string   "workflow_state"
     t.integer  "grade"
     t.integer  "user_id"
+    t.integer  "course_id"
     t.datetime "graded_at"
     t.integer  "grader_id"
     t.datetime "cached_due_date"
-    t.integer  "course_id"
     t.datetime "updated_at"
   end
 
