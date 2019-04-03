@@ -11,7 +11,7 @@ module PipelineService
         end
 
         def call
-          raise 'Missing config' if missing_config?
+          raise 'Missing config: SIS_ENROLLMENT_UPDATE_API_KEY or SIS_ENROLLMENT_UPDATE_ENDPOINT is nil' if missing_config?
           queue.enqueue(self)
         end
 
