@@ -65,7 +65,7 @@ describe PipelineService::API::Republish do
       end
       
       it 'publishes all records' do
-        PipelineService::API::Republish.models.each do |model_class|
+        PipelineService::Serializers.repositories.each do |model_class|
           expect(model_class).to receive(:where).and_return(collection)
         end
         subject.call
