@@ -1,5 +1,6 @@
 module PipelineService
   module API
+
     # Republish all models given a class and a time range
     #
     # Usage:
@@ -12,7 +13,6 @@ module PipelineService
     # Notes: 
     # Range is required
     # A submission will also cause a "UnitGrades" to be published
-    # If an object to publish has no updated_at, created_at will be used
     class Republish
       def initialize(options)
         @range = options[:range]
@@ -34,7 +34,7 @@ module PipelineService
       attr_accessor :range, :query
 
       def publish_all
-        Serializers.repositories.each do |model|
+        self.class.models.each do |model|
           @model = model
           publish_model
         end
