@@ -4,7 +4,7 @@ module PipelineService
       def initialize(args={})
         @args = args
         configure_dependencies
-        raise 'Missing config: PIPELINE_ENDPOINT or PIPELINE_USER_NAME or PIPELINE_PASSWORD is nil' if missing_config?
+        raise 'Missing config' if missing_config?
       end
 
       def call

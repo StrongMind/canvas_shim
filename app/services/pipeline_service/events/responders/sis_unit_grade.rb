@@ -12,7 +12,7 @@ module PipelineService
 
         def call
           return unless SettingsService.get_settings(object: :school, id: 1)['enable_unit_grade_calculations'] == true
-          raise 'Missing config: SIS_UNIT_GRADE_ENDPOINT_API_KEY or SIS_UNIT_GRADE_ENDPOINT is nil' if missing_config?
+          raise 'Missing config' if missing_config?
           queue.enqueue(self)
         end
 

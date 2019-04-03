@@ -8,6 +8,7 @@ describe SettingsService::Enrollment do
   context '' do
     before do
       allow(SettingsService::Repository).to receive(:create_table)
+      SettingsService::Repository.use_test_client!
     end
 
     xit 'blows up if canvas domain is not present' do
