@@ -6,7 +6,6 @@ xdescribe 'Save an enrollment setting', dynamo_db: true do
     ENV['CANVAS_DOMAIN'] = 'integration.example.com'
     ENV['AWS_SECRET_ACCESS_KEY'] = 'SecretKey'
     ENV['AWS_ACCESS_KEY_ID'] = 'SecretKeyID'
-    SettingsService::Repository.use_test_client!
   end
 
   it 'creates a table' do
