@@ -1,30 +1,6 @@
 require 'forwardable'
 module SettingsService
-  class Repository < Base
-    include Singleton
-
-    class << self
-      extend Forwardable
-      def_delegators :instance, :create_table, :get, :put
-    end
-
-    def initialize
-      raise "missing canvas domain!" if SettingsService.canvas_domain.nil?
-      @secret_key = ENV['S3_ACCESS_KEY']
-      @id_key = ENV['S3_ACCESS_KEY_ID']
-      Aws.config.update(
-        region: 'us-west-2',
-        credentials: creds
-      )
-    end
-
-    def create_table(name:)
-      begin
-        dynamodb.create_table(table_params(name)).successful?
-      rescue
-      end
-    end
-
+  class Repository < RepositoryBase
     def get(table_name:, id:)
       begin
         dynamodb.query(
@@ -54,10 +30,6 @@ module SettingsService
 
     private
 
-    def creds
-      Aws::Credentials.new(@id_key, @secret_key)
-    end
-
     def table_params(name)
       {
         table_name: name,
@@ -75,6 +47,5 @@ module SettingsService
         }
       }
     end
-
   end
 end
