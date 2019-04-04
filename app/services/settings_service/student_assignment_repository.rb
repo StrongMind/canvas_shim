@@ -20,7 +20,7 @@ module SettingsService
 
     def create_table(name:)
       begin
-        self.class.dynamodb.create_table(table_params(name)).successful?
+        dynamodb.create_table(table_params(name)).successful?
       rescue
       end
     end
@@ -30,7 +30,7 @@ module SettingsService
       migration_id = assignment.migration_id
       student_assignment_id = "#{migration_id}:#{id[:student_id]}"
 
-      self.class.dynamodb.query(
+      dynamodb.query(
         table_name: table_name,
         key_condition_expression: "#id = :id",
         expression_attribute_names: { "#id" => "id" },
@@ -65,7 +65,7 @@ module SettingsService
 
       value = student_attempts if student_attempts
 
-      self.class.dynamodb.put_item(
+      dynamodb.put_item(
         table_name: table_name,
         item: {
           id: student_assignment_id,
