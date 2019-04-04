@@ -78,7 +78,7 @@ describe AssignmentsService::Commands::DistributeDueDates do
       end
 
       it 'will not distribute the due dates' do
-        expect(assignment).to_not(receive(:update))
+        expect(assignment).to(receive(:update)).once.with({due_at: nil})
         subject.call
       end
     end
@@ -94,7 +94,7 @@ describe AssignmentsService::Commands::DistributeDueDates do
       end
 
       it 'wont distribute the due dates' do
-        expect(assignment).to_not(receive(:update))
+        expect(assignment).to(receive(:update)).once.with({due_at: nil})
         subject.call
       end
     end
@@ -110,7 +110,7 @@ describe AssignmentsService::Commands::DistributeDueDates do
       end
 
       it 'wont distribute the due dates' do
-        expect(assignment).to_not(receive(:update))
+        expect(assignment).to(receive(:update)).once.with({due_at: nil})
         subject.call
       end
     end
@@ -139,7 +139,7 @@ describe AssignmentsService::Commands::DistributeDueDates do
       let(:content_tags) { double(:content_tags, order: [double('DisscussionTopic', assignment: assignment)]) }
 
       it 'wont break' do
-        expect(assignment).to_not receive(:update)
+        expect(assignment).to(receive(:update)).once.with({due_at: nil})
         subject.call
       end
     end
@@ -156,9 +156,46 @@ describe AssignmentsService::Commands::DistributeDueDates do
       end
 
       it 'assigns the last assignment on the last day' do
+        expect(assignment10).to(receive(:update)).with(due_at: nil)
         expect(assignment10).to(receive(:update)).with(due_at: Time.parse('2019-11-29 23:59:59.999999999 +0000'))
         dates = subject.call
         expect(dates.values.last).to eq 1
+      end
+    end
+
+    context 'Has no end date with an assignment' do
+      let(:course) do
+        double(
+            :course,
+            start_at: start_at,
+            end_at: nil,
+            id: 1,
+            time_zone: Time.zone
+        )
+      end
+
+      let(:assignment11) { double(:assignment11, due_at: start_at - 1.month) }
+
+      let(:ordered_content_tags) do
+        [
+            double(:content_tag, assignment: assignment),
+            double(:content_tag, assignment: assignment2),
+            double(:content_tag, assignment: assignment3),
+            double(:content_tag, assignment: assignment4),
+            double(:content_tag, assignment: assignment5),
+            double(:content_tag, assignment: assignment6),
+            double(:content_tag, assignment: assignment7),
+            double(:content_tag, assignment: assignment8),
+            double(:content_tag, assignment: assignment9),
+            double(:content_tag, assignment: assignment10),
+            double(:content_tag, assignment: assignment11)
+        ]
+      end
+
+
+      it 'assigns the last assignment on the last day' do
+        expect(assignment11).to(receive(:update)).once.with(due_at: nil)
+        subject.call
       end
     end
   end
