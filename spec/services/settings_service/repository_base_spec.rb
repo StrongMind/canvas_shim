@@ -1,6 +1,6 @@
-describe SettingsService::Base do
+describe SettingsService::RepositoryBase do
   subject {
-    described_class.new
+    described_class.instance
   }
 
   context '#dynamodb' do
@@ -12,7 +12,7 @@ describe SettingsService::Base do
       }.to_not raise_error
 
       expect {
-        SettingsService::Base.dynamodb
+        SettingsService::RepositoryBase.dynamodb
       }.to raise_error(NoMethodError)
     end
   end
