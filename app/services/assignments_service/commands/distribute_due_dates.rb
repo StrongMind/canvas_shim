@@ -8,9 +8,10 @@ module AssignmentsService
       end
 
       def call
+        course_assignments = assignments
+        clear_due_dates(course_assignments)
         return unless SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on'
         return unless course.start_at && course.end_at
-        course_assignments = assignments
         offset = 0
         scheduler.course_dates.each do |date, count|
 
@@ -42,6 +43,12 @@ module AssignmentsService
 
       def assignments
         @assignment_query.query
+      end
+
+      def clear_due_dates(course_assignments)
+        course_assignments.each do |asst|
+          asst.update(due_at: nil)
+        end
       end
     end
   end
