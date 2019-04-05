@@ -33,8 +33,11 @@ module CanvasShim
     end
 
     def requirement_count
-      count = requirements.size - excused_submission_count
-      count < 1 ? 0 : count
+      account_for_excused_submissions(requirements.size)
+    end
+
+    def requirement_completed_count
+      account_for_excused_submissions(requirements_completed.size)
     end
 
     def to_json
@@ -53,6 +56,11 @@ module CanvasShim
     end
 
     private
+
+    def account_for_excused_submissions(count)
+      count = count - excused_submission_count
+      count < 1 ? 0 : count
+    end
 
     def find_user_id
       observer_enrollment ? observer_enrollment.associated_user_id : @user.id

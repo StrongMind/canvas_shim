@@ -68,10 +68,23 @@ describe CourseProgress do
 
       let(:excused_submission_count) { 6 }
       let(:fake_requirements) { Array.new(excused_submission_count + 1) }
+      let(:fake_completed_reqs) { Array.new(excused_submission_count + 1) }
 
       it "subtracts excused submissions from requirement count" do
         allow(course_progress_student).to receive(:requirements).and_return(fake_requirements)
         expect(course_progress_student.requirement_count).to eq 1
+      end
+
+      it "subtracts excused submissions from requirement completed count" do
+        allow(course_progress_student).to receive(:requirements_completed).and_return(fake_completed_reqs)
+        expect(course_progress_student.requirement_completed_count).to eq 1
+      end
+
+      it "doesnt have more completed requirements than total requirements" do
+        allow(course_progress_student).to receive(:requirements).and_return(fake_requirements)
+        allow(course_progress_student).to receive(:requirements_completed).and_return(fake_completed_reqs)
+
+        expect(course_progress_student.requirement_completed_count).to be <= course_progress_student.requirement_count
       end
     end
   end
