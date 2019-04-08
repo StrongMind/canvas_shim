@@ -7,7 +7,7 @@ CoursesController.class_eval do
     unless user_can_conclude_enrollments?
       authorized_action(@context, @current_user, :permission_fail)
     end
-    @users = @context.student_enrollments.where.not(type: "StudentViewEnrollment") if @context
+    @users = @context.student_enrollments.where.not(type: "StudentViewEnrollment")
   end
 
   def conclude_users
