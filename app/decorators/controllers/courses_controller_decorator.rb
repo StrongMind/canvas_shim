@@ -7,6 +7,9 @@ CoursesController.class_eval do
     unless user_can_conclude_enrollments?
       authorized_action(@context, @current_user, :permission_fail)
     end
+
+    # filter out fake students
+    @student_enrollments = @context.student_enrollments.where(type: "StudentEnrollment")
   end
 
   def conclude_users
