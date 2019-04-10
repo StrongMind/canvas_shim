@@ -1,10 +1,19 @@
-language: ruby
 rvm:
-  - 2.4.3
+  - 2.4.4
+cache:
+  directories:
+    - node_modules
+    - vendor/bundle
 before_install:
-  - gem update --system
-  - gem install bundler
+  - "find /home/travis/.rvm/rubies -wholename '*default/bundler-*.gemspec' -delete"
+  - gem uninstall bundler -x || gem uninstall bundler -a || true
+  - gem update --system 2.6.12
+  - gem uninstall bundler -x -i /home/travis/.rvm/gems/ruby-2.4.1@global || gem uninstall bundler -a -i /home/travis/.rvm/gems/ruby-2.4.1@global || true
+  - gem install bundler --version=1.15.1
+install:
+  - bundle install --path vendor/bundle --without production --jobs=3 --retry=1
 before_script:
   - psql -c 'create database shim_test;' -U postgres
   - RAILS_ENV=test bundle exec rake db:migrate --trace
-
+script:
+  - bundle exec rspec spec
