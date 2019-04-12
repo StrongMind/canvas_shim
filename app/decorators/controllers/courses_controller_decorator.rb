@@ -1,5 +1,4 @@
 CoursesController.class_eval do
-
   helper_method :enrollment_name, :user_can_conclude_enrollments?
 
   def show_course_enrollments
@@ -12,6 +11,22 @@ CoursesController.class_eval do
     @student_enrollments = @context.student_enrollments.where(type: "StudentEnrollment")
   end
 
+  def shim_show
+    lms_show
+    set_current_requirement
+  end
+  alias_method :lms_show, :show
+  alias_method :show, :shim_show
+
+  def set_current_requirement
+    return unless @context && @current_user
+    current_user_enrollment = @current_user.not_ended_enrollments.find_by(type: "StudentEnrollment", course: @context)
+    return unless current_user_enrollment
+    current_user_settings = SettingsService.get_enrollment_settings(id: current_user_enrollment.id)
+    return unless current_user_settings.fetch('sequence_control', true)
+    @current_requirement = CourseProgress.new(@context, @current_user).current_content_tag
+  end
+  
   def conclude_users
     get_context
     if user_can_conclude_enrollments?
