@@ -31,7 +31,7 @@ module AssignmentsService
             assignment = @assignments[i]
             @current_assignment_position = @current_assignment_position + 1
 
-            next unless assignment.due_at
+            next unless assignment && assignment.due_at
 
             ao = AssignmentOverride
               .create_with(
