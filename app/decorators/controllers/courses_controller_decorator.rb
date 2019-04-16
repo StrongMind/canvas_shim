@@ -21,7 +21,7 @@ CoursesController.class_eval do
 
   def shim_settings
     lms_settings
-    @threshold ||= SettingsService.get_settings(object: :course, id: @course.id)['threshold']
+    @threshold ||= SettingsService.get_settings(object: :course, id: @context.id)['threshold']
   end
 
   alias_method :lms_settings, :settings
