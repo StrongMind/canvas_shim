@@ -305,7 +305,7 @@
         </td>
       </tr>
 <!-- StrongMind Added -->
-      <% if can_manage %>
+      <% if can_manage && @threshold && @threshold.positive? %>
         <tr>
           <td class="form-label">Threshold</td>
           <td>
