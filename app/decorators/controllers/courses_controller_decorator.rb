@@ -19,6 +19,14 @@ CoursesController.class_eval do
   alias_method :lms_update, :update
   alias_method :update, :shim_update
 
+  def shim_settings
+    lms_settings
+    @threshold ||= SettingsService.get_settings(object: :course, id: @course.id)['threshold']
+  end
+
+  alias_method :lms_settings, :settings
+  alias_method :settings, :shim_settings
+
   def show_course_enrollments
     get_context
     unless user_can_conclude_enrollments?
