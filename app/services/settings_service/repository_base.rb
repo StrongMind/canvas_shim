@@ -7,7 +7,7 @@ module SettingsService
       @secret_key = ENV['S3_ACCESS_KEY']
       @id_key = ENV['S3_ACCESS_KEY_ID']
       Aws.config.update(
-        region: 'us-west-2',
+        region: ENV['AWS_REGION'],
         credentials: creds
       )
     end
