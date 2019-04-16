@@ -2,6 +2,23 @@ CoursesController.class_eval do
 
   helper_method :enrollment_name, :user_can_conclude_enrollments?
 
+  def shim_update
+    params[:course] ||= {}
+    threshold = params[:course].delete(:threshold).to_i
+    lms_update
+    if validate_threshold(threshold) && @course.valid?
+      SettingsService.update_settings(
+          object: 'course',
+          id: @course.id,
+          setting: 'threshold',
+          value: threshold
+        )
+    end
+  end
+
+  alias_method :lms_update, :update
+  alias_method :update, :lms_update
+
   def show_course_enrollments
     get_context
     unless user_can_conclude_enrollments?
@@ -69,5 +86,9 @@ CoursesController.class_eval do
   private
   def grade_out_users_params
     params.permit(enrollment_ids: [])
+  end
+
+  def validate_threshold(threshold)
+    threshold.positive? && threshold <= 100
   end
 end
