@@ -4,7 +4,7 @@ CoursesController.class_eval do
 
   def shim_update
     params[:course] ||= {}
-    threshold = params[:course].delete(:threshold)
+    threshold = params[:course].delete(:threshold).to_i
     lms_update
     if validate_threshold(threshold) && @course.valid?
       SettingsService.update_settings(
@@ -89,7 +89,6 @@ CoursesController.class_eval do
   end
 
   def validate_threshold(threshold)
-    threshold_integer = threshold.to_i
-    threshold_integer.positive? && threshold_integer <= 100
+    threshold.positive? && threshold <= 100
   end
 end
