@@ -272,7 +272,19 @@
           <% end %>
         </td>
       <% end %>
-      </tr><tr>
+      </tr>
+      <!-- StrongMind Added -->
+            <% if can_manage && @threshold && @threshold.positive? %>
+              <tr>
+                <td class="form-label">Pretest Threshold:</td>
+                <td>
+                    <input type="text" style="width: 33px;" name="course[threshold]" id="threshold" value=<%= "#{@threshold}" %> />
+                    <%= t('percent', %{percent}) %>
+                </td>
+              </tr>
+            <% end %>
+      <!-- StrongMind Added -->
+      <tr>
         <td class="form-label"><%= f.blabel :storage_quota_mb, :storage_quota, :en => "File Storage" %></td>
         <td>
           <% if can_manage && can_do(@context.account, @current_user, :manage_storage_quotas) %>
@@ -304,17 +316,6 @@
           </div>
         </td>
       </tr>
-<!-- StrongMind Added -->
-      <% if can_manage && @threshold && @threshold.positive? %>
-        <tr>
-          <td class="form-label">Pretest Threshold:</td>
-          <td>
-              <input type="text" style="width: 33px;" name="course[threshold]" id="threshold" value=<%= "#{@threshold}" %> />
-              <%= t('percent', %{percent}) %>
-          </td>
-        </tr>
-      <% end %>
-<!-- StrongMind Added -->
       <tr>
         <td class="form-label"><%= f.label :license, :en => "License" %></td>
         <td colspan="3">
