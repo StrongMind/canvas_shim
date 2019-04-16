@@ -1,4 +1,4 @@
-Feature.class_eval do
+Feature.class_eval do  
   register(
     'hide_inbox' =>
     {
