@@ -17,7 +17,7 @@ CoursesController.class_eval do
   end
 
   alias_method :lms_update, :update
-  alias_method :update, :lms_update
+  alias_method :update, :shim_update
 
   def show_course_enrollments
     get_context
