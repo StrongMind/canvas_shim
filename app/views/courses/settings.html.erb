@@ -307,7 +307,7 @@
 <!-- StrongMind Added -->
       <% if can_manage && @threshold && @threshold.positive? %>
         <tr>
-          <td class="form-label">Threshold:</td>
+          <td class="form-label">Pretest Threshold:</td>
           <td>
               <input type="text" style="width: 33px;" name="course[threshold]" id="threshold" value=<%= "#{@threshold}" %> />
               <%= t('percent', %{percent}) %>
