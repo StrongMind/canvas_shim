@@ -1,11 +1,4 @@
-<%= content_for :right_side do %>
-    <div id="course_show_secondary">    
-        cat
-    </div>
-<% end %>
-
 <% shim_content(content_for: :right_side, selector: '<div id="course_show_secondary">') do %>
-    yaya
     <% if @current_requirement %>
         <div id="resume-container">
             <div id="resume-inner-container">
