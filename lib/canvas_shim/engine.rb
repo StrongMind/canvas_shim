@@ -10,6 +10,7 @@ require 'pandarus'
 require 'pipeline_publisher_ruby'
 require 'pg'
 require 'chronic'
+require 'deface'
 
 module CanvasShim
   class Engine < ::Rails::Engine

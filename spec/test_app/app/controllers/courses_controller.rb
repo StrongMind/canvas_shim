@@ -3,5 +3,6 @@ class CoursesController < ApplicationController
     end
 
     def settings
+        @context = Course.new(id: 1)
     end
 end
