@@ -280,6 +280,10 @@
                 <td>
                     <input type="text" style="width: 60px;" name="course[threshold]" id="threshold" value='<%= @threshold || "Not set" %>' />
                     <%= t('percent', %{percent}) %>
+                    <a id="prescriptive-link" href="#" title='<%= t("Allow students to bypass units based on pretest score.") %>'>
+                      <i class='icon-question'></i>
+                    </a>
+                    <small id="popout">Allow students to bypass units based on pretest score.</small>
                 </td>
               </tr>
             <% end %>
@@ -766,3 +770,23 @@
   <a href="<%= context_url(@context, :context_grading_standard_url, "{{ id }}") %>" style="display: none;" id="update_grading_standard_url">&nbsp;</a>
   <a href="<%= context_url(@context, :context_url) %>" style="display: none;" id="update_course_url">&nbsp;</a>
 </div>
+
+
+<% content_for :strongmind_assets do %>
+  <%= stylesheet_link_tag    "canvas_shim/application", media: "all" %>
+
+  <script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+
+  <script type="text/javascript">
+      $(window).on("load", function(event) {
+
+          $('#prescriptive-link').on("click", function(e) {
+              e.preventDefault();
+              $("#popout").toggle();
+          });
+      });
+  </script>
+<% end %>
