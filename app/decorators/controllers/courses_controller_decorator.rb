@@ -21,7 +21,9 @@ CoursesController.class_eval do
 
   def shim_settings
     lms_settings
-    @threshold ||= SettingsService.get_settings(object: :course, id: @context.id)['threshold'].to_i
+    @threshold_allowed = prescriptive_recovery_on?
+    threshold = SettingsService.get_settings(object: :course, id: @context.id)['threshold'].to_i
+    @threshold = threshold if threshold.positive?
   end
 
   alias_method :lms_settings, :settings
@@ -97,6 +99,10 @@ CoursesController.class_eval do
   end
 
   def validate_threshold(threshold)
-    threshold.positive? && threshold <= 100
+    threshold.zero? || (threshold.positive? && threshold <= 100)
+  end
+
+  def prescriptive_recovery_on?
+    SettingsService.get_settings(object: :school, id: 1)['prescriptive_credit_recovery'] == 'on'
   end
 end
