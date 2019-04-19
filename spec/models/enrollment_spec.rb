@@ -18,10 +18,17 @@ describe Enrollment do
 
   describe "#after_commit" do
     let(:enrollment) { Enrollment.create(course: course, user: user, type: "StudentEnrollment", workflow_state: "active") }
-    let(:score_deleted) { Score.create(enrollment: enrollment, workflow_state: "deleted") }
 
-    enrollment2.save
-    expect(enrollment2).to receive(:ensure_active_scores)
-    expect(score_deleted.workflow_state).to eq("active")
+    it "reactivates deleted scores when active" do
+      Score.create(enrollment: enrollment, workflow_state: "deleted")
+      enrollment.save
+      expect(Score.first.workflow_state).to eq("active")
+    end
+
+    it "does not run on active scores" do
+      Score.create(enrollment: enrollment, workflow_state: "active")
+      enrollment.save
+      expect(Score.first).not_to receive(:update)
+    end
   end
 end

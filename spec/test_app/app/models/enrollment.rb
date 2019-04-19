@@ -1,6 +1,7 @@
 class Enrollment < ActiveRecord::Base
   belongs_to :user
   belongs_to :course
+  has_many :scores
 
   after_create :distribute_due_dates
   after_commit { PipelineService.publish(self)}

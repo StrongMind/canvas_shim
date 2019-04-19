@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190419220802) do
+ActiveRecord::Schema.define(version: 20190419232312) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -173,7 +173,8 @@ ActiveRecord::Schema.define(version: 20190419220802) do
   end
 
   create_table "scores", force: :cascade do |t|
-    t.string "workflow_state"
+    t.string  "workflow_state"
+    t.integer "enrollment_id"
   end
 
   create_table "students", force: :cascade do |t|
