@@ -5,6 +5,7 @@ module CanvasShim
                                     where(user_id: course_progress_user, context_module_id: modules).to_a
     end
 
+    # TODO: remove me and decorate
     def self.included(mod)
       (mod.instance_methods & self.instance_methods).each do |method|
         mod.instance_eval{remove_method method.to_sym}

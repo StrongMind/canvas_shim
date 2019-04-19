@@ -1,4 +1,6 @@
 BasicLTI::BasicOutcomes::LtiResponse.class_eval do
+  attr_accessor :submission
+
   alias_method :homework_submission_alias, :create_homework_submission
 
   def create_homework_submission(_tool, submission_hash, assignment, user, new_score, raw_score)
@@ -13,9 +15,11 @@ BasicLTI::BasicOutcomes::LtiResponse.class_eval do
 
   def update_submission_with_best_score
     return unless @submission
+
     best_score = @submission.score
     best_grade = @submission.grade
-    versions = @submission.versions
+    versions   = @submission.versions
+
     versions.each do |version|
       version_score = YAML.load(version.yaml).stringify_keys['score']
       if version_score.to_f > best_score.to_f

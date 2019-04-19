@@ -3,13 +3,14 @@ DiscussionEntry.class_eval do
   after_save :set_unread_status
 
   def set_unread_status
-    return unless SettingsService.get_settings(object: 'school', id: 1)['show_unread_discussions']
-    topic = self.discussion_topic
-    course = self.discussion_topic.course
     topic_microservice_endpoint = ENV['TOPIC_MICROSERVICE_ENDPOINT']
-    api_key = ENV['TOPIC_MICROSERVICE_API_KEY']
+    api_key                     = ENV['TOPIC_MICROSERVICE_API_KEY']
 
     return unless topic_microservice_endpoint && api_key
+    return unless SettingsService.get_settings(object: 'school', id: 1)['show_unread_discussions']
+
+    topic  = self.discussion_topic
+    course = self.discussion_topic.course
 
     course.teachers.each do |teacher|
       endpoint = "#{topic_microservice_endpoint}/teachers/#{ENV['CANVAS_DOMAIN']}:#{teacher.id}/topics/#{topic.id}"

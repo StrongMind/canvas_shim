@@ -19,7 +19,3 @@ development:
 test:
   <<: *default
   database: shim_test
-
-production:
-  <<: *default
-  database: db/production.sqlite3
