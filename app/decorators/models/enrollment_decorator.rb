@@ -6,7 +6,7 @@ Enrollment.class_eval do
   end
   
   def ensure_active_scores
-    return if active_scores?
+    return if !active_student? || active_scores?
     all_scores.each { |score| score.update(workflow_state: "active") }
   end
   
