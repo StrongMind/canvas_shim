@@ -26,6 +26,6 @@ User.class_eval do
   private
 
   def filter_feedback(submissions)
-    submissions.select { |sub| sub.submission_comments.any? || (sub.grader_id && sub.grader_id > 1) }
+    submissions.select { |sub| sub.submission_comments.any? || (sub.grader_id && sub.grader_id > GradesService::Account.account_admin.try(:id)) }
   end
 end
