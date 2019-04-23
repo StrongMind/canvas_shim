@@ -56,7 +56,7 @@ describe User do
   describe "#recent_feedback" do
     include_context "stubbed_network"
 
-    let(:computer_graded_submission) { Submission.create(grader_id: 1) }
+    let(:computer_graded_submission) { Submission.create(grader_id: GradesService::Account.account_admin.id) }
     let(:lti_graded_submission) { Submission.create(grader_id: -6, submission_comments: [submission_comment]) }
     let(:teacher_graded_submission) { Submission.create(grader_id: 2) }
     let(:nil_submission) { Submission.create(grader_id: nil) }
@@ -65,6 +65,7 @@ describe User do
     let(:submission_comment) { SubmissionComment.create() }
 
     before do
+      allow(GradesService::Account).to receive_message_chain(:account_admin, :id).and_return(1)
       subject.submissions = all_submissions
     end
 
