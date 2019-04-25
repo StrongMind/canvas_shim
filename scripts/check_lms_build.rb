@@ -13,7 +13,7 @@ build_id = build_values[:build_id]
 
 if build_id.present?
   loop do
-    sleep 20
+    sleep 60
     state = travis.check_build(build_id: build_id)
 
     puts "Build check: #{state}"
