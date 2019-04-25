@@ -10,6 +10,7 @@ build_values = YAML.load(File.read("travis_lms_build.yml")).with_indifferent_acc
 puts "Build values: #{build_values}"
 
 build_id = build_values[:build_id]
+state = nil
 
 if build_id.present?
   loop do
@@ -24,7 +25,7 @@ if build_id.present?
   # From Travis docs
   # If any of the commands in the first four phases of the job lifecycle return a non-zero exit code, the build is broken
 
-  exit(1) unless travis.show_build_response["result"] == 'approved'
+  exit(1) unless state == 'passed'
 else
   puts "No LMS build ID found, exiting with fail status"
   exit(1)
