@@ -48,7 +48,7 @@ class Travis
   # BRANCH='19-04-15-shim-specs-in-lms'
   #
   def create_request(branch: nil)
-    raise 'You must provided a branch name to start a build' if branch.nil?
+    raise 'You must provide a branch name to start a build' if branch.nil?
 
     raw_response = HTTParty.post("https://api.travis-ci.org/repo/#{@repo_slug}/requests", {
       headers: @headers,
