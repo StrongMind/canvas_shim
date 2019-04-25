@@ -1,7 +1,7 @@
 require 'httparty'
 
 class Travis
-  attr_accessor :auth_token, :repo_slug
+  attr_accessor :auth_token, :repo_slug, :request_id, :build_id
   attr_accessor :debug_build_response, :create_request_response, :list_requests_response, :show_build_response
 
   def initialize(auth_token: nil, repo_slug: nil)
@@ -23,12 +23,12 @@ class Travis
 
   def build_id
     @build_id ||= begin
-      @build = show_request(id: @request_id)['builds']
-      @build.first.id
+      @builds = show_request(id: @request_id)['builds']
+      @builds.first["id"]
     end
   end
 
-  # Trigger a debug build
+  # Debug Build
   # JOB_ID = 523737962 # shim job
   # JOB ID = 524218744 # canvas job
   #
@@ -44,7 +44,9 @@ class Travis
     @debug_build_response = JSON.parse(raw_response.body)
   end
 
-  # Trigger a spec run on a branch
+  # Create Reqeuest - triggers a build
+  # It alters the default Canvas LMS .travis.yml steps to set the SHIM_BRANCH
+  # before running the bash script to kick off spec run
   # BRANCH='19-04-15-shim-specs-in-lms'
   #
   def create_request(branch: nil)
@@ -56,6 +58,7 @@ class Travis
         'request' => {
           'branch' => branch,
           'message': "Canvas LMS build API triggered via commit on Canvas Shim.",
+          # Will merge (overwrite) this config with the default .travis.yml config of LMS
           'config': {
             'script': "export SHIM_BRANCH='#{branch}'; STRONGMIND_SPEC=1 HEADLESS=1 ./script/run-tests.sh"
           }
@@ -92,9 +95,9 @@ class Travis
   # Show Build
   #
   def show_build(build_id: nil)
-    raise 'You must provided a request id to check on a build' if build_id.nil?
+    _build_id = build_id || self.build_id
 
-    raw_response = HTTParty.get("https://api.travis-ci.org/build/#{build_id || self.build_id}", {
+    raw_response = HTTParty.get("https://api.travis-ci.org/build/#{_build_id}", {
       headers: @headers,
       debug_output: STDOUT
     })
@@ -102,13 +105,21 @@ class Travis
     @show_build_response = JSON.parse(raw_response.body)
   end
 
-  def check_build(build_id: nil)
-    raw_response = HTTParty.get("https://api.travis-ci.org/build/#{build_id || self.build_id}", {
+  def restart_build(build_id: nil)
+    _build_id = build_id || self.build_id
+
+    raw_response = HTTParty.post("https://api.travis-ci.org/build/#{_build_id}/restart", {
       headers: @headers,
       debug_output: STDOUT
     })
 
-    @show_build_response = JSON.parse(raw_response.body)
+    @restart_build_response = JSON.parse(raw_response.body)
+  end
+
+  def check_build(build_id: nil)
+    _build_id = build_id || self.build_id
+
+    show_build(build_id: _build_id)
     @show_build_response["state"]
   end
 end
