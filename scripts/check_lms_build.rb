@@ -1,6 +1,6 @@
 require "./scripts/travis.rb"
 require 'yaml'
-require 'active_support'
+require 'active_support/all'
 
 travis = Travis.new auth_token: '2Zs3QvPdUqpWXL1kB-aM5A', repo_slug: "StrongMind%2Fcanvas-lms"
 
