@@ -18,7 +18,7 @@ if build_id.present?
 
     puts "Build check: #{state}"
 
-    break if ['failed', 'canceled'].include?(state)
+    break if ['passed', 'failed', 'canceled'].include?(state)
   end
 
   # From Travis docs
