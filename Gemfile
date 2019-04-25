@@ -25,4 +25,5 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'rspec-rails', '~> 3'
   gem 'spring'
+  gem 'awesome_print'
 end

@@ -105,6 +105,8 @@ class Travis
     @show_build_response = JSON.parse(raw_response.body)
   end
 
+  # Restart Build
+  #
   def restart_build(build_id: nil)
     _build_id = build_id || self.build_id
 
@@ -116,6 +118,8 @@ class Travis
     @restart_build_response = JSON.parse(raw_response.body)
   end
 
+  # Check Build
+  #
   def check_build(build_id: nil)
     _build_id = build_id || self.build_id
 
