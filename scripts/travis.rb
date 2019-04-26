@@ -60,6 +60,7 @@ class Travis
           'message': "Canvas LMS build API triggered via commit on Canvas Shim.",
           # Will merge (overwrite) this config with the default .travis.yml config of LMS
           'config': {
+            "merge_mode": 'replace',
             'script': "export SHIM_BRANCH='#{branch}'; STRONGMIND_SPEC=1 HEADLESS=1 ./script/run-tests.sh"
           }
         }
