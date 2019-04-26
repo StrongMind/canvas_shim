@@ -29,8 +29,6 @@ class Travis
   end
 
   # Debug Build
-  # JOB_ID = 523737962 # shim job
-  # JOB ID = 524218744 # canvas job
   #
   def debug_build(job_id: nil)
     raise 'You must provided a Travis Job ID to initiate a debug build' if job_id.nil?
@@ -45,9 +43,9 @@ class Travis
   end
 
   # Create Reqeuest - triggers a build
+  #
   # It alters the default Canvas LMS .travis.yml steps to set the SHIM_BRANCH
   # before running the bash script to kick off spec run
-  # BRANCH='19-04-15-shim-specs-in-lms'
   #
   def create_request(branch: nil)
     raise 'You must provide a branch name to start a build' if branch.nil?
@@ -58,7 +56,7 @@ class Travis
         'request' => {
           'branch' => branch,
           'message': "Canvas LMS build API triggered via commit on Canvas Shim.",
-          # Will merge (overwrite) this config with the default .travis.yml config of LMS
+          # Will replace default .travis.yml config of LMS for 'script' build step
           'config': {
             "merge_mode": 'replace',
             'script': "export SHIM_BRANCH='#{branch}'; STRONGMIND_SPEC=1 HEADLESS=1 ./script/run-tests.sh"
