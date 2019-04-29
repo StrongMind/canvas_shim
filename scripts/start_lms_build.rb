@@ -10,6 +10,9 @@ travis = Travis.new auth_token: '2Zs3QvPdUqpWXL1kB-aM5A', repo_slug: "StrongMind
 
 travis.create_request branch: branch
 
+# need to sleep to give Travis time to assign build id
+sleep 5
+
 puts "Build id assigned: #{travis.build_id}"
 
 File.open("travis_lms_build.yml", "w+") do |file|
