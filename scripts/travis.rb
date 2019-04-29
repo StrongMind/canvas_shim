@@ -5,7 +5,7 @@ class Travis
   attr_accessor :debug_build_response, :create_request_response, :list_requests_response, :show_build_response
 
   def initialize(auth_token: nil, repo_slug: nil)
-    raise 'You must provided a Travis Auth Token to use this class' if auth_token.nil?
+    raise 'You must provide a Travis Auth Token to use this class' if auth_token.nil?
 
     @auth_token = auth_token
     @repo_slug  = repo_slug
@@ -31,7 +31,7 @@ class Travis
   # Debug Build
   #
   def debug_build(job_id: nil)
-    raise 'You must provided a Travis Job ID to initiate a debug build' if job_id.nil?
+    raise 'You must provide a Travis Job ID to initiate a debug build' if job_id.nil?
 
     raw_response = HTTParty.post("https://api.travis-ci.org/job/#{job_id}/debug", {
       headers: @headers,
@@ -58,7 +58,6 @@ class Travis
           'message': "Canvas LMS build API triggered via commit on Canvas Shim.",
           # Will replace default .travis.yml config of LMS for 'script' build step
           'config': {
-            "merge_mode": 'replace',
             'script': "export SHIM_BRANCH='#{branch}'; STRONGMIND_SPEC=1 HEADLESS=1 ./script/run-tests.sh"
           }
         }
