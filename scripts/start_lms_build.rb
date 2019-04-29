@@ -3,7 +3,7 @@ require 'yaml'
 
 # If PR grab branch from PR branch env
 # If push build or non-PR, use branch env
-branch = [ENV['TRAVIS_PULL_REQUEST_BRANCH'], ENV['TRAVIS_BRANCH']].find { |item| item.present?
+branch = [ENV['TRAVIS_PULL_REQUEST_BRANCH'], ENV['TRAVIS_BRANCH']].find { |item| item.present? }
 
 travis = Travis.new auth_token: '2Zs3QvPdUqpWXL1kB-aM5A', repo_slug: "StrongMind%2Fcanvas-lms"
 
