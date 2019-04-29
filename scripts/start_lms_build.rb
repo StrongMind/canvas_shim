@@ -1,5 +1,6 @@
 require "./scripts/travis.rb"
 require 'yaml'
+require 'active_support/all'
 
 # If PR grab branch from PR branch env
 # If push build or non-PR, use branch env
