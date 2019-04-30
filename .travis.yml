@@ -1,6 +1,10 @@
 language: ruby
 rvm:
   - 2.4.3
+services:
+  - postgresql
+addons:
+  postgresql: "9.6"
 cache:
   directories:
     - vendor/bundle
