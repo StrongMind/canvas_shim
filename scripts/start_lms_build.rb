@@ -8,7 +8,7 @@ branch = [ENV['TRAVIS_PULL_REQUEST_BRANCH'], ENV['TRAVIS_BRANCH']].find { |item|
 
 puts "Branch found: #{branch}"
 
-travis = Travis.new auth_token: '2Zs3QvPdUqpWXL1kB-aM5A', repo_slug: "StrongMind%2Fcanvas-lms"
+travis = Travis.new auth_token: ENV['TRAVIS_API_TOKEN'], repo_slug: "StrongMind%2Fcanvas-lms"
 
 travis.create_request branch: branch
 

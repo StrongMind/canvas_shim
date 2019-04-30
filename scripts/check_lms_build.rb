@@ -2,7 +2,7 @@ require "./scripts/travis.rb"
 require 'yaml'
 require 'active_support/all'
 
-travis = Travis.new auth_token: '2Zs3QvPdUqpWXL1kB-aM5A', repo_slug: "StrongMind%2Fcanvas-lms"
+travis = Travis.new auth_token: ENV['TRAVIS_API_TOKEN'], repo_slug: "StrongMind%2Fcanvas-lms"
 
 
 build_values = YAML.load(File.read("travis_lms_build.yml")).with_indifferent_access

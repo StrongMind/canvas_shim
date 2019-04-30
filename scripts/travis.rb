@@ -42,7 +42,7 @@ class Travis
     @debug_build_response = JSON.parse(raw_response.body)
   end
 
-  # Create Reqeuest - triggers a build
+  # Create Request - triggers a build
   #
   # It alters the default Canvas LMS .travis.yml steps to set the SHIM_BRANCH
   # before running the bash script to kick off spec run
