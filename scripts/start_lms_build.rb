@@ -6,13 +6,16 @@ require 'active_support/all'
 # If push build or non-PR, use branch env
 branch = [ENV['TRAVIS_PULL_REQUEST_BRANCH'], ENV['TRAVIS_BRANCH']].find { |item| item.present? }
 
+puts "Branch found: #{branch}"
+
 travis = Travis.new auth_token: '2Zs3QvPdUqpWXL1kB-aM5A', repo_slug: "StrongMind%2Fcanvas-lms"
 
 travis.create_request branch: branch
 
 # need to sleep to give Travis time to assign build id
-sleep 5
+sleep 30
 
+puts "Request id: #{travis.request_id}"
 puts "Build id assigned: #{travis.build_id}"
 
 File.open("travis_lms_build.yml", "w+") do |file|
@@ -22,3 +25,7 @@ File.open("travis_lms_build.yml", "w+") do |file|
   }
   file.write(vars.to_yaml)
 end
+
+sleep 10
+
+puts "Wrote request/build id to file"
