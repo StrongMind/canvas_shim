@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190419232312) do
+ActiveRecord::Schema.define(version: 20190430222312) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -167,6 +167,9 @@ ActiveRecord::Schema.define(version: 20190419232312) do
   create_table "observer_enrollments", force: :cascade do |t|
   end
 
+  create_table "page_views", force: :cascade do |t|
+  end
+
   create_table "pseudonyms", force: :cascade do |t|
     t.integer "sis_user_id"
     t.integer "user_id"
@@ -198,7 +201,6 @@ ActiveRecord::Schema.define(version: 20190419232312) do
     t.string   "workflow_state"
     t.integer  "grade"
     t.integer  "user_id"
-    t.integer  "course_id"
     t.datetime "graded_at"
     t.integer  "grader_id"
     t.datetime "cached_due_date"
