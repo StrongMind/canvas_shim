@@ -10,7 +10,7 @@ before_install:
 install:
   - bundle install --path vendor/bundle --without production --jobs=3 --retry=1
 before_script:
-  - bundle exec ruby scripts/start_lms_build.rb
+  # - bundle exec ruby scripts/start_lms_build.rb
   - psql -c 'create database shim_test;' -U postgres
   - RAILS_ENV=test bundle exec rake db:migrate --trace
 script:
