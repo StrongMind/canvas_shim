@@ -8,6 +8,6 @@ AssignmentsController.class_eval do
   end
 
   def excused_students
-    tiny_student_hash(@assignment.submissions.select(&:excused))
+    tiny_student_hash(@assignment.submissions.where(excused: true))
   end
 end
