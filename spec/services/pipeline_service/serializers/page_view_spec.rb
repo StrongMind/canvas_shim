@@ -7,6 +7,6 @@ describe PipelineService::Serializers::PageView do
   let(:noun) { PipelineService::Models::Noun.new(active_record_object)}
 
   it 'Return an attribute hash of the noun' do
-    expect(subject.call).to include( { 'id' => active_record_object.id } )
+    expect(subject.call).to include( { noun.primary_key => active_record_object.id } )
   end
 end

@@ -167,7 +167,7 @@ ActiveRecord::Schema.define(version: 20190430222312) do
   create_table "observer_enrollments", force: :cascade do |t|
   end
 
-  create_table "page_views", force: :cascade do |t|
+  create_table "page_views", primary_key: "request_id", force: :cascade do |t|
   end
 
   create_table "pseudonyms", force: :cascade do |t|
