@@ -1,2 +1,2 @@
-class PageView < ApplicationRecord
+class PageView < ActiveRecord::Base
 end
