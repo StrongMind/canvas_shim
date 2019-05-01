@@ -9,7 +9,7 @@ describe PipelineService::API::Publish do
     double(
       'submission',
       id: 1,
-      class: 'Submission',
+      class: ::Submission,
       assignment: double('assignment', course: course),
       changes: {},
       assignment_id: 1,
@@ -17,16 +17,19 @@ describe PipelineService::API::Publish do
     )
   }
 
-  context 'When deserializing' do
-
-    it 'the object is a noun' do
+  context 'building a noun' do
+    before do
       allow(Delayed::Job).to receive(:enqueue)
-      conversation = Conversation.create
-      expect(PipelineService::Models::Noun).to receive(:new).with(conversation).and_return(
-          PipelineService::Models::Noun.new(double('noun', valid?: true, id: 1, changes: [])))
+    end
+
+    let(:conversation) {Conversation.create}
+
+    it 'Builds an noun with the active record object' do
+      expect(PipelineService::Models::Noun).to receive(:new).with(conversation)
       PipelineService::API::Publish.new(conversation).call
     end
   end
+
 
   context 'publish non-deletes' do
 
@@ -65,8 +68,8 @@ describe PipelineService::API::Publish do
 
   context 'publishes deleted records' do
     include_context 'stubbed_network'
-    
-    let(:conversation) { double('conversation', destroyed?: true) }  
+
+    let(:conversation) { double('conversation', destroyed?: true) }
     let(:deleted_noun_class) { PipelineService::Models::Noun }
     let(:deleted_noun_instance) { double('deleted_noun_instance', valid?: true) }
 

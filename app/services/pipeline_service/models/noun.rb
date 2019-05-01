@@ -1,10 +1,11 @@
 module PipelineService
   module Models
     class Noun
-      attr_reader :id, :name, :changes, :noun_class, :additional_identifiers
-      
+      attr_reader :id, :name, :changes, :noun_class, :additional_identifiers, :primary_key
+
       def initialize(object)
-        @id = object.id
+        @primary_key = object.class.primary_key
+        @id = object.send(primary_key)
         @noun_class = object.class
         @changes = object.changes
         @workflow_state = object.try(:workflow_state)
@@ -57,7 +58,7 @@ module PipelineService
         Helpers::AdditionalIdentifiers.call(
           instance: object,
           fields: serializer.additional_identifier_fields
-        ) 
+        )
       end
     end
   end
