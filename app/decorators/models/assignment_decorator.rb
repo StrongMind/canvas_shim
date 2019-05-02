@@ -7,4 +7,8 @@ Assignment.class_eval do
       end
     end
   end
+
+  def excused_submissions
+    self.submissions.where(excused: true)
+  end
 end
