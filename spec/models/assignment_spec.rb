@@ -6,14 +6,11 @@ describe Assignment do
   let(:user_2) { User.create }
 
   describe "#toggle_exclusion" do
-    it "flips the excused status" do
+    it "flips the excused status to true" do
       submission
       assignment.toggle_exclusion(user.id)
       submission = assignment.submissions.find_by(user_id: user.id)
       expect(submission.excused).to be true
-      assignment.toggle_exclusion(user.id)
-      submission = assignment.submissions.find_by(user_id: user.id)
-      expect(submission.excused).to be false
     end
 
     it "returns nil if no user found" do

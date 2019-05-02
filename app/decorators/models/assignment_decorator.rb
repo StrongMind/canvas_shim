@@ -3,7 +3,7 @@ Assignment.class_eval do
     subs = self.submissions.where(user_id: student_id)
     if subs.any?
       subs.each do |submission|
-        submission.update(excused: !submission.excused)
+        submission.update(excused: true)
       end
     end
   end
