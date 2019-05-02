@@ -3,7 +3,7 @@ AssignmentsApiController.class_eval do
     @assignment = @context.active_assignments.api_id(params[:id])
     if @assignment && params['assignment'] && params['assignment']['excluded_students']
       params['assignment']['excluded_students'].each do |student|
-        @assignment.toggle_exclusion(student['id'].to_i)
+        @assignment.toggle_exclusion(student['id'].to_i, true)
       end
     end
     instructure_update
