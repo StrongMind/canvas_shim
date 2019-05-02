@@ -2,7 +2,7 @@ AssignmentsApiController.class_eval do
   def strongmind_update
     instructure_update
     params[:excluded_students].each do |student|
-      @assignment.toggle_exclusion(student.id)
+      @assignment.toggle_exclusion(student[:id])
     end
   end
 
