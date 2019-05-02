@@ -10,4 +10,11 @@ AssignmentsController.class_eval do
   def excused_students
     tiny_student_hash(@assignment.submissions.where(excused: true))
   end
+
+  def strongmind_update
+    instructure_update
+  end
+
+  alias_method :instructure_update, :update
+  alias_method :update, :strongmind_update
 end
