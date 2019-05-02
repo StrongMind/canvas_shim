@@ -1,5 +1,5 @@
 Assignment.class_eval do
-  def exclude_student(student_id)
+  def toggle_exclusion(student_id)
     subs = self.submissions.where(user_id: student_id)
     if subs.any?
       subs.each do |submission|
