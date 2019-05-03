@@ -10,4 +10,15 @@ AssignmentsController.class_eval do
   def excused_students
     tiny_student_hash(@assignment.excused_submissions)
   end
+
+  def strongmind_show
+    @assignment ||= @context.assignments.find(params[:id])
+    if excused_students.any?
+      @excused = excused_students.map { |stu| stu[:name] }.join(', ')
+    end
+    instructure_show
+  end
+
+  alias_method :instructure_show, :show
+  alias_method :show, :strongmind_show
 end
