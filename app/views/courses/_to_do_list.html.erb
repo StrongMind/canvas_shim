@@ -34,7 +34,7 @@ cache(safe_cache_key([@current_user, contexts, 'to_do_list_view']), cache_opts) 
     <h2 class="todo-list-header" tabindex="-1"><%= t('headings.to_do', %{To Do}) %>
     
     <% if SettingsService.get_settings(object: 'school', id: 1)['enable_full_page_todo'] %>
-        <%= link_to 'See all', "todo", :style => "float: right;"%>
+        <%= link_to 'See all', "todos", :style => "float: right;"%>
     <% end %>
 
     </h2>
