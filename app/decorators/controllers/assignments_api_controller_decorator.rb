@@ -1,6 +1,24 @@
 AssignmentsApiController.class_eval do
   def strongmind_update
     @assignment = @context.active_assignments.api_id(params[:id])
+    handle_exclusions
+    instructure_update
+  end
+
+  alias_method :instructure_update, :update
+  alias_method :update, :strongmind_update
+
+  def strongmind_create
+    instructure_create
+    handle_exclusions
+  end
+
+  alias_method :instructure_create, :create
+  alias_method :create, :strongmind_create
+
+  private
+
+  def handle_exclusions
     if @assignment && params['assignment'] && params['assignment']['excluded_students']
       begin
         Assignment.transaction do
@@ -13,12 +31,7 @@ AssignmentsApiController.class_eval do
         Raven.capture_exception(exception)
       end
     end
-
-    instructure_update
   end
-
-  alias_method :instructure_update, :update
-  alias_method :update, :strongmind_update
 
   def unexcuse_assignments(arr)
     student_ids = arr.map { |student| student['id'] }
