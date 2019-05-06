@@ -9,6 +9,10 @@ module PipelineService
         @id = submission.id
         @changes = submission.changes
       end
+
+      def self.primary_key
+        'id'
+      end
     end
   end
 end

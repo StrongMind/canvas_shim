@@ -1,6 +1,6 @@
 describe PipelineService::Models::Noun do
     include_context('stubbed_network')
-    
+
     let(:user) { User.create }
     let(:submission) { Submission.create(assignment: assignment, user: user) }
     let(:submission_noun) { described_class.new(submission) }
@@ -11,13 +11,15 @@ describe PipelineService::Models::Noun do
     let(:teacher_enrollment_noun) { described_class.new(teacher_enrollment)}
     let(:conversation_noun) { described_class.new(conversation) }
     let(:deleted_conversation_noun) { described_class.new(deleted_conversation) }
-    
+
     let(:unit_grades) { PipelineService::Nouns::UnitGrades.new(submission) }
     let(:unit_grades_noun) { described_class.new(unit_grades) }
     let(:changes) { {'workflow_state' => ['active', 'completed']} }
     let(:conversation) { Conversation.create }
     let(:conversation_participant_noun) { described_class.new(conversation_participant) }
     let(:conversation_participant) { ConversationParticipant.create(conversation: conversation) }
+    let(:page_view) { PageView.create }
+    let(:page_view_noun) { described_class.new(page_view) }
 
     before do
         allow(conversation).to receive(:try).with(:workflow_state).and_return(nil)
@@ -32,6 +34,16 @@ describe PipelineService::Models::Noun do
         it 'uses the passed in class name as the name' do
             expect(unit_grades_noun.name).to eq 'unit_grades'
         end
+    end
+
+    describe '#primary_key' do
+      it 'returns a custom primary_key' do
+        expect(page_view_noun.primary_key).to eq 'request_id'
+      end
+
+      it 'returns a standard AR primary key' do
+        expect(conversation_noun.primary_key).to eq 'id'
+      end
     end
 
     describe '#id' do
