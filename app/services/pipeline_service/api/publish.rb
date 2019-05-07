@@ -36,17 +36,9 @@ module PipelineService
         raise "#{object.name} noun with id=#{object.id} is invalid"
       end
 
-      def subscriptions
-        Events::Subscription.new(
-          event: 'graded_out',
-          responder: Events::Responders::SIS
-        )
-      end
-
       def command
         command_class.new(
           object: object,
-          event_subscriptions: subscriptions,
           changes: changes
         )
       end
