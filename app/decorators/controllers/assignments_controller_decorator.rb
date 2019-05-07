@@ -15,6 +15,8 @@ AssignmentsController.class_eval do
     @assignment ||= @context.assignments.find(params[:id])
     if excused_students.any?
       @excused = excused_students.map { |stu| stu[:name] }.join(', ')
+    else
+      @excused = "No students currently excused from this assignment."
     end
     instructure_show
   end
