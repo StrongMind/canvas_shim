@@ -70,9 +70,6 @@ module Serializers
 end
 ```
 
-## Events
-COMING SOON!
-
 ## Noun Payloads
 When an ActiveRecord object is published, it is serialized into a payload that includes additional_identifiers and JSON data that represent the model.  The following are examples of those payloads.
 
