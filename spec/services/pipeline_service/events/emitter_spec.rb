@@ -28,23 +28,8 @@ describe PipelineService::Events::Emitter do
     allow(subject).to receive(:events).and_return({ grade_changed: event_class })
   end
 
-  subject do 
+  subject do
     described_class.new(object: noun, responder: responder_class)
-  end
-
-  context 'unhandled noun' do
-    let(:unhandled_noun) {double('unhandled_noun', id: 1, changes: {})}
-    let(:object) { PipelineService::Models::Noun.new(unhandled_noun) }
-    before do
-      allow(subject).to receive(:serializer).and_return(nil)
-    end
-
-    describe '#call' do
-      it 'does not emit an event' do
-        expect(event).to_not receive(:emit)
-        subject.call
-      end
-    end
   end
 
   context 'graded_out_event' do
