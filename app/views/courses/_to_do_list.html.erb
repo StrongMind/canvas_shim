@@ -33,9 +33,15 @@ cache(safe_cache_key([@current_user, contexts, 'to_do_list_view']), cache_opts) 
 <% if presenter.any_assignments? %>
     <h2 class="todo-list-header" tabindex="-1"><%= t('headings.to_do', %{To Do}) %>
     
-    <% if SettingsService.get_settings(object: 'school', id: 1)['enable_full_page_todo'] %>
-        <%= link_to 'See all', "todos", :style => "float: right;"%>
-    <% end %>
+
+        <% if SettingsService.get_settings(object: 'school', id: 1)['enable_full_page_todo'] 
+            is_admin = @current_user.roles(@domain_root_account).include?('admin')
+            is_teacher = @current_user.enrollments.where(type: 'TeacherEnrollment').count %>
+            
+            <% if is_admin || is_teacher %>
+                <%= link_to 'See all', "todos", :style => "float: right;"%>
+            <% end %>
+        <% end %>
 
     </h2>
 

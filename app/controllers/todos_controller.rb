@@ -4,4 +4,3 @@ class TodosController < ApplicationController
         render 'todos_list'
     end
 end
-  
