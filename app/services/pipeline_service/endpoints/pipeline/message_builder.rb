@@ -15,9 +15,7 @@ module PipelineService
         def call
           fetch_serializer
           serialize
-          result = build
-          log
-          result
+          build
         end
 
         private
@@ -30,10 +28,6 @@ module PipelineService
 
         def serializer_instance
           @serializer_instance ||= serializer.new(object: object)
-        end
-
-        def log
-          Logger.new(source: 'pipeline', message: payload).call
         end
 
         def status
