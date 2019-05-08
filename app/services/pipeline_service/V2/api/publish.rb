@@ -1,11 +1,11 @@
 module PipelineService
-  module API
-    module V2
+  module V2
+    module API
       class Publish
         def initialize(model)
           @model = model
           @noun = Models::V2::Noun.new(model)
-          @message_builder = Endpoints::Pipeline::MessageBuilder.new(
+          @message_builder = MessageBuilder.new(
             object: @noun
           )
         end
