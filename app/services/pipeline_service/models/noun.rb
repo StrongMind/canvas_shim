@@ -27,11 +27,16 @@ module PipelineService
       end
 
       def serializer
-        begin
-          "PipelineService::V2::Nouns::#{short_class_name}".constantize
-        rescue
-          nil
-        end
+          case short_class_name
+          when /Enrollment/
+            PipelineService::Serializers::Enrollment
+          else
+            begin
+              "PipelineService::Serializers::#{short_class_name}".constantize
+            rescue
+              nil
+            end
+          end
       end
 
       def fetch

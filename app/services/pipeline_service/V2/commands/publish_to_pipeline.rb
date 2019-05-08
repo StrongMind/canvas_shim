@@ -3,10 +3,11 @@ module PipelineService
     module Commands
       class PublishToPipeline
         def initialize(payload)
-          @payload
+          @payload = payload
         end
 
         def call
+          Client.publish(@payload)
         end
       end
     end

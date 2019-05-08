@@ -6,6 +6,14 @@ module PipelineService
         super(object)
         @ar_model = object
       end
+
+      def serializer
+        begin
+          "PipelineService::V2::Nouns::#{short_class_name}".constantize
+        rescue
+          nil
+        end
+      end
     end
   end
 end

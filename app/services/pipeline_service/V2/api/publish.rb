@@ -12,7 +12,7 @@ module PipelineService
 
         def call
           payload = @payload.call
-          Commands::PublishToPipeline(payload).call
+          Commands::PublishToPipeline.new(payload).call
         end
       end
     end

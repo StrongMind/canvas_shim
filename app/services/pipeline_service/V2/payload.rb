@@ -55,9 +55,9 @@ module PipelineService
         serialized_object
       end
 
-      def fetch_noun
-        return if @noun
-        @noun = object.serializer
+      def fetch_serializer
+        return if @serializer
+        @serializer = object.serializer
       end
 
       def build
