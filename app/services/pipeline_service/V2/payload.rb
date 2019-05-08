@@ -1,6 +1,6 @@
 module PipelineService
   module V2
-    class MessageBuilder
+    class Payload
       SOURCE = 'canvas'
 
       def initialize(args)
@@ -32,7 +32,7 @@ module PipelineService
         @object.status
       end
 
-      def payload
+      def body
         {
           noun: noun_name,
           meta: {
@@ -55,13 +55,13 @@ module PipelineService
         serialized_object
       end
 
-      def fetch_serializer
-        return if @serializer
-        @serializer = object.serializer
+      def fetch_noun
+        return if @noun
+        @noun = object.serializer
       end
 
       def build
-        payload.to_hash
+        body.to_hash
       end
 
       def noun_name

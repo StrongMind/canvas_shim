@@ -4,14 +4,15 @@ module PipelineService
       class Publish
         def initialize(model)
           @model = model
-          @noun = Models::V2::Noun.new(model)
-          @message_builder = MessageBuilder.new(
+          @noun = Noun.new(model)
+          @payload = Payload.new(
             object: @noun
           )
         end
 
         def call
-          @message_builder.call
+          payload = @payload.call
+          Commands::PublishToPipeline(payload).call
         end
       end
     end
