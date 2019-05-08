@@ -30,8 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sass-rails'
   s.add_dependency 'coffee-rails'
   s.add_dependency 'uglifier'
-  s.add_dependency 'chronic'
-  
+  s.add_dependency 'chronic'  
 
   s.add_development_dependency 'better_errors'
   s.add_development_dependency 'binding_of_caller'

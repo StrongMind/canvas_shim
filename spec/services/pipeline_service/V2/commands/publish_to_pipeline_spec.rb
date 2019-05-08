@@ -8,7 +8,7 @@ describe PipelineService::V2::Commands::PublishToPipeline do
     }
   end
 
-  it 'throw me away' do
+  it 'Sends payload to client' do
     expect(PipelineService::V2::Client).to receive(:publish).with(payload)
     described_class.new(payload).call
   end
