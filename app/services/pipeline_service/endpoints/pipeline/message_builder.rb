@@ -8,7 +8,6 @@ module PipelineService
           @object        = args[:object]
           @serializer    = args[:serializer]
           @args          = args
-          @logger        = @args[:logger] || PipelineService::Logger
           @canvas_domain = ENV['CANVAS_DOMAIN']
         end
 
@@ -20,7 +19,7 @@ module PipelineService
 
         private
 
-        attr_reader :message_class, :object, :serializer, :canvas_domain, :logger, :serialized_object
+        attr_reader :message_class, :object, :serializer, :canvas_domain :serialized_object
 
         def serialize
           @serialized_object = serializer_instance.call
