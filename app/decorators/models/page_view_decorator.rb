@@ -3,7 +3,7 @@ PageView.class_eval do
 
   def publish_to_pipeline
     return unless SettingsService.get_settings(object: :school, id: 1)['publish_page_views']
-    PipelineService.publish self
+    PipelineService::V2.publish self
   end
 
 end
