@@ -12,7 +12,7 @@ AssignmentsController.class_eval do
   end
 
   def current_user_excused?
-    excused_students.any? { |student| student[:id] == @current_user.id }
+    @assignment.is_excused?(@current_user)
   end
 
   def strongmind_show
