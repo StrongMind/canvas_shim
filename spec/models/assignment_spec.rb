@@ -24,4 +24,16 @@ describe Assignment do
       expect(assignment.toggle_exclusion(user_2.id, true)).to be nil
     end
   end
+
+  describe "#is_excused?" do
+    it "returns true when excused" do
+      submission.update(excused: true)
+      expect(assignment.is_excused?(user)).to be true
+    end
+
+    it "returns false when unexcused" do
+      submission
+      expect(assignment.is_excused?(user)).to be false
+    end
+  end
 end
