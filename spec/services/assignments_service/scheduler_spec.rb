@@ -12,7 +12,7 @@ describe AssignmentsService::Scheduler do
   end
 
   before do
-    allow(subject).to receive(:dynamo_holidays).and_return(nil)
+    allow(subject).to receive(:settings_service_holidays).and_return(nil)
   end
 
   describe '#course_days_count' do
