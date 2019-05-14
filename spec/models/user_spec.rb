@@ -19,18 +19,18 @@ describe User do
     allow(HTTParty).to receive(:get).and_return(response)
   end
 
-  describe '#get_teacher_unread_discussion_topic_assignments' do
+  describe '#get_teacher_unread_discussion_topics' do
     it 'is mixed in' do
-      expect(subject).to respond_to(:get_teacher_unread_discussion_topic_assignments)
+      expect(subject).to respond_to(:get_teacher_unread_discussion_topics)
     end
 
     it 'calls the endpoint' do
       expect(HTTParty).to receive(:get).and_return(response)
-      subject.get_teacher_unread_discussion_topic_assignments(course)
+      subject.get_teacher_unread_discussion_topics(course)
     end
 
     it 'returns a list of assignments' do
-      expect(subject.get_teacher_unread_discussion_topic_assignments(course)).to eq [assignment]
+      expect(subject.get_teacher_unread_discussion_topics(course)).to eq [assignment]
     end
 
 
@@ -45,11 +45,11 @@ describe User do
 
       it 'wont look up enrollments' do
         expect(enrollments).to_not receive(:where)
-        subject.get_teacher_unread_discussion_topic_assignments(course) end
+        subject.get_teacher_unread_discussion_topics(course) end
 
       it "wont call the service" do
         expect(HTTParty).to_not receive(:get)
-        subject.get_teacher_unread_discussion_topic_assignments(course)
+        subject.get_teacher_unread_discussion_topics(course)
       end
     end
   end
