@@ -1,18 +1,18 @@
 module PipelineService
   module V2
     module Nouns
-      class PageView
+      class Base
         def initialize object:
-          @page_view = object.ar_model
+          @ar_object = object.ar_model
         end
 
         def call
           # Return the default, non-overrriden from #as_json
-          @page_view
+          @ar_object
             .class
             .superclass
             .instance_method(:as_json)
-            .bind(@page_view)
+            .bind(@ar_object)
             .call(include_root: false)
         end
       end

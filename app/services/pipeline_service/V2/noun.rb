@@ -8,11 +8,7 @@ module PipelineService
       end
 
       def serializer
-        begin
-          "PipelineService::V2::Nouns::#{short_class_name}".constantize
-        rescue
-          nil
-        end
+        PipelineService::V2::Nouns::Base
       end
     end
   end
