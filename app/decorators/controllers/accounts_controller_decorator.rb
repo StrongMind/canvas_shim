@@ -15,7 +15,7 @@ AccountsController.class_eval do
         object: 'school',
         id: 1,
         setting: 'holidays',
-        value: params[:holidays]
+        value: holidays
       )
     end
 
@@ -24,4 +24,9 @@ AccountsController.class_eval do
 
   alias_method :instructure_update, :update
   alias_method :update, :strongmind_update
+
+  private
+  def holidays
+    params[:holidays].blank? ? false : params[:holidays]
+  end
 end
