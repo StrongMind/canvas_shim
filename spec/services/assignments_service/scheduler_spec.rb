@@ -11,6 +11,10 @@ describe AssignmentsService::Scheduler do
     described_class.new(course: course, assignment_count: 44)
   end
 
+  before do
+    allow(subject).to receive(:dynamo_holidays).and_return(nil)
+  end
+
   describe '#course_days_count' do
     it 'should return a count of all weekdays' do
       expect(subject.course_days_count).to eq 28
