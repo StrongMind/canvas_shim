@@ -44,7 +44,7 @@ module AssignmentsService
 
     def calendar
       if settings_service_holidays
-        Business::Calendar.new(working_days: WORKING_DAYS, holidays: dynamo_holidays.split(','))
+        Business::Calendar.new(working_days: WORKING_DAYS, holidays: settings_service_holidays.split(','))
       elsif ENV['HOLIDAYS']
         Business::Calendar.new(working_days: WORKING_DAYS, holidays: ENV['HOLIDAYS'].split(','))
       else
