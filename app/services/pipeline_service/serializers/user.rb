@@ -31,7 +31,9 @@ module PipelineService
       end
 
       def call
-        user_json(@user, @admin, {})
+        json = user_json(@user, @admin, {})
+        json['lti_context_id'] = @user.try(:lti_context_id)
+        json
       end
     end
   end
