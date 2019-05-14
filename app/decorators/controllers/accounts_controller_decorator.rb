@@ -3,6 +3,7 @@ AccountsController.class_eval do
     @holidays = SettingsService.get_settings(object: :school, id: 1)['holidays']
     @holidays = @holidays.split(",") if @holidays
     @holidays ||= ENV["HOLIDAYS"] ? ENV["HOLIDAYS"].split(",") : []
+    js_env({HOLIDAYS: @holidays})
     instructure_settings
   end
 

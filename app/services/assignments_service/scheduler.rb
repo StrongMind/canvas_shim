@@ -43,7 +43,7 @@ module AssignmentsService
     end
 
     def calendar
-      if dynamo_holidays
+      if settings_service_holidays
         Business::Calendar.new(working_days: WORKING_DAYS, holidays: dynamo_holidays.split(','))
       elsif ENV['HOLIDAYS']
         Business::Calendar.new(working_days: WORKING_DAYS, holidays: ENV['HOLIDAYS'].split(','))
@@ -83,7 +83,7 @@ module AssignmentsService
       result
     end
 
-    def dynamo_holidays
+    def settings_service_holidays
       SettingsService.get_settings(object: :school, id: 1)['holidays']
     end
   end
