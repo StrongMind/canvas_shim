@@ -1,12 +1,12 @@
 module PipelineService
   module Serializers
-    class PageView
+    class Course
       def initialize object:
-        @page_view = object
+        @course = object
       end
 
       def call
-        @payload = Builders::PageViewJSONBuilder.call(@page_view) || {}
+        @payload = Builders::CourseJSONBuilder.call(@course) || {}
       end
 
     end

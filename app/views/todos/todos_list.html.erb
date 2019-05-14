@@ -1,0 +1,215 @@
+<% content_for :page_title do %><%= t('user_todo_list', 'User To Do List') %><% end %>
+<% css_bundle :dashboard %>
+<% js_bundle :dashboard_card %>
+<% css_bundle :dashboard_card %>
+
+
+
+<div id="dashboard_header_container" class="ic-Dashboard-header">
+    <div class="ic-Dashboard-header__layout">
+        <h1 class="ic-Dashboard-header__title">To Do List</h1>
+        <div class="ic-Dashboard-header__actions">
+            <div id="DashboardOptionsMenu_Container">
+                <%= link_to 'Back', :back, :class => "element_toggler btn button-sidebar-wide", type: :button %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br><br>
+
+<div style="width: 100%; position: relative; margin-top: auto">
+
+   <aside id="right-side" role="complementary">
+      <%
+         # This is rendered both on the dashboard and on the course homepage. On the
+         # dashboard, contexts is nil, and so the cache is only based on the user, which
+         # does not get touched when an assignment needs_grading count changes. So for
+         # the dashboard, we expire after 3 minutes. On the course page, contexts is the
+         # course, which does get touched, and so the cache expiration works.
+         #
+         # BTW if you add a new thing here, it probably needs adding to the /users/self/todo API
+         contexts = nil
+         cache_opts = (contexts.present? ? {} : { :expires_in => 3.minutes })
+         cache(safe_cache_key([@current_user, contexts, 'to_do_list_view']), cache_opts) do
+         hidden_todos = 0
+         presenter = ToDoListPresenter.new(self, @current_user, contexts)
+         %>
+      <% if presenter.any_assignments? %>
+      <div class="flex-grid" style="display: flex;">
+         <div class="col" style="flex: 1;">
+            <p style="font-size: 16px; text-align: center; width: 100%;">Items to Grade (<%= presenter.needs_grading.count %>)</p>
+            </h5>
+            <ul class="right-side-list to-do-list">
+               <% presenter.needs_grading.each_with_index do |assignment, i| %>
+               <div id="DashboardCard_Container" style="display: block;">
+                  <div class="ic-DashboardCard__box">
+                     <div class="ic-DashboardCard" style="margin: auto; width: 98%;">
+                        <li class="todo" style="<%= hidden if i >= presenter.visible_limit %>">
+                           <a
+                              class="item"
+                              href="<%= assignment.gradebook_path %>"
+                              data-track-category="dashboard"
+                              data-track-label="todo needs grading"
+                              >
+                              <div class="todo-badge-wrapper">
+                                 <div class="todo-badge">
+                                    <span aria-hidden="true"><%= assignment.needs_grading_badge %></span>
+                                    <span class="screenreader-only"><%= assignment.needs_grading_label %></span>
+                                 </div>
+                              </div>
+                              <div class="todo-details">
+                                 <b class="todo-details__title"><%= t('Grade %{assignment}', assignment: assignment.title) %></b>
+                                 <% if presenter.show_context? %>
+                                 <p class="todo-details__context">
+                                    <%= assignment.short_context_name %>
+                                 </p>
+                                 <% end %>
+                                 <p>
+                                    <% if assignment.points_possible %>
+                                    <%= t({one: '1 point', other: '%{count} points'}, count: round_if_whole(assignment.points_possible)) %>
+                                    &bullet;
+                                    <% end %>
+                                    <%= assignment.formatted_due_date %>
+                                 </p>
+                              </div>
+                           </a>
+                           <%= render :partial => 'shared/ignore_option_list', :locals => {presenter: assignment} %>
+                        </li>
+                     </div>
+                  </div>
+               </div>
+               <% end %>
+            </ul>
+         </div>
+         <div class="col" style="flex: 1;">
+            <p style="font-size: 16px; text-align: center; width: 100%;">Items to Moderate (<%= presenter.needs_moderation.count %>)</p>
+            </h5>
+         <ul class="right-side-list to-do-list">
+            <% presenter.needs_moderation.each_with_index do |assignment, i| %>
+            <div id="DashboardCard_Container" style="display: block;">
+               <div class="ic-DashboardCard__box">
+                  <div class="ic-DashboardCard" style="margin: auto; width: 100%;">
+                     <% icon_explanation, icon_aria_label, icon_class = assignment.needs_moderation_icon_data %>
+                     <li class="todo" style="<%= hidden if i >= presenter.visible_limit %>">
+                        <a
+                           class="item"
+                           href="<%= assignment.moderate_path %>"
+                           data-track-category="dashboard"
+                           data-track-label="todo needs moderation"
+                           >
+                           <i class="<%= icon_class %>" aria-label="<%= icon_aria_label %>"></i>
+                           <div class="todo-details">
+                              <b class="todo-details__title"><%= t('Moderate %{assignment}', assignment: assignment.title) %></b>
+                              <% if presenter.show_context? %>
+                              <p class="todo-details__context">
+                                 <%= assignment.short_context_name %>
+                              </p>
+                              <% end %>
+                              <p>
+                                 <% if assignment.points_possible %>
+                                 <%= t({one: '1 point', other: '%{count} points'}, count: round_if_whole(assignment.points_possible)) %>
+                                 &bullet;
+                                 <% end %>
+                                 <%= assignment.formatted_due_date %>
+                              </p>
+                           </div>
+                        </a>
+                        <%= render :partial => 'shared/ignore_option_list', :locals => {presenter: assignment} %>
+                     </li>
+                  </div>
+               </div>
+            </div>
+            <% end %>
+         </ul>
+         </div>
+         <div class="col" style="flex: 1;">
+            <p style="font-size: 16px; text-align: center; width: 100%;">Items to Review (<%= presenter.needs_reviewing.count %>)</p>
+            </h5>
+         <ul class="right-side-list to-do-list">
+            <% presenter.needs_reviewing.each_with_index do |assessment_request, i| %>
+            <div id="DashboardCard_Container" style="display: block;">
+               <div class="ic-DashboardCard__box">
+                  <div class="ic-DashboardCard" style="margin: auto; width: 100%;">
+                     <li class="todo" style="<%= hidden if i >= presenter.visible_limit %>">
+                        <% assignment = assessment_request.assignment_presenter %>
+                        <a
+                           class="item"
+                           href="<%= assessment_request.submission_path %>"
+                           data-track-category="dashboard"
+                           data-track-label="todo needs reviewing"
+                           title="<%= assessment_request.submission_author_name %>"
+                           >
+                           <%# Don't need aria-label here because we say that this is a peer review in the text immediately following %>
+                           <i class="icon-peer-review"></i>
+                           <div class="todo-details">
+                              <b class="todo-details__title"><%= t('Peer Review for %{assignment}', assignment: assignment.title) %></b>
+                              <% if presenter.show_context? %>
+                              <p class="todo-details__context">
+                                 <%= assessment_request.short_context_name %>
+                              </p>
+                              <% end %>
+                              <p>
+                                 <% if assignment.try(:points_possible) %>
+                                 <%= t({one: '1 point', other: '%{count} points'}, count: round_if_whole(assignment.points_possible)) %>
+                                 &bullet;
+                                 <% end %>
+                                 <%= assignment.formatted_peer_review_due_date %>
+                              </p>
+                           </div>
+                        </a>
+                        <%= render :partial => 'shared/ignore_option_list', :locals => {presenter: assessment_request} %>
+                     </li>
+                  </div>
+               </div>
+            </div>
+            <% end %>
+         </ul>
+         </div>
+         <div class="col" style="flex: 1;">
+            <p style="font-size: 16px; text-align: center; width: 100%;">Missing Submissions (<%= presenter.needs_submitting.count %>)</p>
+            </h5>
+            <ul class="right-side-list to-do-list">
+               <% presenter.needs_submitting.each_with_index do |assignment, i| %>
+               <div id="DashboardCard_Container" style="display: block;">
+                  <div class="ic-DashboardCard__box">
+                     <div class="ic-DashboardCard" style="margin: auto; width: 100%;">
+                        <% icon_explanation, icon_aria_label, icon_class = assignment.needs_submitting_icon_data %>
+                        <li class="todo" style="<%= hidden if i >= presenter.visible_limit %>">
+                           <a
+                              class="item"
+                              href="<%= assignment.assignment_path %>#submit"
+                              data-track-category="dashboard"
+                              data-track-label="todo needs submitting"
+                              >
+                              <i class="<%= icon_class %>" aria-label="<%= icon_aria_label %>"></i>
+                              <div class="todo-details">
+                                 <b  class="todo-details__title"><%= assignment.submission_action_string %></b>
+                                 <% if presenter.show_context? %>
+                                 <p class="todo-details__context">
+                                    <%= assignment.short_context_name %>
+                                 </p>
+                                 <% end %>
+                                 <p>
+                                    <% if assignment.points_possible %>
+                                    <%= t({one: '1 point', other: '%{count} points'}, count: round_if_whole(assignment.points_possible)) %>
+                                    &bullet;
+                                    <% end %>
+                                    <%= assignment.formatted_due_date %>
+                                 </p>
+                              </div>
+                           </a>
+                           <%= render :partial => 'shared/ignore_option_list', :locals => {presenter: assignment} %>
+                        </li>
+                     </div>
+                  </div>
+               </div>
+            </ul>
+            <% end %>
+         </div>
+      </div>
+      </ul>
+      <% end %>
+      <% end %>
+</div>
+</aside>

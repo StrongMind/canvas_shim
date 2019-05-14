@@ -18,7 +18,6 @@ module PipelineService
       def call
         return if SettingsService.get_settings(object: :school, id: 1)['disable_pipeline']
         post_to_pipeline
-        publish_events
         self
       end
 
@@ -28,10 +27,6 @@ module PipelineService
 
       def configure_dependencies
         @client     = @args[:client] || PipelineClient
-      end
-
-      def publish_events
-        Commands::PublishEvents.new(@args).call
       end
 
       def post_to_pipeline

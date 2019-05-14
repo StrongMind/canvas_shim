@@ -11,4 +11,8 @@ Assignment.class_eval do
   def excused_submissions
     self.submissions.where(excused: true)
   end
+
+  def is_excused?(user)
+    !!excused_submissions.find_by(user: user)
+  end
 end

@@ -1,4 +1,5 @@
 describe UnitsService::Queries::GetItems do
+  include_context "stubbed_network"
   let(:course) { Course.create(context_modules: [context_module]) }
   let(:content_tag) { ContentTag.create(content: assignment) }
   let(:context_module) { ContextModule.create(content_tags: [content_tag]) }

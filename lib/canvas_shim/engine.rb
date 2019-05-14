@@ -1,6 +1,7 @@
 require 'aws-sdk-core'
 require 'aws-sdk-dynamodb'
 require 'aws-sdk-s3'
+require 'aws-sdk-sqs'
 require 'business'
 require 'csv'
 require 'decorators'

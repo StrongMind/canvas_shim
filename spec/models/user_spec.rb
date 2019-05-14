@@ -1,4 +1,5 @@
 describe User do
+  include_context 'stubbed_network'
   let(:subject) { User.create }
   let(:enrollment) { double('enrollment') }
   let(:enrollments) { double('enrollments', where: [enrollment])}

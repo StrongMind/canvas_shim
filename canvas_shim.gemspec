@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'aws-sdk-core'
   s.add_dependency 'aws-sdk-s3'
+  s.add_dependency 'aws-sdk-sqs'
   s.add_dependency 'aws-sdk-dynamodb', '1.15.0'
   s.add_dependency "pipeline_publisher_ruby"
   s.add_dependency "business"
@@ -29,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sass-rails'
   s.add_dependency 'coffee-rails'
   s.add_dependency 'uglifier'
-  s.add_dependency 'chronic'
+  s.add_dependency 'chronic'  
 
   s.add_development_dependency 'better_errors'
   s.add_development_dependency 'binding_of_caller'
