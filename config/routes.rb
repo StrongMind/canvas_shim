@@ -12,6 +12,12 @@ Rails.application.routes.draw do
     get  'conclude_users', to: 'courses#show_course_enrollments', as: :show_course_enrollments
   end
 
-  
   get 'todos', to: 'todos#index', as: :user_todo
+
+  ApiRouteSet::V1.draw(self) do
+    scope(controller: :enrollments_api) do
+      post 'courses/:course_id/enrollments/:id/custom_placement', action: :custom_placement
+    end
+  end
 end
+
