@@ -43,9 +43,10 @@ module AssignmentsService
     end
 
     def calendar
-      if settings_service_holidays
-        Business::Calendar.new(working_days: WORKING_DAYS, holidays: settings_service_holidays.split(','))
-      elsif ENV['HOLIDAYS']
+      ss_holidays = settings_service_holidays
+      if ss_holidays
+        Business::Calendar.new(working_days: WORKING_DAYS, holidays: ss_holidays.split(','))
+      elsif ENV['HOLIDAYS'] && ss_holidays != false
         Business::Calendar.new(working_days: WORKING_DAYS, holidays: ENV['HOLIDAYS'].split(','))
       else
         Business::Calendar.new(working_days: WORKING_DAYS)
