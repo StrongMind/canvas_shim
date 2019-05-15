@@ -4,6 +4,8 @@ CanvasShim::Engine.routes.draw do
       resources :users, only: ['update']
     end
   end
+
+
 end
 
 Rails.application.routes.draw do
@@ -14,10 +16,8 @@ Rails.application.routes.draw do
 
   get 'todos', to: 'todos#index', as: :user_todo
 
-  ApiRouteSet::V1.draw(self) do
-    scope(controller: :enrollments_api) do
-      post 'courses/:course_id/enrollments/:id/custom_placement', action: :custom_placement
-    end
+  scope(controller: :enrollments_api) do
+    post '/api/v1/courses/:course_id/enrollments/:id/custom_placement', action: :custom_placement
   end
 end
 
