@@ -1,4 +1,5 @@
 describe PipelineService::Serializers::Submission do
+  include_context 'stubbed_network'
   subject do
     described_class.new object: submission
   end

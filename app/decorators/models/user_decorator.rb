@@ -1,4 +1,7 @@
 User.class_eval do
+  after_commit -> { PipelineService::V2.publish self }
+
+
   def custom_placement_at(content_tag)
     context_module = content_tag.context_module
     course = context_module.context

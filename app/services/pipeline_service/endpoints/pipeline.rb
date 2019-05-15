@@ -25,6 +25,10 @@ module PipelineService
 
       def build_payload
         @payload = message_builder.new(@args).call
+        
+        Logger.new(source: 'pipeline', message: @payload).call
+        
+        @payload
       end
 
       def configure_dependencies

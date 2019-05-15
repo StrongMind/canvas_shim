@@ -1,4 +1,5 @@
 describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
+  include_context 'stubbed_network'
   subject { described_class.new(enrollment: enrollment) }
 
   let(:enrollment_start_time) { course_start_date + 1.day }

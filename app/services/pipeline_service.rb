@@ -10,9 +10,18 @@ module PipelineService
     self
   end
 
-
   def self.republish(options)
     API::Republish.new(options).call
     self
+  end
+
+  module V2
+    def self.publish(model)
+      begin
+        V2::API::Publish.new(model).call
+      rescue StandardError => exception
+        Raven.captureException(exception)
+      end
+    end
   end
 end
