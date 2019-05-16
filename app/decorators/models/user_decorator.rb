@@ -27,6 +27,8 @@ User.class_eval do
 
       bypass_requirement(tag)
     end
+
+    AssignmentOverrideStudent.where(user_id: self.id, assignment_id: course.assignment_ids).each(&:destroy) # run through each as we want callbacks to fire
   end
 
   def bypass_requirement(content_tag)
