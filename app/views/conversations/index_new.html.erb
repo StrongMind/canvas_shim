@@ -22,7 +22,12 @@
 <h1 class="screenreader-only"><%= t(:page_title_header, "Conversations") %></h1>
 <% content_for :page_title, t('titles.conversations', "Conversations") %>
 
-<% can_delete = can_do(Account.first, @current_user, :delete_inbox_messages) %>
+<% 
+
+is_admin = @current_user.roles(Account.site_admin).include? 'admin'
+can_delete = is_admin || @current_user.enrollments.active.any? { |e| e.has_permission_to?(:delete_inbox_messages) }
+
+ %>
 
 <div class="conversations">
   <header class="panel">
