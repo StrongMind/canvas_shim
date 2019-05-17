@@ -3,7 +3,7 @@ describe Course do
 
   describe "#after_commit" do
     it 'does publish to the pipeline' do
-      expect(PipelineService).to receive(:publish)
+      expect(PipelineService::V2).to receive(:publish)
       AssignmentGroup.create
     end
   end
