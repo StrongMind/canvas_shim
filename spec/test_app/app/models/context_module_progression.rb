@@ -5,4 +5,8 @@ class ContextModuleProgression < ActiveRecord::Base
   def prerequisites_satisfied?
     false
   end
+
+  def locked?
+    true
+  end
 end
