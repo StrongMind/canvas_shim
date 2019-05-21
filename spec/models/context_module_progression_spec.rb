@@ -10,7 +10,15 @@ describe ContextModuleProgression do
     allow(SettingsService).to receive(:get_enrollment_settings).and_return({"sequence_control"=>false})
   end
 
-  it 'returns true with no setting' do
-    expect(context_module_progression.prerequisites_satisfied?).to be(true)
+  describe "#prerequisites_satisfied?" do
+    it 'returns true when sequence control is off' do
+      expect(context_module_progression.prerequisites_satisfied?).to be(true)
+    end
+  end
+
+  describe "#locked?" do
+    it 'returns false when sequence control is off' do
+      expect(context_module_progression.locked?).to be(false)
+    end
   end
 end

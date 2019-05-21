@@ -43,12 +43,14 @@ module AssignmentsService
     end
 
     def calendar
-      if ENV['HOLIDAYS']
+      ss_holidays = settings_service_holidays
+      if ss_holidays
+        Business::Calendar.new(working_days: WORKING_DAYS, holidays: ss_holidays.split(','))
+      elsif ENV['HOLIDAYS'] && ss_holidays != false
         Business::Calendar.new(working_days: WORKING_DAYS, holidays: ENV['HOLIDAYS'].split(','))
       else
         Business::Calendar.new(working_days: WORKING_DAYS)
       end
-
     end
 
     def get_days
@@ -80,6 +82,10 @@ module AssignmentsService
       end
       result[days.last] = 1
       result
+    end
+
+    def settings_service_holidays
+      SettingsService.get_settings(object: :school, id: 1)['holidays']
     end
   end
 end

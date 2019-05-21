@@ -19,6 +19,13 @@ describe User do
     allow(HTTParty).to receive(:get).and_return(response)
   end
 
+  describe "#after_commit" do
+    it 'publishes to the pipeline' do
+      expect(PipelineService::V2).to receive(:publish)
+      ::User.create
+    end
+  end
+
   describe '#get_teacher_unread_discussion_topics' do
     it 'is mixed in' do
       expect(subject).to respond_to(:get_teacher_unread_discussion_topics)
