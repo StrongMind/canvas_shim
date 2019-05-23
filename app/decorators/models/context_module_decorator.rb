@@ -2,7 +2,7 @@ ContextModule.class_eval do
   serialize :completion_requirements, Array
   
   def score_threshold
-    SettingsService.get_settings(object: :school, id: 1)['score_threshold']
+    SettingsService.get_settings(object: :school, id: 1)['score_threshold'].to_f
   end
   
   def threshold_set?
@@ -19,7 +19,7 @@ ContextModule.class_eval do
     completion_requirements.each do |requirement|
       if graded_requirements.include?(requirement)
         requirement[:type] = "min_score"
-        requirement[:min_score] = score_threshold.to_f
+        requirement[:min_score] = score_threshold
       end
     end
 
