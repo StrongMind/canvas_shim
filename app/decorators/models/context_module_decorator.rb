@@ -1,6 +1,4 @@
-ContextModule.class_eval do   
-  serialize :completion_requirements, Array
-  
+ContextModule.class_eval do
   def score_threshold
     SettingsService.get_settings(object: :school, id: 1)['score_threshold'].to_f
   end
