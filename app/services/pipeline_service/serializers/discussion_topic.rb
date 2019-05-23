@@ -4,11 +4,10 @@ module PipelineService
       def initialize(object:)
         @object = object
         @discussion_topic = ::DiscussionTopic.find(object.id)
-
       end
 
       def call
-        return unless @discussion_topic.context_type == "course"
+        return unless @discussion_topic.context_type == "Course"
         fetch
       end
 
