@@ -11,6 +11,10 @@ module PipelineService
         fetch
       end
 
+      def self.additional_identifier_fields
+        [Models::Identifier.new(:context_id, alias: :course_id)]
+      end
+
       private
 
       attr_reader :object
