@@ -15,7 +15,7 @@ module PipelineService
 
     # A list of the active record models that are used by the serializers
     def self.repositories
-      (names - [:CanvasAPIEnrollment, :UnitGrades]).map { |name| name.to_s.constantize }
+      (names - [:CanvasAPIEnrollment, :UnitGrades, :CourseProgress]).map { |name| name.to_s.constantize }
     end
   end
 end
