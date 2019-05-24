@@ -7,13 +7,14 @@ class EnrollmentsApiController < ApplicationController
     @content_tag = ContentTag.find(params[:content_tag].dig(:id))
 
     if @enrollment && @content_tag
-      @enrollment.user.custom_placement_at(@content_tag)
+      @enrollment.user.send_later(:custom_placement_at, @content_tag)
       render :json => {}, :status => :ok
     else
       render :json => {}, :status => :unprocessable_entity
     end
 
-  rescue StandardError
+  rescue StandardError => exception
+    Raven.capture_exception(exception)
     render :json => {}, :status => :bad_request
   end
 
