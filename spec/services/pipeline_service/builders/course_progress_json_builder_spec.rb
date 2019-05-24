@@ -4,8 +4,9 @@ describe PipelineService::Builders::CourseProgressJSONBuilder do
   include_context('stubbed_network')
   let(:course) {Course.create}
   let(:user) {User.create}
+  let(:context_module) { double('course_module', context: course) }
 
-  let(:ar_object) { double('context_module_progression', course: course, user: user) }
+  let(:ar_object) { double('context_module_progression', context_module: context_module, user: user) }
   let(:noun) { PipelineService::Nouns::CourseProgress.new(ar_object) }
 
   it "Returns course progress" do
