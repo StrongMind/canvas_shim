@@ -5,12 +5,14 @@ describe ContextModule do
   end
   
   describe "#assign_threshold" do
-    completion_requirements = [
-      {:id=>53, :type=>"must_view"},
-      {:id=>56, :type=>"must_submit"},
-      {:id=>58, :type=>"must_contribute"}
-    ]
-
+    let(:completion_requirements) do
+      [
+        {:id=>53, :type=>"must_view"},
+        {:id=>56, :type=>"must_submit"},
+        {:id=>58, :type=>"must_contribute"}
+      ]
+    end
+    
     before do
       ContextModule.create(completion_requirements: completion_requirements)
     end
