@@ -25,7 +25,7 @@ describe PipelineService::API::Publish do
     let(:conversation) {Conversation.create}
 
     it 'Builds an noun with the active record object' do
-      expect(PipelineService::Models::Noun).to receive(:new).with(conversation)
+      expect(PipelineService::Models::Noun).to receive(:new).with(conversation, any_args)
       PipelineService::API::Publish.new(conversation).call
     end
   end

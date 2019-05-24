@@ -8,7 +8,7 @@ module PipelineService
       attr_reader :object
 
       def initialize(object, args={})
-        @object = Models::Noun.new(object)
+        @object = Models::Noun.new(object, alias: args[:alias])
         @changes = object.try(:changes)
         @command_class = args[:command_class] || Commands::Publish
         @queue         = args[:queue] || Delayed::Job

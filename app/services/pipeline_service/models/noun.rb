@@ -3,7 +3,7 @@ module PipelineService
     class Noun
       attr_reader :id, :name, :changes, :noun_class, :additional_identifiers, :primary_key
 
-      def initialize(object)
+      def initialize(object, args={})
         @primary_key = object.class.primary_key
         @id = object.send(primary_key)
         @noun_class = object.class
@@ -11,6 +11,7 @@ module PipelineService
         @workflow_state = object.try(:workflow_state)
         @object_is_destroyed = object.try(:destroyed?)
         @additional_identifiers = get_additional_identifiers(object)
+        @alias = args[:alias]
       end
 
       def destroyed?
@@ -23,7 +24,7 @@ module PipelineService
       end
 
       def name
-        short_class_name.underscore
+        send(:alias) || short_class_name.underscore 
       end
 
       def serializer
@@ -48,6 +49,8 @@ module PipelineService
       end
 
       private
+
+      attr_reader :alias
 
       def short_class_name
         @noun_class.to_s.split('::').last
