@@ -17,7 +17,7 @@ ContextModule.class_eval do
   end
 
   def threshold_changes_needed?
-    !!completion_requirements.find { |req| ["must_submit", "must_contribute"].include?(req[:type]) }
+    completion_requirements.any? { |req| ["must_submit", "must_contribute"].include?(req[:type]) }
   end
 
   def add_min_score_to_requirements

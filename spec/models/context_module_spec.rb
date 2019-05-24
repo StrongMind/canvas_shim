@@ -28,6 +28,11 @@ describe ContextModule do
       expect(req_scores.any? && req_scores.all? { |score| score == 60.0 }).to be true
     end
 
+    it "does not receive add_min_score once all have min_score" do
+      expect(ContextModule.last).to_not receive(:add_min_score_to_requirements)
+      ContextModule.last.save
+    end
+
     context "no threshold score available" do
       before do
         allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(0.0)
@@ -36,6 +41,15 @@ describe ContextModule do
 
       it "does not modify the completion requirements" do
         expect(ContextModule.last.completion_requirements).to eq(completion_requirements)
+      end
+    end
+
+    context "new object" do
+      let(:new_cm) { ContextModule.new(completion_requirements: completion_requirements) }
+
+      it "Receives add_min_score when setting is on" do
+        expect(new_cm).to receive(:add_min_score_to_requirements)
+        new_cm.save
       end
     end
   end
