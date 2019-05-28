@@ -4,7 +4,6 @@ module PipelineService
       attr_reader :course_id, :context_module_id, :id
 
       def initialize(content_tag)
-        binding.pry
         @id = content_tag.id
         @course_id = content_tag.try(:course).try(:id)
         @context_module_id = content_tag.context_module_id

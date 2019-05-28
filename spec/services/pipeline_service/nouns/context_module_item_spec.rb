@@ -21,7 +21,7 @@ describe PipelineService::Nouns::ContextModuleItem do
 
   describe '#id' do
     it do
-      expect(subject.context_module_id).to eq(content_tag.id)
+      expect(subject.id).to eq(content_tag.id)
     end
   end
 
