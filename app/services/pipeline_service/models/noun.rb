@@ -7,7 +7,7 @@ module PipelineService
         @primary_key = object.class.primary_key
         @id = object.send(primary_key)
         @noun_class = object.class
-        @changes = object.changes
+        @changes = object.changes if object.respond_to?(:changes)
         @workflow_state = object.try(:workflow_state)
         @object_is_destroyed = object.try(:destroyed?)
         @additional_identifiers = get_additional_identifiers(object)
