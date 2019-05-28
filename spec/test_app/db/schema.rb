@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190521202538) do
+ActiveRecord::Schema.define(version: 20190523202047) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(version: 20190521202538) do
     t.string  "context_type"
     t.string  "name"
     t.integer "context_module_progression_id"
+    t.text    "completion_requirements"
   end
 
   create_table "conversation_messages", force: :cascade do |t|
