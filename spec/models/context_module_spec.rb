@@ -17,7 +17,7 @@ describe ContextModule do
       ContextModule.create(completion_requirements: completion_requirements)
     end
 
-    it "eliminates submittable types" do
+    it "modifies submittable types" do
       req_types = ContextModule.last.completion_requirements.map { |req| req[:type] }
       expect(req_types).to_not include "must_submit"
       expect(req_types).to_not include "must_contribute"

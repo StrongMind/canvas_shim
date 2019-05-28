@@ -48,6 +48,6 @@ AccountsController.class_eval do
   end
 
   def valid_threshold?
-    !@threshold.negative? && @threshold < 100
+    !@threshold.negative? && @threshold <= 100
   end
 end
