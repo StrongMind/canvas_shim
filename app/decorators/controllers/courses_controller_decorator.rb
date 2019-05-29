@@ -1,5 +1,5 @@
 CoursesController.class_eval do
-
+  before_action :get_course_threshold, only: :settings
   helper_method :enrollment_name, :user_can_conclude_enrollments?
 
   def show_course_enrollments
@@ -99,5 +99,9 @@ CoursesController.class_eval do
       setting: 'passing_threshold',
       value: @course_threshold
     )
+  end
+
+  def get_course_threshold
+    @course_threshold = SettingsService.get_settings(object: :course, id: params[:course_id])['passing_threshold'].to_f
   end
 end
