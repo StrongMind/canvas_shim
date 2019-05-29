@@ -1,4 +1,5 @@
 describe ContextModule do
+
   include_context "stubbed_network"
   context 'callbacks' do
     describe 'before_commit' do
