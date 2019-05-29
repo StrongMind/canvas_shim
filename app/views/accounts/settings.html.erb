@@ -231,7 +231,7 @@ TEXT
                     <td><%= settings.blabel :score_threshold, :en => "Passing Threshold" %></td>
                     <td>
                       <%= settings.text_field :score_threshold,
-                                              :value => @threshold,
+                                              :value => @school_threshold,
                                               :class => 'same-width-as-select',
                                               :placeholder => "Choose a number between 0-100" %>
                       <p style="font-size: 0.9em;"><%= t("Set a school-wide minimum grade for students to move on from each assignment in a unit.") %></p>
@@ -263,7 +263,7 @@ TEXT
                     </td>
                   </tr>
                   <tr>
-                    <td colspan="2"><%= settings.check_box :prevent_thresholds_in_courses, :checked => false %>
+                    <td colspan="2"><%= settings.check_box :prevent_thresholds_in_courses, :checked => @prevent_course_thresh, :title => "Prevent teachers from adding custom passing thresholds to courses" %>
                     <%= settings.label :prevent_thresholds_in_courses, :en => "Don't let teachers create passing thresholds" %>
                     </td>
                   </tr>

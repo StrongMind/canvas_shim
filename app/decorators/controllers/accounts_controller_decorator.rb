@@ -1,7 +1,8 @@
 AccountsController.class_eval do
   def strongmind_settings
     grab_holidays
-    @threshold = SettingsService.get_settings(object: :school, id: 1)['score_threshold']
+    @school_threshold = score_threshold
+    @prevent_course_thresh = course_threshold_prevention_on?
     js_env({HOLIDAYS: @holidays})
     instructure_settings
   end
@@ -10,26 +11,10 @@ AccountsController.class_eval do
   alias_method :settings, :strongmind_settings
 
   def strongmind_update
-    if params[:holidays]
-      SettingsService.update_settings(
-        object: 'school',
-        id: 1,
-        setting: 'holidays',
-        value: holidays
-      )
-    end
-
-    @threshold = params[:account][:settings][:score_threshold].to_i
-
-    if valid_threshold?
-      SettingsService.update_settings(
-        object: 'school',
-        id: 1,
-        setting: 'score_threshold',
-        value: @threshold
-      )
-    end
-
+    @school_threshold = params[:account][:settings][:score_threshold].to_i
+    set_school_threshold if valid_threshold?
+    set_holidays if params[:holidays]
+    set_course_threshold_prevention
     instructure_update
   end
 
@@ -47,7 +32,38 @@ AccountsController.class_eval do
     @holidays ||= (ENV["HOLIDAYS"] && @holidays != false) ? ENV["HOLIDAYS"].split(",") : []
   end
 
+  def set_holidays
+    SettingsService.update_settings(
+        object: 'school',
+        id: 1,
+        setting: 'holidays',
+        value: holidays
+      )
+  end
+
   def valid_threshold?
-    !@threshold.negative? && @threshold <= 100
+    !@school_threshold.negative? && @school_threshold <= 100
+  end
+
+  def set_school_threshold
+    SettingsService.update_settings(
+        object: 'school',
+        id: 1,
+        setting: 'score_threshold',
+        value: @school_threshold
+      )
+  end
+
+  def course_threshold_prevention_params
+    params[:account][:settings][:prevent_thresholds_in_courses].to_i.positive?
+  end
+
+  def set_course_threshold_prevention
+    SettingsService.update_settings(
+        object: 'school',
+        id: 1,
+        setting: 'course_threshold_prevention',
+        value: course_threshold_prevention_params
+      )
   end
 end
