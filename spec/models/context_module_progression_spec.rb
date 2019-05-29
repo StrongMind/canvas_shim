@@ -4,7 +4,7 @@ describe ContextModuleProgression do
   let(:course) { Course.create }
   let(:context_module) { ContextModule.create!(context: course) }
   let(:context_module_progression) { ContextModuleProgression.create(context_module: context_module, user: user) }
-  let!(:enrollment) { Enrollment.create(user: user, course: course) }
+  let!(:enrollment) { Enrollment.create(user: user, course: course, type: 'StudentEnrollment') }
 
   before do
     allow(SettingsService).to receive(:get_enrollment_settings).and_return({"sequence_control"=>false})
@@ -23,6 +23,15 @@ describe ContextModuleProgression do
   end
 
   context "Pipeline" do
+
+    context "User is not enrolled as a student" do
+      let!(:enrollment) { Enrollment.create(user: user, course: course, type: 'TeacherEnrollment') }
+      it 'does not publish course progress to the pipeline' do
+        expect(PipelineService).to_not receive(:publish)
+        ContextModuleProgression.create(user: user, context_module: context_module)
+      end
+    end
+
     it 'publishes course progress to the pipeline' do
       expect(PipelineService).to receive(:publish)
       ContextModuleProgression.create(user: user, context_module: context_module)
