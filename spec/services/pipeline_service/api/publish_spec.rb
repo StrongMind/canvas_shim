@@ -28,6 +28,19 @@ describe PipelineService::API::Publish do
       expect(PipelineService::Models::Noun).to receive(:new).with(conversation)
       PipelineService::API::Publish.new(conversation).call
     end
+
+    context 'Synthetic Noun' do
+      it 'doesnt wrap the noun in a noun' do
+        course = double('course', id: 1)
+        user = double('user', id: 1)
+        cm = double('context module', context: course)
+        cmp = double("context_module_progression", context_module: cm, user: user, class: double(primary_key: 'id'), id: 1)
+        course_progress = PipelineService::Nouns::CourseProgress.new(cmp)
+
+        expect(PipelineService::Models::Noun).to_not receive(:new)
+        PipelineService::API::Publish.new(course_progress).call
+      end
+    end
   end
 
 

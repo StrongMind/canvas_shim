@@ -10,7 +10,15 @@ module PipelineService
         @changes = object.changes if object.respond_to?(:changes)
         @workflow_state = object.try(:workflow_state)
         @object_is_destroyed = object.try(:destroyed?)
-        @additional_identifiers = get_additional_identifiers(object)
+        
+        @additional_identifiers = 
+        if self.class == PipelineService::Models::Noun
+          # Synthetic nouns dont wrap active record objects and have their own serializers 
+          # with additional identifiers
+          get_additional_identifiers(object)
+        else
+          get_additional_identifiers(self)
+        end
       end
 
       def destroyed?
@@ -44,6 +52,7 @@ module PipelineService
       end
 
       def valid?
+        return true if additional_identifiers.nil?
         !additional_identifiers.values.any?(&:nil?)
       end
 
