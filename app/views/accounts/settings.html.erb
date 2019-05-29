@@ -230,9 +230,11 @@ TEXT
                   <tr>
                     <td><%= settings.blabel :score_threshold, :en => "Passing Threshold" %></td>
                     <td>
-                      <%= settings.text_field :score_threshold,
+                      <%= settings.number_field :score_threshold,
                                               :value => @school_threshold,
                                               :class => 'same-width-as-select',
+                                              :min => "0",
+                                              :max => "100",
                                               :placeholder => "Choose a number between 0-100" %>
                       <p style="font-size: 0.9em;"><%= t("Set a school-wide minimum grade for students to move on from each assignment in a unit.") %></p>
                     </td>
