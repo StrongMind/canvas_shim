@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190521202538) do
-
+ActiveRecord::Schema.define(version: 20190523231907) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -57,6 +56,7 @@ ActiveRecord::Schema.define(version: 20190521202538) do
   create_table "context_module_progressions", force: :cascade do |t|
     t.integer "user_id"
     t.integer "context_module_id"
+    t.integer "course_id"
   end
 
   create_table "context_modules", force: :cascade do |t|
@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(version: 20190521202538) do
     t.string  "context_type"
     t.string  "name"
     t.integer "context_module_progression_id"
+    t.text    "completion_requirements"
   end
 
   create_table "conversation_messages", force: :cascade do |t|
