@@ -1,4 +1,10 @@
 ContextModuleProgression.class_eval do
+  after_commit -> do
+    PipelineService.publish(
+      PipelineService::Nouns::CourseProgress.new(self)
+    ) 
+  end
+
   def strongmind_prerequisites_satisfied?
     sequence_control_on? ? instructure_prerequisites_satisfied? : true
   end
