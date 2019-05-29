@@ -74,8 +74,30 @@ CoursesController.class_eval do
   alias_method :instructure_show, :show
   alias_method :show, :strongmind_show
 
+  def strongmind_update
+    instructure_update
+    @course_threshold = params[:passing_threshold].to_i
+    set_course_passing_threshold if !params[:course].blank? && can_update_threshold?
+  end
+
+  alias_method :instructure_update, :update
+  alias_method :update, :strongmind_update
+
   private
   def grade_out_users_params
     params.permit(enrollment_ids: [])
+  end
+
+  def can_update_threshold?
+    @course && !course_threshold_prevention_on? && valid_threshold?(@course_threshold)
+  end
+
+  def set_course_passing_threshold
+    SettingsService.update_settings(
+      object: 'course',
+      id: @course.id,
+      setting: 'passing_threshold',
+      value: @course_threshold
+    )
   end
 end

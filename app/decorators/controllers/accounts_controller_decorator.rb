@@ -12,7 +12,7 @@ AccountsController.class_eval do
 
   def strongmind_update
     @school_threshold = params[:account][:settings][:score_threshold].to_i
-    set_school_threshold if valid_threshold?
+    set_school_threshold if valid_threshold?(@school_threshold)
     set_holidays if params[:holidays]
     set_course_threshold_prevention
     instructure_update
@@ -39,10 +39,6 @@ AccountsController.class_eval do
         setting: 'holidays',
         value: holidays
       )
-  end
-
-  def valid_threshold?
-    !@school_threshold.negative? && @school_threshold <= 100
   end
 
   def set_school_threshold
