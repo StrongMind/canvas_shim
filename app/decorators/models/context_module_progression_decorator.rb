@@ -1,9 +1,5 @@
 ContextModuleProgression.class_eval do
-  after_commit -> do
-    PipelineService.publish(
-      PipelineService::Nouns::CourseProgress.new(self)
-    ) 
-  end
+  after_commit :publish_course_progress
 
   def strongmind_prerequisites_satisfied?
     sequence_control_on? ? instructure_prerequisites_satisfied? : true
@@ -20,6 +16,15 @@ ContextModuleProgression.class_eval do
   alias_method :locked?, :strongmind_locked?
 
   private
+
+  def publish_course_progress
+    enrollment = Enrollment.where(user_id: user.id, course_id: context_module.context.id).first
+    return unless enrollment.type == "StudentEnrollment"
+    PipelineService.publish(
+      PipelineService::Nouns::CourseProgress.new(self)
+    )
+  end
+
   def sequence_control_on?
     enrollment = Enrollment.where(user_id: user.id, course_id: context_module.context.id).first
     settings = enrollment ? SettingsService.get_enrollment_settings(id: enrollment.id) : {}
