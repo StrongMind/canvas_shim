@@ -25,7 +25,7 @@ describe ContextModuleProgression do
   context "Pipeline" do
 
     context "User is not enrolled as a student" do
-      let!(:enrollment) { Enrollment.create(user: user, course: course, type: 'TeacherEnrollment', workflow_state: 'active') }
+      let!(:enrollment) { Enrollment.create(user: user, course: course, type: 'TeacherEnrollment') }
       it 'publishes course progress to the pipeline' do
         expect(PipelineService).to_not receive(:publish)
         ContextModuleProgression.create(user: user, context_module: context_module)

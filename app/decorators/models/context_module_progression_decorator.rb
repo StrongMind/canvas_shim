@@ -18,7 +18,7 @@ ContextModuleProgression.class_eval do
   private
 
   def publish_course_progress
-    enrollment = Enrollment.where(user_id: user.id, course_id: context_module.context.id).first
+    enrollment = Enrollment.find_by(user_id: user.id, course_id: context_module.context.id)
     return unless enrollment.type == "StudentEnrollment"
     PipelineService.publish(
       PipelineService::Nouns::CourseProgress.new(self)
