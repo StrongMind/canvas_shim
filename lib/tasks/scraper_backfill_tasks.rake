@@ -32,7 +32,7 @@ namespace :canvas_shim do
 
     task :user => :environment do
       User.find_each do |model|
-        PipelineService.publish(user)
+        PipelineService::V2.publish(model)
       end
     end
   end
