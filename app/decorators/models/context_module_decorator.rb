@@ -7,6 +7,16 @@ ContextModule.class_eval do
     update_column(:completion_requirements, completion_requirements)
   end
 
+  def force_min_score_to_requirements
+    completion_requirements.each do |requirement|
+      next unless ["must_submit", "must_contribute", "min_score"].include?(requirement[:type])
+      requirement[:type] = "min_score"
+      requirement[:min_score] = score_threshold
+    end
+
+    update_column(:completion_requirements, completion_requirements)
+  end
+
   private
   def course_score_threshold?
     threshold = SettingsService.get_settings(object: :course, id: course.try(:id))['passing_threshold'].to_f

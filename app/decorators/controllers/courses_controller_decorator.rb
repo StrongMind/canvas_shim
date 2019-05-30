@@ -77,7 +77,10 @@ CoursesController.class_eval do
   def strongmind_update
     instructure_update
     @course_threshold = params[:passing_threshold].to_i
-    set_course_passing_threshold if !params[:course].blank? && can_update_threshold?
+    if !params[:course].blank? && can_update_threshold?
+      set_course_passing_threshold
+      @course.try(:force_min_scores)
+    end
   end
 
   alias_method :instructure_update, :update
