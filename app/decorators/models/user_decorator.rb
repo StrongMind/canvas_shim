@@ -80,14 +80,14 @@ User.class_eval do
       case req[:type]
       when 'must_submit'
         # exclude the assignment
-        subs = tag.content.submissions.where(user_id: self.id)
+        subs = tag&.content&.submissions&.where(user_id: self.id) || []
         subs.each do |sub|
           sub.update_column :excused, true
         end
       when 'min_score'
         # exclude the quiz? assignment
         # tag.content.assignment.toggle_exclusion(self.id, true)
-        subs = tag.content.assignment.submissions.where(user_id: self.id)
+        subs = tag&.content&.assignment&.submissions&.where(user_id: self.id) || []
         subs.each do |sub|
           sub.update_column :excused, true
         end
