@@ -8,13 +8,14 @@ describe ContentTag do
     end
 
     it 'publishes content_modules_item' do
+      course = Course.create
       expect(PipelineService).to receive(:publish)
-      ContentTag.create(context: Course.create)
+      ContentTag.create(context: course)
     end
 
     it 'uses the Context' do
       ct = ContentTag.create(context: Course.create)
-      expect(PipelineService::Nouns::ContextModuleItem).to receive(:new).with(ct)
+      expect(PipelineService::Nouns::ModuleItem).to receive(:new).with(ct)
       ct.update(content_id: 100)
     end
 

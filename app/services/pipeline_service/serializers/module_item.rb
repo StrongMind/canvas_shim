@@ -1,9 +1,9 @@
 module PipelineService
   module Serializers
-    class ContextModuleItem
+    class ModuleItem
       def initialize(object:)
-        @object = ::ContentTag.find(object.id)
-        @course_id = @object.try(:course).try(:id)
+        @object = object
+        @course_id = @object.try(:course_id)
         @module_id = @object.context_module_id
       end
 

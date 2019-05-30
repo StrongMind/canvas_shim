@@ -1,4 +1,4 @@
-describe PipelineService::Nouns::ContextModuleItem do
+describe PipelineService::Nouns::ModuleItem do
   include_context 'stubbed_network'
   let(:course) { Course.create }
   let(:content_tag) { ContentTag.create(context: course, context_module: context_module) }
@@ -24,5 +24,4 @@ describe PipelineService::Nouns::ContextModuleItem do
       expect(subject.id).to eq(content_tag.id)
     end
   end
-
 end

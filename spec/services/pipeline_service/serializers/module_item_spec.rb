@@ -1,11 +1,10 @@
-describe PipelineService::Serializers::ContextModuleItem do
+describe PipelineService::Serializers::ModuleItem do
   include_context('stubbed_network')
   subject { described_class.new(object: noun) }
-  let(:context_module) {ContextModule.create}
-  let(:course) {Course.create}
-  let(:content_tag) {ContentTag.create(context_module: context_module, context: course)}
-
-  let(:noun) { PipelineService::Nouns::ContextModuleItem.new(content_tag) }
+  let(:context_module) { ContextModule.create }
+  let(:course) { Course.create }
+  let(:content_tag) { ContentTag.create(context_module: context_module, context: course) }
+  let(:noun) { PipelineService::Nouns::ModuleItem.new(content_tag) }
 
   it do
     expect(PipelineService::HTTPClient).to receive(:get).with(
