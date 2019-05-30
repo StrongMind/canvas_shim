@@ -11,7 +11,7 @@ module PipelineService
         if object.is_a? PipelineService::Models::Noun
           @object = object
         else
-          @object = Models::Noun.new(object)
+          @object = Models::Noun.new(object, alias: args[:alias])
         end
         @changes = object.try(:changes)
         @command_class = args[:command_class] || Commands::Publish

@@ -1,4 +1,5 @@
 ContextModule.class_eval do
+  after_commit -> { PipelineService.publish(self, alias: 'module') }
   after_commit :assign_threshold
 
   def assign_threshold

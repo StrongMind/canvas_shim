@@ -2,7 +2,7 @@ describe ContextModuleProgression do
   include_context 'stubbed_network'
   let(:user) { User.create }
   let(:course) { Course.create }
-  let(:context_module) { ContextModule.create!(context: course) }
+  let!(:context_module) { ContextModule.create!(context: course) }
   let(:context_module_progression) { ContextModuleProgression.create(context_module: context_module, user: user) }
   let!(:enrollment) { Enrollment.create(user: user, course: course, type: 'StudentEnrollment') }
 
@@ -27,8 +27,10 @@ describe ContextModuleProgression do
     context "User is not enrolled as a student" do
       let!(:enrollment) { Enrollment.create(user: user, course: course, type: 'TeacherEnrollment') }
       it 'does not publish course progress to the pipeline' do
-        expect(PipelineService).to_not receive(:publish)
+        
+        expect(PipelineService::Nouns::CourseProgress).to_not receive(:new)
         ContextModuleProgression.create(user: user, context_module: context_module)
+        
       end
     end
 
