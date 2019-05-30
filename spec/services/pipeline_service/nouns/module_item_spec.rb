@@ -9,7 +9,7 @@ describe PipelineService::Nouns::ModuleItem do
 
   describe '#course_id' do
     it do
-      expect(subject.course_id).to eq(course.id)
+      expect(subject.context_id).to eq(course.id)
     end
   end
 

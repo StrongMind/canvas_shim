@@ -3,7 +3,7 @@ module PipelineService
     class ModuleItem
       def initialize(object:)
         @object = object
-        @course_id = @object.try(:course_id)
+        @course_id = @object.try(:context_id)
         @module_id = @object.context_module_id
       end
 
