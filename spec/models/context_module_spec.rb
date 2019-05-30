@@ -65,4 +65,31 @@ describe ContextModule do
       end
     end
   end
+
+  describe "#force_min_score_to_requirements" do
+    let(:completion_requirements) do
+      [
+        {:id=>53, :type=>"must_view"},
+        {:id=>56, :type=>"must_submit"},
+        {:id=>58, :type=>"must_contribute"}
+      ]
+    end
+
+    before do
+      allow_any_instance_of(ContextModule).to receive(:course_score_threshold?).and_return(70.0)
+      ContextModule.create(completion_requirements: completion_requirements)
+    end
+
+    context "new threshold enforced" do
+      before do
+        allow_any_instance_of(ContextModule).to receive(:course_score_threshold?).and_return(75.0)
+      end
+
+      it "uses the new threshold" do
+        ContextModule.last.force_min_score_to_requirements
+        req_scores = ContextModule.last.completion_requirements.select { |req| req[:min_score] }.map { |req| req[:min_score] }
+        expect(req_scores.any? && req_scores.all? { |score| score == 75.0 }).to be true
+      end
+    end
+  end
 end
