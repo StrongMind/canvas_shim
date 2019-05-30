@@ -1,5 +1,5 @@
 describe PipelineService::Serializers::DiscussionTopic do
-  include_context('stubbed_network')
+  include_context 'stubbed_network'
   subject { described_class.new(object: noun) }
 
   let(:noun) { PipelineService::Models::Noun.new(discussion_topic) }

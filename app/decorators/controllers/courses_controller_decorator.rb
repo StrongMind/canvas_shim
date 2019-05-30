@@ -66,6 +66,14 @@ CoursesController.class_eval do
     @current_user && first_student_enrollment && first_student_enrollment.can_be_concluded_by(@current_user, @context, session)
   end
 
+  def strongmind_show
+    instructure_show
+    js_env(score_threshold: score_threshold.to_s) if threshold_set?
+  end
+
+  alias_method :instructure_show, :show
+  alias_method :show, :strongmind_show
+
   private
   def grade_out_users_params
     params.permit(enrollment_ids: [])
