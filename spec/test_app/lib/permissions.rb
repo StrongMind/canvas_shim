@@ -53,7 +53,7 @@ module Permissions
     # Return the list of registered permissions.
     def self.retrieve
       @permissions ||= {}
-      @permissions.freeze unless @permissions.frozen?
+      #@permissions.freeze unless @permissions.frozen?
       @permissions
     end
   end

@@ -94,7 +94,7 @@ CoursesController.class_eval do
   end
 
   def can_update_threshold?
-    @course && !course_threshold_prevention_on? && valid_threshold?(@course_threshold)
+    @course && granted_permission?(:course_passing_thresholds) && valid_threshold?(@course_threshold)
   end
 
   def set_course_passing_threshold

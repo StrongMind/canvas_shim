@@ -32,4 +32,15 @@ Permissions.register({
       'AccountMembership'
     ]
   },
+  :course_passing_thresholds => {
+    :label => lambda { "Add, edit and delete course passing thresholds" },
+    :available_to => [
+      'TeacherEnrollment',
+      'AccountAdmin'
+    ],
+    :true_for => [
+      'TeacherEnrollment',
+      'AccountAdmin'
+    ]
+  },
 })

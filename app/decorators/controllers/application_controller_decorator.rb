@@ -1,6 +1,12 @@
 ApplicationController.class_eval do
   prepend_view_path CanvasShim::Engine.root.join('app', 'views')
 
+  def granted_permission?(task)
+    is_admin = @current_user.roles(Account.site_admin).include? 'admin'
+    is_admin || @current_user.enrollments.active.any? { |e| e.has_permission_to?(task) }
+  end
+  helper_method :granted_permission?
+
   def course_score_threshold?
     threshold = SettingsService.get_settings(object: :course, id: @context.try(:id))['passing_threshold'].to_f
     threshold if threshold.positive?
@@ -12,10 +18,6 @@ ApplicationController.class_eval do
   
   def threshold_set?
     score_threshold.positive?
-  end
-
-  def course_threshold_prevention_on?
-    SettingsService.get_settings(object: :school, id: 1)['course_threshold_prevention']
   end
 
   def valid_threshold?(threshold)

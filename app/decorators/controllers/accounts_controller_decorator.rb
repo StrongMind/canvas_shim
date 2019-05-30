@@ -2,7 +2,6 @@ AccountsController.class_eval do
   def strongmind_settings
     grab_holidays
     @school_threshold = score_threshold
-    @prevent_course_thresh = course_threshold_prevention_on?
     js_env({HOLIDAYS: @holidays})
     instructure_settings
   end
@@ -14,7 +13,6 @@ AccountsController.class_eval do
     @school_threshold = params[:account][:settings][:score_threshold].to_i
     set_school_threshold if valid_threshold?(@school_threshold)
     set_holidays if params[:holidays]
-    set_course_threshold_prevention
     instructure_update
   end
 
@@ -47,19 +45,6 @@ AccountsController.class_eval do
         id: 1,
         setting: 'score_threshold',
         value: @school_threshold
-      )
-  end
-
-  def course_threshold_prevention_params
-    params[:account][:settings][:prevent_thresholds_in_courses].to_i.positive?
-  end
-
-  def set_course_threshold_prevention
-    SettingsService.update_settings(
-        object: 'school',
-        id: 1,
-        setting: 'course_threshold_prevention',
-        value: course_threshold_prevention_params
       )
   end
 end
