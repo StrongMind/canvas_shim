@@ -107,6 +107,12 @@ CoursesController.class_eval do
   end
 
   def get_course_threshold
+    @threshold_visible = threshold_ui_allowed?
     @course_threshold = SettingsService.get_settings(object: :course, id: params[:course_id])['passing_threshold'].to_f
+  end
+
+  def threshold_ui_allowed?
+    !course_threshold_prevention_on? &&
+    (!!@current_user.enrollments.find_by(type: 'TeacherEnrollment') || @current_user.roles(Account.site_admin).include?('admin'))
   end
 end
