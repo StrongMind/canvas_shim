@@ -42,9 +42,10 @@ User.class_eval do
       progression = bypass_module.find_or_create_progression(self) # self is user
       progression.update_columns requirements_met: bypass_module.completion_requirements,
                                  evaluated_at: (bypass_module.updated_at - 1.second),
-                                 current: true
+                                 current: false # mark as outdated # TODO change back to false
 
-      progression.evaluate!
+      progression.reload.evaluate!
+      sleep(Rails.env.production? ? 5 : 1)
     end
 
     # force progression requirements of lower tags in new placements context_module
@@ -64,11 +65,12 @@ User.class_eval do
     progression = bypass_tags_context_module.find_or_create_progression(self) # self is user
     progression.update_columns requirements_met: requirements_of_bypass_tags,
                                evaluated_at: (bypass_tags_context_module.updated_at - 1.second),
-                               current: true
+                               current: false # mark as outdated # TODO change back to false
 
-    progression.evaluate!
+    progression.reload.evaluate!
 
     AssignmentOverrideStudent.where(user_id: self.id, assignment_id: course.assignment_ids).each(&:destroy!) # run through each as we want callbacks to fire
+    sleep(Rails.env.production? ? 5 : 1)
   end
 
   def exclude_submissions(tag)
