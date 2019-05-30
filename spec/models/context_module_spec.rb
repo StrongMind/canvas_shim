@@ -80,6 +80,11 @@ describe ContextModule do
       ContextModule.create(completion_requirements: completion_requirements)
     end
 
+    it "has 70 to start" do
+      req_scores = ContextModule.last.completion_requirements.select { |req| req[:min_score] }.map { |req| req[:min_score] }
+      expect(req_scores.any? && req_scores.all? { |score| score == 70.0 }).to be true
+    end
+
     context "new threshold enforced" do
       before do
         allow_any_instance_of(ContextModule).to receive(:course_score_threshold?).and_return(75.0)
