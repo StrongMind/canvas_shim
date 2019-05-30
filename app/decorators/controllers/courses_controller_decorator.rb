@@ -79,7 +79,9 @@ CoursesController.class_eval do
     @course_threshold = params[:passing_threshold].to_i
     if !params[:course].blank? && can_update_threshold?
       set_course_passing_threshold
-      @course.try(:force_min_scores)
+      Delayed::Job.enqueue(
+        CoursesService::Commands::ForceMinScores.new(course: @course)
+      )
     end
   end
 
