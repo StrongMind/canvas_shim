@@ -14,8 +14,8 @@ ApplicationController.class_eval do
     score_threshold.positive?
   end
 
-  def course_threshold_prevention_on?
-    SettingsService.get_settings(object: :school, id: 1)['course_threshold_prevention']
+  def course_threshold_enabled?
+    SettingsService.get_settings(object: :school, id: 1)['course_threshold_enabled']
   end
 
   def disable_module_editing_on?

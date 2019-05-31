@@ -95,7 +95,7 @@ CoursesController.class_eval do
   end
 
   def can_update_threshold?
-    @course && !course_threshold_prevention_on? && valid_threshold?(@course_threshold)
+    @course && course_threshold_enabled? && valid_threshold?(@course_threshold)
   end
 
   def set_course_passing_threshold
@@ -114,7 +114,7 @@ CoursesController.class_eval do
   end
 
   def threshold_ui_allowed?
-    !course_threshold_prevention_on? &&
+    course_threshold_enabled? &&
     (!!@current_user.enrollments.find_by(type: 'TeacherEnrollment') || @current_user.roles(Account.site_admin).include?('admin'))
   end
 end
