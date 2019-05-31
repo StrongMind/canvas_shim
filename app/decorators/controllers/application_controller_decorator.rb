@@ -18,6 +18,10 @@ ApplicationController.class_eval do
     SettingsService.get_settings(object: :school, id: 1)['course_threshold_prevention']
   end
 
+  def disable_module_editing_on?
+    SettingsService.get_settings(object: :school, id: 1)['disable_module_editing']
+  end
+
   def valid_threshold?(threshold)
     !threshold.negative? && threshold <= 100
   end
