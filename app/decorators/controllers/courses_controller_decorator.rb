@@ -108,6 +108,7 @@ CoursesController.class_eval do
 
   def get_course_threshold
     @threshold_visible = threshold_ui_allowed?
+    return unless @threshold_visible
     @course_threshold = SettingsService.get_settings(object: :course, id: params[:course_id])['passing_threshold'].to_f
   end
 
