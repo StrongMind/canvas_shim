@@ -17,12 +17,12 @@ ContextModuleProgression.class_eval do
 
   private
 
-  def publish_course_progress    
+  def publish_course_progress
     return unless Enrollment.find_by(
-      user_id: user.id, 
+      user_id: user.id,
       course_id: context_module.context.id
     ).type == "StudentEnrollment"
-    
+
     PipelineService.publish(
       PipelineService::Nouns::CourseProgress.new(self)
     )
@@ -34,12 +34,3 @@ ContextModuleProgression.class_eval do
     settings.fetch('sequence_control', true)
   end
 end
-
-# from prior master merge, need to reconcile
-# def prerequisites_satisfied?
-#    enrollment       = Enrollment.where(user_id: user.id, course_id: context_module.context.id).first
-#    settings         = enrollment ? SettingsService.get_enrollment_settings(id: enrollment.id) : {}
-#    sequence_control = settings.fetch('sequence_control', true)
-#
-#    sequence_control ? ContextModuleProgression.prerequisites_satisfied?(user, context_module) : true
-#end
