@@ -228,6 +228,17 @@ TEXT
                   </tr>
 
                   <tr>
+                    <td><%= settings.blabel :score_threshold, :en => "Passing Threshold" %></td>
+                    <td>
+                      <%= settings.text_field :score_threshold,
+                                              :value => @threshold,
+                                              :class => 'same-width-as-select',
+                                              :placeholder => "Choose a number between 0-100" %>
+                      <p style="font-size: 0.9em;"><%= t("Set a school-wide minimum grade for students to move on from each assignment in a unit.") %></p>
+                    </td>
+                  </tr>
+
+                  <tr>
                     <td><%= settings.blabel :school_holidays, :en => "Add Holiday" %></td>
                     <td>
                       <%= settings.text_field :holiday, :class => "date_entry" %>

@@ -34,6 +34,10 @@ describe PipelineService::Models::Noun do
         it 'uses the passed in class name as the name' do
             expect(unit_grades_noun.name).to eq 'unit_grades'
         end
+
+        it 'returns the alias if included in the initializer' do
+          expect(described_class.new(User.new, alias: 'student').name).to eq 'student'
+        end
     end
 
     describe '#primary_key' do
@@ -126,6 +130,14 @@ describe PipelineService::Models::Noun do
                 :assignment_id => assignment.id,
                 :course_id => course.id
             )
+        end
+
+        context 'synthetic nouns' do
+            let(:context_module_progression) { double('context module progression', id: 1, context_module: double('context module', context: course), user: user, class: double('myclass', primary_key: 'id')) }
+            let(:noun) { PipelineService::Nouns::CourseProgress.new(context_module_progression) }
+            it do
+              expect(noun.additional_identifiers).to eq({course_id: course.id, user_id: user.id})
+            end
         end
     end
 end

@@ -26,4 +26,5 @@ group :development, :test do
   gem 'rspec-rails', '~> 3'
   gem 'spring'
   gem 'awesome_print'
+  gem 'timecop'
 end
