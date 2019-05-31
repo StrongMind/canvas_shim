@@ -77,20 +77,23 @@ User.class_eval do
     tag.context_module.completion_requirements.each do |req|
       next unless req[:id] == tag.id
 
+      subs = []
+
       case req[:type]
       when 'must_submit'
         # exclude the assignment
         subs = tag&.content&.submissions&.where(user_id: self.id) || []
-        subs.each do |sub|
-          sub.update_column :excused, true
-        end
       when 'min_score'
-        # exclude the quiz? assignment
-        # tag.content.assignment.toggle_exclusion(self.id, true)
-        subs = tag&.content&.assignment&.submissions&.where(user_id: self.id) || []
-        subs.each do |sub|
-          sub.update_column :excused, true
+        # Quiz? - exclude the quiz assignment
+        if tag&.content&.respond_to? :assignment
+          subs = tag&.content&.assignment&.submissions&.where(user_id: self.id) || []
+        else # Assignment
+          subs = tag&.content&.submissions&.where(user_id: self.id) || []
         end
+      end
+
+      subs.each do |sub|
+        sub.update_column :excused, true
       end
     end
   end
