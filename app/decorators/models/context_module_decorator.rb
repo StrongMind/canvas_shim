@@ -1,5 +1,5 @@
 ContextModule.class_eval do
-  after_commit :assign_threshold
+  after_save :assign_threshold
 
   def assign_threshold
     return unless threshold_set? && threshold_changes_needed?
