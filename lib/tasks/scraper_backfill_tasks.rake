@@ -19,8 +19,9 @@ namespace :canvas_shim do
     end
 
     task :backfill_context_module_item => :environment do
-      ContextModuleItem.find_each do |model|
-        after_commit -> { PipelineService.publish(model, alias: 'module_item') }
+      ContentTag.find_each do |model|
+        return unless model.course
+        after_commit -> { PipelineService.publish PipelineService::Nouns::ModuleItem.new(model) }
       end
     end
 
