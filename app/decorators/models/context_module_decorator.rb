@@ -15,6 +15,7 @@ ContextModule.class_eval do
     end
 
     update_column(:completion_requirements, completion_requirements)
+    touch
   end
 
   private

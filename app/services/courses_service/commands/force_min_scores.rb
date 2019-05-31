@@ -5,6 +5,10 @@ module CoursesService
         @course = course
       end
 
+      def call
+        Delayed::Job.enqueue(self)
+      end
+
       def perform
         @course.try(:force_min_scores)
       end
