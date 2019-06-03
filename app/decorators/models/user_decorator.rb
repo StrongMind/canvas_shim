@@ -79,17 +79,12 @@ User.class_eval do
 
       subs = []
 
-      case req[:type]
-      when 'must_submit'
-        # exclude the assignment
+      # Things that can have assignments, i.e. Quiz, Discussion Topic, etc?
+      if tag&.content&.respond_to? :assignment
+        subs = tag&.content&.assignment&.submissions&.where(user_id: self.id) || []
+
+      elsif tag&.content&.respond_to? :submissions # Assignment
         subs = tag&.content&.submissions&.where(user_id: self.id) || []
-      when 'min_score'
-        # Quiz? - exclude the quiz assignment
-        if tag&.content&.respond_to? :assignment
-          subs = tag&.content&.assignment&.submissions&.where(user_id: self.id) || []
-        else # Assignment
-          subs = tag&.content&.submissions&.where(user_id: self.id) || []
-        end
       end
 
       subs.each do |sub|
