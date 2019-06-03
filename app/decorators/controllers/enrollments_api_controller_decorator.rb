@@ -7,6 +7,8 @@ class EnrollmentsApiController < ApplicationController
     @content_tag = ContentTag.find(params[:content_tag].dig(:id))
 
     if @enrollment && @content_tag
+      # Auto accept invite if pending
+      @enrollment.accept if @enrollment.invited?
       @enrollment.user.send_later_if_production_enqueue_args(:custom_placement_at, { priority: Delayed::HIGH_PRIORITY }, @content_tag)
 
       render :json => {}, :status => :ok
