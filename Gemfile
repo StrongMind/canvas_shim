@@ -24,5 +24,7 @@ group :development, :test do
   gem 'faker'
   gem 'pry-byebug'
   gem 'rspec-rails', '~> 3'
+  gem 'spring'
+  gem 'awesome_print'
   gem 'timecop'
 end

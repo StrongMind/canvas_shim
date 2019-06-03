@@ -23,6 +23,9 @@ describe UnitsService::Commands::GetUnitGrades do
     allow(UnitsService::Queries::GetEnrollment).to receive(:query).and_return(@enrollment)
     allow(@enrollment).to receive(:computed_current_score).and_return(90)
     allow(subject).to receive(:unit_submissions).and_return(unit_submissions)
+
+    # needed for admin check in GetUnitGrades#submissions_graded?
+    allow(GradesService::Account).to receive_message_chain(:account_admin, :id).and_return 1
   end
 
 

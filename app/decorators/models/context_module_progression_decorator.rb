@@ -17,12 +17,12 @@ ContextModuleProgression.class_eval do
 
   private
 
-  def publish_course_progress    
+  def publish_course_progress
     return unless Enrollment.find_by(
-      user_id: user.id, 
+      user_id: user.id,
       course_id: context_module.context.id
     ).type == "StudentEnrollment"
-    
+
     PipelineService.publish(
       PipelineService::Nouns::CourseProgress.new(self)
     )

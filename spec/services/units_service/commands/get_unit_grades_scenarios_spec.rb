@@ -14,6 +14,9 @@ describe UnitsService::Commands::GetUnitGrades do
     )
 
     allow(Enrollment).to receive(:computed_current_score).and_return(90)
+
+
+    allow(GradesService::Account).to receive_message_chain(:account_admin, :id).and_return 1
     seed
   end
 
