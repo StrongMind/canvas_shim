@@ -24,6 +24,7 @@ module SettingsService
     def create_table(name:)
       begin
         dynamodb.create_table(table_params(name)).successful?
+        dynamodb.wait_until(:table_exists, {table_name: name})
       rescue
       end
     end
