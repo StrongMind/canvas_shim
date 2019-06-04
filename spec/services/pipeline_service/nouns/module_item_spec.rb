@@ -5,8 +5,6 @@ describe PipelineService::Nouns::ModuleItem do
   let(:context_module) { ContextModule.create }
   subject { described_class.new(content_tag) }
 
-  attr_reader :course_id, :context_module_id, :id
-
   describe '#course_id' do
     it do
       expect(subject.context_id).to eq(course.id)
@@ -16,6 +14,16 @@ describe PipelineService::Nouns::ModuleItem do
   describe '#context_module_id' do
     it do
       expect(subject.context_module_id).to eq(context_module.id)
+    end
+  end
+
+  describe '#additional_identifers' do
+    it 'returns the context_module id' do
+      expect(subject.additional_identifiers[:module_id]).to eq context_module.id
+    end
+
+    it 'returns the course id' do
+      expect(subject.additional_identifiers[:course_id]).to eq course.id
     end
   end
 
