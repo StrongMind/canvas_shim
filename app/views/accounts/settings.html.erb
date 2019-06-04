@@ -264,11 +264,13 @@ TEXT
                     <%= settings.label :enable_thresholds_in_courses, :en => "Enable teachers to set minimum score thresholds" %>
                     </td>
                   </tr>
-                  <tr>
-                    <td colspan="2"><%= settings.check_box :prevent_post_enrollment_threshold_updates, :checked => @post_enrollment_thresh_enabled %>
-                    <%= settings.label :prevent_post_enrollment_threshold_updates, :en => "Don't allow teachers to adjust score threshold once students begin course" %>
-                    </td>
-                  </tr>
+                  <% if @course_thresh_enabled %>
+                    <tr>
+                      <td colspan="2"><%= settings.check_box :enable_post_enrollment_threshold_updates, :checked => @post_enrollment_thresh_enabled %>
+                      <%= settings.label :enable_post_enrollment_threshold_updates, :en => "Allow teachers to adjust score threshold once students begin course" %>
+                      </td>
+                    </tr>
+                  <% end %>
                   <tr>
                     <td colspan="2"><%= settings.check_box :prevent_course_renaming_by_teachers, :checked => @account.settings[:prevent_course_renaming_by_teachers] %>
                     <%= settings.label :prevent_course_renaming_by_teachers, :en => "Don't let teachers rename their courses" %>
