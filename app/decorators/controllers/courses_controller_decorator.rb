@@ -118,6 +118,7 @@ CoursesController.class_eval do
   end
 
   def no_active_students_or_post_thresh?
+    get_context
     post_enrollment_thresholds_enabled? ? true : @context.try(:no_active_students?)
   end
 end
