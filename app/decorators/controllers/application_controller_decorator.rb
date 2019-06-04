@@ -18,6 +18,10 @@ ApplicationController.class_eval do
     SettingsService.get_settings(object: :school, id: 1)['course_threshold_enabled']
   end
 
+  def post_enrollment_thresholds_enabled?
+    SettingsService.get_settings(object: :school, id: 1)['enable_post_enrollment_threshold_updates']
+  end
+
   def disable_module_editing_on?
     SettingsService.get_settings(object: :school, id: 1)['disable_module_editing']
   end

@@ -3,6 +3,9 @@ AccountsController.class_eval do
     grab_holidays
     @school_threshold = score_threshold
     @course_thresh_enabled = course_threshold_enabled?
+    if @course_thresh_enabled
+      @post_enrollment_thresh_enabled = post_enrollment_thresholds_enabled?
+    end
     @module_editing_disabled = disable_module_editing_on?
     js_env({HOLIDAYS: @holidays})
     instructure_settings
@@ -16,6 +19,7 @@ AccountsController.class_eval do
     set_school_threshold if valid_threshold?(@school_threshold)
     set_holidays if params[:holidays]
     set_course_threshold_enablement
+    set_post_enrollment_thresholds if course_threshold_enablement_params
     set_module_editing
     instructure_update
   end
@@ -75,6 +79,19 @@ AccountsController.class_eval do
         id: 1,
         setting: 'disable_module_editing',
         value: disable_module_editing_params
+      )
+  end
+
+  def enable_post_enrollment_threshold_params
+    params[:account][:settings][:enable_post_enrollment_threshold_updates].to_i.positive?
+  end
+
+  def set_post_enrollment_thresholds
+    SettingsService.update_settings(
+        object: 'school',
+        id: 1,
+        setting: 'enable_post_enrollment_threshold_updates',
+        value: enable_post_enrollment_threshold_params
       )
   end
 end
