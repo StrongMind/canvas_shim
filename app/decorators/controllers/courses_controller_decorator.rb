@@ -1,5 +1,5 @@
 CoursesController.class_eval do
-
+  before_action :get_course_threshold, only: :settings
   helper_method :enrollment_name, :user_can_conclude_enrollments?
 
   def show_course_enrollments
@@ -66,8 +66,59 @@ CoursesController.class_eval do
     @current_user && first_student_enrollment && first_student_enrollment.can_be_concluded_by(@current_user, @context, session)
   end
 
+  def strongmind_show
+    instructure_show
+    js_env(score_threshold: score_threshold.to_s) if threshold_set?
+    js_env(module_editing_disabled: disable_module_editing_on?)
+  end
+
+  alias_method :instructure_show, :show
+  alias_method :show, :strongmind_show
+
+  def strongmind_update
+    instructure_update
+    @course_threshold = params[:passing_threshold].to_i
+    if !params[:course].blank? && can_update_threshold?
+      set_course_passing_threshold
+      CoursesService::Commands::ForceMinScores.new(course: @course).call
+    end
+  end
+
+  alias_method :instructure_update, :update
+  alias_method :update, :strongmind_update
+
   private
   def grade_out_users_params
     params.permit(enrollment_ids: [])
+  end
+
+  def can_update_threshold?
+    @course && course_threshold_enabled? && valid_threshold?(@course_threshold)
+  end
+
+  def set_course_passing_threshold
+    SettingsService.update_settings(
+      object: 'course',
+      id: @course.id,
+      setting: 'passing_threshold',
+      value: @course_threshold
+    )
+  end
+
+  def get_course_threshold
+    @threshold_visible = threshold_ui_allowed?
+    return unless @threshold_visible
+    @course_threshold = SettingsService.get_settings(object: :course, id: params[:course_id])['passing_threshold'].to_f
+  end
+
+  def threshold_ui_allowed?
+    course_threshold_enabled? &&
+    (!!@current_user.enrollments.find_by(type: 'TeacherEnrollment') || @current_user.roles(Account.site_admin).include?('admin')) &&
+    no_active_students_or_post_thresh?
+  end
+
+  def no_active_students_or_post_thresh?
+    get_context
+    post_enrollment_thresholds_enabled? ? true : @context.try(:no_active_students?)
   end
 end

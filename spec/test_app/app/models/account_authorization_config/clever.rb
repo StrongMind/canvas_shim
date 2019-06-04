@@ -9,7 +9,7 @@ class AccountAuthorizationConfig::Clever
 
     def self.flatten_attributes(attributes, prefix=nil)
         attributes.each_pair.reduce({}) do |a, (k, v)|
-            v.is_a?(Hash) ? a.merge(flatten_attributes(v, "#{prefix}#{k}.")) : a.merge("#{prefix}#{k}".to_sym => v)
+            v.is_a?(Hash) ? a.merge(flatten_attributes(v, "#{prefix}#{k}.")) : a.merge("#{prefix}#{k}" => v)
         end
     end
 end

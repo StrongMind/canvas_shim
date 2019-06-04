@@ -39,6 +39,4 @@ class CourseProgress
   def modules
     []
   end
-
-  include CanvasShim::CourseProgress
 end

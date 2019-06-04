@@ -35,6 +35,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'better_errors'
   s.add_development_dependency 'binding_of_caller'
   s.add_development_dependency 'pry-rails'
-  s.add_development_dependency 'pry-byebug'
-  s.add_development_dependency 'faker'
 end

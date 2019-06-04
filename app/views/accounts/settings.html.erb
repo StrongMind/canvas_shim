@@ -228,6 +228,19 @@ TEXT
                   </tr>
 
                   <tr>
+                    <td><%= settings.blabel :score_threshold, :en => "Passing Threshold" %></td>
+                    <td>
+                      <%= settings.number_field :score_threshold,
+                                              :value => @school_threshold,
+                                              :class => 'same-width-as-select',
+                                              :min => "0",
+                                              :max => "100",
+                                              :placeholder => "Choose a number between 0-100" %>
+                      <p style="font-size: 0.9em;"><%= t("Set a school-wide minimum score for students to move on from each graded assignment in a unit.") %></p>
+                    </td>
+                  </tr>
+
+                  <tr>
                     <td><%= settings.blabel :school_holidays, :en => "Add Holiday" %></td>
                     <td>
                       <%= settings.text_field :holiday, :class => "date_entry" %>
@@ -246,6 +259,23 @@ TEXT
                     </td>
                   </tr>
 
+                  <tr>
+                    <td colspan="2"><%= settings.check_box :enable_thresholds_in_courses, :checked => @course_thresh_enabled, :title => "Allow teachers to add custom passing thresholds to courses" %>
+                    <%= settings.label :enable_thresholds_in_courses, :en => "Enable teachers to set minimum score thresholds" %>
+                    </td>
+                  </tr>
+                  <% if @course_thresh_enabled %>
+                    <tr>
+                      <td colspan="2"><%= settings.check_box :enable_post_enrollment_threshold_updates, :checked => @post_enrollment_thresh_enabled %>
+                      <%= settings.label :enable_post_enrollment_threshold_updates, :en => "Allow teachers to adjust score threshold once students begin course" %>
+                      </td>
+                    </tr>
+                  <% end %>
+                  <tr>
+                    <td colspan="2"><%= settings.check_box :prevent_module_editing, :checked => @module_editing_disabled, :title => "Prevent teachers from editing passing requirements for a unit" %>
+                    <%= settings.label :prevent_module_editing, :en => "Don't let teachers edit unit requirements" %>
+                    </td>
+                  </tr>
                   <tr>
                     <td colspan="2"><%= settings.check_box :prevent_course_renaming_by_teachers, :checked => @account.settings[:prevent_course_renaming_by_teachers] %>
                     <%= settings.label :prevent_course_renaming_by_teachers, :en => "Don't let teachers rename their courses" %>

@@ -5,6 +5,7 @@ describe PipelineService do
     ENV['PIPELINE_PASSWORD'] = 'example_password'
     ENV['CANVAS_DOMAIN'] = 'someschool.com'
     allow(SettingsService).to receive(:get_settings).and_return({})
+    allow(PipelineService).to receive(:api).and_return(api)
   end
 
   subject { described_class }
@@ -17,24 +18,29 @@ describe PipelineService do
   describe '#publish' do
     it 'Calls the API instance' do
       expect(api_instance).to receive(:call)
-      subject.publish(enrollment, api: api)
+      subject.publish(enrollment)
+    end
+
+    it 'passes options to the api' do
+      expect(api).to receive(:new).with(enrollment, alias: 'unrollment')
+      subject.publish(enrollment, alias: 'unrollment')
     end
 
     it "Can be turned off" do
       allow(SettingsService).to receive(:get_settings).and_return({'disable_pipeline' => true})
       expect(api_instance).to_not receive(:call)
-      subject.publish(enrollment, api: api)
+      subject.publish(enrollment)
     end
   end
 
   describe '#republish' do
     let(:instance) { double('instance', call: nil) }
     let(:range) { (DateTime.now...1.hour.from_now) }
-    
+
     before do
       class_double("PipelineService::API::Republish", new: instance).as_stubbed_const
     end
-    
+
     it 'calls the api instance' do
       expect(PipelineService::API::Republish).to receive(:new).with(
         model: User,
@@ -44,4 +50,3 @@ describe PipelineService do
     end
   end
 end
-

@@ -3,4 +3,5 @@ class ContextModule < ActiveRecord::Base
   belongs_to :course
   belongs_to :context, polymorphic: true
   belongs_to :context_module_progression
+  serialize :completion_requirements
 end
