@@ -1,4 +1,4 @@
-# Preload all of the serializers.  Rails does just in time loading.  This makes sure all 
+# Preload all of the serializers.  Rails does just in time loading.  This makes sure all
 # the modules are loaded so when we call for the constants, ruby returns something
 Dir[File.dirname(__FILE__) + '/serializers/*.rb'].each {|file| require_dependency file }
 module PipelineService
@@ -15,7 +15,13 @@ module PipelineService
 
     # A list of the active record models that are used by the serializers
     def self.repositories
-      (names - [:CanvasAPIEnrollment, :UnitGrades, :CourseProgress]).map { |name| name.to_s.constantize }
+      (names - [
+        :CanvasAPIEnrollment, 
+        :UnitGrades, 
+        :CourseProgress, 
+        :ModuleItem
+      ]
+      ).map { |name| name.to_s.constantize }
     end
   end
 end

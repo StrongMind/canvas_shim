@@ -17,6 +17,7 @@ module PipelineService
 
       def call
         return if SettingsService.get_settings(object: :school, id: 1)['disable_pipeline']
+        return unless object.serializer
         post_to_pipeline
         self
       end

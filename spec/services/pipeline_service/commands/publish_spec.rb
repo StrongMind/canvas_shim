@@ -24,6 +24,28 @@ describe PipelineService::Commands::Publish do
   end
 
   describe '#call' do
+    context 'no serializer' do
+      let(:unknown_noun) do
+        double(
+          "unknown noun", 
+          id: 1,
+          class: double(
+            'noun_class', 
+            primary_key: 'id'
+          )
+        )
+      end
+
+      let(:object) do 
+        PipelineService::Models::Noun.new(unknown_noun)
+      end
+      
+      it 'will not try to publish' do
+        expect(client_instance).to_not receive(:call)
+        subject.call
+      end
+    end
+    
     it 'sends a message to the pipeline' do
       expect(client_instance).to receive(:call)
       subject.call
