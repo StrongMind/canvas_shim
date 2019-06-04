@@ -272,13 +272,13 @@ TEXT
                     </tr>
                   <% end %>
                   <tr>
-                    <td colspan="2"><%= settings.check_box :prevent_course_renaming_by_teachers, :checked => @account.settings[:prevent_course_renaming_by_teachers] %>
-                    <%= settings.label :prevent_course_renaming_by_teachers, :en => "Don't let teachers rename their courses" %>
+                    <td colspan="2"><%= settings.check_box :prevent_module_editing, :checked => @module_editing_disabled, :title => "Prevent teachers from editing passing requirements for a unit" %>
+                    <%= settings.label :prevent_module_editing, :en => "Don't let teachers edit unit requirements" %>
                     </td>
                   </tr>
                   <tr>
-                    <td colspan="2"><%= settings.check_box :prevent_module_editing, :checked => @module_editing_disabled, :title => "Prevent teachers from editing passing requirements for a unit" %>
-                    <%= settings.label :prevent_module_editing, :en => "Don't let teachers edit unit requirements" %>
+                    <td colspan="2"><%= settings.check_box :prevent_course_renaming_by_teachers, :checked => @account.settings[:prevent_course_renaming_by_teachers] %>
+                    <%= settings.label :prevent_course_renaming_by_teachers, :en => "Don't let teachers rename their courses" %>
                     </td>
                   </tr>
                   <tr>
