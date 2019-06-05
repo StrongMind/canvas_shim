@@ -15,9 +15,9 @@ Course.class_eval do
   private
   def set_default_course_threshold
     SettingsService.update_settings(
-      object: 'school',
-      id: 1,
-      setting: 'score_threshold',
+      object: 'course',
+      id: self.id,
+      setting: 'passing_threshold',
       value: account_threshold
     )
   end
