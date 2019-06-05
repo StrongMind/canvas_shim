@@ -36,13 +36,14 @@ ContextModule.class_eval do
   end
 
   def add_min_score_to_requirements(threshold)
-    completion_requirements.each { |requirement| update_score(requirement, threshold) }
+    completion_requirements.each do |requirement| 
+      next unless ["must_submit", "must_contribute", "min_score"].include?(requirement[:type])
+      update_score(requirement, threshold)
+    end
   end
 
   def update_score(requirement, threshold)
-    if ["must_submit", "must_contribute", "min_score"].include?(requirement[:type])
-      requirement[:type] = "min_score"
-      requirement[:min_score] = threshold
-    end
+    requirement[:type] = "min_score"
+    requirement[:min_score] = threshold
   end
 end
