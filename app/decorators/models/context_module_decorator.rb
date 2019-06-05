@@ -20,12 +20,12 @@ ContextModule.class_eval do
     threshold if threshold.positive?
   end
 
-  def account_score_threshold?
+  def account_score_threshold
     SettingsService.get_settings(object: :school, id: 1)['score_threshold'].to_f
   end
 
   def score_threshold
-    @score_threshold ||= (course_score_threshold? || account_score_threshold?)
+    @score_threshold ||= (course_score_threshold? || account_score_threshold)
   end
 
   def threshold_set?
