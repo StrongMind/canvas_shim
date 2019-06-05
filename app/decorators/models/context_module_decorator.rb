@@ -9,12 +9,7 @@ ContextModule.class_eval do
   end
 
   def force_min_score_to_requirements
-    completion_requirements.each do |requirement|
-      next unless ["must_submit", "must_contribute", "min_score"].include?(requirement[:type])
-      requirement[:type] = "min_score"
-      requirement[:min_score] = score_threshold
-    end
-
+    add_min_score_to_requirements
     update_column(:completion_requirements, completion_requirements)
     touch
   end
@@ -41,8 +36,11 @@ ContextModule.class_eval do
   end
 
   def add_min_score_to_requirements
-    completion_requirements.each do |requirement|
-      next unless ["must_submit", "must_contribute"].include?(requirement[:type])
+    completion_requirements.each { |requirement| update_score(requirement) }
+  end
+
+  def update_score(requirement)
+    if ["must_submit", "must_contribute", "min_score"].include?(requirement[:type])
       requirement[:type] = "min_score"
       requirement[:min_score] = score_threshold
     end
