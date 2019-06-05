@@ -32,4 +32,34 @@ describe Course do
       end
     end
   end
+
+  describe "#set_default_course_threshold" do
+    before do
+      allow_any_instance_of(Course).to receive(:set_default_course_threshold).and_return(nil)
+    end
+    
+    context "account threshold is set" do
+      before do
+        allow_any_instance_of(Course).to receive(:account_threshold).and_return(60.0)
+      end
+
+      it "sets a default threshold" do
+        course = Course.new
+        expect(course).to receive(:set_default_course_threshold)
+        course.save
+      end
+    end
+
+    context "account threshold is not set" do
+      before do
+        allow_any_instance_of(Course).to receive(:account_threshold).and_return(0.0)
+      end
+
+      it "does not set a default threshold" do
+        course = Course.new
+        expect(course).not_to receive(:set_default_course_threshold)
+        course.save
+      end
+    end
+  end
 end
