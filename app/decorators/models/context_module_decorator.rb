@@ -4,12 +4,12 @@ ContextModule.class_eval do
 
   def assign_threshold
     return unless threshold_set? && threshold_changes_needed?(score_threshold)
-    add_min_score_to_requirements
+    add_min_score_to_requirements(score_threshold)
     update_column(:completion_requirements, completion_requirements)
   end
 
   def force_min_score_to_requirements
-    add_min_score_to_requirements
+    add_min_score_to_requirements(score_threshold)
     update_column(:completion_requirements, completion_requirements)
     touch
   end
@@ -35,14 +35,14 @@ ContextModule.class_eval do
     end
   end
 
-  def add_min_score_to_requirements
-    completion_requirements.each { |requirement| update_score(requirement) }
+  def add_min_score_to_requirements(threshold)
+    completion_requirements.each { |requirement| update_score(requirement, threshold) }
   end
 
-  def update_score(requirement)
+  def update_score(requirement, threshold)
     if ["must_submit", "must_contribute", "min_score"].include?(requirement[:type])
       requirement[:type] = "min_score"
-      requirement[:min_score] = score_threshold
+      requirement[:min_score] = threshold
     end
   end
 end
