@@ -12,6 +12,9 @@ Rails.application.routes.draw do
     get  'conclude_users', to: 'courses#show_course_enrollments', as: :show_course_enrollments
   end
 
+  resources :users do
+    get 'alerts', to: 'alerts#index'
+  end
   
   get 'todos', to: 'todos#index', as: :user_todo
 end
