@@ -19,7 +19,7 @@ AccountsController.class_eval do
     set_school_threshold if valid_threshold?(@school_threshold)
     set_holidays if params[:holidays]
     set_course_threshold_enablement
-    set_post_enrollment_thresholds if course_threshold_enablement_params
+    set_post_enrollment_thresholds
     set_module_editing
     instructure_update
   end
@@ -91,7 +91,7 @@ AccountsController.class_eval do
         object: 'school',
         id: 1,
         setting: 'enable_post_enrollment_threshold_updates',
-        value: enable_post_enrollment_threshold_params
+        value: (course_threshold_enablement_params && enable_post_enrollment_threshold_params)
       )
   end
 end
