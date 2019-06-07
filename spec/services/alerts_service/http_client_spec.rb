@@ -4,7 +4,9 @@ describe AlertsService::HTTPClient do
   
   describe '#post' do
     it do
-      subject.post(alert)
+      VCR.use_cassette 'alerts_service/http_client/post' do
+        subject.post(alert)
+      end
     end
   end
 
