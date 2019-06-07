@@ -8,14 +8,25 @@ ContextModulesController.class_eval do
   alias_method :instructure_add_item, :add_item
   alias_method :add_item, :strongmind_add_item
 
-  def strongmind_update
+  def update
     @module = @context.context_modules.not_deleted.find(params[:id])
-    add_overrides if authorized_action(@module, @current_user, :update)
-    instructure_update
+    if authorized_action(@module, @current_user, :update)
+      add_overrides_and_update_module
+      if params[:publish]
+        @module.publish
+        @module.publish_items!
+      elsif params[:unpublish]
+        @module.unpublish
+      end
+      if @module.save
+        json = @module.as_json(:include => :content_tags, :methods => :workflow_state, :permissions => {:user => @current_user, :session => session})
+        json['context_module']['relock_warning'] = true if @module.relock_warning?
+        render :json => json
+      else
+        render :json => @module.errors, :status => :bad_request
+      end
+    end
   end
-
-  alias_method :instructure_update, :update
-  alias_method :update, :strongmind_update
 
   private
   def gradeable_tag_type?
@@ -27,22 +38,17 @@ ContextModulesController.class_eval do
     @module.update_column(:completion_requirements, @module.completion_requirements)
   end
 
-  def add_overrides
-    select_changed_requirements.each do |requirement|
-      requirement[:overridden] = true
+  def add_overrides_and_update_module
+    cmps = context_module_params.to_h.dup
+    cmps[:completion_requirements].to_h.each do |k, v|
+      requirement = @module.completion_requirements.find {|req| req[:id] == k.to_i }
+      cmps[:completion_requirements][k]["overridden"] = true if requirement && changed_requirement?(v, requirement)
     end
+    @module.update_attributes(cmps)
   end
 
-  def select_changed_requirements
-    context_module_params[:completion_requirements].to_h.select do |k, v|
-      requirement = @module.completion_requirements.find {|req| req[:id] == k.to_i }
-      if requirement
-        if v["type"] != requirement[:type]
-          true
-        elsif requirement[:min_score]
-          v[:min_score].to_f != requirement[:min_score]
-        end
-      end
-    end
+  def changed_requirement?(param_requirement, current_requirement)
+    param_requirement["type"] != current_requirement[:type] ||
+    (current_requirement[:min_score] && param_requirement[:min_score].to_f != current_requirement[:min_score])
   end
 end
