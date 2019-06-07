@@ -39,7 +39,7 @@ ContextModulesController.class_eval do
 
   def add_overrides_and_update_module
     cmps = context_module_params.to_h.dup
-    cmps[:completion_requirements].to_h.each do |k, v|
+    cmps[:completion_requirements].each do |k, v|
       requirement = @module.completion_requirements.find {|req| req[:id] == k.to_i }
       cmps[:completion_requirements][k]["overridden"] = true if requirement && changed_requirement?(v, requirement)
     end
