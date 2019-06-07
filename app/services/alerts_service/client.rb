@@ -12,7 +12,7 @@ module AlertsService
       http_client.post(
         "#{API_HOST}/schools/#{school_id}/alerts", 
         alert.as_json
-      ).code 
+      ).code
     end
 
     def list(school)
@@ -22,9 +22,16 @@ module AlertsService
     end
 
     def show(id)
-      http_client.get(
+      response = http_client.get(
         "#{API_HOST}/schools/#{school_id}/alerts/#{id}"
-      ).code
+      )
+      
+      Response.new(
+        code: response.code,
+        payload: Alerts::MaxAttemptsReached.from_json(
+          response.body
+        )
+      )
     end
 
     def destroy(id)
