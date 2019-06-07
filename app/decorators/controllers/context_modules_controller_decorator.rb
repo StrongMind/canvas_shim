@@ -11,14 +11,13 @@ ContextModulesController.class_eval do
   def update
     @module = @context.context_modules.not_deleted.find(params[:id])
     if authorized_action(@module, @current_user, :update)
-      add_overrides_and_update_module
       if params[:publish]
         @module.publish
         @module.publish_items!
       elsif params[:unpublish]
         @module.unpublish
       end
-      if @module.save
+      if add_overrides_and_update_module
         json = @module.as_json(:include => :content_tags, :methods => :workflow_state, :permissions => {:user => @current_user, :session => session})
         json['context_module']['relock_warning'] = true if @module.relock_warning?
         render :json => json
