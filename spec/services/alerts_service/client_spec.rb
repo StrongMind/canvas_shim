@@ -29,10 +29,16 @@ describe AlertsService::Client do
   end
 
   describe '#list' do
-    xit do
+    it 'has a success code' do
       VCR.use_cassette 'alerts_service/client/list' do
-        expect(subject.list(alert)).to eq 200
-      end  
+        expect(subject.list(alert).code).to eq 200
+      end
+    end
+
+    it 'has a list of alerts in the payload' do
+      VCR.use_cassette 'alerts_service/client/list' do
+        expect(subject.list(alert).payload.first).to be_a(AlertsService::Alerts::MaxAttemptsReached)
+      end
     end
   end
 

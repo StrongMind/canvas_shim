@@ -19,17 +19,31 @@ describe AlertsService::Alerts::MaxAttemptsReached do
     end
 
     context('class methods') do
-      let(:json) do
+      let(:attributes) do
         {
           "student_id": 1, 
           "teacher_id": 2, 
           "assignment_id": 3
-        }.to_json
+        }
       end
+
+      let(:json) do
+        attributes.to_json
+      end
+      
+      let(:json_list) {
+        [attributes].to_json
+      }
       
       describe('#from_json') do
         it do
           expect(described_class.from_json(json))
+        end
+      end
+
+      describe('#list_from_json') do
+        it do
+          expect(described_class.list_from_json(json_list))
         end
       end
     end

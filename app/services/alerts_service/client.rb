@@ -18,20 +18,28 @@ module AlertsService
     def list(school)
       http_client.get(
         "#{API_HOST}/schools/#{school_id}/alerts"
-      ).code
+      ).tap do |response|
+        return Response.new(
+          code: response.code,
+          payload: Alerts::MaxAttemptsReached.list_from_json(
+            response.body
+          )
+        )
+        
+      end
     end
 
-    def show(id)
-      response = http_client.get(
+    def show(id)      
+      http_client.get(
         "#{API_HOST}/schools/#{school_id}/alerts/#{id}"
-      )
-      
-      Response.new(
-        code: response.code,
-        payload: Alerts::MaxAttemptsReached.from_json(
-          response.body
+      ).tap do |response|
+        return Response.new(
+          code: response.code,
+          payload: Alerts::MaxAttemptsReached.from_json(
+            response.body
+          )
         )
-      )
+      end
     end
 
     def destroy(id)
