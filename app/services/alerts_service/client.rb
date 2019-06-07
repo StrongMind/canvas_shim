@@ -3,12 +3,34 @@ module AlertsService
     include Singleton
     API_HOST = 'https://www.example.com'
 
-    def self.create(alert)
-      instance.create(alert)
-    end
+    def self.create(alert);instance.create(alert);end
+    def self.list(school);instance.list(school);end
+    def self.show(id);instance.show(id);end
+    def self.destroy(id);instance.destroy(id);end
 
     def create(alert)
-      http_client.post("#{API_HOST}/schools/#{school_id}/alerts", alert.as_json)
+      http_client.post(
+        "#{API_HOST}/schools/#{school_id}/alerts", 
+        alert.as_json
+      ).code 
+    end
+
+    def list(school)
+      http_client.get(
+        "#{API_HOST}/schools/#{school_id}/alerts"
+      ).code
+    end
+
+    def show(id)
+      http_client.get(
+        "#{API_HOST}/schools/#{school_id}/alerts/#{id}"
+      ).code
+    end
+
+    def destroy(id)
+      http_client.delete(
+        "#{API_HOST}/schools/#{school_id}/alerts/#{id}"
+      ).code
     end
 
     private
