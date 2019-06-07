@@ -3,13 +3,18 @@ describe AlertsService::Client do
 
   let(:alert) { double('alert') }
   let(:http_client) { double('http_client', post: nil) }
+  
+  before do
+    allow(subject.instance).to receive('school_name').and_return('myschool')
+  end
 
   describe '#get'
   describe '#list'
   describe '#create' do
     it do
-      expect(subject.instance).to receive(:http_client).and_return(http_client)
-      subject.create(alert)
+      VCR.use_cassette 'alerts_service/client/create' do
+        subject.create(alert)
+      end
     end
   end
   describe '#destroy'
