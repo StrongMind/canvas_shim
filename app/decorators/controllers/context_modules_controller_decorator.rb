@@ -1,7 +1,7 @@
 ContextModulesController.class_eval do
   def strongmind_update
     @module = @context.context_modules.not_deleted.find(params[:id])
-    add_overrides if authorized_action(@module, @current_user, :update)
+    add_overrides if threshold_set? && authorized_action(@module, @current_user, :update)
     instructure_update
   end
 
@@ -39,13 +39,28 @@ ContextModulesController.class_eval do
   end
 
   def send_overrides_to_settings
-    @changed_reqs = @changed_reqs.blank? ? false : @changed_reqs.join(",")
+    @all_reqs = conjoin_threshold_overrides(@changed_reqs)
+    @all_reqs = @all_reqs.blank? ? false : @all_reqs.join(",")
     SettingsService.update_settings(
       object: 'course',
       id: @context.id,
       setting: 'threshold_overrides',
-      value: @changed_reqs
+      value: @all_reqs
     )
+  end
+
+  def get_threshold_overrides
+    @threshold_overrides ||= SettingsService.get_settings(object: :course, id: @context.try(:id))['threshold_overrides']
+  end
+
+  def conjoin_threshold_overrides(new_overrides)
+    if get_threshold_overrides
+      current_overrides = get_threshold_overrides.split(",")
+      return current_overrides unless new_overrides.any?
+      current_overrides.concat(new_overrides).uniq
+    else
+      []
+    end
   end
 
   def changed_requirement?(param_requirement, current_requirement)
