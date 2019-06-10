@@ -38,9 +38,22 @@ ContextModule.class_eval do
     end
   end
 
+  def get_threshold_overrides
+    @threshold_overrides ||= SettingsService.get_settings(object: :course, id: course.id)['threshold_overrides']
+  end
+
+  def has_threshold_override?(requirement)
+    get_threshold_overrides.split(",").map(&:to_i).include?(requirement[:id]) if get_threshold_overrides
+  end
+
+  def skippable_requirement?(requirement)
+    has_threshold_override?(requirement) ||
+    ["must_submit", "must_contribute", "min_score"].none? { |type| type == requirement[:type] }
+  end
+
   def add_min_score_to_requirements
-    completion_requirements.each do |requirement| 
-      next unless ["must_submit", "must_contribute", "min_score"].include?(requirement[:type])
+    completion_requirements.each do |requirement|
+      next if skippable_requirement?(requirement)
       update_score(requirement)
     end
   end

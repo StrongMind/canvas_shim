@@ -58,6 +58,8 @@ ContextModulesController.class_eval do
       current_overrides = get_threshold_overrides.split(",")
       return current_overrides unless new_overrides.any?
       current_overrides.concat(new_overrides).uniq
+    elsif new_overrides.any?
+      new_overrides
     else
       []
     end
