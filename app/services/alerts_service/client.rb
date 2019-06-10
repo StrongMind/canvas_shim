@@ -1,6 +1,8 @@
 module AlertsService
   class Client
     include Singleton
+
+    Response = Struct.new(:code, :payload)
     API_HOST = 'https://www.example.com'
 
     def self.create(alert);instance.create(alert);end
@@ -20,12 +22,11 @@ module AlertsService
         "#{API_HOST}/schools/#{school_id}/alerts"
       ).tap do |response|
         return Response.new(
-          code: response.code,
-          payload: Alerts::MaxAttemptsReached.list_from_json(
+          response.code,
+          Alerts::MaxAttemptsReached.list_from_json(
             response.body
           )
         )
-        
       end
     end
 
@@ -34,8 +35,8 @@ module AlertsService
         "#{API_HOST}/schools/#{school_id}/alerts/#{id}"
       ).tap do |response|
         return Response.new(
-          code: response.code,
-          payload: Alerts::MaxAttemptsReached.from_json(
+          response.code,
+          Alerts::MaxAttemptsReached.from_json(
             response.body
           )
         )

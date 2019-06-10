@@ -47,6 +47,5 @@ describe AlertsService::Alerts::MaxAttemptsReached do
         end
       end
     end
-    
   end
 end
