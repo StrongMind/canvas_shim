@@ -65,7 +65,7 @@ User.class_eval do
     progression = bypass_tags_context_module.find_or_create_progression(self) # self is user
     progression.update_columns requirements_met: requirements_of_bypass_tags,
                                evaluated_at: (bypass_tags_context_module.updated_at - 1.second),
-                               current: false # mark as outdated # TODO change back to false
+                               current: false # mark as outdated
 
     progression.reload.evaluate!
 
