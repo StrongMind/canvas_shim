@@ -15,3 +15,5 @@
 // Add some Shim asset require directives here
 // i.e.
 // require canvas_shim/roster_user_usage
+//= require_tree
+//= require_self

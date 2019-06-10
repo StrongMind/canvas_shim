@@ -255,7 +255,10 @@
           <td class="form-label"><label for="passing_threshold" id="passing_threshold_label"><%= t("Passing Threshold:") %></label></td>
           <td class="nobr tall-row">
             <div>
-              <input type="number" name="passing_threshold" id="passing_threshold" placeholder="Number b/w 0-100" value="<%= @course_threshold %>" min="0" max="100" style="width: 150px;" />
+              <input type="number" name="passing_threshold" id="passing_threshold" placeholder="Number b/w 0-100" value="<%= @course_threshold %>" min="0" max="100" style="width: 150px;" disabled />
+              <a id="edit_threshold_btn" href="" class="Button Button--icon-action">
+                <i class="icon-edit"></i>
+              </a>
             </div>
 
             <div class="aside palign">
@@ -772,3 +775,8 @@
   <a href="<%= context_url(@context, :context_grading_standard_url, "{{ id }}") %>" style="display: none;" id="update_grading_standard_url">&nbsp;</a>
   <a href="<%= context_url(@context, :context_url) %>" style="display: none;" id="update_course_url">&nbsp;</a>
 </div>
+
+
+<% content_for :strongmind_assets do %>
+  <%= javascript_include_tag 'canvas_shim/application' %>
+<% end %>
