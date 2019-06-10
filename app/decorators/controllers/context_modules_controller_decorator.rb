@@ -1,7 +1,7 @@
 ContextModulesController.class_eval do
   def strongmind_update
     @module = @context.context_modules.not_deleted.find(params[:id])
-    add_overrides if threshold_set? && authorized_action(@module, @current_user, :update)
+    add_overrides if authorized_action(@module, @current_user, :update) && course_threshold_enabled?
     instructure_update
   end
 
