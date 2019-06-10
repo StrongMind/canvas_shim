@@ -235,7 +235,11 @@ TEXT
                                               :class => 'same-width-as-select',
                                               :min => "0",
                                               :max => "100",
-                                              :placeholder => "Choose a number between 0-100" %>
+                                              :placeholder => "Choose a number between 0-100",
+                                              :disabled => true %>
+                      <a id="edit_school_threshold_btn" href="" class="Button Button--icon-action">
+                        <i class="icon-edit"></i>
+                      </a>
                       <p style="font-size: 0.9em;"><%= t("Set a school-wide minimum score for students to move on from each graded assignment in a unit.") %></p>
                     </td>
                   </tr>
@@ -1238,3 +1242,7 @@ acknowledge that you have read and agreed to the
     <div id="tab-features"></div>
   <% end %>
 </div>
+
+<% content_for :strongmind_assets do %>
+  <%= javascript_include_tag 'canvas_shim/application' %>
+<% end %>
