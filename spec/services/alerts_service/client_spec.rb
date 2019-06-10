@@ -5,13 +5,13 @@ describe AlertsService::Client do
   let(:http_client) { double('http_client', post: nil) }
   
   before do
-    allow(subject.instance).to receive(:school).and_return(AlertsService::Client::School.new('myschool'))
+    allow(subject.instance).to receive(:school).and_return(AlertsService::School.new('myschool'))
   end
 
   describe '#show' do
     it 'returns a client response on success' do
       VCR.use_cassette 'alerts_service/client/show' do
-        expect(subject.show(1)).to be_a(AlertsService::Client::Response)
+        expect(subject.show(1)).to be_a(AlertsService::Response)
       end
     end
 
