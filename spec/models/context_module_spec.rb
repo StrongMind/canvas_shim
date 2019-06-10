@@ -10,10 +10,19 @@ describe ContextModule do
       ]
     end
 
+    let!(:course) { Course.create }
+    let!(:content_migration) { ContentMigration.new(workflow_state: "preprocessing", course: course) }
+
+    before do
+      allow_any_instance_of(ContextModule).to receive(:has_threshold_override?).and_return(false)
+    end
+
     context "school threshold default" do
       before do
         allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(60.0)
-        ContextModule.create(completion_requirements: completion_requirements)
+        ContextModule.create(completion_requirements: completion_requirements, course: course)
+        content_migration.workflow_state = "imported"
+        content_migration.save
       end
 
       it "modifies submittable types" do
@@ -29,13 +38,14 @@ describe ContextModule do
 
       it "does not receive add_min_score once all have min_score" do
         expect(ContextModule.last).to_not receive(:add_min_score_to_requirements)
-        ContextModule.last.save
+        ContextModule.last.assign_threshold
       end
 
       context "no threshold score available" do
         before do
           allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(0.0)
-          ContextModule.create(completion_requirements: completion_requirements)
+          ContextModule.create(completion_requirements: completion_requirements, course: course)
+          content_migration.save
         end
 
         it "does not modify the completion requirements" do
@@ -43,17 +53,8 @@ describe ContextModule do
         end
       end
 
-      context "new object" do
-        let(:new_cm) { ContextModule.new(completion_requirements: completion_requirements) }
-
-        it "Receives add_min_score when setting is on" do
-          expect(new_cm).to receive(:add_min_score_to_requirements)
-          new_cm.save
-        end
-      end
-
       context "requirements taken from previous course" do
-        let(:completion_requirements) do
+        let!(:completion_requirements) do
           [
             {:id=>53, :type=>"min_score", min_score: 70.0},
             {:id=>56, :type=>"min_score", min_score: 70.0},
@@ -63,11 +64,13 @@ describe ContextModule do
 
         before do
           allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(60.0)
-          ContextModule.create(completion_requirements: completion_requirements)
+          ContextModule.create(completion_requirements: completion_requirements, course: course)
+          course.context_modules << ContextModule.last
+          content_migration.save
         end
 
         it "overrides with actual threshold" do
-          req_scores = ContextModule.last.completion_requirements.select { |req| req[:min_score] }.map { |req| req[:min_score] }
+          req_scores = ContextModule.last.completion_requirements.map { |req| req[:min_score] }
           expect(req_scores.all? { |score| score == 60.0 }).to be true
         end
       end
@@ -76,7 +79,7 @@ describe ContextModule do
     context "Course has overridden school threshold" do
       before do
         allow_any_instance_of(ContextModule).to receive(:course_score_threshold?).and_return(70.0)
-        ContextModule.create(completion_requirements: completion_requirements)
+        ContextModule.create(completion_requirements: completion_requirements, course: course).assign_threshold
       end
 
       it "uses the course score threshold" do
@@ -87,6 +90,9 @@ describe ContextModule do
   end
 
   describe "#force_min_score_to_requirements" do
+    let!(:course) { Course.create }
+    let!(:content_migration) { ContentMigration.new(workflow_state: "preprocessing", course: course) }
+
     let(:completion_requirements) do
       [
         {:id=>53, :type=>"must_view"},
@@ -96,8 +102,9 @@ describe ContextModule do
     end
 
     before do
+      allow_any_instance_of(ContextModule).to receive(:has_threshold_override?).and_return(false)
       allow_any_instance_of(ContextModule).to receive(:course_score_threshold?).and_return(70.0)
-      ContextModule.create(completion_requirements: completion_requirements)
+      ContextModule.create(completion_requirements: completion_requirements, course: course).assign_threshold
     end
 
     it "has 70 to start" do
