@@ -1,7 +1,7 @@
 describe AlertsService::Client do
   subject { described_class }
 
-  let(:alert) { double('alert') }
+  let(:alert) { double('alert', as_json: {teacher_id: 1, student_id: 1, assignment_id: 1, type: 'max_attempts_reached'}) }
   let(:http_client) { double('http_client', post: nil) }
   
   before do
@@ -45,7 +45,7 @@ describe AlertsService::Client do
   describe '#create' do
     it do
       VCR.use_cassette 'alerts_service/client/create' do
-        expect(subject.create(alert)).to eq 200
+        expect(subject.create(alert)).to eq 201
       end
     end
   end

@@ -1,5 +1,5 @@
 module AlertsService
-  module Alerts
+  
     module AlertBuilder
       module ClassMethods
         def required_attributes
@@ -40,5 +40,5 @@ module AlertsService
         base.send(:attr_reader, *base.required_attributes)
       end
     end
-  end
+  
 end
