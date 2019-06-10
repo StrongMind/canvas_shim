@@ -5,7 +5,7 @@ describe AlertsService::Client do
   let(:http_client) { double('http_client', post: nil) }
   
   before do
-    allow(subject.instance).to receive('school_name').and_return('myschool')
+    allow(subject.instance).to receive(:school).and_return(AlertsService::Client::School.new('myschool'))
   end
 
   describe '#show' do
@@ -31,13 +31,13 @@ describe AlertsService::Client do
   describe '#list' do
     it 'has a success code' do
       VCR.use_cassette 'alerts_service/client/list' do
-        expect(subject.list(alert).code).to eq 200
+        expect(subject.list(1).code).to eq 200
       end
     end
 
     it 'has a list of alerts in the payload' do
       VCR.use_cassette 'alerts_service/client/list' do
-        expect(subject.list(alert).payload.first).to be_a(AlertsService::Alerts::MaxAttemptsReached)
+        expect(subject.list(1).payload.first).to be_a(AlertsService::Alerts::MaxAttemptsReached)
       end
     end
   end

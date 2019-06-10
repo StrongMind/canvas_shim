@@ -2,24 +2,33 @@ module AlertsService
   class Client
     include Singleton
 
-    Response = Struct.new(:code, :payload)
     API_HOST = 'https://www.example.com'
+    Response = Struct.new(:code, :payload)
+    School = Struct.new(:name) do
+      def id
+        Base64.urlsafe_encode64(name)
+      end
+    end
+
+    def initialize
+      @school = School.new(ENV['CANVAS_DOMAIN'])
+    end
 
     def self.create(alert);instance.create(alert);end
-    def self.list(school);instance.list(school);end
+    def self.list(teacher_id);instance.list(teacher_id);end
     def self.show(id);instance.show(id);end
     def self.destroy(id);instance.destroy(id);end
 
     def create(alert)
       http_client.post(
-        "#{API_HOST}/schools/#{school_id}/alerts", 
+        "#{API_HOST}/schools/#{school.id}/alerts", 
         alert.as_json
       ).code
     end
 
-    def list(school)
+    def list(teacher_id)
       http_client.get(
-        "#{API_HOST}/schools/#{school_id}/alerts"
+        "#{API_HOST}/schools/#{school.id}/teachers/#{teacher_id}/alerts"
       ).tap do |response|
         return Response.new(
           response.code,
@@ -32,7 +41,7 @@ module AlertsService
 
     def show(id)      
       http_client.get(
-        "#{API_HOST}/schools/#{school_id}/alerts/#{id}"
+        "#{API_HOST}/schools/#{school.id}/alerts/#{id}"
       ).tap do |response|
         return Response.new(
           response.code,
@@ -45,19 +54,13 @@ module AlertsService
 
     def destroy(id)
       http_client.delete(
-        "#{API_HOST}/schools/#{school_id}/alerts/#{id}"
+        "#{API_HOST}/schools/#{school.id}/alerts/#{id}"
       ).code
     end
 
     private
 
-    def school_id
-      Base64.urlsafe_encode64(school_name)
-    end
-
-    def school_name
-      ENV['CANVAS_HOST']
-    end
+    attr_reader :school
 
     def http_client
       HTTParty

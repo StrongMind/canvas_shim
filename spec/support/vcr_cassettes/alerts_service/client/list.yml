@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://www.example.com/schools/bXlzY2hvb2w=/alerts
+    uri: https://www.example.com/schools/bXlzY2hvb2w=/teachers/1/alerts
     body:
       encoding: US-ASCII
       string: ''
