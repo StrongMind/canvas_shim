@@ -40,7 +40,7 @@ ContextModule.class_eval do
   end
 
   def get_threshold_overrides
-    @threshold_overrides ||= SettingsService.get_settings(object: :course, id: course.id)['threshold_overrides']
+    @threshold_overrides ||= SettingsService.get_settings(object: :course, id: course.try(:id))['threshold_overrides']
   end
 
   def has_threshold_override?(requirement)
