@@ -6,7 +6,7 @@ module AlertsService
     end
 
     def id
-      Base64.urlsafe_encode64(name)
+      Base64.urlsafe_encode64(name, padding: false)
     end
   end
 end

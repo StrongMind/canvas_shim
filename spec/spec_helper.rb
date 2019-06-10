@@ -2,6 +2,7 @@ require 'vcr'
 
 VCR.configure do |config|
   config.cassette_library_dir = "spec/support/vcr_cassettes"
+  config.filter_sensitive_data('<REDACTED>') { ENV['MY_ID'] }
   config.hook_into :webmock
   config.default_cassette_options = { :record => :all } if ENV['RECORD_VCR_AGAIN']
 end

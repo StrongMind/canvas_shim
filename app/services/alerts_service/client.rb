@@ -37,7 +37,8 @@ module AlertsService
 
     def show(id)      
       http_client.get(
-        "#{API_HOST}/schools/#{school.id}/alerts/#{id}"
+        "#{API_HOST}/schools/#{school.id}/alerts/#{id}",
+        headers: headers
       ).tap do |response|
         return Response.new(
           response.code,

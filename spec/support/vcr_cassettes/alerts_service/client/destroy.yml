@@ -2,45 +2,47 @@
 http_interactions:
 - request:
     method: delete
-    uri: https://kom06r8apf.execute-api.us-west-2.amazonaws.com/dev/schools/bXlzY2hvb2w=/alerts/1
+    uri: https://kom06r8apf.execute-api.us-west-2.amazonaws.com/dev/schools/bXlzY2hvb2w/alerts/4
     body:
       encoding: US-ASCII
       string: ''
     headers:
       X-Api-Key:
-      - tTHekVctTl5VLspdQ9yFQ1VkDIzBHPRG7PjaU9o7
+      - "<REDACTED>"
       Content-Type:
       - application/json
   response:
     status:
-      code: 500
-      message: Internal Server Error
+      code: 201
+      message: Created
     headers:
       Content-Type:
       - text/html; charset=utf-8
       Content-Length:
-      - '22'
+      - '17'
       Connection:
       - keep-alive
       Date:
-      - Mon, 10 Jun 2019 21:26:37 GMT
+      - Mon, 10 Jun 2019 23:36:57 GMT
       X-Amzn-Requestid:
-      - 6db1e087-8bc6-11e9-95f9-b3beda914b1e
+      - a2eeb3fd-8bd8-11e9-ae1e-6d8339274671
       X-Amzn-Remapped-Content-Length:
-      - '22'
+      - '17'
       X-Amz-Apigw-Id:
-      - bFSqDE6HvHcF8Pg=
+      - bFlv-HgIPHcFqAA=
       X-Amzn-Trace-Id:
-      - Root=1-5cfecb0d-05f793a72476b5d2c45df98f;Sampled=0
+      - Root=1-5cfee999-b35ebf281e65e55291583678;Sampled=0
       X-Cache:
-      - Error from cloudfront
+      - Miss from cloudfront
       Via:
-      - 1.1 f277a6c0a1dc5b57a50776b1cc14c3d2.cloudfront.net (CloudFront)
+      - 1.1 b66e95045cc13b8f57a957271cfb33f6.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - PHX50-C1
       X-Amz-Cf-Id:
-      - 2LoRrZ5RdtnumVAE2q-HOoJ9aCKc2cWiVahegBb5qViWkWdwRMSvPg==
+      - Trz4sJRnGZBa_zAq02zK4ifc5s-tJIYt5lcRCnbwyaRAVi6hvPsKcg==
     body:
       encoding: UTF-8
-      string: '{"server error": true}'
+      string: '{"success": true}'
     http_version: 
-  recorded_at: Mon, 10 Jun 2019 21:26:37 GMT
+  recorded_at: Mon, 10 Jun 2019 23:36:57 GMT
 recorded_with: VCR 4.0.0

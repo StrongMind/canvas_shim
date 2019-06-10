@@ -2,39 +2,49 @@
 http_interactions:
 - request:
     method: get
-    uri: https://www.example.com/schools/bXlzY2hvb2w=/alerts/1
+    uri: https://kom06r8apf.execute-api.us-west-2.amazonaws.com/dev/schools/bXlzY2hvb2w/alerts/4
     body:
       encoding: US-ASCII
       string: ''
     headers:
-      Accept-Encoding:
-      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
-      Accept:
-      - "*/*"
-      User-Agent:
-      - Ruby
+      X-Api-Key:
+      - "<REDACTED>"
+      Content-Type:
+      - application/json
   response:
     status:
       code: 200
-      message: Not Found
+      message: OK
     headers:
-      Cache-Control:
-      - max-age=604800
       Content-Type:
-      - text/html; charset=UTF-8
-      Date:
-      - Fri, 07 Jun 2019 20:55:16 GMT
-      Expires:
-      - Fri, 14 Jun 2019 20:55:16 GMT
-      Server:
-      - EOS (vny006/0450)
-      Vary:
-      - Accept-Encoding
+      - text/html; charset=utf-8
       Content-Length:
-      - '606'
+      - '161'
+      Connection:
+      - keep-alive
+      Date:
+      - Mon, 10 Jun 2019 23:36:56 GMT
+      X-Amzn-Requestid:
+      - a298a4d9-8bd8-11e9-a31e-034d3106e16d
+      X-Amzn-Remapped-Content-Length:
+      - '161'
+      X-Amz-Apigw-Id:
+      - bFlv4ES8PHcFfrw=
+      X-Amzn-Trace-Id:
+      - Root=1-5cfee998-86d45f1cbd60016c697f236b;Sampled=0
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 767a83bc593065e60dcd78bb7448efb0.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - PHX50-C1
+      X-Amz-Cf-Id:
+      - zB-4kfGoKkgPvT9Uh7PUAGVTSihGN3x1ezHgmqL4VA0BD7rmC1CHyg==
     body:
-      encoding: ASCII-8BIT
-      string: '{"student_id": 1, "teacher_id": 2, "assignment_id": 3}'
+      encoding: UTF-8
+      string: '{"alert_id": 4, "alert": {"type": "max_attempts_reached", "status":
+        "Deleted", "student_id": 1, "teacher_id": 1, "assignment_id": 1}, "school_id":
+        "bXlzY2hvb2w"}'
     http_version: 
-  recorded_at: Fri, 07 Jun 2019 20:54:55 GMT
+  recorded_at: Mon, 10 Jun 2019 23:36:56 GMT
 recorded_with: VCR 4.0.0
