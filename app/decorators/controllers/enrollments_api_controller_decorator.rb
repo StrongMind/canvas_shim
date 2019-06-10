@@ -3,6 +3,10 @@ class EnrollmentsApiController < ApplicationController
   before_action :require_context
 
   def custom_placement
+    if !custom_placement_enabled?
+      render(:json => { error: 'Custom placement not enabled' }, :status => :unprocessable_entity) and return
+    end
+
     @enrollment  = @context.enrollments.find(params[:id])
     @content_tag = ContentTag.find(params[:content_tag].dig(:id))
 

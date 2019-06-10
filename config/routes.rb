@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   get 'todos', to: 'todos#index', as: :user_todo
 
   scope(controller: :enrollments_api) do
-    post '/api/v1/courses/:course_id/enrollments/:id/custom_placement', action: :custom_placement
+    post '/api/v1/courses/:course_id/enrollments/:id/custom_placement', action: :custom_placement, as: :custom_placement
   end
 end
 
