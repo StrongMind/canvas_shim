@@ -29,7 +29,7 @@ ContextModulesController.class_eval do
 
   def add_overrides
     @changed_reqs = []
-    context_module_params.to_h.each do |k, v|
+    context_module_params[:completion_requirements].each do |k, v|
       requirement = @module.completion_requirements.find {|req| req[:id] == k.to_i }
       if requirement && changed_requirement?(v, requirement)
         @changed_reqs << requirement[:id]
