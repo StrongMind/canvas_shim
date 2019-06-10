@@ -5,21 +5,12 @@ module AlertsService
         [:teacher_id, :student_id, :assignment_id]
       end
 
-      include PayloadBuilder
+      include AlertBuilder
 
       def initialize(teacher_id:, student_id:, assignment_id:)
         @teacher_id = teacher_id
         @student_id = student_id
         @assignment_id = assignment_id
-      end
-
-      def as_json
-        {
-          teacher_id: teacher_id,
-          student_id: student_id,
-          assignment_id: assignment_id,
-          type: type
-        }
       end
 
       def type
