@@ -15,7 +15,7 @@ http_interactions:
       - Ruby
   response:
     status:
-      code: 404
+      code: 200
       message: Not Found
     headers:
       Cache-Control:

@@ -43,7 +43,7 @@ describe AlertsService::Client do
   end
 
   describe '#create' do
-    xit do
+    it do
       VCR.use_cassette 'alerts_service/client/create' do
         expect(subject.create(alert)).to eq 200
       end
@@ -51,7 +51,7 @@ describe AlertsService::Client do
   end
 
   describe '#destroy' do
-    xit do
+    it do
       VCR.use_cassette 'alerts_service/client/destroy' do
         expect(subject.destroy(1)).to eq 200
       end
