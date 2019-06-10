@@ -18,27 +18,31 @@ module AlertsService
           type: type
         }
       end
-
+      
+      # Return a list of alerts from json
       def self.list_from_json(json)
         JSON.parse(json, symbolize_names: true).tap do |parsed|
           return parsed.map do |attributes|
-            new(
-              teacher_id: attributes[:teacher_id],
-              student_id: attributes[:student_id],
-              assignment_id: attributes[:assignment_id]  
-            )
+            from_payload_attributes(attributes)
           end
         end
       end
 
+      # Return a single alert from json
       def self.from_json(json)
-        JSON.parse(json, symbolize_names: true).tap do |parsed|
-          return new(
-            teacher_id: parsed[:teacher_id],
-            student_id: parsed[:student_id],
-            assignment_id: parsed[:assignment_id]
-          )
+        JSON.parse(json, symbolize_names: true).tap do |attributes|
+          return from_payload_attributes(attributes)  
         end
+      end
+
+      # Return an instance by pulling the required attributes 
+      # from a hash
+      def self.from_payload_attributes(attributes)
+        new(
+          teacher_id: attributes[:teacher_id],
+          student_id: attributes[:student_id],
+          assignment_id: attributes[:assignment_id]
+        )
       end
     end
   end
