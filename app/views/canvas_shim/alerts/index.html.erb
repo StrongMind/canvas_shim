@@ -1,12 +1,12 @@
 <%= form_tag '/canvas_shim/alerts', action: 'post' do %>
-   <%= submit_tag 'create' %> 
+  <%= submit_tag 'create' %> 
 <% end %>
 
+<h2>Alerts</h2>
 <% @alerts.each do |alert| %>
-    <%= form_tag "/canvas_shim/alerts/#{alert.alert_id}", method: 'delete' do %>
-        <%=alert %> 
-        <%= hidden_field_tag :alert_id, alert.alert_id %> 
-        <%= submit_tag 'delete' %> 
-     <% end %>
+  <%= form_tag "/canvas_shim/alerts/#{alert.alert_id}", method: 'delete' do %>
+    alert #<%= alert.alert_id %> 
+    <%= hidden_field_tag :alert_id, alert.alert_id %> 
+    <%= submit_tag 'delete' %> 
+    <% end %>
 <% end %>
-
