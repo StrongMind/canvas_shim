@@ -49,8 +49,9 @@
     <%= 'also_assignment' if module_item && module_item.graded? %>
     indent_<%= module_item.try_rescue(:indent) || '0' %>
     <%= 'progression_requirement' if criterion %>
-    <%= criterion[:type] if criterion %>_requirement
+    <%= criterion[:type] if criterion && !module_item&.assignment&.is_excused?(@current_user) %>_requirement
     <%= module_item.item_class if module_item %>
+    <%= 'excused_requirement' if module_item&.assignment&.is_excused?(@current_user) %>
   "
 >
   <div class="sm-ig-row sm-activity-row context_module_sub_header_expander <%= 'with-completion-requirements' if criterion %> <%= 'ig-published' if module_item && module_item.published? %> <%= 'student-view' if @is_student %>"  href="<%= context_url(@context, :context_url) %>/modules/items/<%= module_item ? module_item.id : "{{ id }}" %>">
@@ -62,7 +63,7 @@
       <%= module_item && module_item.title %>
     </a>
     <span class="for-nvda">
-      <%= module_item && module_item.title %>    
+      <%= module_item && module_item.title %>
     </span>
     <% if editable || module_item.nil? %>
     <div class="ig-handle">
@@ -195,6 +196,12 @@
               <span class="fulfilled">
                 <%= t('must_submit.fulfilled', 'Submitted') %>
                 <span class="screenreader-only"><%= t('Module item submitted and is complete') %></span>
+              </span>
+            </span>
+            <span class="requirement_type excused_requirement">
+              <span>
+                Excused
+                <span class="screenreader-only">Excused</span>
               </span>
             </span>
           </span>
