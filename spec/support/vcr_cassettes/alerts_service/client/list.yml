@@ -19,50 +19,32 @@ http_interactions:
       Content-Type:
       - text/html; charset=utf-8
       Content-Length:
-      - '1874'
+      - '384'
       Connection:
       - keep-alive
       Date:
-      - Tue, 11 Jun 2019 00:41:18 GMT
+      - Tue, 11 Jun 2019 22:27:51 GMT
       X-Amzn-Requestid:
-      - a017fd7e-8be1-11e9-ac27-3b7d8aff7f4e
+      - 26059b3f-8c98-11e9-857a-f9af58bdf30a
       X-Amzn-Remapped-Content-Length:
-      - '1874'
+      - '384'
       X-Amz-Apigw-Id:
-      - bFvLNFwGvHcFcdw=
+      - bIukIHMkvHcFmzA=
       X-Amzn-Trace-Id:
-      - Root=1-5cfef8ae-d3c0688070c6d9007ead9ad0;Sampled=0
+      - Root=1-5d002ae7-c8185a68f3359a88d74ae29c;Sampled=0
       X-Cache:
       - Miss from cloudfront
       Via:
-      - 1.1 5e262cd849cf388f683d13611c712e0d.cloudfront.net (CloudFront)
+      - 1.1 03e8784cc6fbcd65ff743e9f537e8e88.cloudfront.net (CloudFront)
       X-Amz-Cf-Id:
-      - WAu3VesYNNXgI4RcOgqqPCGo7DVzM-7jkWJPgPA8s_zr5_UQ79zaqw==
+      - 2G7Jf4ir8P32ghQCsztGbY-7qATRvSrS9SUDPxxkpkAKcshRCp3JnQ==
     body:
       encoding: UTF-8
-      string: '[{"alert_id": 5, "alert": {"type": "max_attempts_reached", "student_id":
-        1, "teacher_id": 1, "assignment_id": 1}, "school_id": "bXlzY2hvb2w"}, {"alert_id":
-        6, "alert": {"type": "max_attempts_reached", "student_id": 1, "teacher_id":
-        1, "assignment_id": 1}, "school_id": "bXlzY2hvb2w"}, {"alert_id": 7, "alert":
-        {"type": "max_attempts_reached", "student_id": 1, "teacher_id": 1, "assignment_id":
-        1}, "school_id": "bXlzY2hvb2w"}, {"alert_id": 8, "alert": {"type": "max_attempts_reached",
-        "student_id": 1, "teacher_id": 1, "assignment_id": 1}, "school_id": "bXlzY2hvb2w"},
-        {"alert_id": 9, "alert": {"type": "max_attempts_reached", "student_id": 1,
-        "teacher_id": 1, "assignment_id": 1}, "school_id": "bXlzY2hvb2w"}, {"alert_id":
-        10, "alert": {"type": "max_attempts_reached", "student_id": 1, "teacher_id":
-        1, "assignment_id": 1}, "school_id": "bXlzY2hvb2w"}, {"alert_id": 11, "alert":
-        {"type": "max_attempts_reached", "student_id": 1, "teacher_id": 1, "assignment_id":
-        1}, "school_id": "bXlzY2hvb2w"}, {"alert_id": 12, "alert": {"type": "max_attempts_reached",
-        "student_id": 1, "teacher_id": 1, "assignment_id": 1}, "school_id": "bXlzY2hvb2w"},
-        {"alert_id": 13, "alert": {"type": "max_attempts_reached", "student_id": 1,
-        "teacher_id": 1, "assignment_id": 1}, "school_id": "bXlzY2hvb2w"}, {"alert_id":
-        14, "alert": {"type": "max_attempts_reached", "student_id": 1, "teacher_id":
-        1, "assignment_id": 1}, "school_id": "bXlzY2hvb2w"}, {"alert_id": 15, "alert":
-        {"type": "max_attempts_reached", "student_id": 1, "teacher_id": 1, "assignment_id":
-        1}, "school_id": "bXlzY2hvb2w"}, {"alert_id": 16, "alert": {"type": "max_attempts_reached",
-        "student_id": 1, "teacher_id": 1, "assignment_id": 1}, "school_id": "bXlzY2hvb2w"},
-        {"alert_id": 4, "alert": {"type": "max_attempts_reached", "status": "Deleted",
-        "student_id": 1, "teacher_id": 1, "assignment_id": 1}, "school_id": "bXlzY2hvb2w"}]'
+      string: '[{"alert_id": 2, "alert": {"type": "max_attempts_reached", "student_id":
+        1, "teacher_id": 1, "assignment_id": 1}, "school_id": "bXlzY2hvb2w", "created_at":
+        "2019-06-11 21:54:09.073954+00:00"}, {"alert_id": 5, "alert": {"type": "max_attempts_reached",
+        "student_id": 1, "teacher_id": 1, "assignment_id": 1}, "school_id": "bXlzY2hvb2w",
+        "created_at": "2019-06-11 22:17:00.556481+00:00"}]'
     http_version: 
-  recorded_at: Tue, 11 Jun 2019 00:41:18 GMT
-recorded_with: VCR 4.0.0
+  recorded_at: Tue, 11 Jun 2019 22:27:51 GMT
+recorded_with: VCR 5.0.0

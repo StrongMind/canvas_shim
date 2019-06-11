@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: delete
-    uri: https://kom06r8apf.execute-api.us-west-2.amazonaws.com/dev/schools/bXlzY2hvb2w/alerts/4
+    uri: https://kom06r8apf.execute-api.us-west-2.amazonaws.com/dev/schools/bXlzY2hvb2w/alerts/2
     body:
       encoding: US-ASCII
       string: ''
@@ -23,24 +23,24 @@ http_interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 11 Jun 2019 00:41:17 GMT
+      - Tue, 11 Jun 2019 22:30:09 GMT
       X-Amzn-Requestid:
-      - 9fb6a3e3-8be1-11e9-9996-8319ae185c5d
+      - 78ac3588-8c98-11e9-b25a-a142ea5d642a
       X-Amzn-Remapped-Content-Length:
       - '17'
       X-Amz-Apigw-Id:
-      - bFvLGEejvHcFWiA=
+      - bIu5yFOevHcFb_Q=
       X-Amzn-Trace-Id:
-      - Root=1-5cfef8ad-430ce5c24d0a77e2b75f570c;Sampled=0
+      - Root=1-5d002b71-351ae3a70dd1c05f707f2fe6;Sampled=0
       X-Cache:
       - Miss from cloudfront
       Via:
-      - 1.1 40ddfb9607f5d49c286c41e9afdce772.cloudfront.net (CloudFront)
+      - 1.1 35dccd475f0302eaef0ffcecc72025dc.cloudfront.net (CloudFront)
       X-Amz-Cf-Id:
-      - t4tvq_xtvDHKSxTVpDWvglcj8FleYEVKm7valbQuBftC6F1EdSuoPQ==
+      - Nuz15nLwWQ8uLPQU-7tqGyOp7E_YyfI7RZIf7_ux-5jhOuSY8X0wpg==
     body:
       encoding: UTF-8
       string: '{"success": true}'
     http_version: 
-  recorded_at: Tue, 11 Jun 2019 00:41:17 GMT
-recorded_with: VCR 4.0.0
+  recorded_at: Tue, 11 Jun 2019 22:30:09 GMT
+recorded_with: VCR 5.0.0

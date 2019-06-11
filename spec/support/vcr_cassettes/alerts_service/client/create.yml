@@ -23,24 +23,24 @@ http_interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 11 Jun 2019 00:41:20 GMT
+      - Tue, 11 Jun 2019 22:26:52 GMT
       X-Amzn-Requestid:
-      - a1a33199-8be1-11e9-a2d6-df19c6bd09da
+      - 02d80566-8c98-11e9-adf7-fb44cd154d6d
       X-Amzn-Remapped-Content-Length:
       - '17'
       X-Amz-Apigw-Id:
-      - bFvLnH41PHcFS8A=
+      - bIua6F6AvHcFp8A=
       X-Amzn-Trace-Id:
-      - Root=1-5cfef8b0-2d97ae400c3d83b473b2fe60;Sampled=0
+      - Root=1-5d002aac-7b9093c4522e487a68270a68;Sampled=0
       X-Cache:
       - Miss from cloudfront
       Via:
-      - 1.1 e425142510c83df56b69a6fcc19a6e89.cloudfront.net (CloudFront)
+      - 1.1 8fb273b390f064c411944b3126eb0eb6.cloudfront.net (CloudFront)
       X-Amz-Cf-Id:
-      - jMP6ZLxisPaqZL-GivFcxrTUuEX9ne-zqJTliwZRJYHjuu4q0zpjow==
+      - eyi6GetH6uv5w-eReqsuuuFDH9EsCWLDQCXcC8FURtNIBXwuYtBQ4g==
     body:
       encoding: UTF-8
       string: '{"success": true}'
     http_version: 
-  recorded_at: Tue, 11 Jun 2019 00:41:20 GMT
-recorded_with: VCR 4.0.0
+  recorded_at: Tue, 11 Jun 2019 22:26:52 GMT
+recorded_with: VCR 5.0.0

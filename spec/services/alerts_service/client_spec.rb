@@ -11,19 +11,19 @@ describe AlertsService::Client do
   describe '#show' do
     it 'returns a client response on success' do
       VCR.use_cassette 'alerts_service/client/show' do
-        expect(subject.show(4)).to be_a(AlertsService::Response)
+        expect(subject.show(2)).to be_a(AlertsService::Response)
       end
     end
 
     it 'has a success code' do
       VCR.use_cassette 'alerts_service/client/show' do
-        expect(subject.show(4).code).to eq(200)
+        expect(subject.show(2).code).to eq(200)
       end
     end
 
     it 'has an alert in the payload' do
       VCR.use_cassette 'alerts_service/client/show' do
-        expect(subject.show(4).payload).to be_a(AlertsService::Alerts::MaxAttemptsReached)
+        expect(subject.show(2).payload).to be_a(AlertsService::Alerts::MaxAttemptsReached)
       end
     end
   end
@@ -53,7 +53,7 @@ describe AlertsService::Client do
   describe '#destroy' do
     it 'can destroy' do
       VCR.use_cassette 'alerts_service/client/destroy' do
-        expect(subject.destroy(4)).to eq 201
+        expect(subject.destroy(2)).to eq 201
       end
     end
   end

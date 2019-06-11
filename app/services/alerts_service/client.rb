@@ -5,6 +5,7 @@ module AlertsService
     API_HOST = SecretManager.get_secret['API_ENDPOINT']
 
     def initialize
+      Aws::Credentials.new(ENV['S3_ACCESS_KEY_ID'], ENV['S3_ACCESS_KEY'])
       @school = School.new(ENV['CANVAS_DOMAIN'])
     end
 
