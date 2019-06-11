@@ -1,7 +1,7 @@
 ContextModulesController.class_eval do
   def strongmind_update
     @module = @context.context_modules.not_deleted.find(params[:id])
-    add_overrides if course_threshold_enabled? && authorized_action(@module, @current_user, :update)
+    add_threshold_overrides if can_add_threshold_overrides?
     instructure_update
   end
 
@@ -27,7 +27,11 @@ ContextModulesController.class_eval do
     @module.update_column(:completion_requirements, @module.completion_requirements)
   end
 
-  def add_overrides
+  def can_add_threshold_overrides?
+    !disable_module_editing_on? && authorized_action(@module, @current_user, :update)
+  end
+
+  def add_threshold_overrides
     @changed_reqs = []
     context_module_params[:completion_requirements].each do |k, v|
       requirement = @module.completion_requirements.find {|req| req[:id] == k.to_i }
