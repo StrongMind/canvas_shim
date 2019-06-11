@@ -2,7 +2,7 @@ module AlertsService
   class Client
     include Singleton
 
-    API_HOST = 'https://kom06r8apf.execute-api.us-west-2.amazonaws.com/dev'
+    API_HOST = SecretManager.get_secret['API_ENDPOINT']
 
     def initialize
       @school = School.new(ENV['CANVAS_DOMAIN'])
@@ -62,7 +62,7 @@ module AlertsService
 
     def headers
       { 
-        'x-api-key' => ENV['MY_ID'],
+        'x-api-key' => SecretManager.get_secret['API_KEY'],
         'Content-Type' => 'application/json'
       }
     end

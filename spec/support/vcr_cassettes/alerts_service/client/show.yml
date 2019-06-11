@@ -23,28 +23,26 @@ http_interactions:
       Connection:
       - keep-alive
       Date:
-      - Mon, 10 Jun 2019 23:36:56 GMT
+      - Tue, 11 Jun 2019 00:41:19 GMT
       X-Amzn-Requestid:
-      - a298a4d9-8bd8-11e9-a31e-034d3106e16d
+      - a0c99a75-8be1-11e9-89fb-75d7ab69cdd5
       X-Amzn-Remapped-Content-Length:
       - '161'
       X-Amz-Apigw-Id:
-      - bFlv4ES8PHcFfrw=
+      - bFvLYHIHvHcFbaQ=
       X-Amzn-Trace-Id:
-      - Root=1-5cfee998-86d45f1cbd60016c697f236b;Sampled=0
+      - Root=1-5cfef8af-d3bdba883a3282f001a5e3ec;Sampled=0
       X-Cache:
       - Miss from cloudfront
       Via:
-      - 1.1 767a83bc593065e60dcd78bb7448efb0.cloudfront.net (CloudFront)
-      X-Amz-Cf-Pop:
-      - PHX50-C1
+      - 1.1 f1f23e31a920ab1b12fcfa84d5ce673e.cloudfront.net (CloudFront)
       X-Amz-Cf-Id:
-      - zB-4kfGoKkgPvT9Uh7PUAGVTSihGN3x1ezHgmqL4VA0BD7rmC1CHyg==
+      - XWj7TM5FDrIZM4DNfcyXFOga5HcFlXf4qpVb13_EW33zdfqCTwTjbA==
     body:
       encoding: UTF-8
       string: '{"alert_id": 4, "alert": {"type": "max_attempts_reached", "status":
         "Deleted", "student_id": 1, "teacher_id": 1, "assignment_id": 1}, "school_id":
         "bXlzY2hvb2w"}'
     http_version: 
-  recorded_at: Mon, 10 Jun 2019 23:36:56 GMT
+  recorded_at: Tue, 11 Jun 2019 00:41:19 GMT
 recorded_with: VCR 4.0.0

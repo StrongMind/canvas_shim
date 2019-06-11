@@ -23,26 +23,24 @@ http_interactions:
       Connection:
       - keep-alive
       Date:
-      - Mon, 10 Jun 2019 23:36:57 GMT
+      - Tue, 11 Jun 2019 00:41:20 GMT
       X-Amzn-Requestid:
-      - a2c84016-8bd8-11e9-b4f6-19cc7b48a77d
+      - a1a33199-8be1-11e9-a2d6-df19c6bd09da
       X-Amzn-Remapped-Content-Length:
       - '17'
       X-Amz-Apigw-Id:
-      - bFlv7H5dPHcFc-g=
+      - bFvLnH41PHcFS8A=
       X-Amzn-Trace-Id:
-      - Root=1-5cfee999-88887e01e641d57cd8a69b93;Sampled=0
+      - Root=1-5cfef8b0-2d97ae400c3d83b473b2fe60;Sampled=0
       X-Cache:
       - Miss from cloudfront
       Via:
-      - 1.1 553a6bd9d1f05f944fd084b3c51cf2ec.cloudfront.net (CloudFront)
-      X-Amz-Cf-Pop:
-      - PHX50-C1
+      - 1.1 e425142510c83df56b69a6fcc19a6e89.cloudfront.net (CloudFront)
       X-Amz-Cf-Id:
-      - JWdxXidYyHRyWYj0it8xvezUZdS2bIv8cdhfPk4AsQtEy3C8XayCOQ==
+      - jMP6ZLxisPaqZL-GivFcxrTUuEX9ne-zqJTliwZRJYHjuu4q0zpjow==
     body:
       encoding: UTF-8
       string: '{"success": true}'
     http_version: 
-  recorded_at: Mon, 10 Jun 2019 23:36:57 GMT
+  recorded_at: Tue, 11 Jun 2019 00:41:20 GMT
 recorded_with: VCR 4.0.0
