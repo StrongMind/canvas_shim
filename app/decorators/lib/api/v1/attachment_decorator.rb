@@ -12,7 +12,7 @@ Api::V1::Attachment.class_eval do
             return 
         end
 
-        unless allowed_filetypes.include?(File.extname(params[:name]).delete("."))
+        unless allowed_filetypes.include?(File.extname(params[:name]))
             render :json => {:message => I18n.t('lib.api.attachments.invalid_filetype', "Filetype not supported")}, :status => 422
             return
         end

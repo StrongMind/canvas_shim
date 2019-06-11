@@ -255,7 +255,7 @@ TEXT
                       <dl id="filetypes">
                         <% if @allowed_filetypes %>
                           <% @allowed_filetypes.each do |filetype| %>
-                            <dd class="filetype-badge ic-badge ic-badge--neutral" filetype="<%= filetype %>">.<%= filetype %> <sup><a href="#" class="del-filetype">x</a></sup></dd>
+                            <dd class="filetype-badge ic-badge ic-badge--neutral" filetype="<%= filetype %>"><%= filetype %> <sup><a href="#" class="del-filetype">x</a></sup></dd>
                           <% end %>
                         <% end %>
                       </dl>
