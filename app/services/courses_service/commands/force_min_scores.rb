@@ -6,7 +6,7 @@ module CoursesService
       end
 
       def call
-        Delayed::Job.enqueue(self, :priority => 0)
+        Delayed::Job.enqueue(self)
       end
 
       def perform
