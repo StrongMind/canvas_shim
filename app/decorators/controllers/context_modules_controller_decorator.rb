@@ -28,7 +28,8 @@ ContextModulesController.class_eval do
   end
 
   def can_add_threshold_overrides?
-    !disable_module_editing_on? && authorized_action(@module, @current_user, :update)
+    !disable_module_editing_on? && && context_module_params[:completion_requirements] &&
+    authorized_action(@module, @current_user, :update)
   end
 
   def add_threshold_overrides
