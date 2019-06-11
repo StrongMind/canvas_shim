@@ -11,12 +11,12 @@ module AlertsService
       secret_name = "dev/alerts_service/api"
       region_name = "us-west-2"
       
-      # return(
-      #   {
-      #     'API_KEY' => ENV['ALERT_SERVICE_API_KEY'],
-      #     'API_ENDPOINT' => ENV['ALERT_SERVICE_HOST']
-      #   }
-      # ) if ENV['ALERT_SERVICE_API_KEY']
+      return(
+        {
+          'API_KEY' => ENV['ALERT_SERVICE_API_KEY'],
+          'API_ENDPOINT' => ENV['ALERT_SERVICE_HOST']
+        }
+      ) if ENV['ALERT_SERVICE_API_KEY']
 
       client = Aws::SecretsManager::Client.new(region: region_name)
 

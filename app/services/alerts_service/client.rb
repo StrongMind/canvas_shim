@@ -2,13 +2,7 @@ module AlertsService
   class Client
     include Singleton
 
-    API_HOST = SecretManager.get_secret['API_ENDPOINT']
-
     def initialize
-      Aws.config.update(
-        credentials: Aws::Credentials.new(ENV['S3_ACCESS_KEY_ID'], ENV['S3_ACCESS_KEY'])
-      )
-
       @school = School.new(ENV['CANVAS_DOMAIN'])
     end
 
@@ -19,7 +13,7 @@ module AlertsService
 
     def create(alert)
       http_client.post(
-        "#{API_HOST}/schools/#{school.id}/alerts", 
+        "#{get_secret['API_ENDPOINT']}/schools/#{school.id}/alerts", 
         body: alert.to_json,
         headers: headers,
       ).code
@@ -27,7 +21,7 @@ module AlertsService
 
     def list(teacher_id)
       http_client.get(
-        "#{API_HOST}/schools/#{school.id}/teachers/#{teacher_id}/alerts",
+        "#{get_secret['API_ENDPOINT']}/schools/#{school.id}/teachers/#{teacher_id}/alerts",
         headers: headers
       ).tap do |response|
         return Response.new(
@@ -41,7 +35,7 @@ module AlertsService
 
     def show(id)      
       http_client.get(
-        "#{API_HOST}/schools/#{school.id}/alerts/#{id}",
+        "#{get_secret['API_ENDPOINT']}/schools/#{school.id}/alerts/#{id}",
         headers: headers
       ).tap do |response|
         return Response.new(
@@ -55,7 +49,7 @@ module AlertsService
 
     def destroy(id)
       http_client.delete(
-        "#{API_HOST}/schools/#{school.id}/alerts/#{id}",
+        "#{get_secret['API_ENDPOINT']}/schools/#{school.id}/alerts/#{id}",
         headers: headers
       ).code
     end
@@ -64,9 +58,13 @@ module AlertsService
 
     attr_reader :school
 
+    def get_secret
+      @secret ||= SecretManager.get_secret
+    end
+
     def headers
       { 
-        'x-api-key' => SecretManager.get_secret['API_KEY'],
+        'x-api-key' => get_secret['API_KEY'],
         'Content-Type' => 'application/json'
       }
     end
