@@ -21,9 +21,11 @@ describe AlertsService::Alerts::MaxAttemptsReached do
     context('class methods') do
       let(:attributes) do
         {
-          "student_id": 1, 
-          "teacher_id": 2, 
-          "assignment_id": 3
+          alert: {
+            "student_id": 1, 
+            "teacher_id": 2, 
+            "assignment_id": 3
+          }
         }
       end
 

@@ -25,8 +25,10 @@ module AlertsService
         # Return an instance by pulling the required attributes 
         # from a hash
         def from_payload_attributes(attributes)
+          flattened = attributes.merge(attributes[:alert])
+          flattened.delete(:alert)
           new(
-            required_attributes.map { |field_name| [field_name, attributes[field_name]] }.to_h
+            required_attributes.map { |field_name| [field_name, flattened[field_name]] }.to_h
           )
         end
       end
