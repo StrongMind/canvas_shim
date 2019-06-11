@@ -31,7 +31,7 @@ module AlertsService
         end
       end
       
-      def as_json
+      def as_json(opts={})
         self.class.required_attributes.map { |field_name| [field_name, self.send(field_name)] }.to_h.merge({type: self.type})
       end
 
