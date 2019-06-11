@@ -54,6 +54,17 @@ describe ContextModule do
         end
       end
 
+      context "has threshold overrides" do
+        before do
+          allow_any_instance_of(ContextModule).to receive(:has_threshold_override?).and_return("56")
+          ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
+        end
+
+        it "ignores the overridden requirement" do
+          expect(ContextModule.last.completion_requirements[1][:type]).to eq("must_submit")
+        end
+      end
+
       context "requirements taken from previous course" do
         let(:completion_requirements) do
           [
