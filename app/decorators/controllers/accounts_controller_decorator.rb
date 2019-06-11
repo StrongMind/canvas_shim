@@ -47,10 +47,6 @@ AccountsController.class_eval do
       )
   end
 
-  def threshold_edited?
-    params[:threshold_edited] == "true"
-  end
-
   def set_school_threshold
     SettingsService.update_settings(
         object: 'school',

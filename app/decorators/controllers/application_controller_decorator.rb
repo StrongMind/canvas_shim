@@ -14,6 +14,10 @@ ApplicationController.class_eval do
     score_threshold.positive?
   end
 
+  def threshold_edited?
+    params[:threshold_edited] == "true"
+  end
+
   def course_threshold_enabled?
     SettingsService.get_settings(object: :school, id: 1)['course_threshold_enabled']
   end

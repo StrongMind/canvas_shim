@@ -96,10 +96,6 @@ CoursesController.class_eval do
     @course && course_threshold_enabled? && valid_threshold?(@course_threshold)
   end
 
-  def threshold_edited?
-    params[:threshold_edited] == "true"
-  end
-
   def set_course_passing_threshold
     SettingsService.update_settings(
       object: 'course',
