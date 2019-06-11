@@ -241,6 +241,29 @@ TEXT
                   </tr>
 
                   <tr>
+                    <td><%= settings.blabel :allowed_filetypes, :en => "Allowed Filetypes" %></td>
+                    <td>
+                      <%= settings.text_field :allowed_filetype,
+                                              :class => 'same-width-as-select allowed_filetype_entry',
+                                              :placeholder => "Add comma separated extentions" %>
+                      <a id="add_new_filetypes_button" href="#" role="button" class="Button button-sidebar-wide">
+                        <span aria-hidden="true"><i class="icon-plus"></i></span>
+                        <span class="screenreader-only">Add a new allowed filetype</span>
+                      </a>
+                      <p id="update_settings_hint" style="color: green; display: none;"><small>Added! Don't forget to click Update Settings below!</small></p>
+
+                      <dl id="filetypes">
+                        <% if @allowed_filetypes %>
+                          <% @allowed_filetypes.each do |filetype| %>
+                            <dd class="filetype-badge ic-badge ic-badge--neutral" filetype="<%= filetype %>">.<%= filetype %> <sup><a href="#" class="del-filetype">x</a></sup></dd>
+                          <% end %>
+                        <% end %>
+                      </dl>
+                      <p style="font-size: 0.9em;"><%= t("Add an allowed filetype for attachment uploads") %></p>
+                    </td>
+                  </tr>
+                
+                  <tr>
                     <td><%= settings.blabel :school_holidays, :en => "Add Holiday" %></td>
                     <td>
                       <%= settings.text_field :holiday, :class => "date_entry" %>

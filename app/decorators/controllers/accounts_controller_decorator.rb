@@ -1,13 +1,17 @@
 AccountsController.class_eval do
   def strongmind_settings
     grab_holidays
+    get_allowed_filetypes
     @school_threshold = score_threshold
     @course_thresh_enabled = course_threshold_enabled?
     if @course_thresh_enabled
       @post_enrollment_thresh_enabled = post_enrollment_thresholds_enabled?
     end
     @module_editing_disabled = disable_module_editing_on?
-    js_env({HOLIDAYS: @holidays})
+    js_env({
+      HOLIDAYS: @holidays,
+      FILETYPES: @allowed_filetypes
+    }) 
     instructure_settings
   end
 
@@ -17,7 +21,9 @@ AccountsController.class_eval do
   def strongmind_update
     @school_threshold = params[:account][:settings][:score_threshold].to_i
     set_school_threshold if valid_threshold?(@school_threshold)
+    set_allowed_filetypes
     set_holidays if params[:holidays]
+    set_allowed_filetypes if params[:allowed_filetypes]
     set_course_threshold_enablement
     set_post_enrollment_thresholds
     set_module_editing
@@ -32,10 +38,20 @@ AccountsController.class_eval do
     params[:holidays].blank? ? false : params[:holidays]
   end
 
+  def allowed_filetypes
+    params[:allowed_filetypes].blank? ? false : params[:allowed_filetypes]
+  end
+
   def grab_holidays
     @holidays = SettingsService.get_settings(object: :school, id: 1)['holidays']
     @holidays = @holidays.split(",") if @holidays
     @holidays ||= (ENV["HOLIDAYS"] && @holidays != false) ? ENV["HOLIDAYS"].split(",") : []
+  end
+
+  def get_allowed_filetypes
+    @allowed_filetypes = SettingsService.get_settings(object: 'school', id: 1)['allowed_filetypes']
+    @allowed_filetypes = @allowed_filetypes.split(',') if @allowed_filetypes
+    @allowed_filetypes = [] unless @allowed_filetypes
   end
 
   def set_holidays
@@ -54,6 +70,15 @@ AccountsController.class_eval do
         setting: 'score_threshold',
         value: @school_threshold
       )
+  end
+
+  def set_allowed_filetypes
+    SettingsService.update_settings(
+      object: 'school',
+      id: 1,
+      setting: 'allowed_filetypes',
+      value: allowed_filetypes
+    )
   end
 
   def course_threshold_enablement_params
