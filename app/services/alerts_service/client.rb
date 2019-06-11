@@ -20,15 +20,14 @@ module AlertsService
     end
 
     def list(teacher_id)
+    
       http_client.get(
         "#{get_secret['API_ENDPOINT']}/schools/#{school.id}/teachers/#{teacher_id}/alerts",
         headers: headers
       ).tap do |response|
         return Response.new(
           response.code,
-          Alerts::MaxAttemptsReached.list_from_json(
-            response.body
-          )
+          Alerts::MaxAttemptsReached.list_from_json(response.body)
         )
       end
     end
