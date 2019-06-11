@@ -32,6 +32,10 @@ module AlertsService
           )
         end
       end
+
+      def type
+        raise 'you need to implement type in your alert'
+      end
       
       def as_json(opts={})
         self.class.required_attributes.map { |field_name| [field_name, self.send(field_name)] }.to_h.merge({type: self.type})

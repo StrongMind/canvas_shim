@@ -17,37 +17,5 @@ describe AlertsService::Alerts::MaxAttemptsReached do
     it 'type' do
       expect(subject.as_json[:type]).to eq 'max_attempts_reached'
     end
-
-    context('class methods') do
-      let(:attributes) do
-        {
-          alert: {
-            "student_id": 1, 
-            "teacher_id": 2, 
-            "assignment_id": 3
-          }
-        }
-      end
-
-      let(:json) do
-        attributes.to_json
-      end
-      
-      let(:json_list) {
-        [attributes].to_json
-      }
-      
-      describe('#from_json') do
-        it do
-          expect(described_class.from_json(json))
-        end
-      end
-
-      describe('#list_from_json') do
-        it do
-          expect(described_class.list_from_json(json_list))
-        end
-      end
-    end
   end
 end
