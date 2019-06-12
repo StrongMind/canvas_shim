@@ -58,13 +58,13 @@
 <div id="account_settings_tabs" style="display:none;" class="ui-tabs-minimal">
   <ul>
     <% if can_do(@context, @current_user, :manage_account_settings) %>
-    <li><a href="#tab-settings" id="tab-settings-link"><%= t(:tab_settings, "Settings") %></a></li>
+      <li><a href="#tab-settings" id="tab-settings-link"><%= t(:tab_settings, "Settings") %></a></li>
     <% end %>
     <% if can_do(@context, @current_user, :manage_storage_quotas) %>
-    <li><a href="#tab-quotas" id="tab-quotas-link"><%= t(:tab_quotas, "Quotas") %></a></li>
+      <li><a href="#tab-quotas" id="tab-quotas-link"><%= t(:tab_quotas, "Quotas") %></a></li>
     <% end %>
     <% if can_do(@context, @current_user, :manage_account_settings) && @account.root_account? && !@account.site_admin? %>
-    <li><a href="#tab-notifications" id="tab-notifications-link"><%= t(:tab_notifications, "Notifications") %></a></li>
+      <li><a href="#tab-notifications" id="tab-notifications-link"><%= t(:tab_notifications, "Notifications") %></a></li>
     <% end %>
     <li><a href="#tab-users" id="tab-users-link"><%= t(:tab_admins, "Admins") %></a></li>
     <li><a href="#tab-announcements" id="tab-announcements-link"><%= t(:tab_announcements, "Announcements") %></a></li>
@@ -245,7 +245,6 @@ TEXT
                     <td>
                       <%= settings.text_field :holiday, :class => "date_entry" %>
                     </td>
-                    
                   </tr>
 
                   <tr>
@@ -272,6 +271,14 @@ TEXT
                   <tr>
                     <td colspan="2" class="sub_checkbox"><%= settings.check_box :prevent_module_editing, :checked => @module_editing_disabled, :title => "Prevent teachers from editing passing requirements for a unit" %>
                     <%= settings.label :prevent_module_editing, :en => "Prevent teachers from adjusting passing thresholds at the unit level" %>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                        <%= settings.check_box :enable_custom_placement,
+                              checked: @custom_placement_enabled,
+                              title: "Allow teachers to custom place a student anywhere in a course's content" %>
+                        <%= settings.label :enable_custom_placement, :en => "Enable student custom placement" %>
                     </td>
                   </tr>
                   <tr>
