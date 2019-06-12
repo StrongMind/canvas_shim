@@ -68,7 +68,7 @@ CoursesController.class_eval do
 
   def strongmind_show
     instructure_show
-    js_env(score_threshold: score_threshold.to_s) if threshold_set?
+    js_env(score_threshold: score_threshold.to_s) if course_has_set_threshold?
     js_env(module_editing_disabled: disable_module_editing_on?)
   end
 

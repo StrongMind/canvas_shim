@@ -5,13 +5,8 @@ ApplicationController.class_eval do
     !!SettingsService.get_settings(object: :course, id: @context.try(:id))['passing_threshold']
   end
 
-  def course_score_threshold?
-    threshold = SettingsService.get_settings(object: :course, id: @context.try(:id))['passing_threshold'].to_f
-    threshold if threshold.positive?
-  end
-
   def score_threshold
-    course_score_threshold? || SettingsService.get_settings(object: :school, id: 1)['score_threshold'].to_f
+    @score_threshold ||= SettingsService.get_settings(object: :course, id: @context.try(:id))['passing_threshold'].to_f
   end
   
   def threshold_set?

@@ -92,7 +92,7 @@ describe ContextModule do
 
     context "Course has overridden school threshold" do
       before do
-        allow_any_instance_of(ContextModule).to receive(:course_score_threshold?).and_return(70.0)
+        allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(70.0)
         ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
       end
 
@@ -113,7 +113,7 @@ describe ContextModule do
     end
 
     before do
-      allow_any_instance_of(ContextModule).to receive(:course_score_threshold?).and_return(70.0)
+      allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(70.0)
       allow_any_instance_of(ContextModule).to receive(:strip_overrides).and_return(nil)
       ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
     end
@@ -125,7 +125,7 @@ describe ContextModule do
 
     context "new threshold enforced" do
       before do
-        allow_any_instance_of(ContextModule).to receive(:course_score_threshold?).and_return(75.0)
+        allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(75.0)
       end
 
       it "uses the new threshold" do

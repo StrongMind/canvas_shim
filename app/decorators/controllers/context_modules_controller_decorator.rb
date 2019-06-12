@@ -10,7 +10,7 @@ ContextModulesController.class_eval do
 
   def strongmind_add_item
     instructure_add_item
-    return unless gradeable_tag_type? && threshold_set?
+    return unless gradeable_tag_type? && course_has_set_threshold?
     add_threshold_to_module
   end
 
