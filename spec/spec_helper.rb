@@ -2,7 +2,7 @@ require 'vcr'
 
 VCR.configure do |config|
   config.cassette_library_dir = "spec/support/vcr_cassettes"
-  
+  config.ignore_hosts 'secretsmanager.us-west-2.amazonaws.com'
   config.filter_sensitive_data('<REDACTED>') do
     AlertsService::SecretManager.get_secret['API_KEY']
   end
