@@ -1,19 +1,13 @@
 AccountsController.class_eval do
   def strongmind_settings
     grab_holidays
-
-    @school_threshold         = score_threshold
-    @course_thresh_enabled    = course_threshold_enabled?
-    @custom_placement_enabled = custom_placement_enabled?
-
+    @school_threshold = score_threshold
+    @course_thresh_enabled = course_threshold_enabled?
     if @course_thresh_enabled
       @post_enrollment_thresh_enabled = post_enrollment_thresholds_enabled?
     end
-
     @module_editing_disabled = disable_module_editing_on?
-
     js_env({HOLIDAYS: @holidays})
-
     instructure_settings
   end
 
@@ -22,14 +16,11 @@ AccountsController.class_eval do
 
   def strongmind_update
     @school_threshold = params[:account][:settings][:score_threshold].to_i
-
     set_school_threshold if valid_threshold?(@school_threshold)
     set_holidays if params[:holidays]
     set_course_threshold_enablement
-    set_post_enrollment_thresholds if course_threshold_enablement_params
+    set_post_enrollment_thresholds
     set_module_editing
-    set_custom_placement
-
     instructure_update
   end
 
@@ -47,35 +38,22 @@ AccountsController.class_eval do
     @holidays ||= (ENV["HOLIDAYS"] && @holidays != false) ? ENV["HOLIDAYS"].split(",") : []
   end
 
-  def enable_custom_placement_param
-    @enable_custom_placement_param ||= ActiveModel::Type::Boolean.new.cast(strong_account_params[:settings][:enable_custom_placement])
-  end
-
-  def set_custom_placement
-    SettingsService.update_settings(
-      object: 'school',
-      id: 1,
-      setting: 'enable_custom_placement',
-      value: enable_custom_placement_param
-    )
-  end
-
   def set_holidays
     SettingsService.update_settings(
-      object: 'school',
-      id: 1,
-      setting: 'holidays',
-      value: holidays
-    )
+        object: 'school',
+        id: 1,
+        setting: 'holidays',
+        value: holidays
+      )
   end
 
   def set_school_threshold
     SettingsService.update_settings(
-      object: 'school',
-      id: 1,
-      setting: 'score_threshold',
-      value: @school_threshold
-    )
+        object: 'school',
+        id: 1,
+        setting: 'score_threshold',
+        value: @school_threshold
+      )
   end
 
   def course_threshold_enablement_params
@@ -84,11 +62,11 @@ AccountsController.class_eval do
 
   def set_course_threshold_enablement
     SettingsService.update_settings(
-      object: 'school',
-      id: 1,
-      setting: 'course_threshold_enabled',
-      value: course_threshold_enablement_params
-    )
+        object: 'school',
+        id: 1,
+        setting: 'course_threshold_enabled',
+        value: course_threshold_enablement_params
+      )
   end
 
   def disable_module_editing_params
@@ -97,11 +75,11 @@ AccountsController.class_eval do
 
   def set_module_editing
     SettingsService.update_settings(
-      object: 'school',
-      id: 1,
-      setting: 'disable_module_editing',
-      value: disable_module_editing_params
-    )
+        object: 'school',
+        id: 1,
+        setting: 'disable_module_editing',
+        value: disable_module_editing_params
+      )
   end
 
   def enable_post_enrollment_threshold_params
