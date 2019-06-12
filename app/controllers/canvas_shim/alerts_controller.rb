@@ -1,5 +1,6 @@
 module CanvasShim
   class AlertsController < ApplicationController
+    before_action :build_alert, only: :create
     def index
       @alerts = AlertsService::Client.list(1).payload
     end
@@ -10,14 +11,18 @@ module CanvasShim
     end
 
     def create
-      AlertsService::Client.create(
-        AlertsService::Alerts::MaxAttemptsReached.new(
-          teacher_id: 1,
-          student_id: 1,
-          assignment_id: 1,
-        )
-      )
+      result = AlertsService::Client.create(@alert)
       redirect_to(alerts_path)
+    end
+    
+    private
+    
+    def build_alert
+      @alert = AlertsService::Alerts::MaxAttemptsReached.new(
+        teacher_id: @current_user.id,
+        student_id: User.last.id,
+        assignment_id: Assignment.first.id,
+      )
     end
   end
 end

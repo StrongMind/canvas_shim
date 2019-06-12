@@ -28,4 +28,5 @@ group :development, :test do
   gem 'awesome_print'
   gem 'timecop'
   gem 'vcr'
+  gem 'sentry-raven'
 end

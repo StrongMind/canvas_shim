@@ -3,10 +3,29 @@
 <% end %>
 
 <h2>Alerts</h2>
-<% @alerts.each do |alert| %>
-  <%= form_tag "/canvas_shim/alerts/#{alert.alert_id}", method: 'delete' do %>
-    alert #<%= alert.alert_id %> 
-    <%= hidden_field_tag :alert_id, alert.alert_id %> 
-    <%= submit_tag 'delete' %> 
-    <% end %>
-<% end %>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Student</th>
+    <th>Assignment</th>
+  </tr>
+  <% @alerts.each do |alert| %>
+    <tr>
+      <td>
+        <%= alert.alert_id %>
+      </td>
+      <td>
+        <%= alert.student_id %>
+      </td>
+      <td>
+        <%= alert.assignment_id %>
+      </td>
+      <td>
+        <%= form_tag "/canvas_shim/alerts/#{alert.alert_id}", method: 'delete' do %>    
+          <%= hidden_field_tag :alert_id, alert.alert_id %> 
+          <%= submit_tag 'dismiss' %> 
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>
