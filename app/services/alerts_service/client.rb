@@ -20,7 +20,6 @@ module AlertsService
     end
 
     def list(teacher_id)
-    
       http_client.get(
         "#{get_secret['API_ENDPOINT']}/schools/#{school.id}/teachers/#{teacher_id}/alerts",
         headers: headers

@@ -8,4 +8,8 @@ class Assignment < ActiveRecord::Base
   def due_date
     due_at
   end
+
+  def name
+    'Assignment Yo Yo'
+  end
 end

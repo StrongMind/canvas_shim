@@ -1,5 +1,5 @@
 CanvasShim::Engine.routes.draw do
-  resources :alerts
+  
   
   namespace "settings_api" do
     namespace 'v1' do
@@ -9,6 +9,7 @@ CanvasShim::Engine.routes.draw do
 end
 
 Rails.application.routes.draw do
+  resources :seasuite_alerts
   resources :courses do
     post 'conclude_users', to: 'courses#conclude_users', as: :conclude_user_enrollments
     get  'conclude_users', to: 'courses#show_course_enrollments', as: :show_course_enrollments

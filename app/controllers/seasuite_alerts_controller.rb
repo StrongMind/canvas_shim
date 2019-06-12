@@ -1,5 +1,5 @@
-module CanvasShim
-  class AlertsController < ApplicationController
+
+  class SeasuiteAlertsController < ApplicationController
     before_action :build_alert, only: :create
     def index
       @alerts = AlertsService::Client.list(1).payload
@@ -7,12 +7,12 @@ module CanvasShim
 
     def destroy
       AlertsService::Client.destroy(params[:alert_id])
-      redirect_to(alerts_path)
+      redirect_to(seasuite_alerts_path)
     end
 
     def create
       result = AlertsService::Client.create(@alert)
-      redirect_to(alerts_path)
+      redirect_to(seasuite_alerts_path)
     end
     
     private
@@ -25,4 +25,3 @@ module CanvasShim
       )
     end
   end
-end

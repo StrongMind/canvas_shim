@@ -1,4 +1,4 @@
-<%= form_tag '/canvas_shim/alerts', action: 'post' do %>
+<%= form_tag '/seasuite_alerts', action: 'post' do %>
   <%= submit_tag 'create' %> 
 <% end %>
 
@@ -15,15 +15,15 @@
         <%= alert.alert_id %>
       </td>
       <td>
-        <%= alert.student_id %>
+        <%= alert.student.name %>
       </td>
       <td>
-        <%= alert.assignment_id %>
+        <%= link_to alert.assignment.name, alert.assignment_id.to_s %>
       </td>
       <td>
-        <%= form_tag "/canvas_shim/alerts/#{alert.alert_id}", method: 'delete' do %>    
+        <%= form_tag "/seasuite_alerts/#{alert.alert_id}", method: 'delete' do %>    
           <%= hidden_field_tag :alert_id, alert.alert_id %> 
-          <%= submit_tag 'dismiss' %> 
+          <%= submit_tag 'dismiss' %>
         <% end %>
       </td>
     </tr>

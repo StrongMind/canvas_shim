@@ -14,6 +14,14 @@ module AlertsService
         @alert_id = alert_id
       end
 
+      def assignment
+        Assignment.find(assignment_id)
+      end
+
+      def student
+        User.find(student_id)
+      end
+
       def type
         'max_attempts_reached'
       end

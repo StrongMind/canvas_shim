@@ -6,7 +6,7 @@ module CanvasShim
       token = SettingsService::AuthToken.authenticate(
         request.headers['HTTP_AUTHORIZATION'].try(:gsub, 'Bearer ', '')
       )
-      render(json: {status: 'error'}, status: 401) and return unless token
+      render(json: { status: 'error' }, status: 401) and return unless token
     end
   end
 end
