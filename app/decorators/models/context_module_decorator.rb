@@ -9,6 +9,7 @@ ContextModule.class_eval do
   end
 
   def force_min_score_to_requirements
+    strip_overrides
     add_min_score_to_requirements
     update_column(:completion_requirements, completion_requirements)
     touch
@@ -45,6 +46,15 @@ ContextModule.class_eval do
 
   def has_threshold_override?(requirement)
     get_threshold_overrides.split(",").map(&:to_i).include?(requirement[:id]) if get_threshold_overrides
+  end
+
+  def strip_overrides
+    SettingsService.update_settings(
+      object: 'course',
+      id: course.try(:id),
+      setting: 'threshold_overrides',
+      value: false
+    )
   end
 
   def skippable_requirement?(requirement)
