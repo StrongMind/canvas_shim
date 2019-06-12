@@ -228,19 +228,6 @@ TEXT
                   </tr>
 
                   <tr>
-                    <td><%= settings.blabel :score_threshold, :en => "Passing Threshold" %></td>
-                    <td>
-                      <%= settings.number_field :score_threshold,
-                                              :value => @school_threshold,
-                                              :class => 'same-width-as-select',
-                                              :min => "0",
-                                              :max => "100",
-                                              :placeholder => "Choose a number between 0-100" %>
-                      <p style="font-size: 0.9em;"><%= t("Set a school-wide minimum score for students to move on from each graded assignment in a unit.") %></p>
-                    </td>
-                  </tr>
-
-                  <tr>
                     <td><%= settings.blabel :school_holidays, :en => "Add Holiday" %></td>
                     <td>
                       <%= settings.text_field :holiday, :class => "date_entry" %>
@@ -256,6 +243,24 @@ TEXT
                           <dd class="holiday-badge ic-badge ic-badge--neutral"><%= DateTime.parse(holiday).strftime("%b %e, %Y") %> <sup><a href="#" class="del-date">x</a></sup></dd>
                         <% end %>
                       </dl>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td><%= settings.blabel :score_threshold, :en => "Passing Threshold" %></td>
+                    <td>
+                      <%= settings.number_field :score_threshold,
+                                              :value => @school_threshold,
+                                              :class => 'same-width-as-select',
+                                              :min => "0",
+                                              :max => "100",
+                                              :placeholder => "Choose a number between 0-100",
+                                              :disabled => true %>
+                      <a id="edit_school_threshold_btn" href="" class="Button Button--icon-action">
+                        <i class="icon-edit"></i>
+                      </a>
+                      <p style="font-size: 0.9em;"><%= t("Set a school-wide minimum score for all graded assignments.") %></p>
+                      <p style="font-size: 0.9em;"><%= t("This setting is off by default, and/or when the threshold is set to 0.0.") %></p>
                     </td>
                   </tr>
 
@@ -1238,3 +1243,7 @@ acknowledge that you have read and agreed to the
     <div id="tab-features"></div>
   <% end %>
 </div>
+
+<% content_for :strongmind_assets do %>
+  <%= javascript_include_tag 'canvas_shim/application' %>
+<% end %>
