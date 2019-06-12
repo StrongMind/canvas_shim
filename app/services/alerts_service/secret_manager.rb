@@ -8,7 +8,7 @@ require 'base64'
 module AlertsService
   module SecretManager
     def self.get_secret
-      secret_name = "dev/alerts_service/api"
+      secret_name = "#{ENV['DEPLOYMENT_STAGE']}/alerts_service/api"
       region_name = "us-west-2"
       
       return(
