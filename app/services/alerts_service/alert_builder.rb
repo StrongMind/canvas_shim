@@ -6,7 +6,7 @@ module AlertsService
       def required_attributes
         raise 'required attributes must be defined in the as a class method before including payload_builder'
       end
-
+    
       # Return a list of alerts from json
       def list_from_json(json)
         JSON.parse(json, symbolize_names: true).tap do |parsed|
@@ -50,6 +50,12 @@ module AlertsService
     def self.included base
       base.extend ClassMethods
       base.send(:attr_reader, *(base.required_attributes + SERVICE_ATTRIBUTES))
+      
+      base.class_exec do
+        def initialize(atts={})
+          raise "you need to supply an initializer with at least #{SERVICE_ATTRIBUTES.join(', ')}"
+        end
+      end
     end
   end
 end

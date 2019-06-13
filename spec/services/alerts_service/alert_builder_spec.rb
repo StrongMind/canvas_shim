@@ -5,7 +5,7 @@ class TestAlert
   
   include AlertsService::AlertBuilder
 
-  def initialize(teacher_id:)
+  def initialize(teacher_id:, alert_id: nil, created_at: nil, updated_at: nil)
     @teacher_id = teacher_id
   end
 
@@ -18,7 +18,7 @@ describe AlertsService::AlertBuilder do
   subject {TestAlert.new(teacher_id: 1)}
 
   let(:attributes) { {alert: {teacher_id: 1}} }
-  
+    
   describe 'as_json' do
     it 'returns required attributes in json hash' do
       expect(subject.as_json[:teacher_id]).to eq 1
