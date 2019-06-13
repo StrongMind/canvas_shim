@@ -2,7 +2,7 @@ module AlertsService
   module Alerts
     class MaxAttemptsReached
       def self.required_attributes
-        [:teacher_id, :student_id, :assignment_id, :alert_id, :created_at, :updated_at]
+        [:teacher_id, :student_id, :assignment_id]
       end
 
       include AlertBuilder

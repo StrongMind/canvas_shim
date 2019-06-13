@@ -1,7 +1,9 @@
 module AlertsService
   
     module AlertBuilder
+      SERVICE_ATTRIBUTES = [:alert_id, :created_at, :updated_at]
       module ClassMethods
+        
         def required_attributes
           raise 'required attributes must be defined in the as a class method before including payload_builder'
         end
@@ -25,11 +27,12 @@ module AlertsService
         # Return an instance by pulling the required attributes 
         # from a hash
         def from_payload_attributes(attributes)
-
           flattened = attributes.merge(attributes[:alert])
           flattened.delete(:alert)
           new(
-            required_attributes.map { |field_name| [field_name, flattened[field_name]] }.to_h
+            (required_attributes + SERVICE_ATTRIBUTES).map do |field_name| 
+              [field_name, flattened[field_name]] 
+            end.to_h
           )
         end
       end
@@ -39,16 +42,15 @@ module AlertsService
       end
       
       def as_json(opts={})
-        result = self.class.required_attributes.map { |field_name| [field_name, self.send(field_name)] }.to_h.merge({type: self.type})
-        result.delete(:created_at)
-        result.delete(:updated_at)
-        result.delete(:alert_id)
+        result = self.class.required_attributes.map do |field_name| 
+          [field_name, self.send(field_name)] 
+        end.to_h.merge({type: self.type})
         result
       end
 
       def self.included base
         base.extend ClassMethods
-        base.send(:attr_reader, *base.required_attributes)
+        base.send(:attr_reader, *(base.required_attributes + SERVICE_ATTRIBUTES))
       end
     end
   

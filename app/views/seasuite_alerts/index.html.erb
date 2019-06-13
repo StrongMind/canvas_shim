@@ -3,29 +3,14 @@
 <% end %>
 
 <h2>Alerts</h2>
+<h3>Maximum Attempts Reached for Assignment (<%= @alerts.count %>)</h3>
 <table>
   <tr>
-    <th>ID</th>
     <th>Student</th>
     <th>Assignment</th>
+    <th>Actions</th>
   </tr>
-  <% @alerts.each do |alert| %>
-    <tr>
-      <td>
-        <%= alert.alert_id %>
-      </td>
-      <td>
-        <%= alert.student.name %>
-      </td>
-      <td>
-        <%= link_to alert.assignment.name, alert.assignment_id.to_s %>
-      </td>
-      <td>
-        <%= form_tag "/seasuite_alerts/#{alert.alert_id}", method: 'delete' do %>    
-          <%= hidden_field_tag :alert_id, alert.alert_id %> 
-          <%= submit_tag 'dismiss' %>
-        <% end %>
-      </td>
-    </tr>
-  <% end %>
+  
+    <%= render partial: 'alerts_table_body', locals: {alert: alert} %>
+  
 </table>

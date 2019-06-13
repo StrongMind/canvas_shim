@@ -2,7 +2,7 @@
   class SeasuiteAlertsController < ApplicationController
     before_action :build_alert, only: :create
     def index
-      @alerts = AlertsService::Client.list(1).payload
+      @alerts = AlertsService::Client.list(@current_user.id).payload
     end
 
     def destroy
