@@ -1,6 +1,6 @@
 Assignment.class_eval do
   def toggle_exclusion(student_id, bool)
-    subs = self.submissions.where(user_id: student_id)
+    subs = submissions.where(user_id: student_id)
     if subs.any?
       subs.each do |submission|
         submission.update(excused: bool)
@@ -9,7 +9,7 @@ Assignment.class_eval do
   end
 
   def excused_submissions
-    self.submissions.where(excused: true)
+    submissions.where(excused: true)
   end
 
   def is_excused?(user)
