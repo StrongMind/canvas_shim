@@ -11,11 +11,11 @@
       <%= alert.created_at.strftime("%u/%e/%y %l:%M %P") %>
     </td>
     <td>
-      <%= link_to("Add more attempts") %>
+      <%= link_to("Add more attempts", "/courses/#{alert.assignment.course.id}/gradebook/speed_grader?assignment_id=#{alert.assignment.id}%22student_id%22%3A%22#{alert.user.id}%22%7D" %>
     </td>
     <td>
-      <%= form_tag "/cs_alerts/#{alert.alert_id}", method: 'delete' do %>    
-        <%= hidden_field_tag :alert_id, alert.alert_id %> 
+      <%= form_tag "/cs_alerts/#{alert.alert_id}", method: 'delete' do %>
+        <%= hidden_field_tag :alert_id, alert.alert_id %>
         <%= submit_tag 'dismiss' %>
       <% end %>
     </td>
