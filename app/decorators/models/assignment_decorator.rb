@@ -13,6 +13,10 @@ Assignment.class_eval do
   end
 
   def is_excused?(user)
+<<<<<<< HEAD
+=======
+    return false if user.nil?
+>>>>>>> ffe2bd0d644fd159d386325bb077b805226f47e3
     excused_submissions.exists?(user_id: user.id)
   end
 end
