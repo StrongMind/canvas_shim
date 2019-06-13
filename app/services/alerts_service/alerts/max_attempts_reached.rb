@@ -11,6 +11,7 @@ module AlertsService
         @teacher_id = teacher_id
         @student_id = student_id
         @assignment_id = assignment_id
+        @created_at = created_at
         @alert_id = alert_id
       end
 
@@ -24,6 +25,10 @@ module AlertsService
 
       def type
         'max_attempts_reached'
+      end
+
+      def created_at
+        DateTime.parse(@created_at)
       end
     end
   end

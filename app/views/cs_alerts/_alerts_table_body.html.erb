@@ -8,6 +8,9 @@
       <%= link_to alert.assignment.name, alert.assignment_id.to_s %>
     </td>
     <td>
+      <%= alert.created_at.strftime("%u/%e/%y %l:%M %P") %>
+    </td>
+    <td>
       <%= link_to("Add more attempts") %>
     </td>
     <td>
