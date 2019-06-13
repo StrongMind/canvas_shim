@@ -8,13 +8,17 @@ ApplicationController.class_eval do
   def score_threshold
     @score_threshold ||= SettingsService.get_settings(object: :course, id: @context.try(:id))['passing_threshold'].to_f
   end
-  
+
   def threshold_set?
     score_threshold.positive?
   end
 
   def threshold_edited?
     params[:threshold_edited] == "true"
+  end
+
+  def custom_placement_enabled?
+    SettingsService.get_settings(object: :school, id: 1)['enable_custom_placement']
   end
 
   def course_threshold_enabled?
@@ -36,7 +40,7 @@ ApplicationController.class_eval do
   def valid_threshold?(threshold)
     !threshold.negative? && threshold <= 100
   end
-  
+
   def strongmind_update_enrollment_last_activity_at
     return if logged_in_user != @current_user
     instructure_update_enrollment_last_activity_at
