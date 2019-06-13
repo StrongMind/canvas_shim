@@ -11,7 +11,7 @@
       <%= link_to("Add more attempts") %>
     </td>
     <td>
-      <%= form_tag "/seasuite_alerts/#{alert.alert_id}", method: 'delete' do %>    
+      <%= form_tag "/cs_alerts/#{alert.alert_id}", method: 'delete' do %>    
         <%= hidden_field_tag :alert_id, alert.alert_id %> 
         <%= submit_tag 'dismiss' %>
       <% end %>

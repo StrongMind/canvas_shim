@@ -1,5 +1,5 @@
 
-  class SeasuiteAlertsController < ApplicationController
+  class CsAlertsController < ApplicationController
     before_action :build_alert, only: :create
     def index
       @alerts = AlertsService::Client.list(@current_user.id).payload
@@ -7,12 +7,12 @@
 
     def destroy
       AlertsService::Client.destroy(params[:alert_id])
-      redirect_to(seasuite_alerts_path)
+      redirect_to(cs_alerts_path)
     end
 
     def create
       result = AlertsService::Client.create(@alert)
-      redirect_to(seasuite_alerts_path)
+      redirect_to(cs_alerts_path)
     end
     
     private
