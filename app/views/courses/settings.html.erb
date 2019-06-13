@@ -255,14 +255,16 @@
           <td class="form-label"><label for="passing_threshold" id="passing_threshold_label"><%= t("Passing Threshold:") %></label></td>
           <td class="nobr tall-row">
             <div>
-              <input type="number" name="passing_threshold" id="passing_threshold" placeholder="Number b/w 0-100" value="<%= @course_threshold %>" min="0" max="100" style="width: 150px;" />
+              <input type="number" name="passing_threshold" id="passing_threshold" placeholder="Number b/w 0-100" value="<%= @course_threshold %>" min="0" max="100" style="width: 150px;" disabled />
+              <a id="edit_threshold_btn" href="" class="Button Button--icon-action">
+                <i class="icon-edit"></i>
+              </a>
             </div>
 
             <div class="aside palign">
-              <%= t('course_overrides_term', %{Set a course-wide minimum score for students to move on from each graded assignment in a unit.}) %>
-            </div>
-            <div class="aside palign">
-              <%= t('course_overrides_term', %{This will override any passing threshold set by an administrator.}) %>
+              <p><%= t("Set a course-wide minimum score for all graded assignments.") %></p>
+              <p><%= t('Adjusting this setting will override the score set by the administrator and any previously changed module settings.') %></p>
+              <p><%= t('Restoring the score to 0.0 turns the threshold off.') %></p>
             </div>
           </td>
       <% end %>
@@ -772,3 +774,8 @@
   <a href="<%= context_url(@context, :context_grading_standard_url, "{{ id }}") %>" style="display: none;" id="update_grading_standard_url">&nbsp;</a>
   <a href="<%= context_url(@context, :context_url) %>" style="display: none;" id="update_course_url">&nbsp;</a>
 </div>
+
+
+<% content_for :strongmind_assets do %>
+  <%= javascript_include_tag 'canvas_shim/application' %>
+<% end %>

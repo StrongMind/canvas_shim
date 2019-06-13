@@ -68,7 +68,7 @@ CoursesController.class_eval do
 
   def strongmind_show
     instructure_show
-    js_env(score_threshold: score_threshold.to_s) if threshold_set?
+    js_env(score_threshold: score_threshold.to_s) if course_has_set_threshold?
     js_env(module_editing_disabled: disable_module_editing_on?)
   end
 
@@ -78,7 +78,7 @@ CoursesController.class_eval do
   def strongmind_update
     instructure_update
     @course_threshold = params[:passing_threshold].to_i
-    if !params[:course].blank? && can_update_threshold?
+    if !params[:course].blank? && threshold_edited? && can_update_threshold?
       set_course_passing_threshold
       CoursesService::Commands::ForceMinScores.new(course: @course).call
     end

@@ -22,8 +22,7 @@ AccountsController.class_eval do
 
   def strongmind_update
     @school_threshold = params[:account][:settings][:score_threshold].to_i
-
-    set_school_threshold if valid_threshold?(@school_threshold)
+    set_school_threshold if threshold_edited? && valid_threshold?(@school_threshold)
     set_holidays if params[:holidays]
     set_course_threshold_enablement
     set_post_enrollment_thresholds if course_threshold_enablement_params
@@ -67,6 +66,10 @@ AccountsController.class_eval do
       setting: 'holidays',
       value: holidays
     )
+  end
+
+  def get_school_threshold
+    SettingsService.get_settings(object: :school, id: 1)['score_threshold'].to_f
   end
 
   def set_school_threshold

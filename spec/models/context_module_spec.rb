@@ -13,6 +13,7 @@ describe ContextModule do
     context "school threshold default" do
       before do
         allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(60.0)
+        allow_any_instance_of(ContextModule).to receive(:has_threshold_override?).and_return(false)
         ContextModule.create(completion_requirements: completion_requirements)
       end
 
@@ -35,6 +36,7 @@ describe ContextModule do
       context "no threshold score available" do
         before do
           allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(0.0)
+          allow_any_instance_of(ContextModule).to receive(:has_threshold_override?).and_return(false)
           ContextModule.create(completion_requirements: completion_requirements)
         end
 
@@ -52,6 +54,21 @@ describe ContextModule do
         end
       end
 
+      context "has threshold overrides" do
+        before do
+          allow_any_instance_of(ContextModule).to receive(:has_threshold_override?).with({:id=>56, :type=>"must_submit"}).and_return(true)
+          ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
+        end
+
+        it "ignores the overridden requirement" do
+          expect(ContextModule.last.completion_requirements[1][:type]).to eq("must_submit")
+        end
+
+        it "runs the rest" do
+          expect(ContextModule.last.completion_requirements[2][:min_score]).to eq(60.0)
+        end
+      end
+
       context "requirements taken from previous course" do
         let(:completion_requirements) do
           [
@@ -63,7 +80,7 @@ describe ContextModule do
 
         before do
           allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(60.0)
-          ContextModule.create(completion_requirements: completion_requirements)
+          ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
         end
 
         it "overrides with actual threshold" do
@@ -75,8 +92,8 @@ describe ContextModule do
 
     context "Course has overridden school threshold" do
       before do
-        allow_any_instance_of(ContextModule).to receive(:course_score_threshold?).and_return(70.0)
-        ContextModule.create(completion_requirements: completion_requirements)
+        allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(70.0)
+        ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
       end
 
       it "uses the course score threshold" do
@@ -96,8 +113,9 @@ describe ContextModule do
     end
 
     before do
-      allow_any_instance_of(ContextModule).to receive(:course_score_threshold?).and_return(70.0)
-      ContextModule.create(completion_requirements: completion_requirements)
+      allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(70.0)
+      allow_any_instance_of(ContextModule).to receive(:strip_overrides).and_return(nil)
+      ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
     end
 
     it "has 70 to start" do
@@ -107,7 +125,7 @@ describe ContextModule do
 
     context "new threshold enforced" do
       before do
-        allow_any_instance_of(ContextModule).to receive(:course_score_threshold?).and_return(75.0)
+        allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(75.0)
       end
 
       it "uses the new threshold" do
