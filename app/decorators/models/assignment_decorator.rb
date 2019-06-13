@@ -13,6 +13,7 @@ Assignment.class_eval do
   end
 
   def is_excused?(user)
-    !!excused_submissions.find_by(user: user)
+    return false if user.nil?
+    excused_submissions.exists?(user_id: user.id)
   end
 end
