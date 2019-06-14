@@ -50,7 +50,13 @@ ApplicationController.class_eval do
   alias_method :update_enrollment_last_activity_at, :strongmind_update_enrollment_last_activity_at
 
   def strongmind_content_tag_redirect(context, tag, error_redirect_symbol, tag_type=nil)
-    flash[:error] = t("PLEASE CONTACT YOUR TEACHER YOU MAXED OUT!!!!") if @maxed_out
+    if @maxed_out
+      maxout_message = <<~DESC
+        You have reached the maximum number of attempts for your last activity.
+        You are unable to proceed. Please contact your teacher.
+      DESC
+      flash[:error] = t(maxout_message)
+    end
     instructure_content_tag_redirect(context, tag, error_redirect_symbol, tag_type)
   end
 
