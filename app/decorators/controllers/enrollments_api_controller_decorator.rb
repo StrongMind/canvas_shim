@@ -1,4 +1,4 @@
-class EnrollmentsApiController < ApplicationController
+EnrollmentsApiController.class_eval do
   before_action :get_course_from_section, except: :custom_placement
   before_action :require_context
 
