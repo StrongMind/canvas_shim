@@ -48,4 +48,12 @@ ApplicationController.class_eval do
 
   alias_method :instructure_update_enrollment_last_activity_at, :update_enrollment_last_activity_at
   alias_method :update_enrollment_last_activity_at, :strongmind_update_enrollment_last_activity_at
+
+  def strongmind_content_tag_redirect(context, tag, error_redirect_symbol, tag_type=nil)
+    flash[:error] = t("PLEASE CONTACT YOUR TEACHER YOU MAXED OUT!!!!") if @maxed_out
+    instructure_content_tag_redirect(context, tag, error_redirect_symbol, tag_type)
+  end
+
+  alias_method :instructure_content_tag_redirect, :content_tag_redirect
+  alias_method :content_tag_redirect, :strongmind_content_tag_redirect
 end
