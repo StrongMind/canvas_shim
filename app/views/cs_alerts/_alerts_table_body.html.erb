@@ -5,22 +5,20 @@
       <%= alert.student.name %>
     </td>
     <td>
-      <%= link_to alert.assignment.name, alert.assignment_id.to_s %>
+      <%= link_to alert.assignment.name, 
+        [
+          "/courses/#{alert.assignment.course.id}/gradebook/speed_grader?assignment_id=#{alert.assignment.id}#",
+            url_encode("{\"student_id\":\"#{alert.student.id}\"}")
+        ].join
+       %>
     </td>
     <td>
       <%= alert.created_at.strftime("%u/%e/%y %l:%M %P") %>
     </td>
     <td>
-      <%= 
-        link_to(
-          "Add more attempts",
-          [
-            "/courses/#{alert.assignment.course.id}/gradebook/speed_grader?assignment_id=#{alert.assignment.id}#",
-            url_encode("{\"student_id\":\"#{alert.student.id}\"}")
-          ].join
-        ) 
-      %>
+      <%= alert.type %>
     </td>
+    
     <td>
       <%= form_tag "/cs_alerts/#{alert.alert_id}", method: 'delete' do %>
         <%= hidden_field_tag :alert_id, alert.alert_id %>

@@ -24,7 +24,7 @@ module AlertsService
       end
 
       def type
-        'max_attempts_reached'
+        'Max Attempts Reached'
       end
 
       def created_at
