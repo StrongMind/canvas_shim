@@ -21,10 +21,11 @@ ContextModulesController.class_eval do
     if @context && @current_user
       course_progress = CourseProgress.new(@context, @current_user)
       @assignment = course_progress.try(&:current_content_tag).try(&:assignment)
-      if @assignment && @assignment.submissions.first
-        versions = @assignment.submissions.first.versions
+      submission = @assignment.submissions.find_by(user: @current_user)
+      if @assignment && submission
+        versions = submission.versions
         lti_latest = versions.find { |version| version.yaml && YAML.load(version.yaml)["grader_id"].to_i < 0 }
-        attempt_number = YAML.load(lti_latest) if lti_latest
+        attempt_number = YAML.load(lti_latest.yaml)["attempt"] if lti_latest
 
         if attempt_number
           max_attempts = find_max_attempts
@@ -100,7 +101,6 @@ ContextModulesController.class_eval do
   def find_max_attempts
     return unless @assignment.migration_id
     migration_id = @assignment.migration_id
-    student_assignment_id = "#{migration_id}:#{@current_user.id}"
 
     value = SettingsService.get_settings(
       object: 'assignment',
@@ -111,9 +111,9 @@ ContextModulesController.class_eval do
 
     student_attempts = SettingsService.get_settings(
       object: 'student_assignment',
-      id: id
+      id: {assignment_id: @assignment.id, student_id: @current_user.try(:id)}
     )['max_attempts']
 
-    student_attempts ? student_attempts : value
+    student_attempts ? student_attempts.to_i : value.to_i
   end
 end
