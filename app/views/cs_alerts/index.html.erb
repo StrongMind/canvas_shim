@@ -22,21 +22,21 @@
 </table>
 
 <script>
-document.addEventListener("DOMContentLoaded", function(){
-  $('#alertsTable').DataTable(
-    {
-      "columnDefs": [
-        {
-          "targets": [4],
-          "orderable": false,
-          "searchable": false,
-        },
-        {
-          targets: [ 0, 1, 2, 3 ],
-          className: 'mdl-data-table__cell--non-numeric'
-        }
-      ]
-    }
-  );
-});
+  document.addEventListener("DOMContentLoaded", function(){
+    $('#alertsTable').DataTable(
+      {
+        "columnDefs": [
+          {
+            "targets": [4],
+            "orderable": false,
+            "searchable": false,
+          },
+          {
+            targets: [ 0, 1, 2, 3 ],
+            className: 'mdl-data-table__cell--non-numeric'
+          }
+        ]
+      }
+    );
+  });
 </script>
