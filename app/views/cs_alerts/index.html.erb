@@ -2,15 +2,26 @@
   <%= submit_tag 'create' %> 
 <% end %>
 
+
 <h2>Alerts</h2>
 <h3>Maximum Attempts Reached for Assignment (<%= @alerts.count %>)</h3>
-<table>
-  <tr>
-    <th>Student</th>
-    <th>Assignment</th>
-    <th>Time</th>
-    <th>Actions</th>
-  </tr>
+
+<table id="alertsTable">
+  <thead>
+    <tr>
+      <th>Student</th>
+      <th>Assignment</th>
+      <th>Time</th>
+      <th>Actions</th>
+      <th></th>
+    </tr>
+  </thead>
   
-  <%= render partial: 'alerts_table_body', locals: {alert: alert} %>
+  <%= render partial: 'alerts_table_body', locals: { alert: alert } %>
 </table>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+    $('#alertsTable').DataTable();
+});
+</script>
