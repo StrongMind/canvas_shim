@@ -22,7 +22,7 @@ describe AlertsService::Alerts::MaxAttemptsReached do
     end
 
     it 'type' do
-      expect(subject.as_json[:type]).to eq 'max_attempts_reached'
+      expect(subject.as_json[:type]).to eq 'Max Attempts Reached'
     end
   end
 end
