@@ -8,7 +8,9 @@ Submission.class_eval do
   end
 
   def touch_context_module
-    self&.assignment&.context_module_tags.each do |tag|
+    tags = self&.assignment&.context_module_tags || []
+
+    tags.each do |tag|
       tag.context_module.send_later_if_production(:touch)
     end
   end
