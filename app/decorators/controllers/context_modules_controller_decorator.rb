@@ -22,9 +22,9 @@ ContextModulesController.class_eval do
       course_progress = CourseProgress.new(@context, @current_user)
       @assignment = course_progress.try(&:current_content_tag).try(&:assignment)
       submission = @assignment ? @assignment.submissions.find_by(user: @current_user) : nil
+
       if @assignment && submission
-        versions = submission.versions
-        lti_latest = versions.find { |version| version.yaml && YAML.load(version.yaml)["grader_id"].to_i < 0 }
+        lti_latest = submission.versions.find { |version| version.yaml && YAML.load(version.yaml)["grader_id"].to_i < 0 }
         attempt_number = YAML.load(lti_latest.yaml)["attempt"] if lti_latest
 
         if attempt_number
