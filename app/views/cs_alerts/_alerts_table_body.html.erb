@@ -20,9 +20,10 @@
     </td>
     
     <td>
-      <%= form_tag "/cs_alerts/#{alert.alert_id}", method: 'delete' do %>
+      <i class="icon-x" style="cursor: pointer" onClick="dismissAlert(<%= "dismiss_alert_#{alert.alert_id}" %>)"></i>
+
+      <%= form_tag "/cs_alerts/#{alert.alert_id}", method: 'delete', id: "dismiss_alert_#{alert.alert_id}", class: 'hidden' do %>
         <%= hidden_field_tag :alert_id, alert.alert_id %>
-        <%= submit_tag 'dismiss' %>
       <% end %>
     </td>
   </tr>

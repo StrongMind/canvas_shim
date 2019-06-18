@@ -25,6 +25,10 @@
 </table>
 
 <script>
+  var dismissAlert = function(form) {
+    form.submit()
+  };
+
   document.addEventListener("DOMContentLoaded", function(){
     $('#alertsTable').DataTable(
       {
