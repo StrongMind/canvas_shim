@@ -33,7 +33,7 @@ module AlertsService
       end
 
       def updated_at
-        DateTime.parse(@created_at)
+        DateTime.parse(@updated_at)
       end
     end
   end
