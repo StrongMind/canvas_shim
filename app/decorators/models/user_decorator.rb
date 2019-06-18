@@ -29,6 +29,7 @@ User.class_eval do
                    .order(position: :asc).each do |tag|
 
         exclude_submissions(tag)
+        bypass_module.touch
       end
     end
 
@@ -45,6 +46,7 @@ User.class_eval do
                                  current: false # mark as outdated # TODO change back to false
 
       progression.reload.evaluate!
+      bypass_module.touch
       sleep(Rails.env.production? ? 5 : 1)
     end
 
@@ -68,6 +70,7 @@ User.class_eval do
                                current: false # mark as outdated
 
     progression.reload.evaluate!
+    bypass_tags_context_module.touch
 
     AssignmentOverrideStudent.where(user_id: self.id, assignment_id: course.assignment_ids).each(&:destroy!) # run through each as we want callbacks to fire
     sleep(Rails.env.production? ? 5 : 1)
