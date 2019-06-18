@@ -17,6 +17,29 @@ ContextModulesController.class_eval do
   alias_method :instructure_add_item, :add_item
   alias_method :add_item, :strongmind_add_item
 
+  def strongmind_item_redirect
+    if @context && @current_user && course_has_set_threshold?
+      course_progress = CourseProgress.new(@context, @current_user)
+      @assignment = course_progress.try(&:current_content_tag).try(&:assignment)
+      submission = @assignment ? @assignment.submissions.find_by(user: @current_user) : nil
+
+      if @assignment && submission
+        lti_latest = submission.versions.find { |version| version.yaml && YAML.load(version.yaml)["grader_id"].to_i < 0 }
+        attempt_number = YAML.load(lti_latest.yaml)["attempt"] if lti_latest
+
+        if attempt_number
+          max_attempts = find_max_attempts
+          @maxed_out = (attempt_number >= max_attempts) if max_attempts
+        end
+      end
+    end
+
+    instructure_item_redirect
+  end
+
+  alias_method :instructure_item_redirect, :item_redirect
+  alias_method :item_redirect, :strongmind_item_redirect
+
   private
   def gradeable_tag_type?
     %w{Assignment DiscussionTopic Quizzes::Quiz}.include?(@tag.content_type)
