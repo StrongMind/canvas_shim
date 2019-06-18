@@ -48,10 +48,11 @@
     <%= module_item.content_type_class if module_item %>
     <%= 'also_assignment' if module_item && module_item.graded? %>
     indent_<%= module_item.try_rescue(:indent) || '0' %>
+
     <%= 'progression_requirement' if criterion %>
-    <%= criterion[:type] if criterion && !module_item&.assignment&.is_excused?(@current_user) %>_requirement
+    <%= criterion[:type] if criterion %>_requirement
     <%= module_item.item_class if module_item %>
-    <%= 'excused_requirement' if module_item&.assignment&.is_excused?(@current_user) %>
+    <%= 'excused_req' if module_item&.assignment&.is_excused?(@current_user) %>
   "
 >
   <div class="sm-ig-row sm-activity-row context_module_sub_header_expander <%= 'with-completion-requirements' if criterion %> <%= 'ig-published' if module_item && module_item.published? %> <%= 'student-view' if @is_student %>"  href="<%= context_url(@context, :context_url) %>/modules/items/<%= module_item ? module_item.id : "{{ id }}" %>">
@@ -198,7 +199,7 @@
                 <span class="screenreader-only"><%= t('Module item submitted and is complete') %></span>
               </span>
             </span>
-            <span class="requirement_type excused_requirement">
+            <span class="requirement_type excused">
               <span>
                 Excused
                 <span class="screenreader-only">Excused</span>
