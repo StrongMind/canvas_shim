@@ -23,10 +23,10 @@ Course.class_eval do
   end
 
   def account_threshold
-    SettingsService.get_settings(object: :school, id: 1).try(:[], 'score_threshold').try(:to_f)
+    SettingsService.get_settings(object: :school, id: 1)['score_threshold'].to_f
   end
 
   def account_threshold_set?
-    account_threshold.try(:positive?)
+    account_threshold.positive?
   end
 end
