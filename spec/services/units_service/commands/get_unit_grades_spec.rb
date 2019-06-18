@@ -75,7 +75,7 @@ describe UnitsService::Commands::GetUnitGrades do
       expect(subject.send(:unit_excused?, cm)).to eq true
     end
 
-    it 'returns true if all are excused' do
+    it 'returns false if not all are excused' do
       unit_submissions[cm] = [Submission.create(excused: true), Submission.create()]
       expect(subject.send(:unit_excused?, cm)).to eq false
     end
