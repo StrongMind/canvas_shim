@@ -16,7 +16,12 @@ module AlertsService
         "#{get_secret['API_ENDPOINT']}/schools/#{school.id}/alerts", 
         body: alert.to_json,
         headers: headers,
-      ).code
+      ).tap do |response|
+        return Response.new(
+          response.code,
+          nil
+        )
+      end
     end
 
     def list(teacher_id)
@@ -49,7 +54,9 @@ module AlertsService
       http_client.delete(
         "#{get_secret['API_ENDPOINT']}/schools/#{school.id}/alerts/#{id}",
         headers: headers
-      ).code
+      ).tap do |response|
+        return Response.new(response.code, nil)
+      end
     end
 
     private

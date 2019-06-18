@@ -45,7 +45,13 @@ describe AlertsService::Client do
   describe '#create' do
     it 'can create' do
       VCR.use_cassette 'alerts_service/client/create' do
-        expect(subject.create(alert)).to eq 201
+        expect(subject.create(alert).payload).to be_nil
+      end
+    end
+
+    it 'response code' do
+      VCR.use_cassette 'alerts_service/client/create' do
+        expect(subject.create(alert).code).to eq(201)
       end
     end
   end
@@ -53,7 +59,13 @@ describe AlertsService::Client do
   describe '#destroy' do
     it 'can destroy' do
       VCR.use_cassette 'alerts_service/client/destroy' do
-        expect(subject.destroy(2)).to eq 201
+        expect(subject.destroy(2).payload).to be_nil
+      end
+    end
+
+    it 'can destroy' do
+      VCR.use_cassette 'alerts_service/client/destroy' do
+        expect(subject.destroy(2).code).to eq 201
       end
     end
   end
