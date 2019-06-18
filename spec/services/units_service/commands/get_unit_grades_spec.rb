@@ -49,20 +49,20 @@ describe UnitsService::Commands::GetUnitGrades do
   end
 
   describe "#submissions_graded?" do
-    it "does the thing" do
+    it "returns the score" do
       unit_submissions[cm] = [Submission.create(graded_at: current_time, grader_id: 2)]
       expect(subject.send(:submissions_graded?, cm, 54)).to eq 54
     end
 
     context "student has no graded submissions" do
-      it 'does not do the thing' do
+      it 'returns nil if no score' do
         unit_submissions[cm] = [Submission.create]
         expect(subject.send(:submissions_graded?, cm, 0)).to eq nil
       end
     end
 
     context "student has graded submissions from zerograder" do
-      it 'does not do the thing' do
+      it 'returns nil with zerograded submissions' do
         unit_submissions[cm] = [Submission.create(score: 0, graded_at: current_time, grader_id: 1)]
         expect(subject.send(:submissions_graded?, cm, 0)).to eq nil
       end
