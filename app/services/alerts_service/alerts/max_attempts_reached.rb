@@ -12,6 +12,7 @@ module AlertsService
         @student_id = student_id
         @assignment_id = assignment_id
         @created_at = created_at
+        @updated_at = updated_at
         @alert_id = alert_id
       end
 
@@ -28,6 +29,10 @@ module AlertsService
       end
 
       def created_at
+        DateTime.parse(@created_at)
+      end
+
+      def updated_at
         DateTime.parse(@created_at)
       end
     end
