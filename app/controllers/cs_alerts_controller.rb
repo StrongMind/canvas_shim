@@ -10,9 +10,11 @@
       redirect_to(cs_alerts_path)
     end
 
-    def create
-      result = AlertsService::Client.create(@alert)
-      redirect_to(cs_alerts_path)
+    if Rails.application.class.parent_name == 'TestApp'
+      def create
+        result = AlertsService::Client.create(@alert)
+        redirect_to(cs_alerts_path)
+      end
     end
     
     private

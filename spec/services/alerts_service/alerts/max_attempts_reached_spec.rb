@@ -8,7 +8,7 @@ describe AlertsService::Alerts::MaxAttemptsReached do
     end
   end
 
-  describe '#as_json' do
+  describe '#as_json' do  
     it 'teacher_id' do
       expect(subject.as_json[:teacher_id]).to eq 1
     end

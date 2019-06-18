@@ -1,9 +1,12 @@
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
 
-<%= form_tag '/cs_alerts', action: 'post' do %>
-  <%= submit_tag 'create' %> 
-<% end %>
 
+<% if Rails.application.class.parent_name == 'TestApp' %>
+  <% #REMOVE BEFORE PRODUCTIONIZING %>
+  <%= form_tag '/cs_alerts', action: 'post' do %>
+    <%= submit_tag 'create' %> 
+  <% end %>
+<% end%>
 
 <h2>Alerts (<%= @alerts.count %>)</h2>
 
