@@ -23,6 +23,7 @@ describe UnitsService::Commands::GetUnitGrades do
     allow(UnitsService::Queries::GetEnrollment).to receive(:query).and_return(@enrollment)
     allow(@enrollment).to receive(:computed_current_score).and_return(90)
     allow(subject).to receive(:unit_submissions).and_return(unit_submissions)
+    allow(submission).to receive(:excused?).and_return(false)
 
     # needed for admin check in GetUnitGrades#submissions_graded?
     allow(GradesService::Account).to receive_message_chain(:account_admin, :id).and_return 1
@@ -41,7 +42,8 @@ describe UnitsService::Commands::GetUnitGrades do
       units: [{
         score: 54,
         id: unit.id,
-        position: unit.position
+        position: unit.position,
+        excused: false
       }]
     )
   end
