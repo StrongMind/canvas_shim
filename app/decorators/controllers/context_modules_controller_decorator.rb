@@ -21,7 +21,7 @@ ContextModulesController.class_eval do
     if @context && @current_user && course_has_set_threshold?
       course_progress = CourseProgress.new(@context, @current_user)
       @assignment = course_progress.try(&:current_content_tag).try(&:assignment)
-      submission = @assignment ? @assignment.submissions.find_by(user: @current_user) : nil
+      submission = @assignment.submissions.find_by(user: @current_user) if @assignment
 
       if @assignment && submission
         lti_latest = submission.versions.find { |version| version.yaml && YAML.load(version.yaml)["grader_id"].to_i < 0 }
