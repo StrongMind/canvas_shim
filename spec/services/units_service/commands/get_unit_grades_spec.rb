@@ -23,6 +23,7 @@ describe UnitsService::Commands::GetUnitGrades do
     allow(UnitsService::Queries::GetEnrollment).to receive(:query).and_return(@enrollment)
     allow(@enrollment).to receive(:computed_current_score).and_return(90)
     allow(subject).to receive(:unit_submissions).and_return(unit_submissions)
+    allow(submission).to receive(:excused?).and_return(false)
 
     # needed for admin check in GetUnitGrades#submissions_graded?
     allow(GradesService::Account).to receive_message_chain(:account_admin, :id).and_return 1
@@ -41,29 +42,42 @@ describe UnitsService::Commands::GetUnitGrades do
       units: [{
         score: 54,
         id: unit.id,
-        position: unit.position
+        position: unit.position,
+        excused: false
       }]
     )
   end
 
   describe "#submissions_graded?" do
-    it "does the thing" do
+    it "returns the score" do
       unit_submissions[cm] = [Submission.create(graded_at: current_time, grader_id: 2)]
       expect(subject.send(:submissions_graded?, cm, 54)).to eq 54
     end
 
     context "student has no graded submissions" do
-      it 'does not do the thing' do
+      it 'returns nil if no score' do
         unit_submissions[cm] = [Submission.create]
         expect(subject.send(:submissions_graded?, cm, 0)).to eq nil
       end
     end
 
     context "student has graded submissions from zerograder" do
-      it 'does not do the thing' do
+      it 'returns nil with zerograded submissions' do
         unit_submissions[cm] = [Submission.create(score: 0, graded_at: current_time, grader_id: 1)]
         expect(subject.send(:submissions_graded?, cm, 0)).to eq nil
       end
+    end
+  end
+
+  describe "#unit_excused?" do
+    it 'returns true if all are excused' do
+      unit_submissions[cm] = [Submission.create(excused: true)]
+      expect(subject.send(:unit_excused?, cm)).to eq true
+    end
+
+    it 'returns false if not all are excused' do
+      unit_submissions[cm] = [Submission.create(excused: true), Submission.create()]
+      expect(subject.send(:unit_excused?, cm)).to eq false
     end
   end
 end
