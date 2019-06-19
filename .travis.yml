@@ -16,7 +16,8 @@ install:
 before_script:
   - psql -c 'create database shim_test;' -U postgres
   - RAILS_ENV=test bundle exec rake db:migrate --trace
-  - bundle exec ruby scripts/start_lms_build.rb
+  # turn off temporarily to bypass api rate limiting on Travis
+  # - bundle exec ruby scripts/start_lms_build.rb
 script:
   - bundle exec rake
 
