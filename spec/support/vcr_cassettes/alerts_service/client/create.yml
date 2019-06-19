@@ -1,0 +1,46 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://kom06r8apf.execute-api.us-west-2.amazonaws.com/dev/schools/bXlzY2hvb2w/alerts
+    body:
+      encoding: UTF-8
+      string: '{"teacher_id":1,"student_id":1,"assignment_id":1,"type":"max_attempts_reached"}'
+    headers:
+      X-Api-Key:
+      - "<REDACTED>"
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Content-Type:
+      - text/html; charset=utf-8
+      Content-Length:
+      - '17'
+      Connection:
+      - keep-alive
+      Date:
+      - Tue, 11 Jun 2019 22:26:52 GMT
+      X-Amzn-Requestid:
+      - 02d80566-8c98-11e9-adf7-fb44cd154d6d
+      X-Amzn-Remapped-Content-Length:
+      - '17'
+      X-Amz-Apigw-Id:
+      - bIua6F6AvHcFp8A=
+      X-Amzn-Trace-Id:
+      - Root=1-5d002aac-7b9093c4522e487a68270a68;Sampled=0
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 8fb273b390f064c411944b3126eb0eb6.cloudfront.net (CloudFront)
+      X-Amz-Cf-Id:
+      - eyi6GetH6uv5w-eReqsuuuFDH9EsCWLDQCXcC8FURtNIBXwuYtBQ4g==
+    body:
+      encoding: UTF-8
+      string: '{"success": true}'
+    http_version: 
+  recorded_at: Tue, 11 Jun 2019 22:26:52 GMT
+recorded_with: VCR 5.0.0
