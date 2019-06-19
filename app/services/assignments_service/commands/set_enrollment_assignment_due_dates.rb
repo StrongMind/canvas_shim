@@ -14,12 +14,17 @@ module AssignmentsService
       def call
         return unless SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on'
         return unless SettingsService.get_settings(object: :school, id: 1)['auto_enrollment_due_dates'] == 'on'
+
         @course = @enrollment.course
+
         return self unless @course.start_at && @course.end_at
-        @user = @enrollment.user
+
+        @user             = @enrollment.user
         @assignment_count = @course.assignments.count
-        @assignments = Queries::AssignmentsWithDueDates.new(course: @course).query
+        @assignments      = Queries::AssignmentsWithDueDates.new(course: @course).query
+
         distribute_due_dates if @enrollment.created_at > @course.start_at
+
         self
       end
 
