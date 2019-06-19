@@ -1,0 +1,41 @@
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+
+<h2>Alerts (<%= @alerts.count %>)</h2>
+
+<table id="alertsTable" class="stripe">
+  <thead>
+    <tr>
+      <th>Student</th>
+      <th>Assignment</th>
+      <th>Time</th>
+      <th>Type</th>
+      <th></th>
+    </tr>
+  </thead>
+  
+  <%= render partial: 'alerts_table_body', locals: { alert: alert } %>
+</table>
+
+<script>
+  var dismissAlert = function(form) {
+    form.submit()
+  };
+
+  document.addEventListener("DOMContentLoaded", function(){
+    $('#alertsTable').DataTable(
+      {
+        "columnDefs": [
+          {
+            "targets": [4],
+            "orderable": false,
+            "searchable": false,
+          },
+          {
+            targets: [ 0, 1, 2, 3 ],
+            className: 'mdl-data-table__cell--non-numeric'
+          }
+        ]
+      }
+    );
+  });
+</script>

@@ -16,4 +16,8 @@ class User < ActiveRecord::Base
   def recent_feedback(opts={})
     self.submissions
   end
+
+  def name
+    "Chris Young"
+  end
 end
