@@ -2,7 +2,7 @@ AccountsController.class_eval do
   def strongmind_settings
     grab_holidays
 
-    @school_threshold         = get_score_threshold
+    @school_threshold         = get_school_threshold
     @course_thresh_enabled    = course_threshold_enabled?
     @custom_placement_enabled = custom_placement_enabled?
 
@@ -22,7 +22,7 @@ AccountsController.class_eval do
 
   def strongmind_update
     @school_threshold = params[:account][:settings][:score_threshold].to_i
-    
+
     set_school_threshold if threshold_edited? && valid_threshold?(@school_threshold)
     set_holidays if params[:holidays]
     set_course_threshold_enablement
