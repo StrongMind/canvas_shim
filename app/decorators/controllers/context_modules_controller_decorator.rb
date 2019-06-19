@@ -97,4 +97,23 @@ ContextModulesController.class_eval do
     param_requirement["type"] != current_requirement[:type] ||
     (current_requirement[:min_score] && param_requirement[:min_score].to_f != current_requirement[:min_score])
   end
+
+  def find_max_attempts
+    return unless @assignment.migration_id
+    migration_id = @assignment.migration_id
+
+    value = SettingsService.get_settings(
+      object: 'assignment',
+      id: migration_id
+    )["max_attempts"]
+
+    return unless value
+
+    student_attempts = SettingsService.get_settings(
+      object: 'student_assignment',
+      id: {assignment_id: @assignment.id, student_id: @current_user.try(:id)}
+    )['max_attempts']
+
+    student_attempts ? student_attempts.to_i : value.to_i
+  end
 end
