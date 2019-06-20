@@ -4,7 +4,7 @@ module PipelineService
     class Enrollment
       include ::Api::V1::User
       include BaseMethods
-      GRADE_TYPES = ['current_score', 'current_grade', 'final_score', 'final_grade']
+      GRADE_TYPES = ['current_score', 'final_score']
 
       attr_accessor :services_enabled, :context, :current_user, :params, :request
 

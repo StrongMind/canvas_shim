@@ -11,10 +11,8 @@ describe PipelineService::Serializers::Enrollment do
     {
       "grades" => {
         "html_url" => "",
-        "current_score" => 0,
-        "current_grade" => nil,
-        "final_score" => 0,
-        "final_grade" => nil
+        "current_score" => nil,
+        "final_score" => 5,
       }  
     }
   end
@@ -35,7 +33,11 @@ describe PipelineService::Serializers::Enrollment do
 
   describe '#call' do
     it 'sets scores to 0 if they are nil' do
-      expect(subject.call['grades']["current_grade"]).to eq(0)
+      expect(subject.call['grades']['current_score']).to eq(0)
+    end
+
+    it 'leaves existing scores alone' do
+      expect(subject.call['grades']['final_score']).to eq(5)
     end
   end
 end
