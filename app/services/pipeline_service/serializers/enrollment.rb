@@ -41,8 +41,8 @@ module PipelineService
       def call
         get_json
         get_grades
-        default_grades_to_zero
-        @json.merge('grades' => @defaulted_grades)
+        set_nil_grades_to_zero
+        @json.merge('grades' => @zeroed_grades)
       end
       
       private
@@ -55,8 +55,8 @@ module PipelineService
         @grades = @json['grades'].clone
       end
 
-      def default_grades_to_zero
-        @defaulted_grades = 
+      def set_nil_grades_to_zero
+        @zeroed_grades = 
           @grades.merge(
             GRADE_TYPES.map { |name| [name, (@grades[name] || 0)] }.to_h
           )
