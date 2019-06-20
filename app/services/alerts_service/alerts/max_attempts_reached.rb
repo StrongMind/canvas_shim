@@ -27,6 +27,14 @@ module AlertsService
       def type
         'Max Attempts Reached'
       end
+
+      def created_at
+        DateTime.parse(@created_at)
+      end
+  
+      def updated_at
+        DateTime.parse(@updated_at)
+      end  
     end
   end
 end

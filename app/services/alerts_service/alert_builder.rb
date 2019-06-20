@@ -1,6 +1,6 @@
 module AlertsService
   module AlertBuilder
-    SERVICE_ATTRIBUTES = [:alert_id]
+    SERVICE_ATTRIBUTES = [:alert_id, :created_at, :updated_at]
     module ClassMethods
       def required_attributes
         raise 'required attributes must be defined in the as a class method before including payload_builder'
@@ -44,14 +44,6 @@ module AlertsService
         [field_name, self.send(field_name)] 
       end.to_h.merge({type: self.type})
       result
-    end
-
-    def created_at
-      DateTime.parse(@created_at)
-    end
-
-    def updated_at
-      DateTime.parse(@updated_at)
     end
 
     def self.included base
