@@ -6,6 +6,8 @@ CanvasShim::Engine.routes.draw do
       resources :users, only: ['update']
     end
   end
+
+
 end
 
 Rails.application.routes.draw do
@@ -15,6 +17,10 @@ Rails.application.routes.draw do
     get  'conclude_users', to: 'courses#show_course_enrollments', as: :show_course_enrollments
   end
 
-  
   get 'todos', to: 'todos#index', as: :user_todo
+
+  scope(controller: :enrollments_api) do
+    post '/api/v1/courses/:course_id/enrollments/:id/custom_placement', action: :custom_placement, as: :custom_placement
+  end
 end
+

@@ -1,2 +1,1 @@
-class EnrollmentsApiController < ApplicationController
-end
+class EnrollmentsApiController < ApplicationController; end
