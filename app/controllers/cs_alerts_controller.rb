@@ -1,4 +1,6 @@
 class CsAlertsController < ApplicationController
+  before_action :require_user
+
   def index
     @alerts = AlertsService::Client.list(@current_user.id).payload
   end
