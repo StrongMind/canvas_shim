@@ -1,6 +1,22 @@
 describe AlertsService::Alerts::MaxAttemptsReached do
   
-  subject { described_class.new(teacher_id: 1, student_id: 2, assignment_id: 3) }
+  subject { described_class.new(teacher_id: 1, student_id: 2, assignment_id: 3, created_at: datetime, updated_at: updated_datetime) }
+
+  let(:datetime) { '2019-06-13 20:53:14.153693+00:00' }
+  let(:updated_datetime) { '2019-06-13 20:58:14.153693+00:00' }
+
+  describe '#created_at' do
+    it 'is in the right format' do
+      expect(subject.created_at).to eq(DateTime.parse(datetime))
+    end
+  end
+
+  describe '#updated_at' do
+    it 'is in the right format' do
+      expect(subject.updated_at).to eq(DateTime.parse(updated_datetime))
+    end
+  end
+
 
   describe '#as_json' do
     it 'teacher_id' do
