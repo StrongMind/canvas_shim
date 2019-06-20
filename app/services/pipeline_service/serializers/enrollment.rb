@@ -1,31 +1,3 @@
-# "id": 2212,
-#             "user_id": 607,
-#             "course_id": 502,
-#             "type": "StudentEnrollment",
-#             "created_at": "2019-03-13T22:41:30Z",
-#             "updated_at": "2019-03-13T22:41:30Z",
-#             "associated_user_id": null,
-#             "start_at": null,
-#             "end_at": null,
-#             "course_section_id": 856,
-#             "root_account_id": 1,
-#             "limit_privileges_to_course_section": false,
-#             "enrollment_state": "invited",
-#             "role": "StudentEnrollment",
-#             "role_id": 3,
-#             "last_activity_at": null,
-#             "total_activity_time": 0,
-#             "sis_import_id": null,
-#             "grades": {
-#                 "html_url": "",
-#                 "current_score": 0,
-#                 "current_grade": null,
-#                 "final_score": 0,
-#                 "final_grade": null
-#             },
-#             "html_url": ""
-#         }
-
 module PipelineService
   # This ugly thing lets us call the canvas user api
   module Serializers
