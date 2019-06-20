@@ -66,6 +66,8 @@ AccountsController.class_eval do
       setting: 'enable_custom_placement',
       value: enable_custom_placement_param
     )
+  end
+  
   def get_allowed_filetypes
     @allowed_filetypes = SettingsService.get_settings(object: 'school', id: 1)['allowed_filetypes']
     @allowed_filetypes = @allowed_filetypes.split(',') if @allowed_filetypes
