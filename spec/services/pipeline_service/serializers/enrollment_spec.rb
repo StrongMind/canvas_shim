@@ -13,6 +13,7 @@ describe PipelineService::Serializers::Enrollment do
         "html_url" => "",
         "current_score" => nil,
         "final_score" => 5,
+        "final_grade" => nil
       }  
     }
   end
@@ -38,6 +39,10 @@ describe PipelineService::Serializers::Enrollment do
 
     it 'leaves existing scores alone' do
       expect(subject.call['grades']['final_score']).to eq(5)
+    end
+
+    it 'leaves grades nil' do
+      expect(subject.call['grades']['final_grade']).to eq(nil)
     end
   end
 end
