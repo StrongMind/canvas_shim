@@ -40,9 +40,13 @@ module PipelineService
 
       def call
         get_json
-        get_grades
-        set_nil_grades_to_zero
-        @json.merge('grades' => @zeroed_grades)
+        if @enrollment.is_a?(StudentEnrollment)
+          get_grades
+          set_nil_grades_to_zero
+          @json.merge('grades' => @zeroed_grades)
+        else
+          @json
+        end
       end
       
       private

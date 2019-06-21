@@ -1,7 +1,7 @@
 describe PipelineService::Serializers::Enrollment do
   let(:noun) {double('noun', id: 1)}
 
-  let(:enrollment) { double('enrollment')}
+  let(:enrollment) { double('enrollment', is_a?: true) }
 
   let(:subject) {
     described_class.new(object: noun)
@@ -43,6 +43,17 @@ describe PipelineService::Serializers::Enrollment do
 
     it 'leaves grades nil' do
       expect(subject.call['grades']['final_grade']).to eq(nil)
+    end
+
+    context 'non student enrollment (no grades)' do
+      let(:result) { {} }
+      
+
+      let(:enrollment) { double('enrollment', is_a?: false) }
+
+      it 'works' do
+        expect(subject.call['grades']).to eq(nil)
+      end
     end
   end
 end
