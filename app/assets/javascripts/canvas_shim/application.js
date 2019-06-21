@@ -10,7 +10,7 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-
+//= require jquery/dist/jquery
 //
 // Add some Shim asset require directives here
 // i.e.
