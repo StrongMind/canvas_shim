@@ -13,7 +13,6 @@ module RequirementsService
 
       def call
         strip_overrides if force
-        
         return unless threshold_changes_needed?
         add_min_score_to_requirements
         context_module.update_column(:completion_requirements, completion_requirements)
