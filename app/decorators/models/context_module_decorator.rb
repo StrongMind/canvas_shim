@@ -4,15 +4,11 @@ ContextModule.class_eval do
 
   def assign_threshold
     return unless threshold_set? && threshold_changes_needed?
-    add_min_score_to_requirements
-    update_column(:completion_requirements, completion_requirements)
+    RequirementsService.apply_minimum_scores_to_unit(context_module: self)
   end
 
   def force_min_score_to_requirements
-    strip_overrides
-    add_min_score_to_requirements
-    update_column(:completion_requirements, completion_requirements)
-    touch
+    RequirementsService.apply_minimum_scores_to_unit(context_module: self, force: true)
   end
 
   private
@@ -39,14 +35,6 @@ ContextModule.class_eval do
     get_threshold_overrides.split(",").map(&:to_i).include?(requirement[:id]) if get_threshold_overrides
   end
 
-  def strip_overrides
-    SettingsService.update_settings(
-      object: 'course',
-      id: course.try(:id),
-      setting: 'threshold_overrides',
-      value: false
-    )
-  end
 
   def skippable_requirement?(requirement)
     has_threshold_override?(requirement) ||

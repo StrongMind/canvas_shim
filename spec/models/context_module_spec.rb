@@ -114,7 +114,7 @@ describe ContextModule do
 
     before do
       allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(70.0)
-      allow_any_instance_of(ContextModule).to receive(:strip_overrides).and_return(nil)
+      allow_any_instance_of(RequirementsService::Commands::ApplyMinimumScoresToUnit).to receive(:strip_overrides).and_return(nil)
       ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
     end
 
