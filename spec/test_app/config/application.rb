@@ -1,5 +1,6 @@
 require_relative 'boot'
 
+
 # Pick the frameworks you want:
 require "active_record/railtie"
 require "action_controller/railtie"
@@ -12,6 +13,9 @@ require "sprockets/railtie"
 
 Bundler.require(*Rails.groups)
 require "canvas_shim"
+
+require 'dotenv'
+Dotenv.load('.env.development')
 
 module TestApp
   class Application < Rails::Application

@@ -1,0 +1,1 @@
+class EnrollmentsApiController < ApplicationController; end

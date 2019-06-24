@@ -1,0 +1,50 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://kom06r8apf.execute-api.us-west-2.amazonaws.com/dev/schools/bXlzY2hvb2w/alerts/2
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Api-Key:
+      - "<REDACTED>"
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - text/html; charset=utf-8
+      Content-Length:
+      - '190'
+      Connection:
+      - keep-alive
+      Date:
+      - Tue, 11 Jun 2019 22:28:59 GMT
+      X-Amzn-Requestid:
+      - 4eae63a9-8c98-11e9-9c12-37d128cefd30
+      X-Amzn-Remapped-Content-Length:
+      - '190'
+      X-Amz-Apigw-Id:
+      - bIuuyFXQPHcFjZQ=
+      X-Amzn-Trace-Id:
+      - Root=1-5d002b2b-b0d81ed4d5c808b63d15e87e;Sampled=0
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 13a07608c2fbdc1d590261cc8316cbab.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - ATL51
+      X-Amz-Cf-Id:
+      - rRdAFZTMFULcQ2A6G3-rYE2ZJpkjzMWmX-yrK11sviJTT7QBUyl-qw==
+    body:
+      encoding: UTF-8
+      string: '{"alert_id": 2, "alert": {"type": "max_attempts_reached", "student_id":
+        1, "teacher_id": 1, "assignment_id": 1}, "school_id": "bXlzY2hvb2w", "created_at":
+        "2019-06-11 21:54:09.073954+00:00"}'
+    http_version: 
+  recorded_at: Tue, 11 Jun 2019 22:28:59 GMT
+recorded_with: VCR 5.0.0

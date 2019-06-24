@@ -2,10 +2,7 @@
 
 require 'dotenv'
 require 'pry-byebug'
-Dotenv.load('.env.development') # TODO: change me to test?
-
-ENV['RAILS_ENV'] ||= 'test'
-ENV['CANVAS_DOMAIN'] = 'canvasdomain.com'
+Dotenv.load('.env.test')
 
 require File.expand_path("../test_app/config/environment.rb", __FILE__)
 

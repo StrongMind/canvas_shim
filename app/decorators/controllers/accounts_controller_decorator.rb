@@ -1,8 +1,9 @@
 AccountsController.class_eval do
   def strongmind_settings
     grab_holidays
+    get_allowed_filetypes
 
-    @school_threshold         = score_threshold
+    @school_threshold         = get_school_threshold
     @course_thresh_enabled    = course_threshold_enabled?
     @custom_placement_enabled = custom_placement_enabled?
 
@@ -12,8 +13,10 @@ AccountsController.class_eval do
 
     @module_editing_disabled = disable_module_editing_on?
 
-    js_env({HOLIDAYS: @holidays})
-
+    js_env({
+      HOLIDAYS: @holidays,
+      FILETYPES: @allowed_filetypes
+    }) 
     instructure_settings
   end
 
@@ -22,7 +25,9 @@ AccountsController.class_eval do
 
   def strongmind_update
     @school_threshold = params[:account][:settings][:score_threshold].to_i
+
     set_school_threshold if threshold_edited? && valid_threshold?(@school_threshold)
+    set_allowed_filetypes if params[:allowed_filetypes]
     set_holidays if params[:holidays]
     set_course_threshold_enablement
     set_post_enrollment_thresholds if course_threshold_enablement_params
@@ -38,6 +43,10 @@ AccountsController.class_eval do
   private
   def holidays
     params[:holidays].blank? ? false : params[:holidays]
+  end
+
+  def allowed_filetypes
+    params[:allowed_filetypes].blank? ? false : params[:allowed_filetypes]
   end
 
   def grab_holidays
@@ -57,6 +66,12 @@ AccountsController.class_eval do
       setting: 'enable_custom_placement',
       value: enable_custom_placement_param
     )
+  end
+  
+  def get_allowed_filetypes
+    @allowed_filetypes = SettingsService.get_settings(object: 'school', id: 1)['allowed_filetypes']
+    @allowed_filetypes = @allowed_filetypes.split(',') if @allowed_filetypes
+    @allowed_filetypes = [] unless @allowed_filetypes
   end
 
   def set_holidays
@@ -78,6 +93,15 @@ AccountsController.class_eval do
       id: 1,
       setting: 'score_threshold',
       value: @school_threshold
+    )
+  end
+
+  def set_allowed_filetypes
+    SettingsService.update_settings(
+      object: 'school',
+      id: 1,
+      setting: 'allowed_filetypes',
+      value: allowed_filetypes
     )
   end
 

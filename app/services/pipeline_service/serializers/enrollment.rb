@@ -4,6 +4,7 @@ module PipelineService
     class Enrollment
       include ::Api::V1::User
       include BaseMethods
+      GRADE_TYPES = ['current_score', 'final_score']
 
       attr_accessor :services_enabled, :context, :current_user, :params, :request
 
@@ -38,7 +39,31 @@ module PipelineService
       end
 
       def call
-        enrollment_json(@enrollment, @admin, {})
+        get_json
+        if @enrollment.is_a?(StudentEnrollment)
+          get_grades
+          set_nil_grades_to_zero
+          @json.merge('grades' => @zeroed_grades)
+        else
+          @json
+        end
+      end
+      
+      private
+
+      def get_json
+        @json = enrollment_json(@enrollment, @admin, {})
+      end
+
+      def get_grades
+        @grades = @json['grades'].clone
+      end
+
+      def set_nil_grades_to_zero
+        @zeroed_grades = 
+          @grades.merge(
+            GRADE_TYPES.map { |name| [name, (@grades[name] || 0)] }.to_h
+          )
       end
     end
   end
