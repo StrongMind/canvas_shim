@@ -5,7 +5,7 @@ Course.class_eval do
   after_create :set_default_course_threshold, if: :account_threshold_set?
 
   def force_min_scores
-    context_modules.each(&:force_min_score_to_requirements)
+    context_modules.each { |cm| force_min_score_to_requirements(cm) }
   end
 
   def no_active_students?
@@ -28,5 +28,9 @@ Course.class_eval do
 
   def account_threshold_set?
     account_threshold.positive?
+  end
+
+  def force_min_score_to_requirements(context_module)
+    RequirementsService.apply_minimum_scores_to_unit(context_module: context_module, force: true)
   end
 end

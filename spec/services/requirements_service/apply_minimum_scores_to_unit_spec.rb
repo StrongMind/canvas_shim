@@ -53,5 +53,28 @@ describe RequirementsService::Commands::ApplyMinimumScoresToUnit do
         subject.call
       end
     end
+
+    context 'force initially false' do
+      it "retains the initial setting" do
+        command = described_class.new(context_module: context_module)
+        command.call
+        req_scores = context_module.completion_requirements.select { |req| req[:min_score] }.map { |req| req[:min_score] }
+        expect(req_scores.any? && req_scores.all? { |score| score == 70.0 }).to be true
+      end
+
+      context "Score Threshold Overriden" do
+        before do
+          allow(SettingsService).to receive(:get_settings).and_return('passing_threshold' => 75)
+          command = described_class.new(context_module: context_module, force: true)
+          allow(command).to receive(:strip_overrides).and_return(nil)
+          command.call
+        end
+
+        it "overrides the previous setting" do
+          req_scores = context_module.completion_requirements.select { |req| req[:min_score] }.map { |req| req[:min_score] }
+          expect(req_scores.any? && req_scores.all? { |score| score == 75.0 }).to be true
+        end
+      end
+    end
   end
 end
