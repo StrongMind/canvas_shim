@@ -1,5 +1,6 @@
 describe RequirementsService::Commands::ApplyMinimumScoresToUnit do
-  subject { described_class.new(context_module) }
+  subject { described_class.new(context_module: context_module) }
+  
   let(:course) { double('course', id: 1) }
   
   let(:context_module) do 
@@ -21,15 +22,16 @@ describe RequirementsService::Commands::ApplyMinimumScoresToUnit do
     ]
   }
 
-  before do
-    # allow_any_instance_of(described_class).to receive(:strip_overrides).and_return(nil)
-  end
-
   describe '#call' do
+    it 'does not strip overrides' do
+      expect(subject).to_not receive(:strip_overrides)
+      subject.call
+    end
+
     context 'force clearing threshold overrides' do
       subject { described_class.new(context_module: context_module, force: true) }
       
-      it do
+      it 'strips overrides' do
         expect(subject).to receive(:strip_overrides)
         subject.call
       end
