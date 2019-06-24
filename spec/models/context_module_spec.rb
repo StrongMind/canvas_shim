@@ -12,8 +12,8 @@ describe ContextModule do
 
     context "school threshold default" do
       before do
-        allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(60.0)
-        allow_any_instance_of(ContextModule).to receive(:has_threshold_override?).and_return(false)
+        allow_any_instance_of(RequirementsService::Commands::ApplyMinimumScoresToUnit).to receive(:score_threshold).and_return(60.0)
+        allow_any_instance_of(RequirementsService::Commands::ApplyMinimumScoresToUnit).to receive(:has_threshold_override?).and_return(false)
         ContextModule.create(completion_requirements: completion_requirements)
       end
 
@@ -35,8 +35,8 @@ describe ContextModule do
 
       context "no threshold score available" do
         before do
-          allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(0.0)
-          allow_any_instance_of(ContextModule).to receive(:has_threshold_override?).and_return(false)
+          allow_any_instance_of(RequirementsService::Commands::ApplyMinimumScoresToUnit).to receive(:score_threshold).and_return(0.0)
+          allow_any_instance_of(RequirementsService::Commands::ApplyMinimumScoresToUnit).to receive(:has_threshold_override?).and_return(false)
           ContextModule.create(completion_requirements: completion_requirements)
         end
 
@@ -45,18 +45,10 @@ describe ContextModule do
         end
       end
 
-      context "new object" do
-        let(:new_cm) { ContextModule.new(completion_requirements: completion_requirements) }
-
-        it "Receives add_min_score when setting is on" do
-          expect(new_cm).to receive(:add_min_score_to_requirements)
-          new_cm.save
-        end
-      end
 
       context "has threshold overrides" do
         before do
-          allow_any_instance_of(ContextModule).to receive(:has_threshold_override?).with({:id=>56, :type=>"must_submit"}).and_return(true)
+          allow_any_instance_of(RequirementsService::Commands::ApplyMinimumScoresToUnit).to receive(:has_threshold_override?).with({:id=>56, :type=>"must_submit"}).and_return(true)
           ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
         end
 
@@ -79,7 +71,7 @@ describe ContextModule do
         end
 
         before do
-          allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(60.0)
+          allow_any_instance_of(RequirementsService::Commands::ApplyMinimumScoresToUnit).to receive(:score_threshold).and_return(60.0)
           ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
         end
 
@@ -92,7 +84,7 @@ describe ContextModule do
 
     context "Course has overridden school threshold" do
       before do
-        allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(70.0)
+        allow_any_instance_of(RequirementsService::Commands::ApplyMinimumScoresToUnit).to receive(:score_threshold).and_return(70.0)
         ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
       end
 
@@ -113,7 +105,7 @@ describe ContextModule do
     end
 
     before do
-      allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(70.0)
+      allow_any_instance_of(RequirementsService::Commands::ApplyMinimumScoresToUnit).to receive(:score_threshold).and_return(70.0)
       allow_any_instance_of(RequirementsService::Commands::ApplyMinimumScoresToUnit).to receive(:strip_overrides).and_return(nil)
       ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
     end
@@ -125,7 +117,7 @@ describe ContextModule do
 
     context "new threshold enforced" do
       before do
-        allow_any_instance_of(ContextModule).to receive(:score_threshold).and_return(75.0)
+        allow_any_instance_of(RequirementsService::Commands::ApplyMinimumScoresToUnit).to receive(:score_threshold).and_return(75.0)
       end
 
       it "uses the new threshold" do
