@@ -6,7 +6,9 @@ module RequirementsService
         @completion_requirements = context_module.completion_requirements
         @force = force
         @course = context_module.course
-        @score_threshold ||= SettingsService.get_settings(object: :course, id: course.try(:id))['passing_threshold'].to_f
+        @settings = SettingsService.get_settings(object: :course, id: course.try(:id))
+        @score_threshold = settings['passing_threshold'].to_f
+        @threshold_overrides = settings['threshold_overrides']
       end
 
       def call
@@ -19,7 +21,7 @@ module RequirementsService
 
       private
 
-      attr_reader :completion_requirements, :context_module, :course, :force, :score_threshold
+      attr_reader :completion_requirements, :context_module, :course, :force, :score_threshold, :threshold_overrides, :settings
 
       def strip_overrides
         SettingsService.update_settings(
@@ -34,20 +36,22 @@ module RequirementsService
         return true if force
         return false unless score_threshold.positive?
         completion_requirements.any? do |req|
-          ["must_submit", "must_contribute"].include?(req[:type]) ||
-          (req[:min_score] && req[:min_score] != score_threshold)
+          is_submittable?(req) || min_score_different_than_threshold?(req)
         end
       end
 
-      def get_threshold_overrides
-        @threshold_overrides ||= SettingsService.get_settings(object: :course, id: course.try(:id))['threshold_overrides']
+      def is_submittable?(req)
+        ["must_submit", "must_contribute"].include?(req[:type])
+      end
+
+      def min_score_different_than_threshold?(req)
+        (req[:min_score] && req[:min_score] != score_threshold)
       end
     
       def has_threshold_override?(requirement)
-        get_threshold_overrides.split(",").map(&:to_i).include?(requirement[:id]) if get_threshold_overrides
+        threshold_overrides.split(",").map(&:to_i).include?(requirement[:id]) if threshold_overrides
       end
-    
-    
+
       def skippable_requirement?(requirement)
         has_threshold_override?(requirement) ||
         ["must_submit", "must_contribute", "min_score"].none? { |type| type == requirement[:type] }
@@ -61,11 +65,8 @@ module RequirementsService
       end
     
       def update_score(requirement)
-        requirement[:type] = "min_score"
-        requirement[:min_score] = score_threshold
+        requirement.merge!(type: 'min_score', min_score: score_threshold)
       end
     end
   end
 end
-
-
