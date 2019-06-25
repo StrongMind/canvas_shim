@@ -32,16 +32,40 @@ describe RequirementsService::Commands::AddThresholdOverrides do
   end
 
   describe "#call" do
-    it "adds the corrext items to settings" do
-      new_overrides = {
-          object: 'course',
-          id: 1,
-          setting: "threshold_overrides",
-          value: "56,58"
-        }
+    context "new threshold override" do
+      it "adds the corrext items to settings" do
+        new_overrides = {
+            object: 'course',
+            id: 1,
+            setting: "threshold_overrides",
+            value: "56,58"
+          }
 
-      expect(SettingsService).to receive(:update_settings).with(new_overrides)
-      subject.call
+        expect(SettingsService).to receive(:update_settings).with(new_overrides)
+        subject.call
+      end
+    end
+
+    context "new threshold override with no values" do
+      let(:new_requirements) do
+        {
+          "53" => { "type" => "must_view" },
+          "56" => { "type" => "min_score", :min_score => "70.0"},
+          "58" => { "type" => "min_score", :min_score => "70.0"}
+        }
+      end
+
+      it "adds the corrext items to settings" do
+        new_overrides = {
+            object: 'course',
+            id: 1,
+            setting: "threshold_overrides",
+            value: false
+          }
+
+        expect(SettingsService).to receive(:update_settings).with(new_overrides)
+        subject.call
+      end
     end
   end
 end
