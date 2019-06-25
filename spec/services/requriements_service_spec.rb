@@ -1,6 +1,7 @@
 describe RequirementsService do
   subject { described_class }
   let(:context_module) { double('context_module') }
+  let(:requirements) { double('requirements') }
   let(:command_instance) { double('command instance') }
 
   before do
@@ -39,6 +40,15 @@ describe RequirementsService do
     it 'Calls the command object' do
       expect(command_instance).to receive(:call)
       subject.enable_threshold_permissions(course_thresholds: true, post_enrollment: true, module_editing: true)
+    end
+  end
+
+  describe '#add_threshold_overrides' do
+    let(:command_class) { RequirementsService::Commands::AddThresholdOverrides }
+
+    it 'Calls the command object' do
+      expect(command_instance).to receive(:call)
+      subject.add_threshold_overrides(context_module: context_module, requirements: requirements)
     end
   end
 end

@@ -14,4 +14,11 @@ module RequirementsService
       module_editing: module_editing,
     ).call
   end
+
+  def self.add_threshold_overrides(context_module:, requirements:)
+    Commands::AddThresholdOverrides.new(
+      context_module: context_module,
+      requirements: requirements,
+    ).call
+  end
 end
