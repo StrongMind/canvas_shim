@@ -31,6 +31,6 @@ Course.class_eval do
   end
 
   def force_min_score_to_requirements(context_module)
-    RequirementsService.apply_minimum_scores_to_unit(context_module: context_module, force: true)
+    RequirementsService.apply_minimum_scores(context_module: context_module, force: true)
   end
 end

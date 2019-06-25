@@ -1,4 +1,4 @@
-describe RequirementsService::Commands::ApplyMinimumScoresToUnit do
+describe RequirementsService::Commands::ApplyMinimumScores do
   include_context 'stubbed_network'
   subject { described_class.new(context_module: context_module) }
   
