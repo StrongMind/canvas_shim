@@ -1,7 +1,6 @@
 describe RequirementsService do
   subject { described_class }
   let(:context_module) { double('context_module') }
-  let(:command_class) { RequirementsService::Commands::ApplyMinimumScores }
   let(:command_instance) { double('command instance') }
 
   before do
@@ -10,6 +9,8 @@ describe RequirementsService do
   end
   
   describe '#apply_minimum_scores' do
+    let(:command_class) { RequirementsService::Commands::ApplyMinimumScores }
+
     it 'Calls the command object' do
       expect(command_instance).to receive(:call)
       subject.apply_minimum_scores(context_module: context_module)
@@ -20,6 +21,24 @@ describe RequirementsService do
         expect(command_class).to receive(:new).with(context_module: context_module, force: true)
         subject.apply_minimum_scores(context_module: context_module, force: true)  
       end
+    end
+  end
+
+  describe '#set_new_threshold' do
+    let(:command_class) { RequirementsService::Commands::SetNewThreshold }
+
+    it 'Calls the command object' do
+      expect(command_instance).to receive(:call)
+      subject.set_new_threshold(type: 'school', threshold: 70, edited: false)
+    end
+  end
+
+  describe '#enable_threshold_permissions' do
+    let(:command_class) { RequirementsService::Commands::EnableThresholdPermissions }
+
+    it 'Calls the command object' do
+      expect(command_instance).to receive(:call)
+      subject.enable_threshold_permissions(course_thresholds: true, post_enrollment: true, module_editing: true)
     end
   end
 end
