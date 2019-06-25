@@ -7,7 +7,11 @@ module RequirementsService
     Commands::SetNewThreshold.new(type: type, threshold: threshold, edited: edited).call
   end
 
-  def self.set_threshold_permissions(course_thresholds:, post_enrollment:, module_editing:)
-    Commands::SetThresholdPermissions.new(course_thresholds: course_thresholds, post_enrollment: post_enrollment, module_editing: module_editing).call
+  def self.enable_threshold_permissions(course_thresholds:, post_enrollment:, module_editing:)
+    Commands::EnableThresholdPermissions.new(
+      course_thresholds: course_thresholds,
+      post_enrollment: post_enrollment,
+      module_editing: module_editing,
+    ).call
   end
 end

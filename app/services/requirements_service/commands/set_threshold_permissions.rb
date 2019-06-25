@@ -1,6 +1,6 @@
 module RequirementsService
   module Commands
-    class SetThresholdPermissions
+    class EnableThresholdPermissions
       def initialize(course_thresholds:, post_enrollment:, module_editing:)
         @course_thresholds = course_thresholds
         @post_enrollment = post_enrollment
@@ -8,38 +8,20 @@ module RequirementsService
       end
 
       def call
-        set_course_threshold_enablement
-        set_post_enrollment_thresholds
-        set_module_editing
+        update_settings('course_threshold_enabled', course_thresholds)
+        update_settings('enable_post_enrollment_threshold_updates', module_editing)
+        update_settings('disable_module_editing', (course_thresholds && post_enrollment))
       end
 
       private
       attr_reader :course_thresholds, :post_enrollment, :module_editing
 
-      def set_course_threshold_enablement
+      def update_settings(setting, value)
         SettingsService.update_settings(
           object: 'school',
           id: 1,
-          setting: 'course_threshold_enabled',
-          value: course_thresholds
-        )
-      end
-
-      def set_post_enrollment_thresholds
-        SettingsService.update_settings(
-            object: 'school',
-            id: 1,
-            setting: 'enable_post_enrollment_threshold_updates',
-            value: (course_thresholds && post_enrollment)
-          )
-      end
-
-      def set_module_editing
-        SettingsService.update_settings(
-          object: 'school',
-          id: 1,
-          setting: 'disable_module_editing',
-          value: module_editing
+          setting: setting,
+          value: value
         )
       end
     end
