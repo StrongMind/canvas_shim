@@ -21,4 +21,11 @@ module RequirementsService
       requirements: requirements,
     ).call
   end
+
+  def self.add_unit_item_with_min_score(context_module:, content_tag:)
+    Commands::AddUnitItemWithMinScore.new(
+      context_module: context_module,
+      content_tag: content_tag,
+    ).call
+  end
 end
