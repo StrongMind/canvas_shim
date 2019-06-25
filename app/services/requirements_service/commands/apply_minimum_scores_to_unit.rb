@@ -12,16 +12,24 @@ module RequirementsService
       end
 
       def call
-        strip_overrides if force
-        return unless threshold_changes_needed?
-        add_min_score_to_requirements
-        context_module.update_column(:completion_requirements, completion_requirements)
-        context_module.touch
+        if force
+          strip_overrides
+        else
+          return unless threshold_changes_needed?
+        end
+
+        run_command
       end
 
       private
 
       attr_reader :completion_requirements, :context_module, :course, :force, :score_threshold, :threshold_overrides, :settings
+
+      def run_command
+        add_min_score_to_requirements
+        context_module.update_column(:completion_requirements, completion_requirements)
+        context_module.touch
+      end
 
       def strip_overrides
         SettingsService.update_settings(
@@ -33,7 +41,6 @@ module RequirementsService
       end
 
       def threshold_changes_needed?
-        return true if force
         return false unless score_threshold.positive?
         completion_requirements.any? do |req|
           is_submittable?(req) || min_score_different_than_threshold?(req)
