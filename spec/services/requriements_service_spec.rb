@@ -29,7 +29,7 @@ describe RequirementsService do
 
     it 'Calls the command object' do
       expect(command_instance).to receive(:call)
-      subject.set_new_threshold(type: 'school', threshold: 70, edited: false)
+      subject.set_new_threshold(type: 'school', threshold: 70, edited: 'true')
     end
   end
 
