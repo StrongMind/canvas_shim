@@ -27,7 +27,7 @@ describe RequirementsService::Commands::AddThresholdOverrides do
     {
       "53" => { "type" => "must_view" },
       "56" => { "type" => "must_contribute" },
-      "58" => { "type" => "min_score", "min_score" => "72.0"}
+      "58" => { "type" => "min_score", :min_score => "72.0"}
     }
   end
 
@@ -61,6 +61,32 @@ describe RequirementsService::Commands::AddThresholdOverrides do
             id: 1,
             setting: "threshold_overrides",
             value: false
+          }
+
+        expect(SettingsService).to receive(:update_settings).with(new_overrides)
+        subject.call
+      end
+    end
+
+    context "new threshold override with no values" do
+      let(:new_requirements) do
+        {
+          "53" => { "type" => "must_view" },
+          "56" => { "type" => "must_contribute" },
+          "58" => { "type" => "min_score", :min_score => "72.0"}
+        }
+      end
+
+      before do
+        allow(subject).to receive(:threshold_overrides).and_return("53")
+      end
+
+      it "adds the corrext items to settings" do
+        new_overrides = {
+            object: 'course',
+            id: 1,
+            setting: "threshold_overrides",
+            value: "53,56,58"
           }
 
         expect(SettingsService).to receive(:update_settings).with(new_overrides)
