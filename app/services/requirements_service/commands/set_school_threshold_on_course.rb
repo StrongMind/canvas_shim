@@ -22,7 +22,7 @@ module RequirementsService
       end
     
       def account_threshold
-        SettingsService.get_settings(object: :school, id: 1)['score_threshold'].to_f
+        RequirementsService.get_passing_threshold(type: :school)
       end
     
       def account_threshold_set?

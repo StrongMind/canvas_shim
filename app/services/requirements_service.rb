@@ -34,11 +34,11 @@ module RequirementsService
   end
 
   def self.get_passing_threshold(type:, id: 1)
-    Queries::GetPassingThreshold(type: type, id: id).call.to_f
+    Queries::GetPassingThreshold.new(type: type, id: id).call.to_f
   end
 
   def self.course_has_set_threshold?(context)
-    !!Queries::GetPassingThreshold(type: :course, id: context.try(:id)).call
+    !!Queries::GetPassingThreshold.new(type: :course, id: context.try(:id)).call
   end
 
   def self.course_threshold_setting_enabled?

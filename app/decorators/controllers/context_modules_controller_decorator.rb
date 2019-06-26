@@ -10,8 +10,7 @@ ContextModulesController.class_eval do
 
   def strongmind_add_item
     instructure_add_item
-    return unless can_add_threshold_overrides?
-    add_threshold_to_module
+    RequirementsService.add_unit_item_with_min_score
   end
 
   alias_method :instructure_add_item, :add_item
