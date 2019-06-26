@@ -35,12 +35,12 @@ describe RequirementsService do
     end
   end
 
-  describe '#enable_threshold_permissions' do
-    let(:command_class) { RequirementsService::Commands::EnableThresholdPermissions }
+  describe '#set_threshold_permissions' do
+    let(:command_class) { RequirementsService::Commands::SetThresholdPermissions }
 
     it 'Calls the command object' do
       expect(command_instance).to receive(:call)
-      subject.enable_threshold_permissions(course_thresholds: true, post_enrollment: true, module_editing: true)
+      subject.set_threshold_permissions(course_thresholds: true, post_enrollment: true, module_editing: true)
     end
   end
 

@@ -24,14 +24,12 @@ AccountsController.class_eval do
   alias_method :settings, :strongmind_settings
 
   def strongmind_update
-    @school_threshold = params[:account][:settings][:score_threshold].to_i
+    set_school_passing_threshold
+    set_threshold_permissions
 
-    set_school_threshold if threshold_edited? && valid_threshold?(@school_threshold)
     set_allowed_filetypes if params[:allowed_filetypes]
     set_holidays if params[:holidays]
-    set_course_threshold_enablement
-    set_post_enrollment_thresholds if course_threshold_enablement_params
-    set_module_editing
+
     set_custom_placement
 
     instructure_update
@@ -41,6 +39,10 @@ AccountsController.class_eval do
   alias_method :update, :strongmind_update
 
   private
+  def get_school_threshold
+    SettingsService.get_settings(object: :school, id: 1)['score_threshold'].to_f
+  end
+
   def holidays
     params[:holidays].blank? ? false : params[:holidays]
   end
@@ -83,19 +85,6 @@ AccountsController.class_eval do
     )
   end
 
-  def get_school_threshold
-    SettingsService.get_settings(object: :school, id: 1)['score_threshold'].to_f
-  end
-
-  def set_school_threshold
-    SettingsService.update_settings(
-      object: 'school',
-      id: 1,
-      setting: 'score_threshold',
-      value: @school_threshold
-    )
-  end
-
   def set_allowed_filetypes
     SettingsService.update_settings(
       object: 'school',
@@ -105,42 +94,33 @@ AccountsController.class_eval do
     )
   end
 
-  def course_threshold_enablement_params
-    params[:account][:settings][:enable_thresholds_in_courses].to_i.positive?
+  def set_school_passing_threshold
+    @school_threshold = params[:account][:settings][:score_threshold].to_i
+
+    RequirementsService.set_new_threshold(
+      type: "school",
+      threshold: @school_threshold, 
+      edited: params[:threshold_edited]
+    )
   end
 
-  def set_course_threshold_enablement
-    SettingsService.update_settings(
-      object: 'school',
-      id: 1,
-      setting: 'course_threshold_enabled',
-      value: course_threshold_enablement_params
-    )
+  def course_threshold_enablement_params
+    params[:account][:settings][:enable_thresholds_in_courses].to_i.positive?
   end
 
   def disable_module_editing_params
     params[:account][:settings][:prevent_module_editing].to_i.positive?
   end
 
-  def set_module_editing
-    SettingsService.update_settings(
-      object: 'school',
-      id: 1,
-      setting: 'disable_module_editing',
-      value: disable_module_editing_params
-    )
-  end
-
   def enable_post_enrollment_threshold_params
     params[:account][:settings][:enable_post_enrollment_threshold_updates].to_i.positive?
   end
 
-  def set_post_enrollment_thresholds
-    SettingsService.update_settings(
-        object: 'school',
-        id: 1,
-        setting: 'enable_post_enrollment_threshold_updates',
-        value: (course_threshold_enablement_params && enable_post_enrollment_threshold_params)
-      )
+  def set_threshold_permissions
+    RequirementsService.set_threshold_permissions(
+      course_thresholds: course_threshold_enablement_params,
+      post_enrollment: enable_post_enrollment_threshold_params,
+      module_editing: disable_module_editing_params,
+    )
   end
 end

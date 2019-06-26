@@ -3,12 +3,12 @@ module RequirementsService
     Commands::ApplyMinimumScores.new(context_module: context_module, force: force).call
   end
 
-  def self.set_new_threshold(type:, threshold:, edited:)
-    Commands::SetNewThreshold.new(type: type, threshold: threshold, edited: edited).call
+  def self.set_new_threshold(type:, threshold:, edited:, id: 1)
+    Commands::SetNewThreshold.new(type: type, threshold: threshold, edited: edited, id: id).call
   end
 
-  def self.enable_threshold_permissions(course_thresholds:, post_enrollment:, module_editing:)
-    Commands::EnableThresholdPermissions.new(
+  def self.set_threshold_permissions(course_thresholds:, post_enrollment:, module_editing:)
+    Commands::SetThresholdPermissions.new(
       course_thresholds: course_thresholds,
       post_enrollment: post_enrollment,
       module_editing: module_editing,
@@ -27,5 +27,9 @@ module RequirementsService
       context_module: context_module,
       content_tag: content_tag,
     ).call
+  end
+
+  def self.set_school_threshold_on_course(course:)
+    Commands::SetSchoolThresholdOnCourse.new(course: course).call
   end
 end

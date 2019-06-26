@@ -77,11 +77,10 @@ CoursesController.class_eval do
 
   def strongmind_update
     instructure_update
-    @course_threshold = params[:passing_threshold].to_i
-    if !params[:course].blank? && threshold_edited? && can_update_threshold?
-      set_course_passing_threshold
-      CoursesService::Commands::ForceMinScores.new(course: @course).call
-    end
+
+    return if params[:course].blank?
+    set_course_passing_threshold
+    CoursesService::Commands::ForceMinScores.new(course: @course).call
   end
 
   alias_method :instructure_update, :update
@@ -97,11 +96,13 @@ CoursesController.class_eval do
   end
 
   def set_course_passing_threshold
-    SettingsService.update_settings(
-      object: 'course',
-      id: @course.id,
-      setting: 'passing_threshold',
-      value: @course_threshold
+    @course_threshold = params[:passing_threshold].to_i
+
+    RequirementsService.set_new_threshold(
+      type: "course",
+      threshold: @course_threshold,
+      edited: params[:threshold_edited],
+      id: @course.try(:id)
     )
   end
 

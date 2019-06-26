@@ -1,4 +1,4 @@
-describe RequirementsService::Commands::EnableThresholdPermissions do
+describe RequirementsService::Commands::SetThresholdPermissions do
   include_context 'stubbed_network'
   context "Happy path" do
     subject do 

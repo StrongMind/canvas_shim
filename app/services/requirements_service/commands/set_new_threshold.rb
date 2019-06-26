@@ -1,26 +1,27 @@
 module RequirementsService
   module Commands
     class SetNewThreshold
-      def initialize(type:, threshold:, edited:)
+      def initialize(type:, threshold:, edited:, id: 1)
         @type = type
         @threshold = threshold
         setting_name = (type == "school" ? "score" : "passing")
         @setting = "#{setting_name}_threshold"
         @edited = (edited == "true")
+        @id = id
       end
 
       def call
-        return unless edited && valid_threshold?
+        return unless id && edited && valid_threshold?
         set_threshold
       end
 
       private
-      attr_reader :type, :threshold, :setting, :edited
+      attr_reader :type, :threshold, :setting, :edited, :id
 
       def set_threshold
         SettingsService.update_settings(
           object: type,
-          id: 1,
+          id: id,
           setting: setting,
           value: threshold
         )
