@@ -1,6 +1,6 @@
 module RequirementsService
   module Commands
-    class SetNewThreshold
+    class SetPassingThreshold
       def initialize(type:, threshold:, edited:, id: 1)
         @type = type
         @threshold = threshold

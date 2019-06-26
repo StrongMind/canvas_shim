@@ -97,7 +97,7 @@ AccountsController.class_eval do
   def set_school_passing_threshold
     @school_threshold = params[:account][:settings][:score_threshold].to_i
 
-    RequirementsService.set_new_threshold(
+    RequirementsService.set_passing_threshold(
       type: "school",
       threshold: @school_threshold, 
       edited: params[:threshold_edited]

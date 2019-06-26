@@ -1,4 +1,4 @@
-describe RequirementsService::Commands::SetNewThreshold do
+describe RequirementsService::Commands::SetPassingThreshold do
   include_context 'stubbed_network'
   
   describe "#call" do

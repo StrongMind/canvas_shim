@@ -26,12 +26,12 @@ describe RequirementsService do
     end
   end
 
-  describe '#set_new_threshold' do
-    let(:command_class) { RequirementsService::Commands::SetNewThreshold }
+  describe '#set_passing_threshold' do
+    let(:command_class) { RequirementsService::Commands::SetPassingThreshold }
 
     it 'Calls the command object' do
       expect(command_instance).to receive(:call)
-      subject.set_new_threshold(type: 'school', threshold: 70, edited: 'true')
+      subject.set_passing_threshold(type: 'school', threshold: 70, edited: 'true')
     end
   end
 
