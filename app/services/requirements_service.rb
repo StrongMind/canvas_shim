@@ -3,6 +3,10 @@ module RequirementsService
     Commands::ApplyMinimumScores.new(context_module: context_module, force: force).call
   end
 
+  def self.force_min_scores(course:)
+    Commands::ForceMinScores.new(course: course).call
+  end
+
   def self.set_passing_threshold(type:, threshold:, edited:, id: 1)
     Commands::SetPassingThreshold.new(type: type, threshold: threshold, edited: edited, id: id).call
   end

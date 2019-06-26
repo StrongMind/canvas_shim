@@ -1,7 +1,7 @@
 ContextModulesController.class_eval do
   def strongmind_update
     @module = @context.context_modules.not_deleted.find(params[:id])
-    add_threshold_overrides if can_add_threshold_overrides?
+    RequirementsService.add_threshold_overrides if can_add_threshold_overrides?
     instructure_update
   end
 

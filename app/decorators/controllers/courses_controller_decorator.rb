@@ -79,7 +79,7 @@ CoursesController.class_eval do
     instructure_update
     return if params[:course].blank?
     set_course_passing_threshold
-    CoursesService::Commands::ForceMinScores.new(course: @course).call
+    RequirementsService.force_min_scores(course: @course)
   end
 
   alias_method :instructure_update, :update
