@@ -41,15 +41,15 @@ module RequirementsService
     Queries::GetPassingThreshold.new(type: type, id: id).call.to_f
   end
 
-  def self.course_has_set_threshold?(context)
-    !!Queries::GetPassingThreshold.new(type: :course, id: context.try(:id)).call
+  def self.get_course_passing_threshold?(context)
+    Queries::GetPassingThreshold.new(type: :course, id: context.try(:id)).call
   end
 
   def self.course_threshold_setting_enabled?
     SettingsService.get_settings(object: :school, id: 1)['course_threshold_enabled']
   end
 
-  def self.post_enrollment_threshold_enabled?
+  def self.post_enrollment_thresholds_enabled?
     SettingsService.get_settings(object: :school, id: 1)['enable_post_enrollment_threshold_updates']
   end
 

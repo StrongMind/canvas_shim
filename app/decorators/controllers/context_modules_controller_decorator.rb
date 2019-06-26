@@ -1,7 +1,14 @@
 ContextModulesController.class_eval do
   def strongmind_update
     @module = @context.context_modules.not_deleted.find(params[:id])
-    RequirementsService.add_threshold_overrides if can_add_threshold_overrides?
+
+    if can_add_threshold_overrides?
+      RequirementsService.add_threshold_overrides(
+        context_module: @module,
+        requirements: context_module_params[:completion_requirements]
+      )
+    end
+
     instructure_update
   end
 
@@ -10,14 +17,14 @@ ContextModulesController.class_eval do
 
   def strongmind_add_item
     instructure_add_item
-    RequirementsService.add_unit_item_with_min_score
+    RequirementsService.add_unit_item_with_min_score(context_module: @module, content_tag: @tag)
   end
 
   alias_method :instructure_add_item, :add_item
   alias_method :add_item, :strongmind_add_item
 
   def strongmind_item_redirect
-    if @context && @current_user && RequirementsService.course_has_set_threshold?(@context)
+    if @context && @current_user && RequirementsService.get_course_passing_threshold?(@context)
       course_progress = CourseProgress.new(@context, @current_user)
       @assignment = course_progress.try(&:current_content_tag).try(&:assignment)
       submission = @assignment.submissions.find_by(user: @current_user) if @assignment
@@ -42,7 +49,7 @@ ContextModulesController.class_eval do
   private
 
   def can_add_threshold_overrides?
-    RequirementsService.course_has_set_threshold?(@context) && RequirementsService.module_editing_enabled? &&
+    RequirementsService.get_course_passing_threshold?(@context) && RequirementsService.module_editing_enabled? &&
     context_module_params[:completion_requirements] && authorized_action(@module, @current_user, :update)
   end
 
