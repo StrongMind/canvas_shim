@@ -77,7 +77,6 @@ CoursesController.class_eval do
 
   def strongmind_update
     instructure_update
-
     return if params[:course].blank?
     set_course_passing_threshold
     CoursesService::Commands::ForceMinScores.new(course: @course).call
@@ -89,10 +88,6 @@ CoursesController.class_eval do
   private
   def grade_out_users_params
     params.permit(enrollment_ids: [])
-  end
-
-  def can_update_threshold?
-    @course && course_threshold_enabled? && valid_threshold?(@course_threshold)
   end
 
   def set_course_passing_threshold
