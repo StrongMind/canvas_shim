@@ -32,4 +32,28 @@ module RequirementsService
   def self.set_school_threshold_on_course(course:)
     Commands::SetSchoolThresholdOnCourse.new(course: course).call
   end
+
+  def self.get_passing_threshold(type:, id: 1)
+    Queries::GetPassingThreshold(type: type, id: id).call.to_f
+  end
+
+  def self.course_has_set_threshold?(context)
+    !!Queries::GetPassingThreshold(type: :course, id: context.try(:id)).call
+  end
+
+  def self.course_threshold_setting_enabled?
+    SettingsService.get_settings(object: :school, id: 1)['course_threshold_enabled']
+  end
+
+  def self.post_enrollment_threshold_enabled?
+    SettingsService.get_settings(object: :school, id: 1)['enable_post_enrollment_threshold_updates']
+  end
+
+  def self.disable_module_editing_on?
+    SettingsService.get_settings(object: :school, id: 1)['disable_module_editing']
+  end
+
+  def self.module_editing_enabled?
+    !RequirementsService.disable_module_editing_on?
+  end
 end

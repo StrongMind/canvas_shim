@@ -10,7 +10,7 @@ ContextModulesController.class_eval do
 
   def strongmind_add_item
     instructure_add_item
-    return unless gradeable_tag_type? && course_has_set_threshold?
+    return unless gradeable_tag_type? && RequirementsService.course_has_set_threshold?(@context)
     add_threshold_to_module
   end
 
@@ -18,7 +18,7 @@ ContextModulesController.class_eval do
   alias_method :add_item, :strongmind_add_item
 
   def strongmind_item_redirect
-    if @context && @current_user && course_has_set_threshold?
+    if @context && @current_user && RequirementsService.course_has_set_threshold?(@context)
       course_progress = CourseProgress.new(@context, @current_user)
       @assignment = course_progress.try(&:current_content_tag).try(&:assignment)
       submission = @assignment.submissions.find_by(user: @current_user) if @assignment
@@ -51,7 +51,7 @@ ContextModulesController.class_eval do
   end
 
   def can_add_threshold_overrides?
-    course_has_set_threshold? && module_editing_enabled? &&
+    RequirementsService.course_has_set_threshold?(@context) && RequirementsService.module_editing_enabled? &&
     context_module_params[:completion_requirements] && authorized_action(@module, @current_user, :update)
   end
 

@@ -4,14 +4,14 @@ AccountsController.class_eval do
     get_allowed_filetypes
 
     @school_threshold         = get_school_threshold
-    @course_thresh_enabled    = course_threshold_enabled?
+    @course_thresh_enabled    = RequirementsService.course_threshold_setting_enabled?
     @custom_placement_enabled = custom_placement_enabled?
 
     if @course_thresh_enabled
-      @post_enrollment_thresh_enabled = post_enrollment_thresholds_enabled?
+      @post_enrollment_thresh_enabled = RequirementsService.post_enrollment_thresholds_enabled?
     end
 
-    @module_editing_disabled = disable_module_editing_on?
+    @module_editing_disabled = RequirementsService.disable_module_editing_on?
 
     js_env({
       HOLIDAYS: @holidays,
