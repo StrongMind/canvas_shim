@@ -6,7 +6,7 @@ module PipelineService
 
       def initialize
         Aws.config.update(
-          region: ENV['AWS_REGION'],
+          region: REGION,
           credentials: Aws::Credentials.new(
             ENV['S3_ACCESS_KEY_ID'],
             ENV['S3_ACCESS_KEY']
@@ -14,7 +14,7 @@ module PipelineService
         )
   
         @url = SettingsService.get_settings(object: 'school', id: 1)['pipeline_sqs_url']
-        @sqs = Aws::SQS::Client.new(region: ENV['AWS_REGION'])
+        @sqs = Aws::SQS::Client.new(region: REGION)
       end
       
       def self.publish(payload)

@@ -14,7 +14,7 @@ module PipelineService
 
       def call
         @api_client.get_single_submission_courses(
-          @course.id, 
+          @course.id,
           @assignment.id, 
           @user.id, 
           include: ['submission_history']

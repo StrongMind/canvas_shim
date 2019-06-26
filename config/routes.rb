@@ -1,13 +1,9 @@
 CanvasShim::Engine.routes.draw do
-  
-  
   namespace "settings_api" do
     namespace 'v1' do
       resources :users, only: ['update']
     end
   end
-
-
 end
 
 Rails.application.routes.draw do
