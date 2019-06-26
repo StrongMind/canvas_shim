@@ -27,7 +27,7 @@ describe RequirementsService::Commands::AddThresholdOverrides do
     {
       "53" => { "type" => "must_view" },
       "56" => { "type" => "must_contribute" },
-      "58" => { "type" => "min_score", :min_score => "72.0"}
+      "58" => { "type" => "min_score", "min_score" => "72.0"}
     }
   end
 
@@ -50,8 +50,8 @@ describe RequirementsService::Commands::AddThresholdOverrides do
       let(:new_requirements) do
         {
           "53" => { "type" => "must_view" },
-          "56" => { "type" => "min_score", :min_score => "70.0"},
-          "58" => { "type" => "min_score", :min_score => "70.0"}
+          "56" => { "type" => "min_score", "min_score" => "70.0"},
+          "58" => { "type" => "min_score", "min_score" => "70.0"}
         }
       end
 

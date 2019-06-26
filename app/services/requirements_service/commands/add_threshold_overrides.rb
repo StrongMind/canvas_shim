@@ -51,7 +51,7 @@ module RequirementsService
 
       def changed_requirement?(new_requirement, current_requirement)
         new_requirement["type"] != current_requirement[:type] ||
-        (current_requirement[:min_score] && new_requirement[:min_score].to_f != current_requirement[:min_score])
+        (current_requirement[:min_score] && new_requirement["min_score"].to_f != current_requirement[:min_score])
       end
     end
   end
