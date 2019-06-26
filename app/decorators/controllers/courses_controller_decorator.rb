@@ -92,11 +92,9 @@ CoursesController.class_eval do
   end
 
   def set_course_passing_threshold
-    @course_threshold = params[:passing_threshold].to_i
-
     RequirementsService.set_passing_threshold(
       type: "course",
-      threshold: @course_threshold,
+      threshold: params[:passing_threshold].to_f,
       edited: params[:threshold_edited],
       id: @course.try(:id)
     )
