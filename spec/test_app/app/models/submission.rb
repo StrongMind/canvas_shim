@@ -16,4 +16,8 @@ class Submission < ActiveRecord::Base
   def send_submission_to_pipeline
     PipelineService.publish self
   end
+
+  def bulk_load_versioned_attachments
+    []
+  end
 end
