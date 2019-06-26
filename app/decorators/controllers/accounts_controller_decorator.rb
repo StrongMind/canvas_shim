@@ -3,7 +3,7 @@ AccountsController.class_eval do
     grab_holidays
     get_allowed_filetypes
 
-    @school_threshold         = get_school_threshold
+    @school_threshold         = RequirementsService.get_passing_threshold(type: :school)
     @course_thresh_enabled    = RequirementsService.course_threshold_setting_enabled?
     @custom_placement_enabled = custom_placement_enabled?
 
@@ -39,10 +39,6 @@ AccountsController.class_eval do
   alias_method :update, :strongmind_update
 
   private
-  def get_school_threshold
-    SettingsService.get_settings(object: :school, id: 1)['score_threshold'].to_f
-  end
-
   def holidays
     params[:holidays].blank? ? false : params[:holidays]
   end
