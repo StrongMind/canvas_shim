@@ -68,8 +68,9 @@ CoursesController.class_eval do
 
   def strongmind_show
     instructure_show
-    js_env(score_threshold: score_threshold.to_s) if course_has_set_threshold?
-    js_env(module_editing_disabled: disable_module_editing_on?)
+    score_threshold = RequirementsService.get_course_passing_threshold?(@context)
+    js_env(score_threshold: score_threshold.to_s) if score_threshold
+    js_env(module_editing_disabled: RequirementsService.disable_module_editing_on?)
   end
 
   alias_method :instructure_show, :show
@@ -77,11 +78,9 @@ CoursesController.class_eval do
 
   def strongmind_update
     instructure_update
-    @course_threshold = params[:passing_threshold].to_i
-    if !params[:course].blank? && threshold_edited? && can_update_threshold?
-      set_course_passing_threshold
-      CoursesService::Commands::ForceMinScores.new(course: @course).call
-    end
+    return if params[:course].blank?
+    set_course_passing_threshold
+    RequirementsService.force_min_scores(course: @course)
   end
 
   alias_method :instructure_update, :update
@@ -92,33 +91,29 @@ CoursesController.class_eval do
     params.permit(enrollment_ids: [])
   end
 
-  def can_update_threshold?
-    @course && course_threshold_enabled? && valid_threshold?(@course_threshold)
-  end
-
   def set_course_passing_threshold
-    SettingsService.update_settings(
-      object: 'course',
-      id: @course.id,
-      setting: 'passing_threshold',
-      value: @course_threshold
+    RequirementsService.set_passing_threshold(
+      type: "course",
+      threshold: params[:passing_threshold].to_f,
+      edited: params[:threshold_edited],
+      id: @course.try(:id)
     )
   end
 
   def get_course_threshold
     @threshold_visible = threshold_ui_allowed?
     return unless @threshold_visible
-    @course_threshold = SettingsService.get_settings(object: :course, id: params[:course_id])['passing_threshold'].to_f
+    @course_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id])
   end
 
   def threshold_ui_allowed?
-    course_threshold_enabled? &&
+    RequirementsService.course_threshold_setting_enabled? &&
     (!!@current_user.enrollments.find_by(type: 'TeacherEnrollment') || @current_user.roles(Account.site_admin).include?('admin')) &&
     no_active_students_or_post_thresh?
   end
 
   def no_active_students_or_post_thresh?
     get_context
-    post_enrollment_thresholds_enabled? ? true : @context.try(:no_active_students?)
+    RequirementsService.post_enrollment_thresholds_enabled? ? true : @context.try(:no_active_students?)
   end
 end
