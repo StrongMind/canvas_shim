@@ -72,7 +72,7 @@ module RequirementsService
         end
       end
     
-      def update_score(requirement, unit_exam = false)
+      def update_score(requirement)
         requirement.merge!(type: 'min_score', min_score: score_threshold)
       end
 
