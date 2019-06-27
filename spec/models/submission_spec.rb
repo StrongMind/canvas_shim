@@ -2,6 +2,7 @@ describe Submission do
   context 'callbacks' do
     before do
       allow(PipelineService).to receive(:publish)
+      allow(PipelineService::V2).to receive(:publish)
     end
 
 
