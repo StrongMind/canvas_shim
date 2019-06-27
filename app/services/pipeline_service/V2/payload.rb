@@ -16,7 +16,7 @@ module PipelineService
           {}
         end
       end
-      
+
     end
   end
 end
