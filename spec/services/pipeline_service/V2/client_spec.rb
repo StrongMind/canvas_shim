@@ -10,7 +10,7 @@ describe PipelineService::V2::Client do
       allow(Aws::SQS::Client).to receive(:new).and_return(sqs_instance)
     end
 
-    let(:payload) do 
+    let(:payload) do
       {
         :noun => "page_view",
         :meta => { :source=>"canvas", :domain_name=>"localhost", :api_version=>1, :status=>nil },
@@ -18,12 +18,12 @@ describe PipelineService::V2::Client do
         :data => {}
       }
     end
-  
+
     it 'calls sqs' do
       expect(sqs_instance).to receive(:send_message)
         .with(
           queue_url: 'sqs_url',
-          message_body: payload.to_json 
+          message_body: payload.to_json
         )
       PipelineService::V2::Client.publish(payload)
     end
