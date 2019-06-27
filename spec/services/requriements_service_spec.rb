@@ -1,9 +1,11 @@
 describe RequirementsService do
   subject { described_class }
+  include_context 'stubbed_network'
+
   let(:context_module) { double('context_module') }
   let(:requirements) { double('requirements') }
   let(:content_tag) { double('content_tag') }
-  let(:command_instance) { double('command instance') }
+  let!(:command_instance) { double('command instance') }
 
   before do
     allow(command_class).to receive(:new).and_return(command_instance)
@@ -12,6 +14,17 @@ describe RequirementsService do
   
   describe '#apply_minimum_scores' do
     let(:command_class) { RequirementsService::Commands::ApplyMinimumScores }
+
+    let(:context_module) do
+      double(
+        'context module',
+        completion_requirements: nil,
+        course: nil,
+        add_min_score_to_requirements: nil,
+        update_column: nil,
+        touch: nil
+      )
+    end
 
     it 'Calls the command object' do
       expect(command_instance).to receive(:call)
