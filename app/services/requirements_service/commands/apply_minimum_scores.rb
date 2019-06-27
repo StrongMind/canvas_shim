@@ -43,7 +43,7 @@ module RequirementsService
       def threshold_changes_needed?
         return false unless score_threshold.positive?
         completion_requirements.any? do |req|
-          is_submittable?(req) || min_score_different_than_threshold?(req)
+          is_submittable?(req) || (min_score_different_than_threshold?(req) && not_unit_exam?(req))
         end
       end
 
@@ -61,7 +61,8 @@ module RequirementsService
 
       def skippable_requirement?(requirement)
         has_threshold_override?(requirement) ||
-        ["must_submit", "must_contribute", "min_score"].none? { |type| type == requirement[:type] }
+        ["must_submit", "must_contribute", "min_score"].none? { |type| type == requirement[:type] } ||
+        unit_exam?(requirement)
       end
     
       def add_min_score_to_requirements
@@ -71,8 +72,17 @@ module RequirementsService
         end
       end
     
-      def update_score(requirement)
+      def update_score(requirement, unit_exam = false)
         requirement.merge!(type: 'min_score', min_score: score_threshold)
+      end
+
+      def unit_exam?(requirement)
+        content_tag = ContentTag.find_by(id: requirement[:id])
+        content_tag && RequirementsService.is_unit_exam?(content_tag: content_tag)
+      end
+
+      def not_unit_exam?(requirement)
+        !unit_exam?(requirement)
       end
     end
   end
