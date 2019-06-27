@@ -1,7 +1,7 @@
 module PipelineService
   module V2
     module Nouns
-      class ContentTag < PipelineService::V2::Nouns::Base
+      class ContentTag < Base
         def initialize object:
           @ar_object = object.ar_model
         end
