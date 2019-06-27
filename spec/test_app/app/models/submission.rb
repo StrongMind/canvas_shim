@@ -17,7 +17,10 @@ class Submission < ActiveRecord::Base
     PipelineService.publish self
   end
 
-  def bulk_load_versioned_attachments
+  def self.bulk_load_versioned_attachments(submissions)
     []
+  end
+
+  def versioned_attachments
   end
 end
