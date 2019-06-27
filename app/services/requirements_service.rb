@@ -7,8 +7,14 @@ module RequirementsService
     Commands::ForceMinScores.new(course: course).call
   end
 
-  def self.set_passing_threshold(type:, threshold:, edited:, id: 1)
-    Commands::SetPassingThreshold.new(type: type, threshold: threshold, edited: edited, id: id).call
+  def self.set_passing_threshold(type:, threshold:, edited:, id: 1, exam: false)
+    Commands::SetPassingThreshold.new(
+      type: type,
+      threshold: threshold,
+      edited: edited,
+      id: id,
+      exam: exam,
+    ).call
   end
 
   def self.set_threshold_permissions(course_thresholds:, post_enrollment:, module_editing:)
@@ -37,8 +43,8 @@ module RequirementsService
     Commands::SetSchoolThresholdOnCourse.new(course: course).call
   end
 
-  def self.get_passing_threshold(type:, id: 1)
-    Queries::GetPassingThreshold.new(type: type, id: id).call.to_f
+  def self.get_passing_threshold(type:, id: 1, exam: false)
+    Queries::GetPassingThreshold.new(type: type, id: id, exam: exam).call.to_f
   end
 
   def self.get_course_passing_threshold?(context)

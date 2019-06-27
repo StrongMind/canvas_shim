@@ -1,10 +1,11 @@
 module RequirementsService
   module Commands
     class SetPassingThreshold
-      def initialize(type:, threshold:, edited:, id: 1)
+      def initialize(type:, threshold:, edited:, id: 1, exam: false)
         @type = type
         @threshold = threshold
         setting_name = (type == "school" ? "score" : "passing")
+        setting_name += "_exam" if exam
         @setting = "#{setting_name}_threshold"
         @edited = (edited == "true")
         @id = id
