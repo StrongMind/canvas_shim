@@ -1,4 +1,4 @@
-module CoursesService
+module RequirementsService
   module Commands
     class ForceMinScores
       def initialize(course:)
