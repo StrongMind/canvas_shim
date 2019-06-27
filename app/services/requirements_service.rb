@@ -45,6 +45,10 @@ module RequirementsService
     Queries::GetPassingThreshold.new(type: :course, id: context.try(:id)).call
   end
 
+  def self.is_unit_exam?(content_tag:)
+    Queries::FindUnitExam.new(content_tag: content_tag).call
+  end
+
   def self.course_threshold_setting_enabled?
     SettingsService.get_settings(object: :school, id: 1)['course_threshold_enabled']
   end
