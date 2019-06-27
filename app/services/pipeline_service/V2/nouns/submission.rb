@@ -15,6 +15,7 @@ module PipelineService
         end
 
         def call
+          load_attachments
           submission_json(
             @submission,
             @submission.assignment,
@@ -23,6 +24,17 @@ module PipelineService
             nil,
             ['submission_history']
           )
+        end
+
+        def load_attachments
+          submissions = [@submission]
+          ::Submission.bulk_load_versioned_attachments(submissions)
+          attachments = submissions.flat_map &:versioned_attachments
+          ActiveRecord::Associations::Preloader.new.preload(
+            attachments,
+            [:canvadoc, :crocodoc_document]
+          )
+          Version.preload_version_number(submissions)
         end
       end
     end
