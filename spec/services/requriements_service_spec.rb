@@ -13,28 +13,17 @@ describe RequirementsService do
   end
   
   describe '#apply_minimum_scores' do
-    let(:command_class) { RequirementsService::Commands::ApplyMinimumScores }
-
-    let(:context_module) do
-      double(
-        'context module',
-        completion_requirements: nil,
-        course: nil,
-        add_min_score_to_requirements: nil,
-        update_column: nil,
-        touch: nil
-      )
-    end
+    let(:command_class) { RequirementsService::Commands::ApplyAssignmentMinScores }
 
     it 'Calls the command object' do
       expect(command_instance).to receive(:call)
-      subject.apply_minimum_scores(context_module: context_module)
+      subject.apply_assignment_min_scores(context_module: context_module)
     end
 
     context "stripping overrides" do
       it 'accepts a strip overrides parameter' do
         expect(command_class).to receive(:new).with(context_module: context_module, force: true)
-        subject.apply_minimum_scores(context_module: context_module, force: true)  
+        subject.apply_assignment_min_scores(context_module: context_module, force: true)
       end
     end
   end

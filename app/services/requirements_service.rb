@@ -1,11 +1,11 @@
 module RequirementsService
   def self.apply_minimum_scores(context_module:, force: false)
-    apply_assignment_minimum_scores(context_module: context_module, force: force)
+    apply_assignment_min_scores(context_module: context_module, force: force)
     apply_unit_exam_min_scores(context_module: context_module, force: force)
   end
 
-  def self.apply_assignment_minimum_scores(context_module:, force: false)
-    Commands::ApplyMinimumScores.new(context_module: context_module, force: force).call
+  def self.apply_assignment_min_scores(context_module:, force: false)
+    Commands::ApplyAssignmentMinScores.new(context_module: context_module, force: force).call
   end
 
   def self.apply_unit_exam_min_scores(context_module:, force: false)

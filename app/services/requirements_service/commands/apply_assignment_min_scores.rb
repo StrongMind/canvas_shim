@@ -1,6 +1,6 @@
 module RequirementsService
   module Commands
-    class ApplyMinimumScores
+    class ApplyAssignmentMinScores
       def initialize(context_module:, force: false)
         @context_module = context_module
         @completion_requirements = context_module.completion_requirements
