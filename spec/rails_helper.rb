@@ -12,8 +12,8 @@ abort('The Rails environment is running in production mode!') if Rails.env.produ
 # Why???  Autoloading seems broken unless we require these manually
 
  ##  this manual loading is really iffy, given we can't count on a specific load order
- ## loading these first because they have to be, we mind find others over time
- 
+ ## loading these first because they have to be, we might find others over time
+
 Dir[CanvasShim::Engine.root.join('app/services/pipeline_service/V2/noun.rb')].each { |f| require f }
 Dir[CanvasShim::Engine.root.join('app/services/pipeline_service/V2/nouns/base.rb')].each { |f| require f }
 
