@@ -13,7 +13,7 @@ module RequirementsService
 
       def call
         if force
-          RequirementsService.strip_overrides if threshold_overrides
+          RequirementsService.strip_overrides(course) if threshold_overrides
         else
           return unless threshold_changes_needed?
         end

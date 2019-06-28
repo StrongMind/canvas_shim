@@ -29,7 +29,7 @@ describe RequirementsService::Commands::ApplyAssignmentMinScores do
 
   describe '#call' do
     it 'does not strip overrides' do
-      expect(subject).to_not receive(:strip_overrides)
+      expect(RequirementsService).to_not receive(:strip_overrides)
       expect(subject).to receive(:add_min_score_to_requirements)
       subject.call
     end
@@ -48,8 +48,12 @@ describe RequirementsService::Commands::ApplyAssignmentMinScores do
     context 'force clearing threshold overrides' do
       subject { described_class.new(context_module: context_module, force: true) }
       
+      before do
+        allow(SettingsService).to receive(:get_settings).and_return({'passing_threshold' => 70, 'threshold_overrides' => ""})
+      end
+
       it 'strips overrides' do
-        expect(subject).to receive(:strip_overrides)
+        expect(RequirementsService).to receive(:strip_overrides)
         subject.call
       end
     end
@@ -66,7 +70,7 @@ describe RequirementsService::Commands::ApplyAssignmentMinScores do
         before do
           allow(SettingsService).to receive(:get_settings).and_return('passing_threshold' => 75)
           command = described_class.new(context_module: context_module, force: true)
-          allow(command).to receive(:strip_overrides).and_return(nil)
+          allow(RequirementsService).to receive(:strip_overrides).and_return(nil)
           command.call
         end
 

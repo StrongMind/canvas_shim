@@ -85,7 +85,7 @@ module RequirementsService
     !RequirementsService.disable_module_editing_on?
   end
 
-  def self.strip_overrides
+  def self.strip_overrides(course)
     SettingsService.update_settings(
       object: 'course',
       id: course.try(:id),
