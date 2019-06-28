@@ -16,8 +16,6 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-
-
 module Api::V1::Json
     # go through this helper for all json serialization in the api -- it handles
     # some tasks that all api json should do, like not including the root wrapper

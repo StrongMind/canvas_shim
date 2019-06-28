@@ -5,6 +5,7 @@ class Submission < ActiveRecord::Base
   has_many :versions, class_name: 'SubmissionVersion'
   has_many :submission_comments
 
+  after_save :send_submission_to_pipeline
   after_save :send_unit_grades_to_pipeline
 
   def send_unit_grades_to_pipeline
@@ -12,10 +13,7 @@ class Submission < ActiveRecord::Base
     PipelineService.publish(PipelineService::Nouns::UnitGrades.new(self))
   end
 
-  def self.bulk_load_versioned_attachments(submissions)
-    []
-  end
-
-  def versioned_attachments
+  def send_submission_to_pipeline
+    PipelineService.publish self
   end
 end

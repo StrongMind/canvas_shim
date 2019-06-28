@@ -5,14 +5,6 @@ module PipelineService
       include Singleton
 
       def initialize
-        Aws.config.update(
-          region: REGION,
-          credentials: Aws::Credentials.new(
-            ENV['S3_ACCESS_KEY_ID'],
-            ENV['S3_ACCESS_KEY']
-          )
-        )
-  
         @url = SettingsService.get_settings(object: 'school', id: 1)['pipeline_sqs_url']
         @sqs = Aws::SQS::Client.new(region: REGION)
       end
