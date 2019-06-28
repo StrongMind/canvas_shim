@@ -84,4 +84,13 @@ module RequirementsService
   def self.module_editing_enabled?
     !RequirementsService.disable_module_editing_on?
   end
+
+  def self.strip_overrides
+    SettingsService.update_settings(
+      object: 'course',
+      id: course.try(:id),
+      setting: 'threshold_overrides',
+      value: false
+    )
+  end
 end

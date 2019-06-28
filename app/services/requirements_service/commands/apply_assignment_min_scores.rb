@@ -13,12 +13,12 @@ module RequirementsService
 
       def call
         if force
-          strip_overrides
+          RequirementsService.strip_overrides if threshold_overrides
         else
           return unless threshold_changes_needed?
         end
 
-        run_command
+        run_command if threshold_set_and_positive?
       end
 
       private
@@ -29,15 +29,6 @@ module RequirementsService
         add_min_score_to_requirements
         context_module.update_column(:completion_requirements, completion_requirements)
         context_module.touch
-      end
-
-      def strip_overrides
-        SettingsService.update_settings(
-          object: 'course',
-          id: course.try(:id),
-          setting: 'threshold_overrides',
-          value: false
-        )
       end
 
       def threshold_changes_needed?
@@ -83,6 +74,10 @@ module RequirementsService
 
       def not_unit_exam?(requirement)
         !unit_exam?(requirement)
+      end
+
+      def threshold_set_and_positive?
+        settings['passing_threshold'] && score_threshold.positive?
       end
     end
   end
