@@ -48,8 +48,8 @@ module RequirementsService
     ).call
   end
 
-  def self.set_school_threshold_on_course(course:)
-    Commands::SetSchoolThresholdOnCourse.new(course: course).call
+  def self.set_school_thresholds_on_course(course:)
+    Commands::SetSchoolThresholdsOnCourse.new(course: course).call
   end
 
   def self.get_passing_threshold(type:, id: 1, exam: false)

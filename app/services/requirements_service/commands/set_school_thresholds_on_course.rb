@@ -1,6 +1,6 @@
 module RequirementsService
   module Commands
-    class SetSchoolThresholdOnCourse
+    class SetSchoolThresholdsOnCourse
       def initialize(course:)
         @course = course
       end
