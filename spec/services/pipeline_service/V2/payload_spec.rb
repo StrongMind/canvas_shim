@@ -9,7 +9,7 @@ describe PipelineService::V2::Payload do
     res = described_class.new(object: PipelineService::V2::Noun.new(
       Submission.new)).call
     expect(res[:identifiers]).to eq ({
-        :assigment_id => nil,
+        :assignment_id => nil,
         :course_id => nil,
         :id => nil,
       })
