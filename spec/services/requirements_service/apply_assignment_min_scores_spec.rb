@@ -75,6 +75,20 @@ describe RequirementsService::Commands::ApplyAssignmentMinScores do
           expect(req_scores.any? && req_scores.all? { |score| score == 75.0 }).to be true
         end
       end
+
+      context 'An assignment is a unit exam' do
+        before do
+          allow(subject).to receive(:unit_exam?).and_call_original
+          allow(subject).to receive(:unit_exam?).with({:id=>58, :type=>"must_contribute"}).and_return(true)
+          subject.call
+        end
+
+        it 'Only updates one of the two submittable assignments' do
+          req_scores = context_module.completion_requirements.select { |req| req[:min_score] }
+          expect(req_scores.size).to eq(1)
+          expect(req_scores.first[:min_score]).to eq(70)
+        end
+      end
     end
   end
 end
