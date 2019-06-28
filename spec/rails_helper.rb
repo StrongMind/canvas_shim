@@ -10,7 +10,7 @@ require File.expand_path("../test_app/config/environment.rb", __FILE__)
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 
 # Why???  Autoloading seems broken unless we require these manually
-Dir[CanvasShim::Engine.root.join('app/services/**/**/**/*.rb')].each { |f| require f }
+Dir[CanvasShim::Engine.root.join('app/services/**/**/**/*.rb')].each { |f| puts "#{f}"; require f }
 
 require 'spec_helper'
 require 'rspec/rails'
