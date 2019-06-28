@@ -5,7 +5,7 @@ describe RequirementsService do
   let(:context_module) { double('context_module') }
   let(:requirements) { double('requirements') }
   let(:content_tag) { double('content_tag') }
-  let!(:command_instance) { double('command instance') }
+  let(:command_instance) { double('command instance') }
 
   before do
     allow(command_class).to receive(:new).and_return(command_instance)
