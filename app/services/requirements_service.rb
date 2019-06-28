@@ -60,6 +60,11 @@ module RequirementsService
     Queries::GetPassingThreshold.new(type: :course, id: context.try(:id)).call
   end
 
+  def self.course_has_set_threshold?(context)
+    Queries::GetPassingThreshold.new(type: :course, id: context.try(:id)).call ||
+    Queries::GetPassingThreshold.new(type: :course, id: context.try(:id), exam: true).call
+  end
+
   def self.is_unit_exam?(content_tag:)
     Queries::FindUnitExam.new(content_tag: content_tag).call
   end
