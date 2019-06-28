@@ -9,8 +9,8 @@ module PipelineService
         case object.noun_class.name
         when /Submission/
           {
-            :assignment_id => object.ar_model.user_id,
-            :course_id => object.ar_model.user_id
+            :assignment_id => object.ar_model.assignment.id,
+            :course_id => object.ar_model.assignment.course.id
           }
         else
           {}
