@@ -18,7 +18,7 @@ module RequirementsService
           return unless threshold_changes_needed?
         end
 
-        run_command if threshold_set_and_valid?
+        run_command if threshold_set_or_positive?
       end
 
       private
@@ -75,8 +75,8 @@ module RequirementsService
         !unit_exam?(requirement)
       end
 
-      def threshold_set_and_valid?
-        settings['passing_exam_threshold'] && !score_threshold.negative?
+      def threshold_set_or_positive?
+        settings['passing_exam_threshold'] || score_threshold.positive?
       end
     end
   end
