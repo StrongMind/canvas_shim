@@ -12,7 +12,7 @@ module RequirementsService
       end
 
       def call
-        return unless RequirementsService.get_course_assignment_passing_threshold?(course)
+        return unless settings['passing_threshold']
 
         if force
           RequirementsService.strip_overrides(course) if threshold_overrides
@@ -20,7 +20,7 @@ module RequirementsService
           return unless threshold_changes_needed?
         end
 
-        run_command if threshold_set_or_positive?
+        run_command
       end
 
       private
@@ -76,10 +76,6 @@ module RequirementsService
 
       def not_unit_exam?(requirement)
         !unit_exam?(requirement)
-      end
-
-      def threshold_set_or_positive?
-        settings['passing_threshold'] || score_threshold.positive?
       end
     end
   end
