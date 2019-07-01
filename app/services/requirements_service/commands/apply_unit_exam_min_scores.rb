@@ -12,6 +12,8 @@ module RequirementsService
       end
 
       def call
+        return unless RequirementsService.get_course_exam_passing_threshold?(course)
+
         if force
           RequirementsService.strip_overrides(course) if threshold_overrides
         else
