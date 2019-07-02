@@ -9,6 +9,7 @@ module RequirementsService
         @setting = "#{setting_name}_threshold"
         @edited = (edited == "true")
         @id = id
+        @last_threshold = RequirementsService.get_raw_passing_threshold(type: type.to_sym, id: id, exam: exam)
       end
 
       def call
@@ -17,7 +18,7 @@ module RequirementsService
       end
 
       private
-      attr_reader :type, :threshold, :setting, :edited, :id
+      attr_reader :type, :threshold, :setting, :edited, :id, :last_threshold
 
       def set_threshold
         SettingsService.update_settings(
@@ -29,7 +30,12 @@ module RequirementsService
       end
 
       def valid_threshold?
-        !threshold.negative? && threshold <= 100
+        !threshold.negative? && threshold <= 100 && valid_compared_to_last_threshold?
+      end
+
+      def valid_compared_to_last_threshold?
+        last_threshold.nil? && threshold.positive? ||
+        last_threshold.to_f != threshold
       end
     end
   end

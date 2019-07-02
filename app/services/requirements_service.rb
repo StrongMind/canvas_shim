@@ -52,16 +52,20 @@ module RequirementsService
     Commands::SetSchoolThresholdsOnCourse.new(course: course).call
   end
 
+  def self.get_raw_passing_threshold(type:, id: 1, exam: false)
+    Queries::GetPassingThreshold.new(type: type, id: id, exam: exam).call
+  end
+
   def self.get_passing_threshold(type:, id: 1, exam: false)
-    Queries::GetPassingThreshold.new(type: type, id: id, exam: exam).call.to_f
+    get_raw_passing_threshold(type: type, id: id, exam: exam).to_f
   end
 
   def self.get_course_assignment_passing_threshold?(context)
-    Queries::GetPassingThreshold.new(type: :course, id: context.try(:id)).call
+    get_raw_passing_threshold(type: :course, id: context.try(:id))
   end
 
   def self.get_course_exam_passing_threshold?(context)
-    Queries::GetPassingThreshold.new(type: :course, id: context.try(:id), exam: true).call
+    get_raw_passing_threshold(type: :course, id: context.try(:id), exam: true)
   end
 
   def self.course_has_set_threshold?(context)
