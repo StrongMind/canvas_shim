@@ -7,12 +7,13 @@ module RequirementsService
         @force = force
         @course = context_module.course
         @settings = SettingsService.get_settings(object: :course, id: course.try(:id))
+        @threshold_exists = !!settings['passing_threshold']
         @score_threshold = settings['passing_threshold'].to_f
         @threshold_overrides = settings['threshold_overrides']
       end
 
       def call
-        return unless settings['passing_threshold']
+        return unless threshold_exists
 
         if force
           RequirementsService.strip_overrides(course) if threshold_overrides
@@ -25,7 +26,7 @@ module RequirementsService
 
       private
 
-      attr_reader :completion_requirements, :context_module, :course, :force, :score_threshold, :threshold_overrides, :settings
+      attr_reader :completion_requirements, :context_module, :course, :force, :score_threshold, :threshold_overrides, :settings, :threshold_exists
 
       def run_command
         add_min_score_to_requirements
