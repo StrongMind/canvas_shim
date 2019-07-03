@@ -1,4 +1,4 @@
-describe RequirementsService::Commands::ApplyMinimumScores do
+describe RequirementsService::Commands::ApplyAssignmentMinScores do
   include_context 'stubbed_network'
   subject { described_class.new(context_module: context_module) }
   
@@ -29,7 +29,7 @@ describe RequirementsService::Commands::ApplyMinimumScores do
 
   describe '#call' do
     it 'does not strip overrides' do
-      expect(subject).to_not receive(:strip_overrides)
+      expect(RequirementsService).to_not receive(:strip_overrides)
       expect(subject).to receive(:add_min_score_to_requirements)
       subject.call
     end
@@ -48,8 +48,12 @@ describe RequirementsService::Commands::ApplyMinimumScores do
     context 'force clearing threshold overrides' do
       subject { described_class.new(context_module: context_module, force: true) }
       
+      before do
+        allow(SettingsService).to receive(:get_settings).and_return({'passing_threshold' => 70, 'threshold_overrides' => ""})
+      end
+
       it 'strips overrides' do
-        expect(subject).to receive(:strip_overrides)
+        expect(RequirementsService).to receive(:strip_overrides)
         subject.call
       end
     end
@@ -66,13 +70,27 @@ describe RequirementsService::Commands::ApplyMinimumScores do
         before do
           allow(SettingsService).to receive(:get_settings).and_return('passing_threshold' => 75)
           command = described_class.new(context_module: context_module, force: true)
-          allow(command).to receive(:strip_overrides).and_return(nil)
+          allow(RequirementsService).to receive(:strip_overrides).and_return(nil)
           command.call
         end
 
         it "overrides the previous setting" do
           req_scores = context_module.completion_requirements.select { |req| req[:min_score] }.map { |req| req[:min_score] }
           expect(req_scores.any? && req_scores.all? { |score| score == 75.0 }).to be true
+        end
+      end
+
+      context 'An assignment is a unit exam' do
+        before do
+          allow(subject).to receive(:unit_exam?).and_call_original
+          allow(subject).to receive(:unit_exam?).with({:id=>58, :type=>"must_contribute"}).and_return(true)
+          subject.call
+        end
+
+        it 'Only updates one of the two submittable assignments' do
+          req_scores = context_module.completion_requirements.select { |req| req[:min_score] }
+          expect(req_scores.size).to eq(1)
+          expect(req_scores.first[:min_score]).to eq(70)
         end
       end
     end

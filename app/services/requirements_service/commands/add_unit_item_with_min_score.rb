@@ -9,7 +9,7 @@ module RequirementsService
       end
 
       def call
-        add_threshold_to_module if gradeable_tag_type? && RequirementsService.get_course_passing_threshold?(course)
+        add_threshold_to_module if gradeable_tag_type? && RequirementsService.get_course_assignment_passing_threshold?(course)
       end
 
       private

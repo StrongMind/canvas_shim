@@ -24,7 +24,7 @@ ContextModulesController.class_eval do
   alias_method :add_item, :strongmind_add_item
 
   def strongmind_item_redirect
-    if @context && @current_user && RequirementsService.get_course_passing_threshold?(@context)
+    if @context && @current_user && RequirementsService.course_has_set_threshold?(@context)
       course_progress = CourseProgress.new(@context, @current_user)
       @assignment = course_progress.try(&:current_content_tag).try(&:assignment)
       submission = @assignment.submissions.find_by(user: @current_user) if @assignment
@@ -49,7 +49,7 @@ ContextModulesController.class_eval do
   private
 
   def can_add_threshold_overrides?
-    RequirementsService.get_course_passing_threshold?(@context) && RequirementsService.module_editing_enabled? &&
+    RequirementsService.course_has_set_threshold?(@context) && RequirementsService.module_editing_enabled? &&
     context_module_params[:completion_requirements] && authorized_action(@module, @current_user, :update)
   end
 

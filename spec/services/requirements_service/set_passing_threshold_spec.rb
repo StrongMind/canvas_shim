@@ -47,7 +47,44 @@ describe RequirementsService::Commands::SetPassingThreshold do
     context "Sent a 0" do
       subject { described_class.new(type: 'school', threshold: 0, edited: 'true') }
 
-      it "receives set_threshold" do
+      it "does not set_threshold" do
+        expect(subject).to_not receive(:set_threshold)
+        subject.call
+      end
+
+      context "has previous setting" do
+        before do
+          allow(SettingsService).to receive(:get_settings).and_return({ "score_threshold" => 70 })
+        end
+
+        it "receives set_threshold" do
+          expect(subject).to receive(:set_threshold)
+          subject.call
+        end
+      end
+    end
+
+    context "Threshold is the same" do
+      subject { described_class.new(type: 'school', threshold: 70, edited: 'true') }
+
+      before do
+        allow(SettingsService).to receive(:get_settings).and_return({ "score_threshold" => 70 })
+      end
+
+      it "does not set_threshold" do
+        expect(subject).to_not receive(:set_threshold)
+        subject.call
+      end
+    end
+
+    context "Threshold is different" do
+      subject { described_class.new(type: 'school', threshold: 75, edited: 'true') }
+
+      before do
+        allow(SettingsService).to receive(:get_settings).and_return({ "score_threshold" => 70 })
+      end
+
+      it "does not set_threshold" do
         expect(subject).to receive(:set_threshold)
         subject.call
       end

@@ -4,6 +4,7 @@ AccountsController.class_eval do
     get_allowed_filetypes
 
     @school_threshold         = RequirementsService.get_passing_threshold(type: :school)
+    @school_exam_threshold    = RequirementsService.get_passing_threshold(type: :school, exam: true)
     @course_thresh_enabled    = RequirementsService.course_threshold_setting_enabled?
     @custom_placement_enabled = custom_placement_enabled?
 
@@ -25,6 +26,7 @@ AccountsController.class_eval do
 
   def strongmind_update
     set_school_passing_threshold
+    set_school_unit_exam_passing_threshold
     set_threshold_permissions
 
     set_allowed_filetypes if params[:allowed_filetypes]
@@ -95,6 +97,15 @@ AccountsController.class_eval do
       type: "school",
       threshold: params[:account][:settings][:score_threshold].to_f,
       edited: params[:threshold_edited]
+    )
+  end
+
+  def set_school_unit_exam_passing_threshold
+    RequirementsService.set_passing_threshold(
+      type: "school",
+      threshold: params[:account][:settings][:unit_score_threshold].to_f,
+      edited: params[:unit_threshold_edited],
+      exam: true
     )
   end
 
