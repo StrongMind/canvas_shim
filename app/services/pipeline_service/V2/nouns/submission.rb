@@ -1,9 +1,12 @@
 module PipelineService
   module V2
-    module Nouns 
+    module Nouns
       class Submission < Base
+
+        include Api
         include Api::V1::Submission
         include Rails.application.routes.url_helpers
+        include PipelineService::Serializers::BaseMethods
         Rails.application.routes.default_url_options[:host] = ENV['CANVAS_DOMAIN']
 
         def initialize(object:)
