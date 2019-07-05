@@ -2,7 +2,7 @@ describe PipelineService::V2::Client do
   include_context 'stubbed_network'
   describe '#publish' do
     let(:sqs_instance) { double('sqs_instance') }
-    
+
     before do
       allow(SettingsService).to receive(:get_settings).and_return(
         'pipeline_sqs_url' => 'sqs_url'
@@ -27,6 +27,5 @@ describe PipelineService::V2::Client do
         )
       PipelineService::V2::Client.publish(payload)
     end
-
   end
 end

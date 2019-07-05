@@ -32,7 +32,6 @@ describe Submission do
               'enable_unit_grade_calculations' => false,
               'v2_submissions' => true
             })
-
         end
 
         it 'publishes on create' do
@@ -45,6 +44,13 @@ describe Submission do
           expect(PipelineService::V2).to receive(:publish).with an_instance_of(Submission)
           s.save
         end
+
+        it 'doesnt post to the v1 client' do
+          s = Submission.create
+          expect(PipelineService::HTTPClient).not_to receive(:post)
+          s.save
+        end
+
       end
     end
 
