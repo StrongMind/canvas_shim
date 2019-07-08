@@ -8,7 +8,7 @@ module PipelineService
             # value from the instance passed into #to_a
             #
             # Proc.new do |submission| 
-            #   [:course_id, submission.assignment.course.id]}
+            #   [:course_id, submission.assignment.course.id]
             # end
             def initialize(field, options={})
                 @field = field

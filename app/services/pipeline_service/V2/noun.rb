@@ -3,8 +3,8 @@ module PipelineService
     class Noun < Models::Noun
       attr_reader :ar_model
       def initialize(object)
-        super(object)
         @ar_model = object
+        super(object)
       end
 
       def serializer
