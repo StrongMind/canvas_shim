@@ -29,6 +29,13 @@ module PipelineService
           )
         end
 
+        def self.additional_identifier_fields
+          [
+            Identifier.new(Proc.new {|ar_model| [:assignment_id, ar_model.assignment.id]}),
+            Identifier.new(Proc.new {|ar_model| [:course_id, ar_model.assignment.course.id]})
+          ]
+        end
+  
         def load_attachments
           submissions = [@submission]
           ::Submission.bulk_load_versioned_attachments(submissions)
