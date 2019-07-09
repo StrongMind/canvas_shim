@@ -1,3 +1,14 @@
+function flipIcon(element, threshDisabled) {
+  var icon = element.children("i");
+  if (threshDisabled) {
+    icon.removeClass("icon-edit");
+    icon.addClass("icon-trash");
+  } else {
+    icon.removeClass("icon-trash");
+    icon.addClass("icon-edit");
+  }
+}
+
 $(window).on("load", function(event) {
   var initialVal = $('#passing_threshold').val();
   $('#edit_threshold_btn').click(function(e) {
@@ -10,6 +21,8 @@ $(window).on("load", function(event) {
     if ($('#passing_threshold').prop('disabled')) {
       $('#passing_threshold').val(initialVal);
     }
+
+    flipIcon($(this), passThreshDisabled);
   });
 
   var initialUnitVal = $('#passing_unit_threshold').val();
@@ -23,5 +36,7 @@ $(window).on("load", function(event) {
     if ($('#passing_unit_threshold').prop('disabled')) {
       $('#passing_unit_threshold').val(initialUnitVal);
     }
+
+    flipIcon($(this), unitPassThreshDisabled);
   });
 });
