@@ -70,6 +70,7 @@ CoursesController.class_eval do
     instructure_show
     score_threshold = RequirementsService.get_course_assignment_passing_threshold?(@context)
     js_env(score_threshold: score_threshold.to_s) if score_threshold
+    js_env(module_editing_disabled: RequirementsService.disable_module_editing_on?)
   end
 
   alias_method :instructure_show, :show
