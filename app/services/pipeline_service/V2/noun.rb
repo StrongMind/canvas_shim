@@ -3,14 +3,16 @@ module PipelineService
     class Noun < Models::Noun
       attr_reader :ar_model
       def initialize(object)
-        super(object)
         @ar_model = object
+        super(object)
       end
 
       def serializer
         case short_class_name
         when /ContentTag/
           PipelineService::V2::Nouns::ContentTag
+        when /Submission/
+          PipelineService::V2::Nouns::Submission
         else
           PipelineService::V2::Nouns::Base
         end
