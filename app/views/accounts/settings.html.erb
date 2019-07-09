@@ -267,60 +267,6 @@ TEXT
                       </dl>
                     </td>
                   </tr>
-
-                  <tr>
-                    <td><%= settings.blabel :score_threshold, :en => "Passing Threshold (Assignments)" %></td>
-                    <td>
-                      <%= settings.number_field :score_threshold,
-                                              :value => @school_threshold,
-                                              :class => 'same-width-as-select',
-                                              :min => "0",
-                                              :max => "100",
-                                              :step => "0.1",
-                                              :placeholder => "Choose a number between 0-100",
-                                              :disabled => true %>
-                      <a id="edit_school_threshold_btn" href="" class="Button Button--icon-action">
-                        <i class="icon-edit"></i>
-                      </a>
-                      <p style="font-size: 0.9em;"><%= t("Set a school-wide minimum score for all graded assignments.") %></p>
-                      <p style="font-size: 0.9em;"><%= t("This setting is off by default, and/or when the threshold is set to 0.0.") %></p>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td><%= settings.blabel :unit_score_threshold, :en => "Passing Threshold (Exams)" %></td>
-                    <td>
-                      <%= settings.number_field :unit_score_threshold,
-                                              :value => @school_exam_threshold,
-                                              :class => 'same-width-as-select',
-                                              :min => "0",
-                                              :max => "100",
-                                              :step => "0.1",
-                                              :placeholder => "Choose a number between 0-100",
-                                              :disabled => true %>
-                      <a id="edit_school_unit_threshold_btn" href="" class="Button Button--icon-action">
-                        <i class="icon-edit"></i>
-                      </a>
-                      <p style="font-size: 0.9em;"><%= t("Set a school-wide minimum score for all unit/final exams.") %></p>
-                      <p style="font-size: 0.9em;"><%= t("This setting is off by default, and/or when the threshold is set to 0.0.") %></p>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td colspan="2"><%= settings.check_box :enable_thresholds_in_courses, :checked => @course_thresh_enabled, :title => "Allow teachers to add custom passing thresholds to courses" %>
-                    <%= settings.label :enable_thresholds_in_courses, :en => "Enable teachers to set minimum score thresholds" %>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2" class="sub_checkbox"><%= settings.check_box :enable_post_enrollment_threshold_updates, :checked => @post_enrollment_thresh_enabled, :disabled => !@course_thresh_enabled %>
-                    <%= settings.label :enable_post_enrollment_threshold_updates, :en => "Allow passing threshold adjustments once the first student starts a course" %>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2" class="sub_checkbox"><%= settings.check_box :prevent_module_editing, :checked => @module_editing_disabled, :title => "Prevent teachers from editing passing requirements for a unit" %>
-                    <%= settings.label :prevent_module_editing, :en => "Prevent teachers from adjusting passing thresholds at the unit level" %>
-                    </td>
-                  </tr>
                   <tr>
                     <td colspan="2">
                         <%= settings.check_box :enable_custom_placement,
@@ -439,6 +385,67 @@ TEXT
                   </tr>
                 <% end %>
               <% end %>
+            <% end %>
+          </table>
+        </fieldset>
+
+        <fieldset>
+          <legend><%= t(:passing_threshold_settings, 'Passing Threshold Settings') %></legend>
+          <table class="formtable">
+            <%= f.fields_for :settings do |settings| %>
+              <tr>
+                <td><%= settings.blabel :score_threshold, :en => "Passing Threshold (Assignments)" %></td>
+                <td>
+                  <%= settings.number_field :score_threshold,
+                                          :value => @school_threshold,
+                                          :class => 'same-width-as-select',
+                                          :min => "0",
+                                          :max => "100",
+                                          :step => "0.1",
+                                          :placeholder => "Choose a number between 0-100",
+                                          :disabled => true %>
+                  <a id="edit_school_threshold_btn" href="" class="Button Button--icon-action">
+                    <i class="icon-edit"></i>
+                  </a>
+                  <p style="font-size: 0.9em;"><%= t("Set a school-wide minimum score for all graded assignments.") %></p>
+                  <p style="font-size: 0.9em;"><%= t("This setting is off by default, and/or when the threshold is set to 0.0.") %></p>
+                </td>
+              </tr>
+
+              <tr>
+                <td><%= settings.blabel :unit_score_threshold, :en => "Passing Threshold (Exams)" %></td>
+                <td>
+                  <%= settings.number_field :unit_score_threshold,
+                                          :value => @school_exam_threshold,
+                                          :class => 'same-width-as-select',
+                                          :min => "0",
+                                          :max => "100",
+                                          :step => "0.1",
+                                          :placeholder => "Choose a number between 0-100",
+                                          :disabled => true %>
+                  <a id="edit_school_unit_threshold_btn" href="" class="Button Button--icon-action">
+                    <i class="icon-edit"></i>
+                  </a>
+                  <p style="font-size: 0.9em;"><%= t("Set a school-wide minimum score for all unit/final exams.") %></p>
+                  <p style="font-size: 0.9em;"><%= t("This setting is off by default, and/or when the threshold is set to 0.0.") %></p>
+                </td>
+              </tr>
+
+              <tr>
+                <td colspan="2"><%= settings.check_box :enable_thresholds_in_courses, :checked => @course_thresh_enabled, :title => "Allow teachers to add custom passing thresholds to courses" %>
+                <%= settings.label :enable_thresholds_in_courses, :en => "Enable teachers to set minimum score thresholds" %>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" class="sub_checkbox"><%= settings.check_box :enable_post_enrollment_threshold_updates, :checked => @post_enrollment_thresh_enabled, :disabled => !@course_thresh_enabled %>
+                <%= settings.label :enable_post_enrollment_threshold_updates, :en => "Allow passing threshold adjustments once the first student starts a course" %>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" class="sub_checkbox"><%= settings.check_box :prevent_module_editing, :checked => @module_editing_disabled, :title => "Prevent teachers from editing passing requirements for a unit" %>
+                <%= settings.label :prevent_module_editing, :en => "Prevent teachers from adjusting passing thresholds at the unit level" %>
+                </td>
+              </tr>
             <% end %>
           </table>
         </fieldset>

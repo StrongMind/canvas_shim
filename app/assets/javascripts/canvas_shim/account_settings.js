@@ -1,3 +1,14 @@
+function flipIcon(element, threshDisabled) {
+  var icon = element.children("i");
+  if (threshDisabled) {
+    icon.removeClass("icon-edit");
+    icon.addClass("icon-trash");
+  } else {
+    icon.removeClass("icon-trash");
+    icon.addClass("icon-edit");
+  }
+}
+
 $(window).on("load", function(event) {
   var initialVal = $('#account_settings_score_threshold').val();
   $('#edit_school_threshold_btn').click(function(e) {
@@ -10,6 +21,8 @@ $(window).on("load", function(event) {
     if ($('#account_settings_score_threshold').prop('disabled')) {
       $('#account_settings_score_threshold').val(initialVal);
     }
+
+    flipIcon($(this), passThreshDisabled);
   });
 
   var initialUnitVal = $('#account_settings_unit_score_threshold').val();
@@ -23,5 +36,7 @@ $(window).on("load", function(event) {
     if ($('#account_settings_unit_score_threshold').prop('disabled')) {
       $('#account_settings_unit_score_threshold').val(initialUnitVal);
     }
+
+    flipIcon($(this), unitPassThreshDisabled);
   });
 });
