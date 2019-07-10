@@ -112,7 +112,7 @@
 
   <div class='form-actions'>
     <a href="<%= course_settings_url(@context) %>" class="btn button-secondary"><%= t '#buttons.cancel', 'Cancel' %></a>
-    <button type="submit" class="btn btn-primary"><%= t('buttons.create_course', %{Create Course}) %></button>
+    <span id="copy-btn-wrapper"><button id="copy-course-btn" type="submit" class="btn btn-primary"><%= t('buttons.create_course', %{Create Course}) %></button></span>
   </div>
 
 <% end %>
