@@ -1,5 +1,4 @@
 describe AlertsService::Alerts::MaxAttemptsReached do
-  
   subject { 
     described_class.new(
       teacher_id: 1, 
@@ -14,6 +13,7 @@ describe AlertsService::Alerts::MaxAttemptsReached do
   let(:datetime) { '2019-06-13 20:53:14.153693+00:00' }
   let(:updated_datetime) { '2019-06-13 20:58:14.153693+00:00' }
   let(:json_response) { subject.as_json }
+
 
   describe '#created_at' do
     it 'is in the right format' do

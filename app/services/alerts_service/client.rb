@@ -29,7 +29,7 @@ module AlertsService
       ).tap do |response|
         return Response.new(
           response.code,
-          Alerts.list_from_json(response.body)
+          Alert.list_from_json(response.body)
         )
       end
     end
@@ -41,7 +41,7 @@ module AlertsService
       ).tap do |response|
         return Response.new(
           response.code,
-          Alerts.from_json(
+          Alert.from_json(
             response.body
           )
         )
