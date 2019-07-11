@@ -5,6 +5,9 @@ module AlertsService
         (self.class::ALERT_ATTRIBUTES + self.class::SERVICE_ATTRIBUTES).each do |attribute|
           instance_variable_set("@#{attribute}", atts[attribute])
         end
+        
+        @created_at = DateTime.parse(atts[:created_at]) if atts[:created_at]
+        @updated_at = DateTime.parse(atts[:updated_at]) if atts[:updated_at]
         alert_initialize(atts)
       end
 
