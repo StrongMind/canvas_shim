@@ -12,10 +12,6 @@ module AlertsService
       def student
         User.find(student_id)
       end
-
-      def type
-        
-      end
     end
   end
 end
