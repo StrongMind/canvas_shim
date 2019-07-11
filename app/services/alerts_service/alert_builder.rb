@@ -1,6 +1,6 @@
 module AlertsService
   module AlertBuilder
-    SERVICE_ATTRIBUTES = [:alert_id, :created_at, :updated_at]  
+    SERVICE_ATTRIBUTES = %i{ alert_id created_at updated_at }
     include Mixins::ServiceFields
     include Mixins::JSONFactories
     include Mixins::Initializer
