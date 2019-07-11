@@ -1,15 +1,10 @@
 class TestAlert
-  def self.required_attributes
+  def self.alert_attributes
     [:teacher_id]
   end
   
   include AlertsService::AlertBuilder
 
-  def initialize(teacher_id:, alert_id: nil, created_at: nil, updated_at: nil)
-    @teacher_id = teacher_id
-    @created_at = created_at
-    @updated_at = updated_at
-  end
 
   def type
     'test_alert'
