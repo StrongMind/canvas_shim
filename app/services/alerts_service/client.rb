@@ -29,7 +29,7 @@ module AlertsService
       ).tap do |response|
         return Response.new(
           response.code,
-          Alerts::MaxAttemptsReached.list_from_json(response.body)
+          Alerts.list_from_json(response.body)
         )
       end
     end
@@ -41,7 +41,7 @@ module AlertsService
       ).tap do |response|
         return Response.new(
           response.code,
-          Alerts::MaxAttemptsReached.from_json(
+          Alerts.from_json(
             response.body
           )
         )

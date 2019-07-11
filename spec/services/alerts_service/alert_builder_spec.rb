@@ -7,7 +7,7 @@ end
 describe AlertsService::AlertBuilder do
   subject { TestAlert.new(teacher_id: 1) }
 
-  let(:attributes) { {alert: {teacher_id: 1}} }
+  let(:attributes) { {alert: {teacher_id: 1, type: 'max_attempts_reached'}} }
     
   describe 'as_json' do
     it 'returns required attributes in json hash' do
@@ -21,13 +21,13 @@ describe AlertsService::AlertBuilder do
     context 'class methods' do
       describe('#from_json') do
         it 'builds_from' do
-          expect(TestAlert.from_json(attributes.to_json).teacher_id).to eq(1)
+          expect(AlertsService::Alerts.from_json(attributes.to_json).teacher_id).to eq(1)
         end
       end
 
       describe('#from_json_list') do
         it 'builds from a json payload' do
-          expect(TestAlert.list_from_json([attributes].to_json).first.teacher_id).to eq(1)
+          expect(AlertsService::Alerts.list_from_json([attributes].to_json).first.teacher_id).to eq(1)
         end
       end
     end

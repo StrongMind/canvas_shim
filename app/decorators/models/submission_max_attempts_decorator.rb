@@ -8,8 +8,8 @@ Submission.class_eval do
         AlertsService::Client.create(
           :max_attempts_reached, 
           teacher_id: teacher.id,
-          student_id: user.id, 
-          assignment_id: assignment.id          
+          student_id: user.id,
+          assignment_id: assignment.id
         )
       end
     end

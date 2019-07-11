@@ -41,7 +41,11 @@ describe AlertsService::Alerts::MaxAttemptsReached do
     end
 
     it 'type' do
-      expect(json_response[:type]).to eq 'Max Attempts Reached'
+      expect(json_response[:type]).to eq 'max_attempts_reached'
+    end
+
+    it 'description' do
+      expect(json_response[:description]).to eq 'Max Attempts Reached'
     end
 
     it 'score' do

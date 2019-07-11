@@ -1,8 +1,8 @@
 module AlertsService
   module Alerts
     class MaxAttemptsReached
-      ALERT_ATTRIBUTES = %i{teacher_id student_id assignment_id score}
-      TYPE = 'Max Attempts Reached'
+      ALERT_ATTRIBUTES = %i{teacher_id student_id assignment_id score description}
+      TYPE = 'max_attempts_reached'
       
       include AlertBuilder
 
@@ -17,6 +17,10 @@ module AlertsService
       def detail
         return unless @score.present?
         "Score: #{@score}"
+      end
+
+      def description
+        'Max Attempts Reached'
       end
     end
   end
