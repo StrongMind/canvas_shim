@@ -12,6 +12,10 @@ module AlertsService
       def alert_id
         @alert_id
       end
+
+      def type
+        @type
+      end
     end  
   end
 end

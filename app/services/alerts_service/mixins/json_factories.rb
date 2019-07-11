@@ -12,6 +12,8 @@ module AlertsService
           from_payload JSON.parse(json, symbolize_names: true)
         end
 
+        private
+
         def all_fields
           self::ALERT_ATTRIBUTES + self::SERVICE_ATTRIBUTES
         end

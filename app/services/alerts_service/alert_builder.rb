@@ -1,11 +1,11 @@
 module AlertsService
   module AlertBuilder
-    SERVICE_ATTRIBUTES = %i{ alert_id created_at updated_at }
+    SERVICE_ATTRIBUTES = %i{ alert_id created_at updated_at type }
     include Mixins::ServiceFields
     include Mixins::JSONFactories
     include Mixins::Initializer
 
-    def as_json(opts={})
+    def as_json opts={}
       self.class::ALERT_ATTRIBUTES.map do |field_name| 
         [field_name, self.send(field_name)] 
       end.to_h.merge({type: self.class::TYPE})

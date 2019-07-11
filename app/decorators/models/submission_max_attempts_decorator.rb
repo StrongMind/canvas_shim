@@ -6,11 +6,10 @@ Submission.class_eval do
     if used_attempts >= max_attempts
       teachers_to_alert.each do |teacher|
         AlertsService::Client.create(
-          AlertsService::Alerts::MaxAttemptsReached.new(
-            teacher_id: teacher.id, 
-            student_id: user.id, 
-            assignment_id: assignment.id
-          )
+          :max_attempts_reached, 
+          teacher_id: teacher.id,
+          student_id: user.id, 
+          assignment_id: assignment.id          
         )
       end
     end

@@ -13,6 +13,11 @@ module AlertsService
       def student
         User.find(student_id)
       end
+
+      def detail
+        return unless @score.present?
+        "Score: #{@score}"
+      end
     end
   end
 end
