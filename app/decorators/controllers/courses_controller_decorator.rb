@@ -89,6 +89,15 @@ CoursesController.class_eval do
   alias_method :instructure_update, :update
   alias_method :update, :strongmind_update
 
+  def strongmind_copy
+    instructure_copy
+    add_on = (SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on')
+    js_env(auto_due_dates: add_on)
+  end
+
+  alias_method :instructure_copy, :copy
+  alias_method :copy, :strongmind_copy
+
   private
   def grade_out_users_params
     params.permit(enrollment_ids: [])

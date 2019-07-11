@@ -1,4 +1,9 @@
 $(window).on("load", function(event) {
+  if (ENV['auto_due_dates']) {
+    $("#dateAdjustCheckbox").remove();
+    $("label[for=dateAdjustCheckbox]").remove();
+  }
+
   $("#copy-course-btn").prop("disabled", true);
 
   $(document).on("change", "#course_start_at, #course_conclude_at", function(e) {
