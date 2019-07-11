@@ -17,7 +17,7 @@ module AlertsService
         def from_payload(attributes)
           attributes.merge(attributes[:alert]).tap do |flattened|
             flattened.delete(:alert)
-            return self.new((alert_attributes + SERVICE_ATTRIBUTES).map do |field_name|
+            return self.new((self::ALERT_ATTRIBUTES + self::SERVICE_ATTRIBUTES).map do |field_name|
               [field_name, flattened[field_name]] 
             end.to_h)
           end

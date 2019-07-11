@@ -12,7 +12,7 @@ module AlertsService
     end
 
     def self.included base
-      raise 'alert attributes must be defined in the as a class method before including PayloadBuilder' unless base.const_defined? :ALERT_ATTRIBUTES
+      raise 'alert attributes must be defined in the as a class method before including PayloadBuilder' unless base.const_defined?(:ALERT_ATTRIBUTES)
       raise 'you need to implement #type in your alert' unless base.const_defined?(:TYPE)
       base.extend Mixins::JSONFactories::ClassMethods
       base.send(:attr_reader, *base::ALERT_ATTRIBUTES)

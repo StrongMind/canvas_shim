@@ -1,14 +1,7 @@
 class TestAlert
-  def self.alert_attributes
-    [:teacher_id]
-  end
-  
+  ALERT_ATTRIBUTES = [:teacher_id]  
+  TYPE = 'test_alert'
   include AlertsService::AlertBuilder
-
-
-  def type
-    'test_alert'
-  end
 end
 
 describe AlertsService::AlertBuilder do

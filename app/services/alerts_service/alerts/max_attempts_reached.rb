@@ -1,8 +1,9 @@
 module AlertsService
   module Alerts
     class MaxAttemptsReached
-      ALERT_ATTRIBUTES = [:teacher_id, :student_id, :assignment_id, :score]
+      ALERT_ATTRIBUTES = %i{teacher_id student_id assignment_id score}
       TYPE = 'Max Attempts Reached'
+      
       include AlertBuilder
 
       def assignment
