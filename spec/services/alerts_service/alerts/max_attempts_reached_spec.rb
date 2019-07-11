@@ -52,4 +52,26 @@ describe AlertsService::Alerts::MaxAttemptsReached do
       expect(json_response[:score]).to eq 10
     end
   end
+
+  describe '#detail' do
+    subject { 
+      described_class.new(
+        teacher_id: 1, 
+        student_id: 2, 
+        assignment_id: 3, 
+        created_at: datetime, 
+        updated_at: updated_datetime,
+        score: 10
+      ) 
+    }
+
+    it 'spells out the type' do
+      expect(json_response[:detail]).to eq "Score: 10"
+    end
+
+    it 'no value if no score' do
+      subject.instance_variable_set(:@score, nil)
+      expect(json_response[:detail]).to be_nil
+    end
+  end
 end
