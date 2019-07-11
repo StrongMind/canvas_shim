@@ -98,6 +98,22 @@ CoursesController.class_eval do
   alias_method :instructure_copy, :copy
   alias_method :copy, :strongmind_copy
 
+  def strongmind_copy_course
+    start_at = DateTime.parse(params[:course][:start_at]) rescue nil
+    conclude_at = DateTime.parse(params[:course][:conclude_at]) rescue nil
+
+    unless start_at && conclude_at
+      flash[:error] = t("Please incude a start and end date.")
+      get_context
+      return render 'copy'
+    end
+
+    instructure_copy_course
+  end
+
+  alias_method :instructure_copy_course, :copy_course
+  alias_method :copy_course, :strongmind_copy_course
+
   private
   def grade_out_users_params
     params.permit(enrollment_ids: [])
