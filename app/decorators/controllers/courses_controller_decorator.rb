@@ -91,8 +91,7 @@ CoursesController.class_eval do
 
   def strongmind_copy
     instructure_copy
-    add_on = (SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on')
-    js_env(auto_due_dates: add_on)
+    display_wo_auto_due_dates?
   end
 
   alias_method :instructure_copy, :copy
@@ -105,6 +104,7 @@ CoursesController.class_eval do
     unless start_at && conclude_at
       flash[:error] = t("Please incude a start and end date.")
       get_context
+      display_wo_auto_due_dates?
       return render 'copy'
     end
 
@@ -146,7 +146,7 @@ CoursesController.class_eval do
   end
 
   def threshold_ui_allowed?
-    RequirementsService.course_threshold_setting_enabled? &&
+    @current_user && RequirementsService.course_threshold_setting_enabled? &&
     (!!@current_user.enrollments.find_by(type: 'TeacherEnrollment') || @current_user.roles(Account.site_admin).include?('admin')) &&
     no_active_students_or_post_thresh?
   end
@@ -154,5 +154,10 @@ CoursesController.class_eval do
   def no_active_students_or_post_thresh?
     get_context
     RequirementsService.post_enrollment_thresholds_enabled? ? true : @context.try(:no_active_students?)
+  end
+
+  def display_wo_auto_due_dates?
+    add_on = (SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on')
+    js_env(auto_due_dates: add_on)
   end
 end
