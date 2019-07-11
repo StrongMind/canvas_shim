@@ -4,7 +4,9 @@ $(window).on("load", function(event) {
     $("label[for=dateAdjustCheckbox]").remove();
   }
 
-  $("#copy-course-btn").prop("disabled", true);
+  if (!(ENV["OLD_START_DATE"] && ENV["OLD_END_DATE"])) {
+    $("#copy-course-btn").prop("disabled", true);
+  }
 
   $(document).on("change", "#course_start_at, #course_conclude_at", function(e) {
     $("#copy-course-btn").prop("disabled", true);
