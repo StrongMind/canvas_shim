@@ -32,6 +32,13 @@ describe AlertsService::Alert do
         expect(AlertsService::Alert.list_from_json([attributes].to_json).first.teacher_id).to eq(1)
       end
     end
+
+    context "old type" do
+      let(:attributes) { { alert: { teacher_id: 1, type: 'Max Attempts Reached' } } }
+      it 'builds from a json payload' do
+        expect(AlertsService::Alert.from_json(attributes.to_json)).to be_a(AlertsService::Alerts::MaxAttemptsReached)
+      end
+    end
   end
 
 end

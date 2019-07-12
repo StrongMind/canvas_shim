@@ -14,15 +14,18 @@ module AlertsService
 
     def self.list_from_json(json)
       JSON.parse(json, symbolize_names: true).map do |alert|
-        alert_class = Alerts.const_get(alert[:alert][:type].camelize)
-        alert_class.from_payload(alert)
+        alert_class(alert).from_payload(alert)
       end
+    end
+
+    def self.alert_class(alert)
+      return Alerts::MaxAttemptsReached if alert[:alert][:type] == 'Max Attempts Reached'
+      Alerts.const_get(alert[:alert][:type].camelize)
     end
 
     def self.from_json(json)
       JSON.parse(json, symbolize_names: true).tap do |alert|
-        alert_class = Alerts.const_get(alert[:alert][:type].camelize)
-        return alert_class.from_payload(alert)
+        return alert_class(alert).from_payload(alert)
       end
     end
 
