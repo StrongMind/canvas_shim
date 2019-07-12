@@ -1,9 +1,8 @@
 module AlertsService
   module Alerts
     class MaxAttemptsReached < Alert
-      ALERT_ATTRIBUTES = %i{teacher_id student_id assignment_id score description detail}
-      TYPE = 'max_attempts_reached'
-      
+      ALERT_ATTRIBUTES = %i{ teacher_id student_id assignment_id score description detail }
+            
       def initialize(atts)
         super
       end

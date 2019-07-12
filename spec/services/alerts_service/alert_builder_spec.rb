@@ -1,6 +1,8 @@
 class TestAlert < AlertsService::Alert
   ALERT_ATTRIBUTES = [:teacher_id]  
-  TYPE = 'test_alert'
+  def type 
+    'test_alert'
+  end
 end
 
 describe AlertsService::Alert do

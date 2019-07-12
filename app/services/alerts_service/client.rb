@@ -41,9 +41,7 @@ module AlertsService
       ).tap do |response|
         return Response.new(
           response.code,
-          Alert.from_json(
-            response.body
-          )
+          Alert.from_json(response.body)
         )
       end
     end

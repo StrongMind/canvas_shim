@@ -1,6 +1,6 @@
 module AlertsService
   class Alert
-    SERVICE_ATTRIBUTES = %i{ alert_id created_at updated_at type }
+    SERVICE_ATTRIBUTES = %i{ alert_id created_at updated_at}
 
     def initialize(atts={})
       self.class.all_fields.each do |attribute|
@@ -27,7 +27,7 @@ module AlertsService
     end
 
     def self.all_fields
-      self::ALERT_ATTRIBUTES + self::SERVICE_ATTRIBUTES
+      self::ALERT_ATTRIBUTES + self::SERVICE_ATTRIBUTES 
     end
 
     def self.from_payload(attributes)          
@@ -37,11 +37,15 @@ module AlertsService
         end.to_h
       )
     end
+
+    def type
+      self.class.to_s.split("::").last.underscore
+    end
     
     def as_json opts={}
       self.class::ALERT_ATTRIBUTES.map do |field_name| 
         [field_name, self.send(field_name)] 
-      end.to_h.merge({type: self.class::TYPE})
+      end.to_h.merge({type: self.type})
     end
   end
 end

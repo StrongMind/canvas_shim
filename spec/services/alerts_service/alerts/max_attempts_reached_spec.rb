@@ -14,10 +14,15 @@ describe AlertsService::Alerts::MaxAttemptsReached do
   let(:updated_datetime) { '2019-06-13 20:58:14.153693+00:00' }
   let(:json_response) { subject.as_json }
 
-
   describe '#created_at' do
     it 'is in the right format' do
       expect(subject.created_at).to eq(DateTime.parse(datetime))
+    end
+  end
+
+  describe '#type' do
+    it do
+      expect(subject.type).to eq("max_attempts_reached")
     end
   end
 
@@ -66,12 +71,12 @@ describe AlertsService::Alerts::MaxAttemptsReached do
     }
 
     it 'spells out the type' do
-      expect(json_response[:detail]).to eq "Score: 10"
+      expect(subject.detail).to eq "Score: 10"
     end
 
     it 'no value if no score' do
       subject.instance_variable_set(:@score, nil)
-      expect(json_response[:detail]).to be_nil
+      expect(subject.detail).to be_nil
     end
   end
 end
