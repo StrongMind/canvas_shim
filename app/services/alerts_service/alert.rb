@@ -1,6 +1,8 @@
 module AlertsService
   class Alert
+    # Servicd attributes are managed by the microservice and not sent in the json blob
     SERVICE_ATTRIBUTES = %i{ alert_id created_at updated_at}
+    DEFAULT_ALERT_ATTRIBUTES = [:description, :detail]
 
     def initialize(atts={})
       self.class.all_fields.each do |attribute|
@@ -30,7 +32,7 @@ module AlertsService
     end
 
     def self.all_fields
-      self::ALERT_ATTRIBUTES + self::SERVICE_ATTRIBUTES 
+      self::ALERT_ATTRIBUTES + self::SERVICE_ATTRIBUTES + DEFAULT_ALERT_ATTRIBUTES
     end
 
     def self.from_payload(attributes)          
@@ -41,12 +43,20 @@ module AlertsService
       )
     end
 
+    def description
+      raise 'Alerts must define #description!'
+    end
+
+    def detail
+      raise 'Alerts must define #detail'
+    end
+
     def type
       self.class.to_s.split("::").last.underscore
     end
     
     def as_json opts={}
-      self.class::ALERT_ATTRIBUTES.map do |field_name| 
+      (self.class::ALERT_ATTRIBUTES + DEFAULT_ALERT_ATTRIBUTES).map  do |field_name| 
         [field_name, self.send(field_name)] 
       end.to_h.merge({type: self.type})
     end

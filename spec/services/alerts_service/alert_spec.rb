@@ -3,6 +3,14 @@ class TestAlert < AlertsService::Alert
   def type 
     'test_alert'
   end
+
+  def description
+    'my description'
+  end
+
+  def detail
+    'my detail'
+  end
 end
 
 describe AlertsService::Alert do
@@ -17,6 +25,19 @@ describe AlertsService::Alert do
     
     it 'includes the type' do
       expect(subject.as_json[:type]).to eq 'test_alert'
+    end
+
+    it 'does not include service_attributes' do
+      AlertsService::Alert::SERVICE_ATTRIBUTES.each do |attribute|
+        expect(subject.as_json[attribute]).to be_nil
+      end
+    end
+    
+    it 'includes default alert attributes' do
+      AlertsService::Alert::DEFAULT_ALERT_ATTRIBUTES.each do |attribute|
+        puts attribute
+        expect(subject.as_json[attribute]).to_not be_nil
+      end
     end
   end
   
