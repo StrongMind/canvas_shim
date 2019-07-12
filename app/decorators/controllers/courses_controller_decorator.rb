@@ -114,6 +114,14 @@ CoursesController.class_eval do
   alias_method :instructure_copy_course, :copy_course
   alias_method :copy_course, :strongmind_copy_course
 
+  def at_a_glance
+    get_context
+    @avg_grade = 83.2
+    @avg_completion_pct = 74.3
+    @assignments_need_grading = 53
+    @alerts_need_attention = 7
+  end
+
   private
   def grade_out_users_params
     params.permit(enrollment_ids: [])
