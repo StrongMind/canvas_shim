@@ -23,7 +23,7 @@ Submission.class_eval do
     
     context_module = content_tag.context_module
     return unless context_module
-    requirement = context_module.completion_requirements.find {|req| req[id] == content_tag.id}
+    requirement = context_module.completion_requirements.find { |req| req[id] == content_tag.id }
 
     return unless requirement
     requirement[:min_score] < score
