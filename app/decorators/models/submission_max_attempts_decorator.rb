@@ -3,16 +3,30 @@ Submission.class_eval do
 
   def send_max_attempts_alert
     return unless used_attempts && max_attempts
-    if used_attempts >= max_attempts
-      teachers_to_alert.each do |teacher|
-        AlertsService::Client.create(
-          :max_attempts_reached, 
-          teacher_id: teacher.id,
-          student_id: user.id,
-          assignment_id: assignment.id
-        )
-      end
+    return unless student_locked?
+    teachers_to_alert.each do |teacher|
+      AlertsService::Client.create(
+        :max_attempts_reached, 
+        teacher_id: teacher.id,
+        student_id: user.id,
+        assignment_id: assignment.id
+      )
     end
+  end
+
+  def student_locked?
+    return unless used_attempts && max_attempts
+    return unless used_attempts >= max_attempts
+    
+    content_tag = ContentTag.find_by(context_id: assignment.id, context_type: 'Assignment')
+    return unless content_tag
+    
+    context_module = content_tag.context_module
+    return unless context_module
+    requirement = context_module.completion_requirements.find {|req| req[id] == content_tag.id}
+
+    return unless requirement
+    requirement[:min_score] < score
   end
   
   def teachers_to_alert

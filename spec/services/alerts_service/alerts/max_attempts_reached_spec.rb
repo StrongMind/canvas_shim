@@ -70,7 +70,7 @@ describe AlertsService::Alerts::MaxAttemptsReached do
       ) 
     }
 
-    it 'spells out the type' do
+    it 'shows the score in english' do
       expect(subject.detail).to eq "Score: 10"
     end
 
