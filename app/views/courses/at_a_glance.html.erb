@@ -21,30 +21,28 @@
     <div class="card-body" style="padding: .25rem 2rem 2rem 2rem; text-align: center;">
       <h5><strong>Average Course Grade</strong></h5>
       <p class="card-text">83.2</p>
-      <a href="#" class="card-link border border-t">Student Details</a>
-      <!-- people tab -->
+      <%= link_to 'Student Details', course_users_path, class: "card-link border border-t" %>
     </div>
   </div>
   <div class="card content-box pad-box-mini border border-trbl border-round">
     <div class="card-body">
       <h5><strong>Average Course % Completed</strong></h5>
       <p class="card-text">74.3</p>
-      <a href="#" class="card-link border border-t">View Progressions</a>
-      <!-- course_modules_progressions_path -->
+      <%= link_to 'View Progressions', progressions_course_context_modules_path, class: "card-link border border-t" %>
     </div>
   </div>
   <div class="card content-box pad-box-mini border border-trbl border-round">
     <div class="card-body">
       <h5><strong>Assignments Need Grading</strong></h5>
       <p class="card-text">53</p>
-      <a href="#" class="card-link border border-t">Gradebook</a>
+      <%= link_to 'Gradebook', course_grades_path, class: "card-link border border-t" %>
     </div>
   </div>
   <div class="card content-box pad-box-mini border border-trbl border-round">
     <div class="card-body">
       <h5><strong>Alerts Need Attention</strong></h5>
       <p class="card-text">7</p>
-      <a href="#" class="card-link border border-t">View Alerts</a>
+      <%= link_to 'View Alerts', cs_alerts_path, class: "card-link border border-t" %>
     </div>
   </div>
 </div>
