@@ -89,6 +89,31 @@ CoursesController.class_eval do
   alias_method :instructure_update, :update
   alias_method :update, :strongmind_update
 
+  def strongmind_copy
+    instructure_copy
+    display_wo_auto_due_dates?
+  end
+
+  alias_method :instructure_copy, :copy
+  alias_method :copy, :strongmind_copy
+
+  def strongmind_copy_course
+    start_at = DateTime.parse(params[:course][:start_at]) rescue nil
+    conclude_at = DateTime.parse(params[:course][:conclude_at]) rescue nil
+
+    unless start_at && conclude_at
+      flash[:error] = t("Please incude a start and end date.")
+      get_context
+      display_wo_auto_due_dates?
+      return render 'copy'
+    end
+
+    instructure_copy_course
+  end
+
+  alias_method :instructure_copy_course, :copy_course
+  alias_method :copy_course, :strongmind_copy_course
+
   private
   def grade_out_users_params
     params.permit(enrollment_ids: [])
@@ -129,5 +154,10 @@ CoursesController.class_eval do
   def no_active_students_or_post_thresh?
     get_context
     RequirementsService.post_enrollment_thresholds_enabled? ? true : @context.try(:no_active_students?)
+  end
+
+  def display_wo_auto_due_dates?
+    add_on = (SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on')
+    js_env(auto_due_dates: add_on)
   end
 end
