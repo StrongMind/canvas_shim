@@ -1,14 +1,29 @@
 module RequirementsService
   def self.apply_minimum_scores(context_module:, force: false)
-    Commands::ApplyMinimumScores.new(context_module: context_module, force: force).call
+    apply_assignment_min_scores(context_module: context_module, force: force)
+    apply_unit_exam_min_scores(context_module: context_module, force: force)
+  end
+
+  def self.apply_assignment_min_scores(context_module:, force: false)
+    Commands::ApplyAssignmentMinScores.new(context_module: context_module, force: force).call
+  end
+
+  def self.apply_unit_exam_min_scores(context_module:, force: false)
+    Commands::ApplyUnitExamMinScores.new(context_module: context_module, force: force).call
   end
 
   def self.force_min_scores(course:)
     Commands::ForceMinScores.new(course: course).call
   end
 
-  def self.set_passing_threshold(type:, threshold:, edited:, id: 1)
-    Commands::SetPassingThreshold.new(type: type, threshold: threshold, edited: edited, id: id).call
+  def self.set_passing_threshold(type:, threshold:, edited:, id: 1, exam: false)
+    Commands::SetPassingThreshold.new(
+      type: type,
+      threshold: threshold,
+      edited: edited,
+      id: id,
+      exam: exam,
+    ).call
   end
 
   def self.set_threshold_permissions(course_thresholds:, post_enrollment:, module_editing:)
@@ -33,16 +48,33 @@ module RequirementsService
     ).call
   end
 
-  def self.set_school_threshold_on_course(course:)
-    Commands::SetSchoolThresholdOnCourse.new(course: course).call
+  def self.set_school_thresholds_on_course(course:)
+    Commands::SetSchoolThresholdsOnCourse.new(course: course).call
   end
 
-  def self.get_passing_threshold(type:, id: 1)
-    Queries::GetPassingThreshold.new(type: type, id: id).call.to_f
+  def self.get_raw_passing_threshold(type:, id: 1, exam: false)
+    Queries::GetPassingThreshold.new(type: type, id: id, exam: exam).call
   end
 
-  def self.get_course_passing_threshold?(context)
-    Queries::GetPassingThreshold.new(type: :course, id: context.try(:id)).call
+  def self.get_passing_threshold(type:, id: 1, exam: false)
+    get_raw_passing_threshold(type: type, id: id, exam: exam).to_f
+  end
+
+  def self.get_course_assignment_passing_threshold?(context)
+    get_raw_passing_threshold(type: :course, id: context.try(:id))
+  end
+
+  def self.get_course_exam_passing_threshold?(context)
+    get_raw_passing_threshold(type: :course, id: context.try(:id), exam: true)
+  end
+
+  def self.course_has_set_threshold?(context)
+    get_course_assignment_passing_threshold?(context) ||
+    get_course_exam_passing_threshold?(context)
+  end
+
+  def self.is_unit_exam?(content_tag:)
+    Queries::FindUnitExam.new(content_tag: content_tag).call
   end
 
   def self.course_threshold_setting_enabled?
@@ -59,5 +91,14 @@ module RequirementsService
 
   def self.module_editing_enabled?
     !RequirementsService.disable_module_editing_on?
+  end
+
+  def self.strip_overrides(course)
+    SettingsService.update_settings(
+      object: 'course',
+      id: course.try(:id),
+      setting: 'threshold_overrides',
+      value: false
+    )
   end
 end

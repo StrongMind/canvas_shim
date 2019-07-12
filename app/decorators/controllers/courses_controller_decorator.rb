@@ -68,7 +68,7 @@ CoursesController.class_eval do
 
   def strongmind_show
     instructure_show
-    score_threshold = RequirementsService.get_course_passing_threshold?(@context)
+    score_threshold = RequirementsService.get_course_assignment_passing_threshold?(@context)
     js_env(score_threshold: score_threshold.to_s) if score_threshold
     js_env(module_editing_disabled: RequirementsService.disable_module_editing_on?)
   end
@@ -80,13 +80,39 @@ CoursesController.class_eval do
     instructure_update
     return if params[:course].blank?
     set_course_passing_threshold
-    if RequirementsService.get_course_passing_threshold?(@course)
+    set_course_exam_passing_threshold
+    if RequirementsService.course_has_set_threshold?(@course)
       RequirementsService.force_min_scores(course: @course)
     end
   end
 
   alias_method :instructure_update, :update
   alias_method :update, :strongmind_update
+
+  def strongmind_copy
+    instructure_copy
+    display_wo_auto_due_dates?
+  end
+
+  alias_method :instructure_copy, :copy
+  alias_method :copy, :strongmind_copy
+
+  def strongmind_copy_course
+    start_at = DateTime.parse(params[:course][:start_at]) rescue nil
+    conclude_at = DateTime.parse(params[:course][:conclude_at]) rescue nil
+
+    unless start_at && conclude_at
+      flash[:error] = t("Please incude a start and end date.")
+      get_context
+      display_wo_auto_due_dates?
+      return render 'copy'
+    end
+
+    instructure_copy_course
+  end
+
+  alias_method :instructure_copy_course, :copy_course
+  alias_method :copy_course, :strongmind_copy_course
 
   private
   def grade_out_users_params
@@ -102,10 +128,21 @@ CoursesController.class_eval do
     )
   end
 
+  def set_course_exam_passing_threshold
+    RequirementsService.set_passing_threshold(
+      type: "course",
+      threshold: params[:passing_unit_threshold].to_f,
+      edited: params[:unit_threshold_edited],
+      id: @course.try(:id),
+      exam: true
+    )
+  end
+
   def get_course_threshold
     @threshold_visible = threshold_ui_allowed?
     return unless @threshold_visible
     @course_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id])
+    @course_exam_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id], exam: true)
   end
 
   def threshold_ui_allowed?
@@ -117,5 +154,10 @@ CoursesController.class_eval do
   def no_active_students_or_post_thresh?
     get_context
     RequirementsService.post_enrollment_thresholds_enabled? ? true : @context.try(:no_active_students?)
+  end
+
+  def display_wo_auto_due_dates?
+    add_on = (SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on')
+    js_env(auto_due_dates: add_on)
   end
 end
