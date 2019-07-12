@@ -6,9 +6,9 @@
 <% content_for :page_title, "#{@context.name} at a glance" %>
 <% add_crumb t('#crumbs.at_a_glance', "#{@context.name} at a glance") %>
 
-<div class="ic-Action-header content-box pad-box-mini border border-t border-b">
+<div id="caag-header" class="ic-Action-header content-box pad-box-mini border border-t border-b">
   <div class="ic-Action-header__Primary">
-    <h3 class="ic-Action-header__Heading"><%= @context.name %> at a glance</h3>
+    <h3 class="ic-Action-header__Heading"><strong><%= @context.name %> at a glance</strong></h3>
   </div>
   <div class="ic-Action-header__Secondary">
     <select class="ic-Input" id="caag-course-select">
