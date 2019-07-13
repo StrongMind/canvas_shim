@@ -6,7 +6,7 @@ module AlertsService
       @school = School.new(ENV['CANVAS_DOMAIN'])
     end
 
-    def self.create(alert_type, attributes);instance.create(alert_type, attributes={});end
+    def self.create(alert_type, attributes);instance.create(alert_type, attributes);end
     def self.list(teacher_id);instance.list(teacher_id);end
     def self.show(id);instance.show(id);end
     def self.destroy(id);instance.destroy(id);end
