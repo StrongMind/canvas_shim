@@ -8,7 +8,8 @@ Submission.class_eval do
         :max_attempts_reached,
         teacher_id: teacher.id,
         student_id: user.id,
-        assignment_id: assignment.id
+        assignment_id: assignment.id,
+        score: score
       )
     end
   end
