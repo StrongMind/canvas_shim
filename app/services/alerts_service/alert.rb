@@ -21,7 +21,6 @@ module AlertsService
     end
 
     def self.alert_class(alert)
-      return Alerts::MaxAttemptsReached if alert[:alert][:type] == 'Max Attempts Reached'
       Alerts.const_get(alert[:alert][:type].camelize)
     end
 
