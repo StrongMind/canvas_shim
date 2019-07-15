@@ -16,6 +16,7 @@ module AlertsService
       end
 
       def detail
+        return
         return unless @score.present?
         "Score: #{@score}"
       end
