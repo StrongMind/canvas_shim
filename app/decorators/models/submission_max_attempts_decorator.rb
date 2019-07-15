@@ -9,6 +9,7 @@ Submission.class_eval do
         teacher_id: teacher.id,
         student_id: user.id,
         assignment_id: assignment.id,
+        course_id: assignment.course.id,
         score: score
       )
     end

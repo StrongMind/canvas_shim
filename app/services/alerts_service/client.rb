@@ -14,7 +14,7 @@ module AlertsService
     def create(alert_type, attributes)
       alert = Alerts.const_get(alert_type.to_s.camelize).new(attributes)
       http_client.post(
-        "#{get_secret['API_ENDPOINT']}/schools/#{school.id}/alerts", 
+        "#{get_secret['API_ENDPOINT']}/schools/#{school.id}/alerts",
         body: alert.to_json,
         headers: headers,
       ).tap do |response|
@@ -34,7 +34,7 @@ module AlertsService
       end
     end
 
-    def show(id)      
+    def show(id)
       http_client.get(
         "#{get_secret['API_ENDPOINT']}/schools/#{school.id}/alerts/#{id}",
         headers: headers
@@ -64,7 +64,7 @@ module AlertsService
     end
 
     def headers
-      { 
+      {
         'x-api-key' => get_secret['API_KEY'],
         'Content-Type' => 'application/json'
       }

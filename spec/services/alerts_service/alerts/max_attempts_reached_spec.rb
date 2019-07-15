@@ -1,13 +1,14 @@
 describe AlertsService::Alerts::MaxAttemptsReached do
-  subject { 
+  subject {
     described_class.new(
-      teacher_id: 1, 
-      student_id: 2, 
-      assignment_id: 3, 
-      created_at: datetime, 
+      teacher_id: 1,
+      student_id: 2,
+      assignment_id: 3,
+      course_id: 10,
+      created_at: datetime,
       updated_at: updated_datetime,
       score: 10
-    ) 
+    )
   }
 
   let(:datetime) { '2019-06-13 20:53:14.153693+00:00' }
@@ -56,18 +57,23 @@ describe AlertsService::Alerts::MaxAttemptsReached do
     it 'score' do
       expect(json_response[:score]).to eq 10
     end
+
+    it 'teacher_id' do
+      expect(json_response[:course_id]).to eq 10
+    end
+
   end
 
   describe '#detail' do
-    subject { 
+    subject {
       described_class.new(
-        teacher_id: 1, 
-        student_id: 2, 
-        assignment_id: 3, 
-        created_at: datetime, 
+        teacher_id: 1,
+        student_id: 2,
+        assignment_id: 3,
+        created_at: datetime,
         updated_at: updated_datetime,
         score: 10
-      ) 
+      )
     }
 
     it 'shows the score in english' do
