@@ -116,10 +116,12 @@ CoursesController.class_eval do
 
   def at_a_glance
     get_context
-    @avg_grade = @context.average_score.round(1)
-    @avg_completion_pct = @context.average_completion_percentage.round(1)
-    @assignments_need_grading = @context.needs_grading_count
-    @alerts_need_attention = 7
+    if authorized_action(@context, @current_user, :manage_grades)
+      @avg_grade = @context.average_score.round(1)
+      @avg_completion_pct = @context.average_completion_percentage.round(1)
+      @assignments_need_grading = @context.needs_grading_count
+      @alerts_need_attention = 7
+    end
   end
 
   private
