@@ -24,9 +24,9 @@ Course.class_eval do
 
   def average_completion_percentage
     active_students.map do |student|
-      cp = CourseProgress.new(course, student.user)
-      cp.requirement_completed_count.to_f / cp.requirement_count.to_f
-     end.reduce(&:+).to_f / working_denominator(active_students)
+      cp = CourseProgress.new(self, student.user)
+      (cp.requirement_completed_count.to_f / cp.requirement_count.to_f) * 100
+    end.reduce(&:+).to_f / working_denominator(active_students)
   end
 
   def needs_grading_count
