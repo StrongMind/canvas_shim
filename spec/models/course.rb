@@ -62,4 +62,36 @@ describe Course do
       end
     end
   end
+
+  describe "#average_score" do
+    let!(:course) { Course.create }
+    let!(:student) { User.create }
+    let!(:student_enrollment) do
+      StudentEnrollment.create(course: course, user: student, workflow_state: "active")
+    end
+    let!(:score_1) { Score.create(enrollment: student_enrollment, current_score: 87.0)}
+
+    it "gets an average" do
+      expect(course.average_score).to eq(87.0)
+    end
+
+    context "multiple students" do
+      let!(:student_enrollment_2) do
+        StudentEnrollment.create(course: course, user: student, workflow_state: "active")
+      end
+      let!(:score_2) { Score.create(enrollment: student_enrollment_2, current_score: 50.0)}
+      let!(:student_enrollment_3) do
+        StudentEnrollment.create(course: course, user: student, workflow_state: "active")
+      end
+      let!(:score_3) { Score.create(enrollment: student_enrollment_3, current_score: 60.0)}
+
+      it "is different now" do
+        expect(course.average_score.round(1)).to eq(65.7)
+      end
+    end
+
+    it "returns 0 with no students" do
+      expect(Course.create.average_score).to eq(0)
+    end
+  end
 end
