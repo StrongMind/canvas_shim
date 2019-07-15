@@ -116,8 +116,8 @@ CoursesController.class_eval do
 
   def at_a_glance
     get_context
-    @avg_grade = 83.2
-    @avg_completion_pct = 74.3
+    @avg_grade = @context.average_score
+    @avg_completion_pct = @context.average_completion_percentage
     @assignments_need_grading = 53
     @alerts_need_attention = 7
   end

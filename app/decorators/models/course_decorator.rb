@@ -13,4 +13,24 @@ Course.class_eval do
   def no_active_students?
     active_students.count.zero?
   end
+
+  def average_score
+    course_scores = active_students.map do |active|
+      active.scores.first.try(:current_score).to_f
+    end
+
+    course_scores.reduce(&:+).to_f / working_denominator(course_scores)
+  end
+
+  def average_completion_percentage
+    active_students.map do |student|
+      cp = CourseProgress.new(course, student.user)
+      cp.requirement_completed_count.to_f / cp.requirement_count.to_f
+     end.reduce(&:+).to_f / working_denominator(active_students)
+  end
+
+  private
+  def working_denominator(arr)
+    arr.none? ? 1 : arr.size
+  end
 end
