@@ -30,7 +30,7 @@ Submission.class_eval do
   end
 
   def teachers_to_alert
-    assignment.course.teacher_enrollments.map { |enrollement| enrollement.user }
+    assignment.course.teacher_enrollments.map { |enrollment| enrollment.user }
   end
 
   def max_attempts

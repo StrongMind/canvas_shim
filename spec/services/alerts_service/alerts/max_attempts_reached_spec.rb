@@ -58,7 +58,7 @@ describe AlertsService::Alerts::MaxAttemptsReached do
       expect(json_response[:score]).to eq 10
     end
 
-    it 'teacher_id' do
+    it 'course_id' do
       expect(json_response[:course_id]).to eq 10
     end
 
