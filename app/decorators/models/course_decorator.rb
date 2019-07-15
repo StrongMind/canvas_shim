@@ -29,6 +29,10 @@ Course.class_eval do
      end.reduce(&:+).to_f / working_denominator(active_students)
   end
 
+  def needs_grading_count
+    assignments.map(&:needs_grading_count).reduce(&:+).to_i
+  end
+
   private
   def working_denominator(arr)
     arr.none? ? 1 : arr.size
