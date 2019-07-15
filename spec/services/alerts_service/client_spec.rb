@@ -3,6 +3,7 @@ describe AlertsService::Client do
 
   let(:alert) { double('alert', as_json: {teacher_id: 1, student_id: 1, assignment_id: 1, type: 'max_attempts_reached'}) }
   let(:http_client) { double('http_client', post: nil) }
+  let(:alert_fields) { { teacher_id: 1, student_id: 1, assignment_id: 1 } }
   
   before do
     allow(subject.instance).to receive(:school).and_return(AlertsService::School.new('myschool'))
@@ -45,13 +46,13 @@ describe AlertsService::Client do
   describe '#create' do
     it 'can create' do
       VCR.use_cassette 'alerts_service/client/create' do
-        expect(subject.create(alert).payload).to be_nil
+        expect(subject.create(:max_attempts_reached, alert_fields).payload).to be_nil
       end
     end
 
     it 'response code' do
       VCR.use_cassette 'alerts_service/client/create' do
-        expect(subject.create(alert).code).to eq(201)
+        expect(subject.create(:max_attempts_reached, alert_fields).code).to eq(201)
       end
     end
   end

@@ -6,21 +6,19 @@ module AlertsService
       @school = School.new(ENV['CANVAS_DOMAIN'])
     end
 
-    def self.create(alert);instance.create(alert);end
+    def self.create(alert_type, attributes);instance.create(alert_type, attributes);end
     def self.list(teacher_id);instance.list(teacher_id);end
     def self.show(id);instance.show(id);end
     def self.destroy(id);instance.destroy(id);end
 
-    def create(alert)
+    def create(alert_type, attributes)
+      alert = Alerts.const_get(alert_type.to_s.camelize).new(attributes)
       http_client.post(
-        "#{get_secret['API_ENDPOINT']}/schools/#{school.id}/alerts", 
+        "#{get_secret['API_ENDPOINT']}/schools/#{school.id}/alerts",
         body: alert.to_json,
         headers: headers,
       ).tap do |response|
-        return Response.new(
-          response.code,
-          nil
-        )
+        return Response.new(response.code, nil)
       end
     end
 
@@ -31,21 +29,19 @@ module AlertsService
       ).tap do |response|
         return Response.new(
           response.code,
-          Alerts::MaxAttemptsReached.list_from_json(response.body)
+          Alert.list_from_json(response.body)
         )
       end
     end
 
-    def show(id)      
+    def show(id)
       http_client.get(
         "#{get_secret['API_ENDPOINT']}/schools/#{school.id}/alerts/#{id}",
         headers: headers
       ).tap do |response|
         return Response.new(
           response.code,
-          Alerts::MaxAttemptsReached.from_json(
-            response.body
-          )
+          Alert.from_json(response.body)
         )
       end
     end
@@ -68,7 +64,7 @@ module AlertsService
     end
 
     def headers
-      { 
+      {
         'x-api-key' => get_secret['API_KEY'],
         'Content-Type' => 'application/json'
       }
