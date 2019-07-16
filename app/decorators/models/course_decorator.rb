@@ -24,8 +24,7 @@ Course.class_eval do
 
   def average_completion_percentage
     avgs = active_students.map do |student|
-      cp = CourseProgress.new(self, student.user)
-      (cp.requirement_completed_count.to_f / cp.requirement_count.to_f) * 100
+      calculate_progress(student)
     end.reduce(&:+).to_f / working_denominator(active_students)
   end
 
@@ -36,5 +35,10 @@ Course.class_eval do
   private
   def working_denominator(arr)
     arr.none? ? 1 : arr.size
+  end
+
+  def calculate_progress(student)
+    cp = CourseProgress.new(self, student.user)
+    (cp.requirement_completed_count.to_f / cp.requirement_count.to_f) * 100
   end
 end

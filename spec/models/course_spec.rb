@@ -71,14 +71,16 @@ describe Course do
     let!(:student_enrollment) do
       StudentEnrollment.create(course: course, user: student, workflow_state: "active")
     end
+    let!(:student_enrollment_2) do
+      StudentEnrollment.create(course: course, user: student, workflow_state: "active")
+    end
 
     before do
-      allow_any_instance_of(CourseProgress).to receive(:requirement_completed_count).and_return 25
-      allow_any_instance_of(CourseProgress).to receive(:requirement_count).and_return 100
+      allow(course).to receive(:calculate_progress).and_return(25.0, 75.0)
     end
 
     it "returns an average" do
-      expect(course.average_completion_percentage).to eq(25.0)
+      expect(course.average_completion_percentage).to eq(50.0)
     end
 
     it "returns 0 with no examples" do
