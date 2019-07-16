@@ -1,8 +1,9 @@
 Submission.class_eval do
-  after_commit :send_max_attempts_alert
+  after_commit :send_max_attempts_callback
 
-  def send_max_attempts_alert
+  def send_max_attempts_callback
     return unless student_locked?
+    return unless send_max_attempts_alert?
     teachers_to_alert.each do |teacher|
       AlertsService::Client.create(
         :max_attempts_reached,
@@ -13,6 +14,11 @@ Submission.class_eval do
         score: score
       )
     end
+  end
+
+
+  def send_max_attempts_alert?
+    used_attempts == max_attempts
   end
 
   def student_locked?
@@ -26,7 +32,22 @@ Submission.class_eval do
     requirement = context_module.completion_requirements.find { |req| req[:id] == content_tag.id }
     return unless requirement
     return unless requirement[:min_score]
-    score < requirement[:min_score]
+    return unless best_score < requirement[:min_score]
+    score.to_f < requirement[:min_score]
+  end
+
+  def best_score
+    best_score = score.to_f
+    versions = self.versions
+    versions.each do |version|
+      return if version.yaml.nil?
+      version_score = YAML.load(version.yaml).stringify_keys['score']
+      return if version_score.nil?
+      if version_score.to_f > best_score.to_f
+        best_score = version_score
+      end
+    end
+    best_score
   end
 
   def teachers_to_alert
