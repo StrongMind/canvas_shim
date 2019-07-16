@@ -34,11 +34,9 @@ Course.class_eval do
 
   def get_relevant_alerts_count(user)
     return unless user
-    alerts = AlertsService::Client.teacher_alerts(user.id).payload
-
-    alerts.select do |alert|
-      Assignment.find(alert.assignment_id).try(:course) == self
-    end.size
+    AlertsService::Client.course_teacher_alerts(
+      course_id: id, teacher_id: user.id
+    ).payload.size
   end
 
   private
