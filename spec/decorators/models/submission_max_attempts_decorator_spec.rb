@@ -33,7 +33,7 @@ describe "SubmissionMaxAttemptsDecorator" do
     end
   end
 
-  describe '#send_max_attempts_alert' do
+  describe '#send_max_attempts_callback' do
     let(:teacher) { double('teacher', id: 1) }
     let(:user) { double('user', id: 2) }
     let(:course) { double('course', id: 3) }
@@ -55,7 +55,7 @@ describe "SubmissionMaxAttemptsDecorator" do
         course_id: course.id,
         score: 30
       )
-      submission.send_max_attempts_alert
+      submission.send_max_attempts_callback
     end
   end
 
@@ -89,6 +89,27 @@ describe "SubmissionMaxAttemptsDecorator" do
       expect(submission.student_locked?).to be_nil
     end
 
+
+    describe "#send_max_attempts_alert" do
+      it "if false if used attempts is greater than max_attempts" do
+        allow(submission).to receive(:max_attempts).and_return(3)
+        allow(submission).to receive(:used_attempts).and_return(4)
+        expect(submission.send_max_attempts_alert?).to eq(false)
+      end
+
+      it "is false if used attempts is less than max_attempts" do
+        allow(submission).to receive(:max_attempts).and_return(3)
+        allow(submission).to receive(:used_attempts).and_return(2)
+        expect(submission.send_max_attempts_alert?).to eq(false)
+      end
+
+      it "is true if used attempts is equal to max_attempts" do
+        allow(submission).to receive(:max_attempts).and_return(3)
+        allow(submission).to receive(:used_attempts).and_return(3)
+        expect(submission.send_max_attempts_alert?).to eq(true)
+      end
+
+    end
 
   end
 end

@@ -1,8 +1,9 @@
 Submission.class_eval do
-  after_commit :send_max_attempts_alert
+  after_commit :send_max_attempts_callback
 
-  def send_max_attempts_alert
+  def send_max_attempts_callback
     return unless student_locked?
+    return unless send_max_attempts_alert?
     teachers_to_alert.each do |teacher|
       AlertsService::Client.create(
         :max_attempts_reached,
@@ -15,8 +16,12 @@ Submission.class_eval do
     end
   end
 
-  def student_locked?
 
+  def send_max_attempts_alert?
+    used_attempts == max_attempts
+  end
+
+  def student_locked?
     return unless used_attempts && max_attempts
     return unless used_attempts >= max_attempts
 
