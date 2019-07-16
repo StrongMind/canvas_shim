@@ -32,6 +32,14 @@ Course.class_eval do
     assignments.map(&:needs_grading_count).reduce(&:+).to_i
   end
 
+  def get_relevant_alerts_count(user)
+    return unless user
+    alerts = AlertsService::Client.list(user.id).payload
+    alerts.select do |alert|
+      Assignment.find(alert.assignment_id).try(:course) == self
+    end.size
+  end
+
   private
   def working_denominator(arr)
     arr.none? ? 1 : arr.size
