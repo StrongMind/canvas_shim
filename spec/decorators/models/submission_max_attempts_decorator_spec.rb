@@ -90,7 +90,7 @@ describe "SubmissionMaxAttemptsDecorator" do
     end
 
 
-    describe "#send_max_attempts_alert" do
+    describe "#send_max_attempts_alert?" do
       it "if false if used attempts is greater than max_attempts" do
         allow(submission).to receive(:max_attempts).and_return(3)
         allow(submission).to receive(:used_attempts).and_return(4)
