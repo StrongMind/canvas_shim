@@ -1,19 +1,10 @@
 module AlertsService
   module Alerts
-    class MaxAttemptsReached
-      def self.required_attributes
-        [:teacher_id, :student_id, :assignment_id]
-      end
+    class MaxAttemptsReached < Alert
+      ALERT_ATTRIBUTES = %i{ teacher_id student_id assignment_id score course_id}
 
-      include AlertBuilder
-
-      def initialize(teacher_id:, student_id:, assignment_id:, alert_id: nil, created_at: nil, updated_at: nil)
-        @teacher_id = teacher_id
-        @student_id = student_id
-        @assignment_id = assignment_id
-        @created_at = created_at
-        @updated_at = updated_at
-        @alert_id = alert_id
+      def initialize(atts)
+        super
       end
 
       def assignment
@@ -24,17 +15,14 @@ module AlertsService
         User.find(student_id)
       end
 
-      def type
-        'Max Attempts Reached'
+      def detail
+        return unless @score.present?
+        "Last Score: #{@score}"
       end
 
-      def created_at
-        DateTime.parse(@created_at)
+      def description
+        'Max Attempts Reached'
       end
-  
-      def updated_at
-        DateTime.parse(@updated_at)
-      end  
     end
   end
 end
