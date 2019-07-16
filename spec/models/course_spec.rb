@@ -87,4 +87,22 @@ describe Course do
       expect(Course.create.average_completion_percentage).to eq (0.0)
     end
   end
+
+  describe "#needs_grading_count" do
+    let!(:course) { Course.create }
+
+
+    it "returns all needs grading assignments" do
+      3.times do
+        Assignment.create(course: course)
+      end
+
+      allow_any_instance_of(Assignment).to receive(:needs_grading_count).and_return(3)
+      expect(course.needs_grading_count).to eq(9)
+    end
+
+    it "returns 0 with no assignments needing grading" do
+      expect(Course.create.needs_grading_count).to eq(0)
+    end
+  end
 end
