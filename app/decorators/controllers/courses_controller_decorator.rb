@@ -174,6 +174,8 @@ CoursesController.class_eval do
 
   def caag_course_urls
     enrollments = @current_user.try(:teacher_enrollments) || []
-    enrollments.map {|enr| [enr.course, course_at_a_glance_path(enr.course)] }
+    enrollments.select do |enr|
+      enr.course.workflow_state != "deleted"
+    end.map {|enr| [enr.course, course_at_a_glance_path(enr.course)] }
   end
 end
