@@ -1,0 +1,52 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://kom06r8apf.execute-api.us-west-2.amazonaws.com/dev/schools/bXlzY2hvb2w/courses/1/alerts
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Api-Key:
+      - "<REDACTED>"
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 500
+      message: Internal Server Error
+    headers:
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '290'
+      Connection:
+      - keep-alive
+      Date:
+      - Tue, 16 Jul 2019 17:57:08 GMT
+      X-Amzn-Requestid:
+      - 20e2da15-a7f3-11e9-b4ee-d952a22e9273
+      X-Amzn-Remapped-Content-Length:
+      - '290'
+      X-Amz-Apigw-Id:
+      - c7duKHOuvHcFzFw=
+      X-Amzn-Trace-Id:
+      - Root=1-5d2e0ff4-452e42261255a27ad95d091f;Sampled=0
+      X-Cache:
+      - Error from cloudfront
+      Via:
+      - 1.1 fe2fe7a38191445e99bcf68919904597.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - PHX50-C1
+      X-Amz-Cf-Id:
+      - "-Oy5UAn83T0_YEmzzETbzYf6DEcsk4w5ErsD5WIL6TLSLPYKEJy-4A=="
+    body:
+      encoding: UTF-8
+      string: |
+        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+        <title>500 Internal Server Error</title>
+        <h1>Internal Server Error</h1>
+        <p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+    http_version: 
+  recorded_at: Tue, 16 Jul 2019 17:57:08 GMT
+recorded_with: VCR 5.0.0

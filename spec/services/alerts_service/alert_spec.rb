@@ -49,8 +49,8 @@ describe AlertsService::Alert do
     end
 
     describe('#list_from_json') do
-      it 'builds from a json payload' do
-        expect(AlertsService::Alert.list_from_json([attributes].to_json).first.teacher_id).to eq(1)
+      it 'builds lists from a json payload' do
+        expect(AlertsService::Alert.from_json([attributes].to_json).first.teacher_id).to eq(1)
       end
     end
   end
