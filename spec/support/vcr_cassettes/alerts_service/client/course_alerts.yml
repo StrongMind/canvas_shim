@@ -13,40 +13,40 @@ http_interactions:
       - application/json
   response:
     status:
-      code: 500
-      message: Internal Server Error
+      code: 200
+      message: OK
     headers:
       Content-Type:
-      - text/html
+      - text/html; charset=utf-8
       Content-Length:
-      - '290'
+      - '350'
       Connection:
       - keep-alive
       Date:
-      - Tue, 16 Jul 2019 17:57:08 GMT
+      - Tue, 16 Jul 2019 23:03:19 GMT
       X-Amzn-Requestid:
-      - 20e2da15-a7f3-11e9-b4ee-d952a22e9273
+      - e6d83ea1-a81d-11e9-a366-a981b63f711b
       X-Amzn-Remapped-Content-Length:
-      - '290'
+      - '350'
       X-Amz-Apigw-Id:
-      - c7duKHOuvHcFzFw=
+      - c8KknFY3vHcFY9w=
       X-Amzn-Trace-Id:
-      - Root=1-5d2e0ff4-452e42261255a27ad95d091f;Sampled=0
+      - Root=1-5d2e57b7-1b919b83c35143092cf5bc10;Sampled=0
       X-Cache:
-      - Error from cloudfront
+      - Miss from cloudfront
       Via:
-      - 1.1 fe2fe7a38191445e99bcf68919904597.cloudfront.net (CloudFront)
+      - 1.1 a31cc112595debd76afd2e2776fb7e0d.cloudfront.net (CloudFront)
       X-Amz-Cf-Pop:
-      - PHX50-C1
+      - PHX50-C2
       X-Amz-Cf-Id:
-      - "-Oy5UAn83T0_YEmzzETbzYf6DEcsk4w5ErsD5WIL6TLSLPYKEJy-4A=="
+      - 0spfJJp71au-8pKJvmjkfsz2I69Co6jN60RBcSYUswlz1fVrK7duPw==
     body:
       encoding: UTF-8
-      string: |
-        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
-        <title>500 Internal Server Error</title>
-        <h1>Internal Server Error</h1>
-        <p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>
+      string: '[{"alert_id": 124, "alert": {"type": "max_attempts_reached", "score":
+        null, "detail": null, "course_id": 1, "student_id": 1, "teacher_id": 1, "description":
+        "Max Attempts Reached", "assignment_id": 1}, "school_id": "bXlzY2hvb2w", "created_at":
+        "2019-07-16 23:02:31.713518+00:00", "status": "Active", "updated_at": "2019-07-16
+        23:02:31.713518+00:00"}]'
     http_version: 
-  recorded_at: Tue, 16 Jul 2019 17:57:08 GMT
+  recorded_at: Tue, 16 Jul 2019 23:03:19 GMT
 recorded_with: VCR 5.0.0

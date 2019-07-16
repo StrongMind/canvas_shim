@@ -1,0 +1,52 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://kom06r8apf.execute-api.us-west-2.amazonaws.com/dev/schools/bXlzY2hvb2w/courses/1/teachers/1/alerts
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Api-Key:
+      - "<REDACTED>"
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '232'
+      Connection:
+      - keep-alive
+      Date:
+      - Tue, 16 Jul 2019 23:13:47 GMT
+      X-Amzn-Requestid:
+      - 5d96d86b-a81f-11e9-bec4-87e2981a42a6
+      X-Amzn-Remapped-Content-Length:
+      - '232'
+      X-Amz-Apigw-Id:
+      - c8MG3H3GPHcFytw=
+      X-Amzn-Trace-Id:
+      - Root=1-5d2e5a2b-6e7c5a4c21c8e52ca1b0b1d4;Sampled=0
+      X-Cache:
+      - Error from cloudfront
+      Via:
+      - 1.1 b90fa2a8b76e1963fd604b672b777c47.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - PHX50-C2
+      X-Amz-Cf-Id:
+      - 3PQ3nGX9JA7XhHLGmY_51o3nmLn1-orI3xUOocoFH8o3B34r-xlgow==
+    body:
+      encoding: UTF-8
+      string: |
+        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+        <title>404 Not Found</title>
+        <h1>Not Found</h1>
+        <p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+    http_version: 
+  recorded_at: Tue, 16 Jul 2019 23:13:47 GMT
+recorded_with: VCR 5.0.0
