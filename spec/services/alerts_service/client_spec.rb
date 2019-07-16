@@ -66,7 +66,6 @@ describe AlertsService::Client do
     end
   end
 
-
   describe '#create' do
     it 'can create' do
       VCR.use_cassette 'alerts_service/client/create' do
