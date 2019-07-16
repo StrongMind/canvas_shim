@@ -6,7 +6,7 @@ describe "SubmissionMaxAttemptsDecorator" do
   let(:context_module) { double "context_module", id: 10, completion_requirements: completion_requirements}
   let(:requirement) { {id: 10, min_score: 50 } }
   let(:versions) { [] }
-  
+
   before do
     allow(ContentTag).to receive(:find_by).and_return(content_tag)
     allow(completion_requirements).to receive(:find).and_return(requirement)
@@ -24,7 +24,7 @@ describe "SubmissionMaxAttemptsDecorator" do
     it 'returns the best score in versions' do
       expect(submission.best_score).to eq 50
     end
-    
+
     context 'no versions' do
       let(:versions) {[]}
       it 'returns the submission#score' do
@@ -60,6 +60,14 @@ describe "SubmissionMaxAttemptsDecorator" do
   end
 
   describe "#student_locked?" do
+    it "does not error is score is nil" do
+      allow(submission).to receive(:used_attempts).and_return(3)
+      allow(submission).to receive(:max_attempts).and_return(3)
+      allow(submission).to receive(:score).and_return(nil)
+      expect(submission.student_locked?).to eq(true)
+
+    end
+
     it "returns true if max_attempts reached and min_score not reached" do
       allow(submission).to receive(:max_attempts).and_return(3)
       allow(submission).to receive(:used_attempts).and_return(3)
@@ -80,5 +88,7 @@ describe "SubmissionMaxAttemptsDecorator" do
       allow(submission).to receive(:best_score).and_return(55)
       expect(submission.student_locked?).to be_nil
     end
+
+
   end
 end

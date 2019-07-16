@@ -16,6 +16,7 @@ Submission.class_eval do
   end
 
   def student_locked?
+
     return unless used_attempts && max_attempts
     return unless used_attempts >= max_attempts
 
@@ -27,11 +28,11 @@ Submission.class_eval do
     return unless requirement
     return unless requirement[:min_score]
     return unless best_score < requirement[:min_score]
-    score < requirement[:min_score]
+    score.to_f < requirement[:min_score]
   end
 
   def best_score
-    best_score = score
+    best_score = score.to_f
     versions = self.versions
     versions.each do |version|
       return if version.yaml.nil?
