@@ -2,11 +2,10 @@ module AlertsService
   class Client
     include Singleton
 
-    def self.create(alert_type, attributes);instance.create(alert_type, attributes);end
-    def self.teacher_alerts(teacher_id);instance.teacher_alerts(teacher_id);end
-    def self.course_alerts(course_id);instance.course_alerts(course_id);end
-    def self.show(id);instance.show(id);end
-    def self.destroy(id);instance.destroy(id);end
+    class << self
+      extend Forwardable
+      def_delegators :instance, :create, :teacher_alerts, :course_teacher_alerts, :course_alerts, :show, :destroy
+    end
 
     def create(alert_type, attributes)
       alert = Alerts.const_get(alert_type.to_s.camelize).new(attributes)
@@ -25,6 +24,10 @@ module AlertsService
 
     def course_alerts(course_id)
       get(endpoints(:course_alerts, course_id: course_id))
+    end
+
+    def course_teacher_alerts(course_id:, teacher_id:)
+      get(endpoints(:course_teacher_alerts, course_id: course_id, teacher_id: teacher_id))
     end
 
     def show(id)

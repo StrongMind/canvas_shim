@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://kom06r8apf.execute-api.us-west-2.amazonaws.com/dev/schools/bXlzY2hvb2w/courses/1/alerts
+    uri: https://kom06r8apf.execute-api.us-west-2.amazonaws.com/dev/schools/bXlzY2hvb2w/courses/1/teachers/1/alerts
     body:
       encoding: US-ASCII
       string: ''
@@ -19,34 +19,34 @@ http_interactions:
       Content-Type:
       - text/html; charset=utf-8
       Content-Length:
-      - '350'
+      - '343'
       Connection:
       - keep-alive
       Date:
-      - Tue, 16 Jul 2019 23:03:19 GMT
+      - Tue, 16 Jul 2019 23:46:07 GMT
       X-Amzn-Requestid:
-      - e6d83ea1-a81d-11e9-a366-a981b63f711b
+      - e171483a-a823-11e9-8d75-adbdb48581f4
       X-Amzn-Remapped-Content-Length:
-      - '350'
+      - '343'
       X-Amz-Apigw-Id:
-      - c8KknFY3vHcFY9w=
+      - c8Q13EgwPHcF16Q=
       X-Amzn-Trace-Id:
-      - Root=1-5d2e57b7-1b919b83c35143092cf5bc10;Sampled=0
+      - Root=1-5d2e61bf-1014f81ca0f44e52c09b1e94;Sampled=0
       X-Cache:
       - Miss from cloudfront
       Via:
-      - 1.1 a31cc112595debd76afd2e2776fb7e0d.cloudfront.net (CloudFront)
+      - 1.1 348ba03da5a7da8ff35baf30f03b8c59.cloudfront.net (CloudFront)
       X-Amz-Cf-Pop:
       - PHX50-C2
       X-Amz-Cf-Id:
-      - 0spfJJp71au-8pKJvmjkfsz2I69Co6jN60RBcSYUswlz1fVrK7duPw==
+      - 8ze-c4gkdaxLaivcBtLcj06BS6iaIkatFNwDsEotKSWeeE2JdUViFA==
     body:
       encoding: UTF-8
       string: '[{"alert_id": 124, "alert": {"type": "max_attempts_reached", "score":
         null, "detail": null, "course_id": 1, "student_id": 1, "teacher_id": 1, "description":
         "Max Attempts Reached", "assignment_id": 1}, "school_id": "bXlzY2hvb2w", "created_at":
         "2019-07-16 23:02:31.713518+00:00", "status": "Active", "updated_at": "2019-07-16
-        23:02:31.713518+00:00"}]'
+        23:03:19+00:00"}]'
     http_version: 
-  recorded_at: Tue, 16 Jul 2019 23:03:19 GMT
+  recorded_at: Tue, 16 Jul 2019 23:46:07 GMT
 recorded_with: VCR 5.0.0
