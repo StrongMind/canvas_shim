@@ -117,6 +117,7 @@ CoursesController.class_eval do
   def at_a_glance
     get_context
     if authorized_action(@context, @current_user, :manage_grades)
+      @course_list ||= caag_course_urls
       @avg_grade = @context.average_score.round(1)
       @avg_completion_pct = @context.average_completion_percentage.round(1)
       @assignments_need_grading = @context.needs_grading_count
@@ -169,5 +170,10 @@ CoursesController.class_eval do
   def display_wo_auto_due_dates?
     add_on = (SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on')
     js_env(auto_due_dates: add_on)
+  end
+
+  def caag_course_urls
+    enrollments = @current_user.try(:teacher_enrollments) || []
+    enrollments.map {|enr| [enr.course, course_at_a_glance_path(enr.course)] }
   end
 end

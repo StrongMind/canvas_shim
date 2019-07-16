@@ -12,7 +12,11 @@
   </div>
   <div class="ic-Action-header__Secondary">
     <select class="ic-Input" id="caag-course-select">
-      <option><%= @context.name %></option>
+      <% @course_list.each do |course_w_url| %>
+        <option <% if course_w_url[0] == @context %>selected<% end %>
+        data-url=<%= course_w_url[1] %>
+        ><%= course_w_url[0].name %></option>
+      <% end %>
     </select>
   </div>
 </div>
@@ -46,3 +50,7 @@
     </div>
   </div>
 </div>
+
+<% content_for :strongmind_assets do %>
+  <%= javascript_include_tag 'canvas_shim/application' %>
+<% end %>
