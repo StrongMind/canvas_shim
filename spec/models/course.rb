@@ -33,36 +33,6 @@ describe Course do
     end
   end
 
-  describe "#set_default_course_threshold" do
-    before do
-      allow_any_instance_of(Course).to receive(:set_default_course_threshold).and_return(nil)
-    end
-    
-    context "account threshold is set" do
-      before do
-        allow_any_instance_of(Course).to receive(:account_threshold).and_return(60.0)
-      end
-
-      it "sets a default threshold" do
-        course = Course.new
-        expect(course).to receive(:set_default_course_threshold)
-        course.save
-      end
-    end
-
-    context "account threshold is not set" do
-      before do
-        allow_any_instance_of(Course).to receive(:account_threshold).and_return(0.0)
-      end
-
-      it "does not set a default threshold" do
-        course = Course.new
-        expect(course).not_to receive(:set_default_course_threshold)
-        course.save
-      end
-    end
-  end
-
   describe "#average_score" do
     let!(:course) { Course.create }
     let!(:student) { User.create }
@@ -92,6 +62,27 @@ describe Course do
 
     it "returns 0 with no students" do
       expect(Course.create.average_score).to eq(0)
+    end
+  end
+
+  describe "#average_completion_percentage" do
+    let!(:course) { Course.create }
+    let!(:student) { User.create }
+    let!(:student_enrollment) do
+      StudentEnrollment.create(course: course, user: student, workflow_state: "active")
+    end
+
+    before do
+      allow_any_instance_of(CourseProgress).to receive(:requirement_completed_count).and_return 25
+      allow_any_instance_of(CourseProgress).to receive(:requirement_count).and_return 100
+    end
+
+    it "returns an average" do
+      expect(course.average_completion_percentage).to eq(25.0)
+    end
+
+    it "returns 0 with no examples" do
+      expect(Course.create.average_completion_percentage).to eq (0.0)
     end
   end
 end
