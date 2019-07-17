@@ -22,7 +22,7 @@
 </div>
 <div id="card-container">
   <div class="card content-box pad-box-mini border border-trbl border-round">
-    <div class="card-body" style="padding: .25rem 2rem 2rem 2rem; text-align: center;">
+    <div class="card-body">
       <h5><strong>Average Course Grade</strong></h5>
       <p class="card-text"><%= @avg_grade %></p>
       <%= link_to 'Student Details', course_users_path, class: "card-link border border-t" %>
@@ -50,7 +50,3 @@
     </div>
   </div>
 </div>
-
-<% content_for :strongmind_assets do %>
-  <%= javascript_include_tag 'canvas_shim/application' %>
-<% end %>
