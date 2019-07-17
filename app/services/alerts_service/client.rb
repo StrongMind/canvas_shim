@@ -69,6 +69,9 @@ module AlertsService
       extend Forwardable
       # This trick makes it so we don't have to define a bunch 
       # of class methods just to forward to the instance
+      #
+      # ie: def self.foo(bar); instance.foo(bar); end
+      # the splat operator turns the array
       def_delegators :instance, *Client.instance_methods(false)
     end
   end

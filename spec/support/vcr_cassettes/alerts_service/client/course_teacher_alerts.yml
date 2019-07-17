@@ -23,23 +23,23 @@ http_interactions:
       Connection:
       - keep-alive
       Date:
-      - Tue, 16 Jul 2019 23:46:07 GMT
+      - Wed, 17 Jul 2019 16:59:39 GMT
       X-Amzn-Requestid:
-      - e171483a-a823-11e9-8d75-adbdb48581f4
+      - 43ddcdb4-a8b4-11e9-a340-9149ece9b4af
       X-Amzn-Remapped-Content-Length:
       - '343'
       X-Amz-Apigw-Id:
-      - c8Q13EgwPHcF16Q=
+      - c-oPVF4LPHcFx1g=
       X-Amzn-Trace-Id:
-      - Root=1-5d2e61bf-1014f81ca0f44e52c09b1e94;Sampled=0
+      - Root=1-5d2f53fb-f1af4162aee70a5e3f04cfb4;Sampled=0
       X-Cache:
       - Miss from cloudfront
       Via:
-      - 1.1 348ba03da5a7da8ff35baf30f03b8c59.cloudfront.net (CloudFront)
+      - 1.1 767a83bc593065e60dcd78bb7448efb0.cloudfront.net (CloudFront)
       X-Amz-Cf-Pop:
-      - PHX50-C2
+      - PHX50-C1
       X-Amz-Cf-Id:
-      - 8ze-c4gkdaxLaivcBtLcj06BS6iaIkatFNwDsEotKSWeeE2JdUViFA==
+      - mTRa0ovTjavaLwXczGugMMIl-S4VWAFManBtNcAtWX0V8_ndKDT0cw==
     body:
       encoding: UTF-8
       string: '[{"alert_id": 124, "alert": {"type": "max_attempts_reached", "score":
@@ -48,5 +48,5 @@ http_interactions:
         "2019-07-16 23:02:31.713518+00:00", "status": "Active", "updated_at": "2019-07-16
         23:03:19+00:00"}]'
     http_version: 
-  recorded_at: Tue, 16 Jul 2019 23:46:07 GMT
+  recorded_at: Wed, 17 Jul 2019 16:59:39 GMT
 recorded_with: VCR 5.0.0
