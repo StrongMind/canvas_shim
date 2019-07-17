@@ -1,6 +1,6 @@
 class CsAlertsController < ApplicationController
   def index
-    @alerts = AlertsService::Client.list(@current_user.id).payload
+    @alerts = AlertsService::Client.teacher_alerts(@current_user.id).payload
   end
 
   def destroy
