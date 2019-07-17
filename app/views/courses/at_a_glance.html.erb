@@ -1,0 +1,52 @@
+<% content_for :strongmind_assets do %>
+  <%= stylesheet_link_tag    "canvas_shim/application", media: "all" %>
+  <%= javascript_include_tag 'canvas_shim/application' %>
+<% end %>
+
+<% content_for :page_title, "#{@context.name} at a glance" %>
+<% add_crumb t('#crumbs.at_a_glance', "#{@context.name} at a glance") %>
+
+<div id="caag-header" class="ic-Action-header content-box pad-box-mini border border-t border-b">
+  <div class="ic-Action-header__Primary">
+    <h3 class="ic-Action-header__Heading"><strong><%= @context.name %> at a glance</strong></h3>
+  </div>
+  <div class="ic-Action-header__Secondary">
+    <select class="ic-Input" id="caag-course-select">
+      <% @course_list.each do |course_w_url| %>
+        <option <% if course_w_url[0] == @context %>selected<% end %>
+        data-url=<%= course_w_url[1] %>
+        ><%= course_w_url[0].name %></option>
+      <% end %>
+    </select>
+  </div>
+</div>
+<div id="card-container">
+  <div class="card content-box pad-box-mini border border-trbl border-round">
+    <div class="card-body">
+      <h5><strong>Average Course Grade</strong></h5>
+      <p class="card-text"><%= @avg_grade %></p>
+      <%= link_to 'Student Details', course_users_path, class: "card-link border border-t" %>
+    </div>
+  </div>
+  <div class="card content-box pad-box-mini border border-trbl border-round">
+    <div class="card-body">
+      <h5><strong>Average Course % Completed</strong></h5>
+      <p class="card-text"><%= @avg_completion_pct %></p>
+      <%= link_to 'View Progressions', progressions_course_context_modules_path, class: "card-link border border-t" %>
+    </div>
+  </div>
+  <div class="card content-box pad-box-mini border border-trbl border-round">
+    <div class="card-body">
+      <h5><strong>Assignments Need Grading</strong></h5>
+      <p class="card-text"><%= @assignments_need_grading %></p>
+      <%= link_to 'Gradebook', course_grades_path, class: "card-link border border-t" %>
+    </div>
+  </div>
+  <div class="card content-box pad-box-mini border border-trbl border-round">
+    <div class="card-body">
+      <h5><strong>Alerts Need Attention</strong></h5>
+      <p class="card-text"><%= @alerts_need_attention %></p>
+      <%= link_to 'View Alerts', cs_alerts_path, class: "card-link border border-t" %>
+    </div>
+  </div>
+</div>

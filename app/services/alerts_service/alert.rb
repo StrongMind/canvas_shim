@@ -14,8 +14,8 @@ module AlertsService
       @updated_at = DateTime.parse(atts[:updated_at]) if atts[:updated_at]
     end
 
-    def self.list_from_json(json)
-      JSON.parse(json, symbolize_names: true).map do |alert|
+    def self.list_from_json(list)
+      list.map do |alert|
         alert_class(alert).from_payload(alert)
       end
     end
@@ -25,8 +25,14 @@ module AlertsService
     end
 
     def self.from_json(json)
-      JSON.parse(json, symbolize_names: true).tap do |alert|
-        return alert_class(alert).from_payload(alert)
+      payload = JSON.parse(json, symbolize_names: true)
+      case payload
+      when Array
+        self.list_from_json(payload)
+      else
+        payload.tap do |alert|
+          return alert_class(alert).from_payload(alert)
+        end
       end
     end
 

@@ -3,10 +3,17 @@ describe AlertsService::Client do
 
   let(:alert) { double('alert', as_json: {teacher_id: 1, student_id: 1, assignment_id: 1, type: 'max_attempts_reached'}) }
   let(:http_client) { double('http_client', post: nil) }
-  let(:alert_fields) { { teacher_id: 1, student_id: 1, assignment_id: 1 } }
+  let(:alert_fields) do 
+    { 
+      teacher_id: 1, 
+      student_id: 1, 
+      assignment_id: 1,
+      course_id: 1
+    } 
+  end
   
   before do
-    allow(subject.instance).to receive(:school).and_return(AlertsService::School.new('myschool'))
+    allow(AlertsService::Endpoints).to receive(:school).and_return(AlertsService::School.new('myschool'))
   end
 
   describe '#show' do
@@ -29,16 +36,32 @@ describe AlertsService::Client do
     end
   end
 
-  describe '#list' do
+  describe '#teacher_alerts' do
     it 'has a success code' do
-      VCR.use_cassette 'alerts_service/client/list' do
-        expect(subject.list(1).code).to eq 200
+      VCR.use_cassette 'alerts_service/client/teacher_alerts' do
+        expect(subject.teacher_alerts(1).code).to eq 200
       end
     end
 
     it 'has a list of alerts in the payload' do
-      VCR.use_cassette 'alerts_service/client/list' do
-        expect(subject.list(1).payload.first).to be_a(AlertsService::Alerts::MaxAttemptsReached)
+      VCR.use_cassette 'alerts_service/client/teacher_alerts' do
+        expect(subject.teacher_alerts(1).payload.first).to be_a(AlertsService::Alerts::MaxAttemptsReached)
+      end
+    end
+  end
+
+  describe '#course_alerts' do
+    it 'has a list of alerts in the payload' do
+      VCR.use_cassette 'alerts_service/client/course_alerts' do
+        expect(subject.course_alerts(1).payload.first).to be_a(AlertsService::Alerts::MaxAttemptsReached)
+      end
+    end
+  end
+
+  describe '#course_teacher_alerts' do
+    it 'has a list of alerts in the payload' do
+      VCR.use_cassette 'alerts_service/client/course_teacher_alerts' do
+        expect(subject.course_teacher_alerts(course_id: 1, teacher_id: 1).payload.first).to be_a(AlertsService::Alerts::MaxAttemptsReached)
       end
     end
   end

@@ -13,4 +13,39 @@ Course.class_eval do
   def no_active_students?
     active_students.count.zero?
   end
+
+  def average_score
+    course_scores = active_students.map do |active|
+      active.scores.first.try(:current_score).to_f
+    end
+
+    course_scores.reduce(&:+).to_f / working_denominator(course_scores)
+  end
+
+  def average_completion_percentage
+    avgs = active_students.map do |student|
+      calculate_progress(student)
+    end.reduce(&:+).to_f / working_denominator(active_students)
+  end
+
+  def needs_grading_count
+    assignments.map(&:needs_grading_count).reduce(&:+).to_i
+  end
+
+  def get_relevant_alerts_count(user)
+    return unless user
+    AlertsService::Client.teacher_alerts(user.id).payload.select do |alert|
+      Assignment.find(alert.assignment_id).try(:course) == self
+    end.size
+  end
+
+  private
+  def working_denominator(arr)
+    arr.none? ? 1 : arr.size
+  end
+
+  def calculate_progress(student)
+    cp = CourseProgress.new(self, student.user)
+    (cp.requirement_completed_count.to_f / cp.requirement_count.to_f) * 100
+  end
 end

@@ -2,53 +2,36 @@ module AlertsService
   class Client
     include Singleton
 
-    def initialize
-      @school = School.new(ENV['CANVAS_DOMAIN'])
-    end
-
-    def self.create(alert_type, attributes);instance.create(alert_type, attributes);end
-    def self.list(teacher_id);instance.list(teacher_id);end
-    def self.show(id);instance.show(id);end
-    def self.destroy(id);instance.destroy(id);end
-
     def create(alert_type, attributes)
       alert = Alerts.const_get(alert_type.to_s.camelize).new(attributes)
       http_client.post(
-        "#{get_secret['API_ENDPOINT']}/schools/#{school.id}/alerts",
+        endpoints(:create_alert),
         body: alert.to_json,
-        headers: headers,
+        headers: headers
       ).tap do |response|
         return Response.new(response.code, nil)
       end
     end
 
-    def list(teacher_id)
-      http_client.get(
-        "#{get_secret['API_ENDPOINT']}/schools/#{school.id}/teachers/#{teacher_id}/alerts",
-        headers: headers
-      ).tap do |response|
-        return Response.new(
-          response.code,
-          Alert.list_from_json(response.body)
-        )
-      end
+    def teacher_alerts(teacher_id)
+      get(endpoints(:teacher_alerts, teacher_id: teacher_id))
+    end
+
+    def course_alerts(course_id)
+      get(endpoints(:course_alerts, course_id: course_id))
+    end
+
+    def course_teacher_alerts(course_id:, teacher_id:)
+      get(endpoints(:course_teacher_alerts, course_id: course_id, teacher_id: teacher_id))
     end
 
     def show(id)
-      http_client.get(
-        "#{get_secret['API_ENDPOINT']}/schools/#{school.id}/alerts/#{id}",
-        headers: headers
-      ).tap do |response|
-        return Response.new(
-          response.code,
-          Alert.from_json(response.body)
-        )
-      end
+      get(endpoints(:show_alert, alert_id: id))
     end
 
     def destroy(id)
       http_client.delete(
-        "#{get_secret['API_ENDPOINT']}/schools/#{school.id}/alerts/#{id}",
+        endpoints(:destroy_alert, alert_id: id),
         headers: headers
       ).tap do |response|
         return Response.new(response.code, nil)
@@ -57,21 +40,39 @@ module AlertsService
 
     private
 
-    attr_reader :school
-
-    def get_secret
-      @secret ||= SecretManager.get_secret
+    def get(endpoint)
+      http_client.get(
+        endpoint, headers: headers
+      ).tap do |response|
+        return Response.new(
+          response.code, Alert.from_json(response.body)
+        )
+      end
     end
 
     def headers
       {
-        'x-api-key' => get_secret['API_KEY'],
+        'x-api-key' => SecretManager.get_secret['API_KEY'],
         'Content-Type' => 'application/json'
       }
     end
 
+    def endpoints(name, ids=nil)
+      Endpoints.fetch(name, ids)
+    end
+
     def http_client
       HTTParty
+    end
+
+    class << self
+      extend Forwardable
+      # This trick makes it so we don't have to define a bunch 
+      # of class methods just to forward to the instance
+      #
+      # ie: def self.foo(bar); instance.foo(bar); end
+      # the splat operator turns the array
+      def_delegators :instance, *Client.instance_methods(false)
     end
   end
 end

@@ -114,6 +114,17 @@ CoursesController.class_eval do
   alias_method :instructure_copy_course, :copy_course
   alias_method :copy_course, :strongmind_copy_course
 
+  def at_a_glance
+    get_context
+    if authorized_action(@context, @current_user, :manage_grades)
+      @course_list ||= caag_course_urls
+      @avg_grade = @context.average_score.round(1)
+      @avg_completion_pct = @context.average_completion_percentage.round(1)
+      @assignments_need_grading = @context.needs_grading_count
+      @alerts_need_attention = @context.get_relevant_alerts_count(@current_user)
+    end
+  end
+
   private
   def grade_out_users_params
     params.permit(enrollment_ids: [])
@@ -159,5 +170,12 @@ CoursesController.class_eval do
   def display_wo_auto_due_dates?
     add_on = (SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on')
     js_env(auto_due_dates: add_on)
+  end
+
+  def caag_course_urls
+    enrollments = @current_user.try(:teacher_enrollments) || []
+    enrollments.select do |enr|
+      enr.course.workflow_state != "deleted"
+    end.map {|enr| [enr.course, course_at_a_glance_path(enr.course)] }
   end
 end

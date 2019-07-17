@@ -1,7 +1,11 @@
 $(window).on("load", function(event) {
+  function replacer(value) {
+    if (value) { return value.replace("at", "") }
+  }
+
   function validCourseDates() {
-    var start_at = $("#course_start_at").val().replace("at", "");
-    var end_at = $("#course_conclude_at").val().replace("at", "");
+    var start_at = replacer($("#course_start_at").val());
+    var end_at = replacer($("#course_conclude_at").val());
     return Date.parse(start_at) && Date.parse(end_at);
   }
 
