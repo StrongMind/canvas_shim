@@ -32,7 +32,7 @@ Submission.class_eval do
     requirement = context_module.completion_requirements.find { |req| req[:id] == content_tag.id }
     return unless requirement
     return unless requirement[:min_score]
-    return unless best_score < requirement[:min_score]
+    return unless best_score.to_f < requirement[:min_score]
     score.to_f < requirement[:min_score]
   end
 

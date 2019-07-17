@@ -65,8 +65,17 @@ describe "SubmissionMaxAttemptsDecorator" do
       allow(submission).to receive(:max_attempts).and_return(3)
       allow(submission).to receive(:score).and_return(nil)
       expect(submission.student_locked?).to eq(true)
-
     end
+
+    it "does not error is best score is nil" do
+      allow(submission).to receive(:used_attempts).and_return(3)
+      allow(submission).to receive(:max_attempts).and_return(3)
+      allow(submission).to receive(:score).and_return(nil)
+      allow(submission).to receive(:score).and_return(nil)
+      allow(submission).to receive(:best_score).and_return(nil)
+      expect(submission.student_locked?).to eq(true)
+    end
+
 
     it "returns true if max_attempts reached and min_score not reached" do
       allow(submission).to receive(:max_attempts).and_return(3)
