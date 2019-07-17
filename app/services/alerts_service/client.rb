@@ -2,10 +2,6 @@ module AlertsService
   class Client
     include Singleton
 
-    class << self
-      extend Forwardable
-      def_delegators :instance, :create, :teacher_alerts, :course_teacher_alerts, :course_alerts, :show, :destroy
-    end
 
     def create(alert_type, attributes)
       alert = Alerts.const_get(alert_type.to_s.camelize).new(attributes)
@@ -68,6 +64,14 @@ module AlertsService
 
     def http_client
       HTTParty
+    end
+
+    class << self
+      extend Forwardable
+      # This trick makes it so we don't have to define a bunch 
+      # of class methods just to forward to the instance
+
+      def_delegators :instance, *(Client.instance_methods - Object.methods - [:_dump])
     end
   end
 end
