@@ -8,4 +8,6 @@ $(window).on("load", function(event) {
       window.location.replace(finalURL);
     }
   });
+
+  $('#studentDetails').DataTable();
 });

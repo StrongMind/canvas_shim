@@ -122,6 +122,7 @@ CoursesController.class_eval do
       @avg_completion_pct = @context.average_completion_percentage.round(1)
       @assignments_need_grading = @context.needs_grading_count
       @alerts_need_attention = @context.get_relevant_alerts_count(@current_user)
+      @students = Array.new(3)
     end
   end
 
