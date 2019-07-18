@@ -8,11 +8,13 @@ StudentEnrollment.class_eval do
   end
 
   def missing_assignments_count
-    user.submissions.count { |sub| sub.missing? || (sub.grader_id == 1 && sub.late?) }
+    user.submissions.count do |sub|
+      sub.missing? || (sub.grader_id == 1 && sub.late?)
+    end
   end
 
-  def current_grade
-    scores.first.try(:current_grade)
+  def current_score
+    scores.first.try(:current_score) || 0
   end
 
   private
@@ -21,8 +23,9 @@ StudentEnrollment.class_eval do
   end
 
   def last_submission
-    user.submissions.where(
-      "context_code = ? AND grader_id <> 1", "course_#{course.id}"
-    ).order('graded_at DESC').first || Time.now
+    user.submissions
+    .where("context_code = ? AND grader_id <> 1", "course_#{course.id}")
+    .order('submitted_at DESC')
+    .first.try(:submitted_at) || course.start_at
   end
 end
