@@ -46,6 +46,7 @@ Course.class_eval do
 
   def calculate_progress(student)
     cp = CourseProgress.new(self, student.user)
-    (cp.requirement_completed_count.to_f / cp.requirement_count.to_f) * 100
+    req_count = cp.requirement_count.zero? ? 1 : cp.requirement_count
+    (cp.requirement_completed_count.to_f / req_count.to_f) * 100
   end
 end

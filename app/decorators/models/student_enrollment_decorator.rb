@@ -19,6 +19,7 @@ StudentEnrollment.class_eval do
 
   private
   def days_since(field)
+    return "N/A" unless field
     (Time.now.to_date - field.to_date).to_i
   end
 
@@ -26,6 +27,6 @@ StudentEnrollment.class_eval do
     user.submissions
     .where("context_code = ? AND grader_id <> 1", "course_#{course.id}")
     .order('submitted_at DESC')
-    .first.try(:submitted_at) || course.start_at
+    .first.try(:submitted_at)
   end
 end

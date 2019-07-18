@@ -12,19 +12,19 @@
   </thead>
 
   <tbody>
-    <% @students.each do |student| %>
+    <% (@context.try(:active_students) || []).each do |student| %>
       <tr class="caag-detail-row">
         <td>
-          1
+          <%= student.days_since_active %>
         </td>
         <td>
-          2
+          <%= student.days_since_last_submission %>
         </td>
         <td>
-          3
+          <%= student.missing_assignments_count %>
         </td>
         <td>
-          4
+          <%= student.current_score %>
         </td>
         <td>
           5
