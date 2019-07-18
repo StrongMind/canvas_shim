@@ -36,6 +36,14 @@ describe AlertsService::Client do
     end
   end
 
+  describe '#course_student_alerts' do
+    it 'has a list of alerts in the payload' do
+      VCR.use_cassette 'alerts_service/client/course_student_alerts' do
+        expect(subject.course_student_alerts(course_id: 1, student_id: 1).payload.first).to be_a(AlertsService::Alerts::MaxAttemptsReached)
+      end
+    end
+  end
+
   describe '#teacher_alerts' do
     it 'has a success code' do
       VCR.use_cassette 'alerts_service/client/teacher_alerts' do
