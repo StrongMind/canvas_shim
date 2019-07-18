@@ -8,7 +8,8 @@ StudentEnrollment.class_eval do
   end
 
   def missing_assignments_count
-    user.submissions.count do |sub|
+    user.submissions.where("context_code = ?", "course_#{course.id}")
+    .count do |sub|
       sub.missing? || (sub.grader_id == 1 && sub.late?)
     end
   end

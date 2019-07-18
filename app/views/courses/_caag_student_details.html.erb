@@ -1,6 +1,7 @@
 <table id="studentDetails" class="stripe">
   <thead>
     <tr>
+      <th>Student Name</th>
       <th>Days Since Active</th>
       <th>Days Since Last Submission</th>
       <th>Missing Assignments</th>
@@ -14,6 +15,7 @@
   <tbody>
     <% (@context.try(:active_students) || []).each do |student| %>
       <tr class="caag-detail-row">
+        <td><%= student.user.name %></td>
         <td>
           <%= student.days_since_active %>
         </td>
