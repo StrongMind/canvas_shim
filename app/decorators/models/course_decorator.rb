@@ -48,7 +48,8 @@ Course.class_eval do
         missing_assignments: student.missing_assignments_count,
         current_score: student.current_score,
         course_progress: "#{calculate_progress(student)}%",
-        requirements_completed: student.string_progress
+        requirements_completed: student.string_progress,
+        alerts: 0
       }
     end
   end
@@ -62,5 +63,13 @@ Course.class_eval do
     cp = CourseProgress.new(self, student.user)
     req_count = cp.requirement_count.zero? ? 1 : cp.requirement_count
     (cp.requirement_completed_count.to_f / req_count.to_f) * 100
+  end
+
+  def get_relevant_student_alerts_count(student)
+    return unless student
+    AlertsService::Client.course_student_alerts(
+      course_id: self.id,
+      student_id: student.id
+    ).payload.size
   end
 end
