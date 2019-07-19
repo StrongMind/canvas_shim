@@ -1,0 +1,53 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://kom06r8apf.execute-api.us-west-2.amazonaws.com/dev/schools/bXlzY2hvb2w/courses/1/students/1/alerts
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      X-Api-Key:
+      - "<REDACTED>"
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '319'
+      Connection:
+      - keep-alive
+      Date:
+      - Thu, 18 Jul 2019 22:02:02 GMT
+      X-Amzn-Requestid:
+      - ac32be94-a9a7-11e9-b39f-53ef16d7ed13
+      X-Amzn-Remapped-Content-Length:
+      - '319'
+      X-Amz-Apigw-Id:
+      - dCneJEYoPHcFfUg=
+      X-Amzn-Trace-Id:
+      - Root=1-5d30ec5a-e0e25c3aa41b00a98dc5cd93;Sampled=0
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 a68097bdd514e6082da61e488096dbfb.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - PHX50-C1
+      X-Amz-Cf-Id:
+      - IQnHNh7dm7UfGGLxalvTCDNP8DJ-JXW38Y2c9W2NEnWEvBpmOw7mDA==
+    body:
+      encoding: UTF-8
+      string: '[{"alert":{"assignment_id":1,"course_id":1,"description":"Max Attempts
+        Reached","detail":null,"score":null,"student_id":1,"teacher_id":1,"type":"max_attempts_reached"},"alert_id":124,"created_at":"Tue,
+        16 Jul 2019 23:02:31 GMT","school_id":"bXlzY2hvb2w","status":"Active","updated_at":"Tue,
+        16 Jul 2019 23:03:19 GMT"}]
+
+        '
+    http_version: 
+  recorded_at: Thu, 18 Jul 2019 22:02:02 GMT
+recorded_with: VCR 5.0.0
