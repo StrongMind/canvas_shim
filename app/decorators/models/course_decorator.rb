@@ -39,6 +39,20 @@ Course.class_eval do
     end.size
   end
 
+  def caag_student_details
+    active_students.map do |student|
+      {
+        name: student.user.name,
+        last_active: student.days_since_active,
+        last_submission: student.days_since_last_submission,
+        missing_assignments: student.missing_assignments_count,
+        current_score: student.current_score,
+        course_progress: "#{calculate_progress(student)}%",
+        requirements_completed: student.string_progress
+      }
+    end
+  end
+
   private
   def working_denominator(arr)
     arr.none? ? 1 : arr.size

@@ -18,6 +18,11 @@ StudentEnrollment.class_eval do
     scores.first.try(:current_score) || 0
   end
 
+  def string_progress
+    cp = CourseProgress.new(course, user)
+    "#{cp.requirement_completed_count.to_i}/#{cp.requirement_count.to_i}"
+  end
+
   private
   def days_since(field)
     return "N/A" unless field

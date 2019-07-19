@@ -13,26 +13,26 @@
   </thead>
 
   <tbody>
-    <% (@context.try(:active_students) || []).each do |student| %>
+    <% (@context.try(:caag_student_details) || []).each do |student| %>
       <tr class="caag-detail-row">
-        <td><%= student.user.name %></td>
+        <td><%= student[:name] %></td>
         <td>
-          <%= student.days_since_active %>
+          <%= student[:last_active] %>
         </td>
         <td>
-          <%= student.days_since_last_submission %>
+          <%= student[:last_submission] %>
         </td>
         <td>
-          <%= student.missing_assignments_count %>
+          <%= student[:missing_assignments] %>
         </td>
         <td>
-          <%= student.current_score %>
+          <%= student[:current_score] %>
         </td>
         <td>
-          5
+          <%= student[:course_progress] %>
         </td>
         <td>
-          6
+          <%= student[:requirements_completed] %>
         </td>
         <td>
           7
