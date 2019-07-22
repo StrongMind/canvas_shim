@@ -47,9 +47,9 @@ Course.class_eval do
         last_submission: student.days_since_last_submission,
         missing_assignments: student.missing_assignments_count,
         current_score: student.current_score,
-        course_progress: "#{calculate_progress(student)}%",
+        course_progress: "#{calculate_progress(student).round(1)}%",
         requirements_completed: student.string_progress,
-        alerts: 0
+        alerts: get_relevant_student_alerts_count(student.user)
       }
     end
   end
@@ -66,10 +66,14 @@ Course.class_eval do
   end
 
   def get_relevant_student_alerts_count(student)
-    return unless student
-    AlertsService::Client.course_student_alerts(
-      course_id: self.id,
-      student_id: student.id
-    ).payload.size
+    return unless student && teacher
+    AlertsService::Client.teacher_alerts(teacher.id).payload.select do |alert|
+      Assignment.find(alert.assignment_id).try(:course) == self &&
+      alert.student_id == student.id
+    end.size
+  end
+
+  def teacher
+    teacher_enrollments.first.try(:user)
   end
 end
