@@ -31,7 +31,8 @@ StudentEnrollment.class_eval do
 
   def last_submission
     user.submissions.where(
-      "submitted_at IS NOT NULL AND context_code = ? AND grader_id IS NULL OR grader_id <> 1",
+      "submitted_at IS NOT NULL AND context_code = ? " \
+      "AND grader_id IS NULL OR grader_id <> 1",
       "course_#{course.id}"
     ).order('submitted_at DESC')
     .first.try(:submitted_at)
