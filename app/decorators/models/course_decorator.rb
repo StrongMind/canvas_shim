@@ -67,14 +67,10 @@ Course.class_eval do
   end
 
   def get_relevant_student_alerts_count(student)
-    return unless student && teacher
+    return unless student
     AlertsService::Client.course_student_alerts(
       course_id: id,
       student_id: student.id,
     ).payload.size
-  end
-
-  def teacher
-    teacher_enrollments.first.try(:user)
   end
 end
