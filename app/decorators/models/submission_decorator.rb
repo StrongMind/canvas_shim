@@ -1,14 +1,6 @@
 Submission.class_eval do
   after_commit :bust_context_module_cache
-  after_commit :publish_to_pipeline
-
-  def publish_to_pipeline
-    if SettingsService.get_settings(object: :school, id: 1)['v2_submissions']
-      PipelineService::V2.publish(self)
-    else
-      PipelineService.publish(self)
-    end
-  end
+  after_commit -> { PipelineService::V2.publish(self) }
 
   def bust_context_module_cache
     if self.previous_changes.include?(:excused)
