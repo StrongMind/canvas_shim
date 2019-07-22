@@ -34,9 +34,10 @@ Course.class_eval do
 
   def get_relevant_alerts_count(user)
     return unless user
-    AlertsService::Client.teacher_alerts(user.id).payload.select do |alert|
-      Assignment.find(alert.assignment_id).try(:course) == self
-    end.size
+    AlertsService::Client.course_teacher_alerts(
+      course_id: id,
+      teacher_id: user.id,
+    ).payload.size
   end
 
   def caag_student_details
@@ -67,10 +68,10 @@ Course.class_eval do
 
   def get_relevant_student_alerts_count(student)
     return unless student && teacher
-    AlertsService::Client.teacher_alerts(teacher.id).payload.select do |alert|
-      Assignment.find(alert.assignment_id).try(:course) == self &&
-      alert.student_id == student.id
-    end.size
+    AlertsService::Client.course_student_alerts(
+      course_id: id,
+      student_id: student.id,
+    ).payload.size
   end
 
   def teacher
