@@ -29,7 +29,11 @@
           <%= student[:current_score] %>
         </td>
         <td>
-          <%= student[:course_progress] %>
+          <div class="progress" data-label='<%= student[:course_progress] %>'>
+            <span class="value" style='<%= "width: #{student[:course_progress]};" %>'>
+              <span style="display: none;"><%= student[:course_progress] %></span>
+            </span>
+          </div>
         </td>
         <td>
           <%= student[:requirements_completed] %>
