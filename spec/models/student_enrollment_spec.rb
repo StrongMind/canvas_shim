@@ -46,5 +46,15 @@ describe StudentEnrollment do
     it "returns 0 with no data" do
       expect(subject.missing_assignments_count).to eq 0
     end
+
+    context "One Missing Assignment" do
+      before do
+        assignment.update(due_at: 1.day.ago)
+      end
+
+      it "has one missing now" do
+        expect(subject.missing_assignments_count).to eq 1
+      end
+    end
   end
 end
