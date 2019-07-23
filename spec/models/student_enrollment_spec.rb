@@ -56,5 +56,21 @@ describe StudentEnrollment do
         expect(subject.missing_assignments_count).to eq 1
       end
     end
+
+    context "Assignment is late" do
+      before do
+        assignment.update(due_at: 1.day.ago)
+        submission.update(submitted_at: Time.now)
+      end
+
+      it "has none missing now" do
+        expect(subject.missing_assignments_count).to eq 0
+      end
+
+      it "is one when zerograded and late" do
+        submission.update(grader_id: 1)
+        expect(subject.missing_assignments_count).to eq 1
+      end
+    end
   end
 end

@@ -26,7 +26,6 @@ class Submission < ActiveRecord::Base
 
   def late?
     return unless assignment && submitted_at
-    (assignment.due_at || 1.day.from_now) < Time.now &&
-    submitted_at < (assignment.due_at || submitted_at - 1.day)
+    true
   end
 end
