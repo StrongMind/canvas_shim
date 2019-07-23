@@ -1,10 +1,12 @@
 module PipelineService
   module V2
     class Client
-      REGION = 'us-west-2'
+      REGION = ENV['AWS_REGION']
+      SQS_REGION = 'us-west-2'
       include Singleton
 
       def initialize
+
         Aws.config.update(
           region: REGION,
           credentials: Aws::Credentials.new(
@@ -12,11 +14,11 @@ module PipelineService
             ENV['S3_ACCESS_KEY']
           )
         )
-  
+
         @url = SettingsService.get_settings(object: 'school', id: 1)['pipeline_sqs_url']
-        @sqs = Aws::SQS::Client.new(region: REGION)
+        @sqs = Aws::SQS::Client.new(region: SQS_REGION)
       end
-      
+
       def self.publish(payload)
         instance.publish(payload)
       end
