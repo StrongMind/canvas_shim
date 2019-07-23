@@ -34,3 +34,36 @@
   padding-top: .5rem;
 }
 
+
+.caag-detail-row {
+  text-align: center;
+}
+
+#studentDetails_wrapper {
+  max-width: 96% !important;
+  margin: 2rem auto;
+}
+
+.progress {
+  height: 1.5em;
+  margin: 0;
+  width: 100%;
+  background-color: #c9c9c9;
+  position: relative;
+}
+.progress:before {
+  content: attr(data-label);
+  position: absolute;
+  text-align: center;
+  left: 0;
+  right: 0;
+}
+.progress .value {
+  background-color: #7cc4ff;
+  display: inline-block;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+

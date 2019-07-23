@@ -18,4 +18,14 @@ class Submission < ActiveRecord::Base
 
   def versioned_attachments
   end
+
+  def missing?
+    return unless assignment
+    (assignment.due_at || 1.day.from_now) < Time.now && !submitted_at
+  end
+
+  def late?
+    return unless assignment && submitted_at
+    true
+  end
 end
