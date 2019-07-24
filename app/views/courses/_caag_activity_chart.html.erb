@@ -1,22 +1,42 @@
-<div class="student-activity-chart">
-   <div class="hour-labels">
-     <div class="day">
-       <% (0..23).each do |day| %>
-           <div class="hour"> <%= @accesses_per_hour[day].keys[0].strftime("%l%P").strip.downcase[0...-1] %></div>
-       <% end %>
-     </div>
-   </div>
+<div class="student-activity-chart" id="caag-student-activity-chart">
+  <h3>Class Activity Chart:</h3>
+  <div class="hour-labels">
+    <div class="day">
+      
+    <div class="hour"> </div>
+      <% (0..23).each do |day| %>
+        <div class="hour"> 
+            <label class="col-label">
+              <%= @accesses_per_hour[day].keys[0].strftime("%l%P").strip.downcase[0...-1] %>
+            </label>
+        </div>
 
-   <% @accesses_per_hour.in_groups_of(24) do |day| %>
-     <div class="week">
-       <div class="day">
-         <div class="day-labels"> <%= day[0].keys[0].strftime("%a") %> </div>
-           <% day.each do |hour| %>
-               <div class="<%= "hour hour--no-border band-#{hour.values[0]}" %>">
-                 <label class="col-label"<%= hour.values[0] %></label>
-               </div>
-           <% end %>
-       </div>
-     </div>
-   <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <% @accesses_per_hour.in_groups_of(24) do |day| %>
+    <div class="week caag-week">
+      <div class="day caag-day">
+        <div class="day-label"> <%= day[0].keys[0].strftime("%a") %> </div>
+          <% day.each do |hour| %>
+              <div class="<%= "hour band-#{hour.values[0]} caag-hour" %>">
+                <label class="col-label"<%= hour.values[0] %></label>
+              </div>
+          <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="student-activity-chart-legend">
+  <div class="band-0"></div>
+  <div class="band-1"></div>
+  <div class="band-2"></div>
+  <div class="band-3"></div>
+  <div class="band-4"></div>
+  <div class="band-5"></div>
+  <div class="band-6"></div>
+  <div class="band-7"></div>
+  <div class="band-8"></div>
 </div>
