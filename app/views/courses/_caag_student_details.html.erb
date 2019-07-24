@@ -1,0 +1,48 @@
+<table id="studentDetails" class="stripe">
+  <thead>
+    <tr>
+      <th>Student Name</th>
+      <th>Days Since Active</th>
+      <th>Days Since Last Submission</th>
+      <th>Missing Assignments</th>
+      <th>Current Grade</th>
+      <th>Course Progress</th>
+      <th>Requirements Completed</th>
+      <th>Alerts</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% (@context.try(:caag_student_details) || []).each do |student| %>
+      <tr class="caag-detail-row">
+        <td><%= student[:name] %></td>
+        <td>
+          <%= student[:last_active] %>
+        </td>
+        <td>
+          <%= student[:last_submission] %>
+        </td>
+        <td>
+          <%= student[:missing_assignments] %>
+        </td>
+        <td>
+          <%= student[:current_score] %>
+        </td>
+        <td>
+          <div class="progress" data-label='<%= student[:course_progress] %>'>
+            <span class="value" style='<%= "width: #{student[:course_progress]};" %>'>
+              <span style="display: none;"><%= student[:course_progress] %></span>
+            </span>
+          </div>
+        </td>
+        <td>
+          <%= student[:requirements_completed] %>
+        </td>
+        <td>
+          <%= student[:alerts] %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+
+</table>

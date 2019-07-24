@@ -34,9 +34,25 @@ Course.class_eval do
 
   def get_relevant_alerts_count(user)
     return unless user
-    AlertsService::Client.teacher_alerts(user.id).payload.select do |alert|
-      Assignment.find(alert.assignment_id).try(:course) == self
-    end.size
+    AlertsService::Client.course_teacher_alerts(
+      course_id: id,
+      teacher_id: user.id,
+    ).payload.size
+  end
+
+  def caag_student_details
+    active_students.map do |student|
+      {
+        name: student.user.name,
+        last_active: student.days_since_active,
+        last_submission: student.days_since_last_submission,
+        missing_assignments: student.missing_assignments_count,
+        current_score: student.current_score,
+        course_progress: "#{calculate_progress(student).round(1)}%",
+        requirements_completed: student.string_progress,
+        alerts: get_relevant_student_alerts_count(student.user)
+      }
+    end
   end
 
   private
@@ -46,6 +62,15 @@ Course.class_eval do
 
   def calculate_progress(student)
     cp = CourseProgress.new(self, student.user)
-    (cp.requirement_completed_count.to_f / cp.requirement_count.to_f) * 100
+    req_count = cp.requirement_count.zero? ? 1 : cp.requirement_count
+    (cp.requirement_completed_count.to_f / req_count.to_f) * 100
+  end
+
+  def get_relevant_student_alerts_count(student)
+    return unless student
+    AlertsService::Client.course_student_alerts(
+      course_id: id,
+      student_id: student.id,
+    ).payload.size
   end
 end

@@ -25,6 +25,10 @@ module AlertsService
       get(endpoints(:course_teacher_alerts, course_id: course_id, teacher_id: teacher_id))
     end
 
+    def course_student_alerts(course_id:, student_id:)
+      get(endpoints(:course_student_alerts, course_id: course_id, student_id: student_id))
+    end
+
     def show(id)
       get(endpoints(:show_alert, alert_id: id))
     end

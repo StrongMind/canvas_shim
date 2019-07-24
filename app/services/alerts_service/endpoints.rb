@@ -16,6 +16,8 @@ module AlertsService
         "/courses/#{ids[:course_id]}/alerts"
       when :course_teacher_alerts
         "/courses/#{ids[:course_id]}/teachers/#{ids[:teacher_id]}/alerts"
+      when :course_student_alerts
+        "/courses/#{ids[:course_id]}/students/#{ids[:student_id]}/alerts"
       when :show_alert, :destroy_alert
         "/alerts/#{ids[:alert_id]}"
       when :create_alert
