@@ -67,3 +67,51 @@
   top: 0;
 }
 
+
+
+#caag-student-activity-chart, #caag-activity-chart-legend {
+  .col-label {
+    width: 2rem;
+    text-align: center;
+  }
+
+  .band-0 {
+   background-color: #eef3f7;
+  }
+
+  .band-1 {
+    background-color: #CAE0EC;
+  }
+
+  .band-2 {
+    background-color: #CAE0EC;
+  }
+
+  .band-3 {
+    background-color: #8BBBD6;
+  }
+
+  .band-4 {
+    background-color: #5CA0C6;   
+  }
+
+  .band-5 {
+    background-color: #2E85B6;  
+  }
+
+  .band-6 {
+    background-color: #006BA6;
+  }
+
+  .band-7 {
+    background-color: #005888;
+  }
+
+  .band-8 {
+    background-color: #00456A;
+  }
+
+  .band-9 {
+    background-color: #00314C;
+  }
+}
