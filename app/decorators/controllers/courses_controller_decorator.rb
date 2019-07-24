@@ -196,7 +196,9 @@ CoursesController.class_eval do
   end
 
   def scale_count(count)
-    return 10 if count >= 30
-    count.divmod(3).first
+    return 0 if @context.no_active_students?
+    enrs = @context.active_students.size
+    return 10 if count >= enrs * 10
+    count.divmod(enrs).first
   end
 end
