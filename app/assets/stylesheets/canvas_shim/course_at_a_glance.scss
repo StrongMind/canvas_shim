@@ -70,13 +70,15 @@
 
 
 #caag-student-activity-chart, #caag-activity-chart-legend {
-  #hacky-hour {
-    width: 1.5rem;
-    margin-right: -.75rem;
+  .week .day > * {
+    flex-basis: 0;
+    flex: 1 1 0;
   }
 
-  .col-label, .hour-labels .day .hour {
-    text-align: center;
+  .hour {
+    flex-basis: 0;
+    flex: 1 1 0;
+    box-sizing: border-box; 
   }
 
   .caag-hour {
@@ -125,11 +127,5 @@
   
   .band-10 {
     background-color: #00101a;
-  }
-}
-
-@media all and (max-width: 1900px) {
-  #caag-student-activity-chart #hacky-hour {
-    margin-right: .25rem;
   }
 }
