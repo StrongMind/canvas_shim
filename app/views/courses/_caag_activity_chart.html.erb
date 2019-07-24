@@ -1,0 +1,22 @@
+<div class="student-activity-chart">
+   <div class="hour-labels">
+     <div class="day">
+       <% (0..23).each do |day| %>
+           <div class="hour"> <%= @accesses_per_hour[day].keys[0].strftime("%l%P").strip.downcase[0...-1] %></div>
+       <% end %>
+     </div>
+   </div>
+
+   <% @accesses_per_hour.in_groups_of(24) do |day| %>
+     <div class="week">
+       <div class="day">
+         <div class="day-labels"> <%= day[0].keys[0].strftime("%a") %> </div>
+           <% day.each do |hour| %>
+               <div class="<%= "hour hour--no-border band-#{hour.values[0]}" %>">
+                 <label class="col-label"<%= hour.values[0] %></label>
+               </div>
+           <% end %>
+       </div>
+     </div>
+   <% end %>
+</div>
