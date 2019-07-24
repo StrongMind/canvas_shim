@@ -74,10 +74,13 @@
     width: 1.5rem;
     margin-right: -.75rem;
   }
-  
+
   .col-label, .hour-labels .day .hour {
-    width: 2rem;
     text-align: center;
+  }
+
+  .caag-hour {
+    width: 70px;
   }
 
   .band-0 {
@@ -118,5 +121,11 @@
 
   .band-9 {
     background-color: #00314C;
+  }
+}
+
+@media all and (max-width: 1900px) {
+  #caag-student-activity-chart #hacky-hour {
+    margin-right: .25rem;
   }
 }
