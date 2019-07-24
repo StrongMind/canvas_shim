@@ -137,7 +137,7 @@ CoursesController.class_eval do
       access_time = start_at + hour.hours
 
       count = accessed_hours[access_time] || 0
-      {access_time => count}
+      {access_time => scale_count(count)}
     end
   end
 
@@ -193,5 +193,10 @@ CoursesController.class_eval do
     enrollments.select do |enr|
       enr.course.workflow_state != "deleted"
     end.map {|enr| [enr.course, course_at_a_glance_path(enr.course)] }
+  end
+
+  def scale_count(count)
+    return 10 if count >= 30
+    count.divmod(3).first
   end
 end
