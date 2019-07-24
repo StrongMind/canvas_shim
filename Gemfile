@@ -13,6 +13,7 @@ gemspec
 gem 'delayed_job_active_record'
 gem 'pg'
 gem 'rails', '~> 5.0.7.2'
+gem 'groupdate'
 
 group :test do
   gem 'webmock'

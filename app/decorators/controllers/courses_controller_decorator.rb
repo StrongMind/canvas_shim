@@ -122,10 +122,26 @@ CoursesController.class_eval do
       @avg_completion_pct = @context.average_completion_percentage.round(1)
       @assignments_need_grading = @context.needs_grading_count
       @alerts_need_attention = @context.get_relevant_alerts_count(@current_user)
+      @accesses_per_hour = get_accesses_by_hour
     end
   end
 
   private
+  def get_accesses_by_hour
+    start_at = 7.days.ago.beginning_of_day
+
+    accesses = @context.asset_user_accesses
+    accessed_hours = accesses.group_by_hour(:created_at).count
+    #168 hours per week
+    (0..167).map do |hour|
+      access_time = start_at + hour.hours
+
+      count = accessed_hours[access_time] || 0
+      {access_time => count}
+    end
+  end
+
+
   def grade_out_users_params
     params.permit(enrollment_ids: [])
   end
