@@ -70,7 +70,12 @@
 
 
 #caag-student-activity-chart, #caag-activity-chart-legend {
-  .col-label {
+  #hacky-hour {
+    width: 1.5rem;
+    margin-right: -.75rem;
+  }
+  
+  .col-label, .hour-labels .day .hour {
     width: 2rem;
     text-align: center;
   }
