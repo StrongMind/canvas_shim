@@ -122,10 +122,31 @@ CoursesController.class_eval do
       @avg_completion_pct = @context.average_completion_percentage.round(1)
       @assignments_need_grading = @context.needs_grading_count
       @alerts_need_attention = @context.get_relevant_alerts_count(@current_user)
+      @accesses_per_hour = get_accesses_by_hour
     end
   end
 
   private
+  def get_accesses_by_hour
+    start_at = 6.days.ago.in_time_zone(@context.time_zone.name).beginning_of_day
+
+    accesses = @context.page_views.where(
+      "created_at >= ? AND user_id IN (?)",
+      start_at,
+      @context.active_students.pluck(:user_id)
+    )
+
+    accessed_hours = accesses.group_by_hour(:created_at).count
+    #168 hours per week
+    (0..167).map do |hour|
+      access_time = start_at + hour.hours
+
+      count = accessed_hours[access_time] || 0
+      {access_time.in_time_zone(@context.time_zone.name) => scale_count(count)}
+    end
+  end
+
+
   def grade_out_users_params
     params.permit(enrollment_ids: [])
   end
@@ -177,5 +198,13 @@ CoursesController.class_eval do
     enrollments.select do |enr|
       enr.course.workflow_state != "deleted"
     end.map {|enr| [enr.course, course_at_a_glance_path(enr.course)] }
+  end
+
+  def scale_count(count)
+    return 0 if @context.no_active_students?
+    count /= 2
+    enrs = @context.active_students.size
+    return 10 if count >= enrs * 10
+    count.divmod(enrs).first
   end
 end

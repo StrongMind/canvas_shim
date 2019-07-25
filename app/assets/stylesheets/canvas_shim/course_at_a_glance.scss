@@ -20,7 +20,7 @@
 }
 
 .card-body {
-  padding: .25rem 2rem 2rem 2rem; 
+  padding: .25rem 2rem 2rem 2rem;
   text-align: center;
 }
 
@@ -39,7 +39,7 @@
   text-align: center;
 }
 
-#studentDetails_wrapper {
+#studentDetails_wrapper, #caag-student-activity-chart {
   max-width: 96% !important;
   margin: 2rem auto;
 }
@@ -67,3 +67,80 @@
   top: 0;
 }
 
+
+
+#caag-student-activity-chart, #caag-activity-chart-legend {
+  .week .day > * {
+    flex: 1 1 0;
+  }
+
+  .hour {
+    flex: 1 1 0;
+    box-sizing: border-box;
+  }
+
+  .band-0 {
+    background-color: #eef3f7;
+  }
+
+  .band-1 {
+    background-color: #CAE0EC;
+  }
+
+  .band-2 {
+    background-color: #AACDE1;
+  }
+
+  .band-3 {
+    background-color: #8BBBD6;
+  }
+
+  .band-4 {
+    background-color: #5CA0C6;
+  }
+
+  .band-5 {
+    background-color: #2E85B6;
+  }
+
+  .band-6 {
+    background-color: #006BA6;
+  }
+
+  .band-7 {
+    background-color: #005888;
+  }
+
+  .band-8 {
+    background-color: #00456A;
+  }
+
+  .band-9 {
+    background-color: #00314C;
+  }
+
+  .band-10 {
+    background-color: #00101a;
+  }
+}
+
+#caag-activity-chart-legend {
+  align-items: center;
+  margin: 2rem auto;
+
+  div {
+    height: 18px;
+
+    &:first-of-type {
+      margin-left: .5rem;
+    }
+
+    &:last-of-type {
+      margin-right: .5rem;
+    }
+  }
+
+  p {
+    font-size: 0.575rem;
+  }
+}
