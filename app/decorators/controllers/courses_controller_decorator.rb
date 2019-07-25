@@ -133,7 +133,7 @@ CoursesController.class_eval do
     accesses = @context.page_views.where(
       "created_at >= ? AND user_id IN (?)",
       start_at,
-      @context.all_real_students.pluck(:id)
+      @context.active_students.pluck(:user_id)
     )
 
     accessed_hours = accesses.group_by_hour(:created_at).count
