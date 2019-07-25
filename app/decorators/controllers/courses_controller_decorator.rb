@@ -130,10 +130,10 @@ CoursesController.class_eval do
   def get_accesses_by_hour
     start_at = 6.days.ago.in_time_zone(@context.time_zone.name).beginning_of_day
 
-    accesses = @context.asset_user_accesses.where(
-      "created_at >= ? AND membership_type = ?",
+    accesses = @context.page_views.where(
+      "created_at >= ? AND user_id IN (?)",
       start_at,
-      "StudentEnrollment"
+      @context.all_real_students.pluck(:id)
     )
 
     accessed_hours = accesses.group_by_hour(:created_at).count
@@ -202,6 +202,7 @@ CoursesController.class_eval do
 
   def scale_count(count)
     return 0 if @context.no_active_students?
+    count /= 2
     enrs = @context.active_students.size
     return 10 if count >= enrs * 10
     count.divmod(enrs).first
