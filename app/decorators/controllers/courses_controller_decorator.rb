@@ -128,7 +128,7 @@ CoursesController.class_eval do
 
   private
   def get_accesses_by_hour
-    start_at = 6.days.ago.beginning_of_day
+    start_at = 6.days.ago.in_time_zone(@context.time_zone.name).beginning_of_day
 
     accesses = @context.asset_user_accesses.where(
       "created_at >= ? AND membership_type = ?",
