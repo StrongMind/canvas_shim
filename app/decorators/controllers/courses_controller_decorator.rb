@@ -128,16 +128,21 @@ CoursesController.class_eval do
 
   private
   def get_accesses_by_hour
-    start_at = 7.days.ago.beginning_of_day
+    start_at = 6.days.ago.beginning_of_day
 
-    accesses = @context.asset_user_accesses
+    accesses = @context.asset_user_accesses.where(
+      "created_at >= ? AND membership_type = ?",
+      start_at,
+      "StudentEnrollment"
+    )
+
     accessed_hours = accesses.group_by_hour(:created_at).count
     #168 hours per week
     (0..167).map do |hour|
       access_time = start_at + hour.hours
 
       count = accessed_hours[access_time] || 0
-      {access_time => scale_count(count)}
+      {access_time.in_time_zone(@context.time_zone.name) => scale_count(count)}
     end
   end
 
