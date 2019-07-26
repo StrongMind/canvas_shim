@@ -10,4 +10,9 @@ $(window).on("load", function(event) {
   });
 
   $('#studentDetails').DataTable();
+
+  // toggle popover on the activity chart
+  $('#activity-chart-info, .popover-close').click(function() {
+    $('.caag-activity-chart-popover').toggleClass('popover-visible');
+  })
 });
