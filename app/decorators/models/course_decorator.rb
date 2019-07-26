@@ -58,12 +58,14 @@ Course.class_eval do
 
   def get_accesses_by_hour
     start_at = 6.days.ago.in_time_zone(time_zone_name).beginning_of_day
+    query = "url NOT ILIKE ? AND user_id IN (?) AND created_at >= ?"
+    as_ids = active_students.pluck(:user_id)
 
     accesses = page_views.where(
-      "url NOT ILIKE ? AND created_at >= ? OR " \
-      "updated_at >= ? AND user_id IN (?)",
-      "%api%", start_at, start_at,
-      active_students.pluck(:user_id)
+      "#{query} OR #{query} AND updated_at >= ?",
+      "%api%", as_ids,
+      start_at, "%api%", as_ids,
+      start_at, start_at
     )
 
     accessed_hours = accesses.group_by_hour(:created_at).count
