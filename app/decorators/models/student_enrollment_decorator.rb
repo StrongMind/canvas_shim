@@ -8,10 +8,10 @@ StudentEnrollment.class_eval do
   end
 
   def missing_assignments_count
-    user.submissions.where(context_code: "course_#{course.id}")
-    .select do |sub|
-      sub.missing? || (sub.grader_id == 1 && sub.late?)
-    end.size
+    subs = user.submissions.where(context_code: "course_#{course.id}")
+    subs.missing.merge(
+      subs.late.where(grader_id: 1)
+    ).count
   end
 
   def current_score
