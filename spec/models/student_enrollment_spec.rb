@@ -41,36 +41,4 @@ describe StudentEnrollment do
        expect(subject.days_since_last_submission).to eq 2
      end
   end
-
-  describe "#missing_assignment_count" do
-    it "returns 0 with no data" do
-      expect(subject.missing_assignments_count).to eq 0
-    end
-
-    context "One Missing Assignment" do
-      before do
-        assignment.update(due_at: 1.day.ago)
-      end
-
-      it "has one missing now" do
-        expect(subject.missing_assignments_count).to eq 1
-      end
-    end
-
-    context "Assignment is late" do
-      before do
-        assignment.update(due_at: 1.day.ago)
-        submission.update(submitted_at: Time.now)
-      end
-
-      it "has none missing now" do
-        expect(subject.missing_assignments_count).to eq 0
-      end
-
-      it "is one when zerograded and late" do
-        submission.update(grader_id: 1)
-        expect(subject.missing_assignments_count).to eq 1
-      end
-    end
-  end
 end

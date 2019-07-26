@@ -41,6 +41,7 @@ Course.class_eval do
   end
 
   def caag_student_details
+    return if no_active_students?
     active_students.map do |student|
       {
         name: student.user.name,
@@ -55,7 +56,33 @@ Course.class_eval do
     end
   end
 
+  def get_accesses_by_hour
+    start_at = 6.days.ago.in_time_zone(time_zone_name).beginning_of_day
+    query = "url NOT ILIKE ? AND user_id IN (?) AND created_at >= ?"
+    as_ids = active_students.pluck(:user_id)
+    api_match = "%/api/%"
+
+    accesses = page_views.where(
+      "#{query} OR #{query} AND updated_at >= ?",
+      api_match, as_ids,
+      start_at, api_match, as_ids,
+      start_at, start_at
+    )
+
+    accessed_hours = accesses.group_by_hour(:created_at).count
+    #168 hours per week
+    (0..167).map do |hour|
+      access_time = start_at + hour.hours
+      count = accessed_hours[access_time] || 0
+      {access_time.in_time_zone(time_zone_name) => scale_count(count)}
+    end
+  end
+
   private
+  def time_zone_name
+    time_zone.name
+  end
+
   def working_denominator(arr)
     arr.none? ? 1 : arr.size
   end
@@ -72,5 +99,12 @@ Course.class_eval do
       course_id: id,
       student_id: student.id,
     ).payload.size
+  end
+
+  def scale_count(count)
+    return 0 if no_active_students?
+    enrs = active_students.size
+    return 10 if count >= enrs * 10
+    count.divmod(enrs).first
   end
 end
