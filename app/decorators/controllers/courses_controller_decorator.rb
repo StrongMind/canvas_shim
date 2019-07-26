@@ -118,13 +118,11 @@ CoursesController.class_eval do
     get_context
     if authorized_action(@context, @current_user, :manage_grades)
       @course_list ||= caag_course_urls
-      Course.transaction do
-        @avg_grade = @context.average_score.round(1)
-        @avg_completion_pct = @context.average_completion_percentage.round(1)
-        @assignments_need_grading = @context.needs_grading_count
-        @alerts_need_attention = @context.get_relevant_alerts_count(@current_user)
-        @accesses_per_hour = @context.get_accesses_by_hour
-      end
+      @avg_grade = @context.average_score.round(1)
+      @avg_completion_pct = @context.average_completion_percentage.round(1)
+      @assignments_need_grading = @context.needs_grading_count
+      @alerts_need_attention = @context.get_relevant_alerts_count(@current_user)
+      @accesses_per_hour = @context.get_accesses_by_hour
     end
   end
 
