@@ -22,31 +22,39 @@
   </div>
 </div>
 <div id="card-container">
-  <div class="card content-box pad-box-mini border border-trbl border-round">
+  <div class="card content-box border border-trbl border-round">
     <div class="card-body">
       <h5><strong>Average Course Grade</strong></h5>
-      <p class="card-text"><%= @avg_grade %></p>
+      <p class="card-text"><%= @avg_grade %>%</p>
+    </div>
+    <div class="card-footer">
       <%= link_to 'Grade History', history_course_gradebook_path, class: "card-link border border-t" %>
     </div>
   </div>
-  <div class="card content-box pad-box-mini border border-trbl border-round">
+  <div class="card content-box border border-trbl border-round">
     <div class="card-body">
       <h5><strong>Average Course % Completed</strong></h5>
-      <p class="card-text"><%= @avg_completion_pct %></p>
+      <p class="card-text"><%= @avg_completion_pct %>%</p>
+    </div>
+    <div class="card-footer">
       <%= link_to 'View Progressions', progressions_course_context_modules_path, class: "card-link border border-t" %>
     </div>
   </div>
-  <div class="card content-box pad-box-mini border border-trbl border-round">
+  <div class="card content-box border border-trbl border-round">
     <div class="card-body">
       <h5><strong>Assignments Need Grading</strong></h5>
       <p class="card-text"><%= @assignments_need_grading %></p>
+    </div>
+    <div class="card-footer">
       <%= link_to 'Gradebook', course_grades_path, class: "card-link border border-t" %>
     </div>
   </div>
-  <div class="card content-box pad-box-mini border border-trbl border-round">
+  <div class="card content-box border border-trbl border-round">
     <div class="card-body">
       <h5><strong>Alerts Need Attention</strong></h5>
       <p class="card-text"><%= @alerts_need_attention %></p>
+    </div>
+    <div class="card-footer">
       <%= link_to 'View Alerts', cs_alerts_path, class: "card-link border border-t" %>
     </div>
   </div>
