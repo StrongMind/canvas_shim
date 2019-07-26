@@ -41,17 +41,19 @@ Course.class_eval do
   end
 
   def caag_student_details
-    active_students.map do |student|
-      {
-        name: student.user.name,
-        last_active: student.days_since_active,
-        last_submission: student.days_since_last_submission,
-        missing_assignments: student.missing_assignments_count,
-        current_score: student.current_score,
-        course_progress: "#{calculate_progress(student).round(1)}%",
-        requirements_completed: student.string_progress,
-        alerts: get_relevant_student_alerts_count(student.user)
-      }
+    Course.transaction do
+      active_students.map do |student|
+        {
+          name: student.user.name,
+          last_active: student.days_since_active,
+          last_submission: student.days_since_last_submission,
+          missing_assignments: student.missing_assignments_count,
+          current_score: student.current_score,
+          course_progress: "#{calculate_progress(student).round(1)}%",
+          requirements_completed: student.string_progress,
+          alerts: get_relevant_student_alerts_count(student.user)
+        }
+      end
     end
   end
 
@@ -60,7 +62,8 @@ Course.class_eval do
 
     Course.transaction do
       accesses = page_views.where(
-        "created_at >= ? OR updated_at >= ? AND user_id IN (?)",
+        "controller NOT ILIKE 'api' AND created_at >= ? OR" \
+        "updated_at >= ? AND user_id IN (?)",
         start_at, start_at,
         active_students.pluck(:user_id)
       )
