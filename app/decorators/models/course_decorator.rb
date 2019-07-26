@@ -60,11 +60,12 @@ Course.class_eval do
     start_at = 6.days.ago.in_time_zone(time_zone_name).beginning_of_day
     query = "url NOT ILIKE ? AND user_id IN (?) AND created_at >= ?"
     as_ids = active_students.pluck(:user_id)
+    api_match = "%/api/%"
 
     accesses = page_views.where(
       "#{query} OR #{query} AND updated_at >= ?",
-      "%/api/%", as_ids,
-      start_at, "%/api/%", as_ids,
+      api_match, as_ids,
+      start_at, api_match, as_ids,
       start_at, start_at
     )
 
