@@ -8,12 +8,11 @@ StudentEnrollment.class_eval do
   end
 
   def missing_assignments_count
-    subs = user.submissions.where(
-            "context_code = ? AND cached_due_date < ?",
-            "course_#{course.id}",
-            1.hour.ago
-          )
-    subs.where("grader_id = 1 OR workflow_state = 'unsubmitted'").count
+    user.submissions.where(
+      "context_code = ? AND cached_due_date < ?",
+      "course_#{course.id}",
+      1.hour.ago
+    ).where("grader_id = 1 OR workflow_state = 'unsubmitted'").count
   end
 
   def current_score
