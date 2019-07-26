@@ -62,9 +62,9 @@ Course.class_eval do
 
     Course.transaction do
       accesses = page_views.where(
-        "controller NOT ILIKE 'api' AND created_at >= ? OR" \
+        "url NOT ILIKE ? AND created_at >= ? OR " \
         "updated_at >= ? AND user_id IN (?)",
-        start_at, start_at,
+        "%api%", start_at, start_at,
         active_students.pluck(:user_id)
       )
 
