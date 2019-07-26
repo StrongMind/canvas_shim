@@ -302,6 +302,7 @@ DEPENDENCIES
   delayed_job_active_record
   dotenv-rails
   faker
+  groupdate
   pg
   pry-byebug
   pry-rails
