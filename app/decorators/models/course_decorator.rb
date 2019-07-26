@@ -41,7 +41,7 @@ Course.class_eval do
   end
 
   def caag_student_details
-    active_students.map do |student|
+    active_students.find_each.map do |student|
       {
         name: student.user.name,
         last_active: student.days_since_active,
