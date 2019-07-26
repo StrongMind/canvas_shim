@@ -41,40 +41,36 @@ Course.class_eval do
   end
 
   def caag_student_details
-    Course.transaction do
-      active_students.map do |student|
-        {
-          name: student.user.name,
-          last_active: student.days_since_active,
-          last_submission: student.days_since_last_submission,
-          missing_assignments: student.missing_assignments_count,
-          current_score: student.current_score,
-          course_progress: "#{calculate_progress(student).round(1)}%",
-          requirements_completed: student.string_progress,
-          alerts: get_relevant_student_alerts_count(student.user)
-        }
-      end
+    active_students.map do |student|
+      {
+        name: student.user.name,
+        last_active: student.days_since_active,
+        last_submission: student.days_since_last_submission,
+        missing_assignments: student.missing_assignments_count,
+        current_score: student.current_score,
+        course_progress: "#{calculate_progress(student).round(1)}%",
+        requirements_completed: student.string_progress,
+        alerts: get_relevant_student_alerts_count(student.user)
+      }
     end
   end
 
   def get_accesses_by_hour
     start_at = 6.days.ago.in_time_zone(time_zone_name).beginning_of_day
 
-    Course.transaction do
-      accesses = page_views.where(
-        "url NOT ILIKE ? AND created_at >= ? OR " \
-        "updated_at >= ? AND user_id IN (?)",
-        "%api%", start_at, start_at,
-        active_students.pluck(:user_id)
-      )
+    accesses = page_views.where(
+      "url NOT ILIKE ? AND created_at >= ? OR " \
+      "updated_at >= ? AND user_id IN (?)",
+      "%api%", start_at, start_at,
+      active_students.pluck(:user_id)
+    )
 
-      accessed_hours = accesses.group_by_hour(:created_at).count
-      #168 hours per week
-      (0..167).map do |hour|
-        access_time = start_at + hour.hours
-        count = accessed_hours[access_time] || 0
-        {access_time.in_time_zone(time_zone_name) => scale_count(count)}
-      end
+    accessed_hours = accesses.group_by_hour(:created_at).count
+    #168 hours per week
+    (0..167).map do |hour|
+      access_time = start_at + hour.hours
+      count = accessed_hours[access_time] || 0
+      {access_time.in_time_zone(time_zone_name) => scale_count(count)}
     end
   end
 
