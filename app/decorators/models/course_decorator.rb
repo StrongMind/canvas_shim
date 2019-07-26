@@ -42,7 +42,7 @@ Course.class_eval do
 
   def caag_student_details
     return if no_active_students?
-    active_students.find_each(batch_size: 50).map do |student|
+    active_students.map do |student|
       {
         name: student.user.name,
         last_active: student.days_since_active,
