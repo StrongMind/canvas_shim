@@ -63,8 +63,8 @@ Course.class_eval do
 
     accesses = page_views.where(
       "#{query} OR #{query} AND updated_at >= ?",
-      "%api%", as_ids,
-      start_at, "%api%", as_ids,
+      "%/api/%", as_ids,
+      start_at, "%/api/%", as_ids,
       start_at, start_at
     )
 
