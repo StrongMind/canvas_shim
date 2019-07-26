@@ -180,4 +180,12 @@ CoursesController.class_eval do
       enr.course.workflow_state != "deleted"
     end.map {|enr| [enr.course, course_at_a_glance_path(enr.course)] }
   end
+
+  def scale_count(count)
+    return 0 if @context.no_active_students?
+    count /= 2
+    enrs = @context.active_students.size
+    return 10 if count >= enrs * 10
+    count.divmod(enrs).first
+  end
 end
