@@ -55,7 +55,31 @@ Course.class_eval do
     end
   end
 
+  def get_accesses_by_hour
+    start_at = 6.days.ago.in_time_zone(time_zone_name).beginning_of_day
+
+    Course.transaction do
+      accesses = page_views.where(
+        "created_at >= ? OR updated_at >= ? AND user_id IN (?)",
+        start_at, start_at,
+        active_students.pluck(:user_id)
+      )
+
+      accessed_hours = accesses.group_by_hour(:created_at).count
+      #168 hours per week
+      (0..167).map do |hour|
+        access_time = start_at + hour.hours
+        count = accessed_hours[access_time] || 0
+        {access_time.in_time_zone(time_zone_name) => scale_count(count)}
+      end
+    end
+  end
+
   private
+  def time_zone_name
+    time_zone.name
+  end
+
   def working_denominator(arr)
     arr.none? ? 1 : arr.size
   end
@@ -72,5 +96,12 @@ Course.class_eval do
       course_id: id,
       student_id: student.id,
     ).payload.size
+  end
+
+  def scale_count(count)
+    return 0 if no_active_students?
+    enrs = active_students.size
+    return 10 if count >= enrs * 10
+    count.divmod(enrs).first
   end
 end
