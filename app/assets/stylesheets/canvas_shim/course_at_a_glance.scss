@@ -196,12 +196,15 @@
 }
 
 #activity-chart-info {
-  color: #2e84b6;
-  width: 0.75rem;
+  width: 1rem;
   margin-left: 0.5rem;
 
-  &:hover {
-    cursor: pointer;
+  a {
+    color: #2e84b6;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 
