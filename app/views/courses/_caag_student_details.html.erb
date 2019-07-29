@@ -15,7 +15,7 @@
   <tbody>
     <% (@context.try(:caag_student_details) || []).each do |student| %>
       <tr class="caag-detail-row">
-        <td><%= link_to student[:user].name, course_user_path(@context, student[:user]) %></td>
+        <td><%= link_to student[:user].name, course_user_path(@context, student[:user]), class: "caag-link-color" %></td>
         <td>
           <%= student[:last_active] %>
         </td>

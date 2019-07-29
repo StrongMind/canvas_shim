@@ -28,7 +28,7 @@
       <p class="card-text"><%= @avg_completion_pct %><span class="percent-superscript">%</span></p>
     </div>
     <div class="card-footer">
-      <%= link_to 'View Progressions', progressions_course_context_modules_path, class: "card-link border border-t" %>
+      <%= link_to 'View Progressions', progressions_course_context_modules_path, class: "card-link border border-t caag-link-color" %>
     </div>
   </div>
   <div class="card content-box border border-trbl border-round">
@@ -37,7 +37,7 @@
       <p class="card-text"><%= @assignments_need_grading %></p>
     </div>
     <div class="card-footer">
-      <%= link_to 'Gradebook', course_grades_path, class: "card-link border border-t" %>
+      <%= link_to 'Gradebook', course_grades_path, class: "card-link border border-t caag-link-color" %>
     </div>
   </div>
   <div class="card content-box border border-trbl border-round">
@@ -46,7 +46,7 @@
       <p class="card-text"><%= @alerts_need_attention %></p>
     </div>
     <div class="card-footer">
-      <%= link_to 'View Alerts', cs_alerts_path, class: "card-link border border-t" %>
+      <%= link_to 'View Alerts', cs_alerts_path, class: "card-link border border-t caag-link-color" %>
     </div>
   </div>
 </div>
