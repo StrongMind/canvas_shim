@@ -176,18 +176,6 @@
     height: 18px;
   }
 
-  #activity-chart-info {
-    margin-left: 1rem;
-
-    &::before {
-      font-size: 0.8rem;
-    }
-
-    &:hover {
-      cursor: pointer;
-    }
-  }
-
   p {
     font-size: 0.575rem;
 
@@ -199,68 +187,92 @@
       margin-left: .5rem;
     }
   }
+}
 
-  .caag-activity-chart-popover {
-    background-color: white;
-    box-shadow: 0 3px 5px #969696;
-    min-width: 300px;
-    padding: 1rem;
-    position: relative;
-    left: 15px;
-    bottom: 70px;
-    z-index: 1;
+.caag-heading-with-info {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
 
-    // visibility styles
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.5s cubic-bezier(0.38, 0.48, 0.45, 0.93);
+#activity-chart-info {
+  width: 1rem;
+  margin-left: 0.5rem;
 
-    h5 {
-      color: #006BA6;
-      font-family: "Montserrat", sans-serif;
-      font-size: .8rem;
-      font-weight: 600;
+  a {
+    color: #2e84b6;
+
+    &:hover {
+      cursor: pointer;
     }
+  }
+}
 
-    p {
-      margin: 1rem 0;
+.popover-content {
+  position: relative;
+}
+
+.caag-activity-chart-popover {
+  background-color: white;
+  box-shadow: 0 3px 5px #969696;
+  width: 300px;
+  padding: 1rem;
+  position: absolute;
+  left: 265px;
+  top: -3px;
+  z-index: 1;
+
+  // visibility styles
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s cubic-bezier(0.38, 0.48, 0.45, 0.93);
+
+  h5 {
+    color: #006BA6;
+    font-family: "Montserrat", sans-serif;
+    font-size: .8rem;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 1rem 0;
+    font-size: 0.7rem;
+  }
+
+  .popover-close {
+    position: absolute;
+    top: -16px;
+    right: -16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    width: 30px;
+    border: 0;
+    color: #cccccc;
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      color: #8f8f8f;
+      cursor: pointer;
     }
+  }
 
-    .popover-close {
-      position: absolute;
-      top: 0;
-      right: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 30px;
-      width: 30px;
-      border: 0;
-      color: #cccccc;
-      font-weight: bold;
-      transition: all 0.2s ease-in-out;
+  &.popover-visible {
+    visibility: visible;
+    opacity: 1;
+  }
 
-      &:hover {
-        color: #8f8f8f;
-        cursor: pointer;
-      }
-    }
-
-    &.popover-visible {
-      visibility: visible;
-      opacity: 1;
-    }
-
-    &:before {
-      position: absolute;
-      z-index: -1;
-      content: '';
-      left: -14px;
-      bottom: 19px;
-      border-style: solid;
-      border-width: 0 8px 8px 8px;
-      border-color: transparent transparent #ccc transparent;
-      transform: rotate(-90deg);
-    }
+  &:before {
+    position: absolute;
+    z-index: -1;
+    content: '';
+    left: -13px;
+    top: 19px;
+    border-style: solid;
+    border-width: 0 8px 8px 8px;
+    border-color: transparent transparent #ccc transparent;
+    transform: rotate(-90deg);
   }
 }
