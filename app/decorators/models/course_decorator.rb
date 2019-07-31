@@ -68,7 +68,7 @@ Course.class_eval do
     return if no_active_students?
     active_students.map do |student|
       {
-        name: student.user.name,
+        user: student.user,
         last_active: student.days_since_active,
         last_submission: student.days_since_last_submission,
         missing_assignments: student.missing_assignments_count,
