@@ -1,4 +1,8 @@
-<table id="studentDetails" class="stripe">
+<h3 class="studentDetails-heading">
+    Students in Course <span>(<%= (@context.try(:active_students) || []).length %>)</span>
+</h3>
+
+<table id="studentDetails">
   <thead>
     <tr>
       <th>Student Name</th>

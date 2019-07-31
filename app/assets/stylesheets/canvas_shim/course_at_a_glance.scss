@@ -1,5 +1,10 @@
+#course-snapshot-container {
+  padding: 0 2rem;
+}
+
 #caag-header {
   padding: .75rem .25rem;
+  margin-bottom: 3rem;
 }
 
 #caag-course-select {
@@ -9,12 +14,13 @@
 
 #card-container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   text-align: center;
   font-family: "Montserrat", sans-serif;
   font-weight: 600;
   text-transform: uppercase;
-  margin-bottom: 4rem;
+  margin: 0 -1rem 4rem -1rem;
+  flex-wrap: wrap;
 
   h5 {
     color: #585858;
@@ -33,12 +39,16 @@
 }
 
 .card {
-  width: 18rem;
-  margin: 0 1.5rem;
+  min-width: 14rem;
   background: white;
   box-shadow: 0 0.1875rem 0.375rem rgba(0, 0, 0, 0.1), 0 0.1875rem 0.375rem rgba(0, 0, 0, 0.16);
   display: flex;
   flex-direction: column;
+  flex-basis: 14rem;
+  flex-shrink: 1;
+  flex-grow: 1;
+  margin-left: 1rem;
+  margin-right: 1rem;
 
   .percent-superscript {
     vertical-align: super;
@@ -84,41 +94,143 @@
   }
 }
 
+.studentDetails-heading {
+  margin-bottom: 1rem;
 
-.caag-detail-row {
-  text-align: center;
+  span {
+    font-weight: bold;
+  }
 }
 
-#studentDetails_wrapper, #caag-student-activity-chart {
-  max-width: 96% !important;
+#studentDetails_wrapper {
+  font-size: 0.75rem;
+
+  label {
+    font-size: 0.75rem;
+  }
+
+  input[type="search"] {
+    border-color: #ededed;
+    font-size: 0.9em;
+    height: 13px;
+    margin-bottom: 0;
+  }
+
+  .dataTables_length {
+    label {
+      select {
+        border-color: #ededed;
+        font-size: 0.9em;
+        height: 30px;
+        line-height: 30px;
+        margin-bottom: 0;
+        width: auto;
+      }
+    }
+  }
+
+  .dataTables_paginate {
+    .paginate_button {
+      border: none;
+      border-bottom: 2px solid transparent;
+      border-radius: 0;
+      padding: 0.25rem;
+      margin: 0 0.25rem;
+      transition: border-bottom-color 0.2s ease;
+
+      &:not(.previous):not(.next):not(.current):hover,
+      &.previous:not(.disabled):hover,
+      &.next:not(.disabled):hover {
+        background: none;
+        background-color: transparent;
+        border: none;
+        border-bottom: 2px solid #b5b5b5;
+        color: #333 !important;
+      }
+
+      &.current, &.current:hover {
+        background: none;
+        background-color: transparent;
+        border: none;
+        border-bottom: 2px solid #2f85b6;
+      }
+    }
+  }
+}
+
+#studentDetails {
+  &.dataTable {
+    border-collapse: separate;
+    border-spacing: 0 7px;
+
+    thead th {
+      border-bottom: 0;
+      font-weight: normal;
+      padding-bottom: 0;
+    }
+
+    tbody {
+      border: 0;
+
+      tr {
+        box-shadow: 0 4px 2px -2px rgba(0, 0, 0, 0.075);
+
+        td {
+          &:first-of-type {
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+          }
+
+          &:last-of-type {
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+          }
+        }
+      }
+    }
+
+    &.no-footer {
+      border-bottom: 0;
+    }
+  }
+
+  .caag-detail-row {
+    text-align: center;
+  }
+
+  .progress {
+    height: 1.5em;
+    margin: 0;
+    width: 100%;
+    background-color: #efefef;
+    background-image: none;
+    border-radius: 1em;
+    box-shadow: none;
+    position: relative;
+  }
+
+  .progress:before {
+    content: attr(data-label);
+    position: absolute;
+    text-align: center;
+    left: 0;
+    right: 0;
+    z-index: 2;
+  }
+
+  .progress .value {
+    background-color: #8abbd6;
+    display: inline-block;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+
+#caag-student-activity-chart {
   margin: 2rem auto;
 }
-
-.progress {
-  height: 1.5em;
-  margin: 0;
-  width: 100%;
-  background-color: #c9c9c9;
-  position: relative;
-}
-.progress:before {
-  content: attr(data-label);
-  position: absolute;
-  text-align: center;
-  left: 0;
-  right: 0;
-  z-index: 2;
-}
-.progress .value {
-  background-color: #7cc4ff;
-  display: inline-block;
-  height: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-
-
 
 #caag-student-activity-chart, #caag-activity-chart-legend {
   .week .day > * {
