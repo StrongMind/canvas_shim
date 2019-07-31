@@ -116,6 +116,7 @@ CoursesController.class_eval do
 
   def at_a_glance
     get_context
+    @active_tab = "at-a-glance"
     if authorized_action(@context, @current_user, :manage_grades)
       @course_list ||= caag_course_urls
       @avg_grade = @context.average_score.round(1)
