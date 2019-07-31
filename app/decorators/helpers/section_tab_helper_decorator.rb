@@ -1,6 +1,6 @@
 SectionTabHelper::AvailableSectionTabs.class_eval do
   def strongmind_to_a
-    if is_teacher? && snapshot_enabled?
+    if is_teacher_or_admin? && snapshot_enabled?
       instructure_to_a
     else
       tabs_without_snapshot
@@ -17,9 +17,9 @@ SectionTabHelper::AvailableSectionTabs.class_eval do
     end
   end
 
-  def is_teacher?
-    return false unless @context && @current_user
-    @context.teacher_enrollments.find_by(user_id: @current_user.id)
+  def is_teacher_or_admin?
+    return false unless @context.is_a?(Course) && @current_user
+    @context.user_is_instructor?(@current_user) || @context.user_is_admin?(@current_user)
   end
 
   def snapshot_enabled?
