@@ -7,7 +7,9 @@
 <% content_for :page_title, "#{@context.name} at a glance" %>
 <% add_crumb t('#crumbs.at_a_glance', "#{@context.name} at a glance") %>
 
-
-<%= render partial: 'caag_overview' %>
-<%= render partial: 'caag_student_details' %>
-<%= render partial: 'caag_activity_chart' %>
+<%= render partial: 'caag_header' %>
+<section id="course-snapshot-container">
+    <%= render partial: 'caag_overview' %>
+    <%= render partial: 'caag_student_details' %>
+    <%= render partial: 'caag_activity_chart' %>
+</div>
