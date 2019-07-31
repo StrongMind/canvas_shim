@@ -4,6 +4,30 @@ Course.class_eval do
   after_commit -> { PipelineService.publish(self) }
   after_create -> { RequirementsService.set_school_thresholds_on_course(course: self) }
 
+  TAB_AT_A_GLANCE = 18
+
+  class << self
+    def strongmind_default_tabs
+      default_tabs = instructure_default_tabs
+      settings_tab = default_tabs.pop
+
+      default_tabs.push(
+        {
+          :id => TAB_AT_A_GLANCE,
+          :label => t('#tabs.at_a_glance', "Snapshot"),
+          :css_class => 'at-a-glance',
+          :href => :course_at_a_glance_path,
+          :screenreader => t('#tabs.course_at_a_glance', "Snapshot")
+        }
+      )
+
+      default_tabs.push(settings_tab)
+    end
+
+    alias_method :instructure_default_tabs, :default_tabs
+    alias_method :default_tabs, :strongmind_default_tabs
+  end
+
   def force_min_scores
     context_modules.each do |cm|
       RequirementsService.apply_minimum_scores(context_module: cm, force: true)
@@ -44,7 +68,7 @@ Course.class_eval do
     return if no_active_students?
     active_students.map do |student|
       {
-        name: student.user.name,
+        user: student.user,
         last_active: student.days_since_active,
         last_submission: student.days_since_last_submission,
         missing_assignments: student.missing_assignments_count,

@@ -18,4 +18,6 @@ class Course < ActiveRecord::Base
   def user_is_student?(one, options={})
     true
   end
+
+  def self.default_tabs; end
 end
