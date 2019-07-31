@@ -14,10 +14,10 @@ Course.class_eval do
       default_tabs.push(
         {
           :id => TAB_AT_A_GLANCE,
-          :label => t('#tabs.at_a_glance', "At A Glance"),
+          :label => t('#tabs.at_a_glance', "Snapshot"),
           :css_class => 'at-a-glance',
           :href => :course_at_a_glance_path,
-          :screenreader => t('#tabs.course_at_a_glance', "At A Glance")
+          :screenreader => t('#tabs.course_at_a_glance', "Snapshot")
         }
       )
 
