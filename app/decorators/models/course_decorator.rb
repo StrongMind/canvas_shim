@@ -4,7 +4,6 @@ Course.class_eval do
   after_commit -> { PipelineService.publish(self) }
   after_create -> { RequirementsService.set_school_thresholds_on_course(course: self) }
 
-
   TAB_AT_A_GLANCE = 18
 
   class << self
