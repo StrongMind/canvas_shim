@@ -9,17 +9,20 @@ Course.class_eval do
 
   class << self
     def strongmind_default_tabs
-      instructure_default_tabs.concat(
-        [
-          {
-            :id => TAB_AT_A_GLANCE,
-            :label => t('#tabs.at_a_glance', "At A Glance"),
-            :css_class => 'at-a-glance',
-            :href => :course_at_a_glance_path,
-            :screenreader => t('#tabs.course_at_a_glance', "At A Glance")
-          }
-        ]
+      default_tabs = instructure_default_tabs
+      settings_tab = default_tabs.pop
+
+      default_tabs.push(
+        {
+          :id => TAB_AT_A_GLANCE,
+          :label => t('#tabs.at_a_glance', "At A Glance"),
+          :css_class => 'at-a-glance',
+          :href => :course_at_a_glance_path,
+          :screenreader => t('#tabs.course_at_a_glance', "At A Glance")
+        }
       )
+
+      default_tabs.push(settings_tab)
     end
 
     alias_method :instructure_default_tabs, :default_tabs

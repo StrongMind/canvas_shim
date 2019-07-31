@@ -1,6 +1,6 @@
 SectionTabHelper.class_eval do
   def strongmind_available_section_tabs(context)
-    instructure_available_section_tabs(context).uniq
+    instructure_available_section_tabs(context)
   end
 
   alias_method :instructure_available_section_tabs, :available_section_tabs
