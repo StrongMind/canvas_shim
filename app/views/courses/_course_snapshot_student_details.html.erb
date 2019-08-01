@@ -1,5 +1,5 @@
 <h3 class="studentDetails-heading">
-    Students in Course <span>(<%= (@context.try(:active_students) || []).length %>)</span>
+    Student Details <span>(<%= pluralize(@student_count, 'active student') %>)</span>
 </h3>
 
 <table id="studentDetails">
@@ -17,9 +17,9 @@
   </thead>
 
   <tbody>
-    <% (@context.try(:caag_student_details) || []).each do |student| %>
-      <tr class="caag-detail-row">
-        <td><%= link_to student[:user].name, course_user_path(@context, student[:user]), class: "caag-link-color" %></td>
+    <% @student_details.each do |student| %>
+      <tr class="course-snapshot-detail-row">
+        <td><%= link_to student[:user].name, course_user_path(@context, student[:user]), class: "course-snapshot-link-color" %></td>
         <td>
           <%= student[:last_active] %>
         </td>

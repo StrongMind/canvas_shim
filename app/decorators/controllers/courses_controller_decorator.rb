@@ -114,16 +114,10 @@ CoursesController.class_eval do
   alias_method :instructure_copy_course, :copy_course
   alias_method :copy_course, :strongmind_copy_course
 
-  def at_a_glance
+  def snapshot
     get_context
     if authorized_action(@context, @current_user, :manage_grades)
-      @active_tab = "at-a-glance"
-      @course_list ||= caag_course_urls
-      @avg_grade = @context.average_score.round(1)
-      @avg_completion_pct = @context.average_completion_percentage.round(1)
-      @assignments_need_grading = @context.needs_grading_count
-      @alerts_need_attention = @context.get_relevant_alerts_count(@current_user)
-      @accesses_per_hour = @context.get_accesses_by_hour
+      set_snapshot_variables
     end
   end
 
@@ -175,11 +169,28 @@ CoursesController.class_eval do
     js_env(auto_due_dates: add_on)
   end
 
-  def caag_course_urls
+  def course_snapshot_course_urls
     enrollments = @current_user.try(:teacher_enrollments) || []
     enrollments.reject do |enr|
       course = enr.course
       course.deleted? || course.no_active_students?
-    end.map {|enr| [enr.course, course_at_a_glance_path(enr.course)] }
+    end.map {|enr| [enr.course, course_snapshot_path(enr.course)] }
+  end
+
+  def context_not_in_snapshot?
+    @course_list.none? { |item| item.first == @context }
+  end
+
+  def set_snapshot_variables
+    @active_tab = "course-snapshot"
+    @course_list ||= course_snapshot_course_urls
+    @is_blank = context_not_in_snapshot?
+    @avg_grade = @context.average_score.round(1)
+    @avg_completion_pct = @context.average_completion_percentage.round(1)
+    @assignments_need_grading = @context.needs_grading_count
+    @alerts_need_attention = @context.get_relevant_alerts_count(@current_user)
+    @student_count = @context&.active_students&.count || 0
+    @student_details = @context.try(:course_snapshot_student_details) || []
+    @accesses_per_hour = @context.get_accesses_by_hour
   end
 end

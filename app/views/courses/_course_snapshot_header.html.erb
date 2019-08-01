@@ -1,0 +1,17 @@
+<div id="course-snapshot-header" class="ic-Action-header content-box pad-box-mini border border-t border-b">
+  <div class="ic-Action-header__Primary">
+    <h3 class="ic-Action-header__Heading"><strong>Snapshot of <%= @context.name %></strong></h3>
+  </div>
+  <div class="ic-Action-header__Secondary">
+    <select class="ic-Input" id="course-snapshot-course-select">
+      <% if @is_blank %>
+        <option selected>&nbsp;</option>
+      <% end %>
+      <% @course_list.each do |course_w_url| %>
+        <option <% if course_w_url[0] == @context %>selected<% end %>
+        data-url=<%= course_w_url[1] %>
+        ><%= course_w_url[0].name %></option>
+      <% end %>
+    </select>
+  </div>
+</div>

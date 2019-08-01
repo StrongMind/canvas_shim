@@ -1,5 +1,5 @@
 $(window).on("load", function(event) {
-  $("#caag-course-select").change(function(e) {
+  $("#course-snapshot-course-select").change(function(e) {
     var oldURL = window.location.pathname;
     var newURL = $(this).children(":selected").data("url");
 
@@ -13,6 +13,6 @@ $(window).on("load", function(event) {
 
   // toggle popover on the activity chart
   $('#activity-chart-info, .popover-close').click(function() {
-    $('.caag-activity-chart-popover').toggleClass('popover-visible');
+    $('.course-snapshot-activity-chart-popover').toggleClass('popover-visible');
   })
 });
