@@ -1,5 +1,5 @@
 <h3 class="studentDetails-heading">
-    Students in Course <span>(<%= (@context.try(:active_students) || []).length %>)</span>
+    Students in Course <span>(<%= @student_count %>)</span>
 </h3>
 
 <table id="studentDetails">
@@ -17,7 +17,7 @@
   </thead>
 
   <tbody>
-    <% (@context.try(:course_snapshot_student_details) || []).each do |student| %>
+    <% @student_details.each do |student| %>
       <tr class="course-snapshot-detail-row">
         <td><%= link_to student[:user].name, course_user_path(@context, student[:user]), class: "course-snapshot-link-color" %></td>
         <td>

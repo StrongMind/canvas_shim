@@ -117,14 +117,7 @@ CoursesController.class_eval do
   def snapshot
     get_context
     if authorized_action(@context, @current_user, :manage_grades)
-      @active_tab = "course-snapshot"
-      @course_list ||= course_snapshot_course_urls
-      @is_blank = @course_list.none? { |item| item.first == @context }
-      @avg_grade = @context.average_score.round(1)
-      @avg_completion_pct = @context.average_completion_percentage.round(1)
-      @assignments_need_grading = @context.needs_grading_count
-      @alerts_need_attention = @context.get_relevant_alerts_count(@current_user)
-      @accesses_per_hour = @context.get_accesses_by_hour
+      set_snapshot_variables
     end
   end
 
@@ -182,5 +175,22 @@ CoursesController.class_eval do
       course = enr.course
       course.deleted? || course.no_active_students?
     end.map {|enr| [enr.course, course_snapshot_path(enr.course)] }
+  end
+
+  def context_not_in_snapshot?
+    @course_list.none? { |item| item.first == @context }
+  end
+
+  def set_snapshot_variables
+    @active_tab = "course-snapshot"
+    @course_list ||= course_snapshot_course_urls
+    @is_blank = context_not_in_snapshot?
+    @avg_grade = @context.average_score.round(1)
+    @avg_completion_pct = @context.average_completion_percentage.round(1)
+    @assignments_need_grading = @context.needs_grading_count
+    @alerts_need_attention = @context.get_relevant_alerts_count(@current_user)
+    @student_count = @context&.active_students&.count || 0
+    @student_details = @context.try(:course_snapshot_student_details) || []
+    @accesses_per_hour = @context.get_accesses_by_hour
   end
 end
