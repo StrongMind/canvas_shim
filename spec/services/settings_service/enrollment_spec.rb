@@ -17,7 +17,7 @@ describe SettingsService::Enrollment do
     end
   end
 
-  context 'canvas domain present' do
+  context 'settings table prefix present' do
     before do
       SettingsService.settings_table_prefix = 'integration.example.com'
     end
