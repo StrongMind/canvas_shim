@@ -1,0 +1,15 @@
+<% content_for :strongmind_assets do %>
+  <%= stylesheet_link_tag    "canvas_shim/application", media: "all" %>
+  <%= javascript_include_tag 'canvas_shim/application' %>
+  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<% end %>
+
+<% content_for :page_title, "Snapshot of #{@context.name}" %>
+<% add_crumb t('#crumbs.snapshot', "Snapshot of #{@context.name}") %>
+
+<%= render partial: 'course_snapshot_header' %>
+<section id="course-snapshot-container">
+    <%= render partial: 'course_snapshot_overview' %>
+    <%= render partial: 'course_snapshot_student_details' %>
+    <%= render partial: 'course_snapshot_activity_chart' %>
+</section>

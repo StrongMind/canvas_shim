@@ -1,7 +1,7 @@
 <div id="card-container">
   <div class="card content-box border border-trbl border-round">
     <div class="card-body">
-      <h5><strong>Average Course Grade</strong></h5>
+      <h5><strong>Average Score in Course</strong></h5>
       <p class="card-text"><%= @avg_grade %><span class="percent-superscript">%</span></p>
     </div>
     <div class="card-footer">
@@ -14,7 +14,7 @@
       <p class="card-text"><%= @avg_completion_pct %><span class="percent-superscript">%</span></p>
     </div>
     <div class="card-footer">
-      <%= link_to 'View Progressions', progressions_course_context_modules_path, class: "card-link border border-t caag-link-color" %>
+      <%= link_to 'View Progressions', progressions_course_context_modules_path, class: "card-link border border-t course-snapshot-link-color" %>
     </div>
   </div>
   <div class="card content-box border border-trbl border-round">
@@ -23,7 +23,7 @@
       <p class="card-text"><%= @assignments_need_grading %></p>
     </div>
     <div class="card-footer">
-      <%= link_to 'Gradebook', course_grades_path, class: "card-link border border-t caag-link-color" %>
+      <%= link_to 'Gradebook', course_grades_path, class: "card-link border border-t course-snapshot-link-color" %>
     </div>
   </div>
   <div class="card content-box border border-trbl border-round">
@@ -32,7 +32,7 @@
       <p class="card-text"><%= @alerts_need_attention %></p>
     </div>
     <div class="card-footer">
-      <%= link_to 'View Alerts', cs_alerts_path, class: "card-link border border-t caag-link-color" %>
+      <%= link_to 'View Alerts', cs_alerts_path, class: "card-link border border-t course-snapshot-link-color" %>
     </div>
   </div>
 </div>

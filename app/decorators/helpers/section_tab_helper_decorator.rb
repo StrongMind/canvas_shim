@@ -13,7 +13,7 @@ SectionTabHelper::AvailableSectionTabs.class_eval do
   private
   def tabs_without_snapshot
     instructure_to_a.delete_if do |tab|
-      tab_is?(tab, 'TAB_AT_A_GLANCE')
+      tab_is?(tab, 'TAB_SNAPSHOT')
     end
   end
 
