@@ -4,8 +4,8 @@
   <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
 <% end %>
 
-<% content_for :page_title, "#{@context.name} at a glance" %>
-<% add_crumb t('#crumbs.snapshot', "#{@context.name} at a glance") %>
+<% content_for :page_title, "Snapshot of #{@context.name}" %>
+<% add_crumb t('#crumbs.snapshot', "Snapshot of #{@context.name}") %>
 
 <%= render partial: 'course_snapshot_header' %>
 <section id="course-snapshot-container">
