@@ -1,6 +1,6 @@
 SectionTabHelper::AvailableSectionTabs.class_eval do
   def strongmind_to_a
-    if is_teacher_or_admin? && snapshot_enabled?
+    if is_teacher_or_admin?
       instructure_to_a
     else
       tabs_without_snapshot
@@ -20,9 +20,5 @@ SectionTabHelper::AvailableSectionTabs.class_eval do
   def is_teacher_or_admin?
     return false unless @context.is_a?(Course) && @current_user
     @context.user_is_instructor?(@current_user) || @context.user_is_admin?(@current_user)
-  end
-
-  def snapshot_enabled?
-    SettingsService.get_settings(object: :school, id: 1)['enable_course_snapshot']
   end
 end
