@@ -1,10 +1,10 @@
-<div class="student-activity-chart" id="caag-student-activity-chart">
-    <div class="caag-heading-with-info">
+<div class="student-activity-chart" id="course-snapshot-student-activity-chart">
+    <div class="course-snapshot-heading-with-info">
         <h3>Course Access Report</h3>
           <div id="activity-chart-info" aria-hidden="true">
-            <a class="icon-info caag-link-color" title="What is this?"></a>
+            <a class="icon-info course-snapshot-link-color" title="What is this?"></a>
           </div>
-          <div class="caag-activity-chart-popover">
+          <div class="course-snapshot-activity-chart-popover">
             <div class="popover-content">
                 <div class="popover-close">x</div>
                 <h5>What is the Course Access Report?</h5>
@@ -29,11 +29,11 @@
   </div>
 
   <% @accesses_per_hour.in_groups_of(24) do |day| %>
-    <div class="week caag-week">
-      <div class="day caag-day">
+    <div class="week course-snapshot-week">
+      <div class="day course-snapshot-day">
         <div class="day-label"> <%= day[0].keys[0].strftime("%a") %> </div>
           <% day.each do |hour| %>
-              <div class="<%= "hour band-#{hour.values[0]} caag-hour" %>">
+              <div class="<%= "hour band-#{hour.values[0]} course-snapshot-hour" %>">
                 <label class="col-label"<%= hour.values[0] %></label>
               </div>
           <% end %>
@@ -41,7 +41,7 @@
     </div>
   <% end %>
 
-<div class="student-activity-chart-legend" id="caag-activity-chart-legend">
+<div class="student-activity-chart-legend" id="course-snapshot-activity-chart-legend">
   <p>Less activity</p>
   <div class="band-0"></div>
   <div class="band-1"></div>

@@ -114,11 +114,11 @@ CoursesController.class_eval do
   alias_method :instructure_copy_course, :copy_course
   alias_method :copy_course, :strongmind_copy_course
 
-  def at_a_glance
+  def snapshot
     get_context
     if authorized_action(@context, @current_user, :manage_grades)
-      @active_tab = "at-a-glance"
-      @course_list ||= caag_course_urls
+      @active_tab = "course-snapshot"
+      @course_list ||= course_snapshot_course_urls
       @avg_grade = @context.average_score.round(1)
       @avg_completion_pct = @context.average_completion_percentage.round(1)
       @assignments_need_grading = @context.needs_grading_count
@@ -175,11 +175,11 @@ CoursesController.class_eval do
     js_env(auto_due_dates: add_on)
   end
 
-  def caag_course_urls
+  def course_snapshot_course_urls
     enrollments = @current_user.try(:teacher_enrollments) || []
     enrollments.reject do |enr|
       course = enr.course
       course.deleted? || course.no_active_students?
-    end.map {|enr| [enr.course, course_at_a_glance_path(enr.course)] }
+    end.map {|enr| [enr.course, course_snapshot_path(enr.course)] }
   end
 end

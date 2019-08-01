@@ -2,12 +2,12 @@
   padding: 0 2rem;
 }
 
-#caag-header {
+#course-snapshot-header {
   padding: .75rem .25rem;
   margin-bottom: 3rem;
 }
 
-#caag-course-select {
+#course-snapshot-course-select {
   width: 50%;
   float: right;
 }
@@ -28,7 +28,7 @@
   }
 }
 
-.caag-link-color {
+.course-snapshot-link-color {
   color: #006BA6;
   transition: all 0.2s ease-in-out;
 
@@ -194,7 +194,7 @@
     }
   }
 
-  .caag-detail-row {
+  .course-snapshot-detail-row {
     text-align: center;
   }
 
@@ -228,11 +228,11 @@
   }
 }
 
-#caag-student-activity-chart {
+#course-snapshot-student-activity-chart {
   margin: 2rem auto;
 }
 
-#caag-student-activity-chart, #caag-activity-chart-legend {
+#course-snapshot-student-activity-chart, #course-snapshot-activity-chart-legend {
   .week .day > * {
     flex: 1 1 0;
   }
@@ -287,12 +287,12 @@
   }
 }
 
-#caag-activity-chart-legend {
+#course-snapshot-activity-chart-legend {
   align-items: center;
   margin: 2rem auto;
   position: relative;
 
-  div:not(.caag-activity-chart-popover) {
+  div:not(.course-snapshot-activity-chart-popover) {
     height: 18px;
   }
 
@@ -309,7 +309,7 @@
   }
 }
 
-.caag-heading-with-info {
+.course-snapshot-heading-with-info {
   display: flex;
   align-items: center;
   position: relative;
@@ -330,7 +330,7 @@
   position: relative;
 }
 
-.caag-activity-chart-popover {
+.course-snapshot-activity-chart-popover {
   background-color: white;
   box-shadow: 0 3px 5px #969696;
   width: 300px;

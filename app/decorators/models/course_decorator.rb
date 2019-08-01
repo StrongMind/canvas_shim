@@ -4,7 +4,7 @@ Course.class_eval do
   after_commit -> { PipelineService.publish(self) }
   after_create -> { RequirementsService.set_school_thresholds_on_course(course: self) }
 
-  TAB_AT_A_GLANCE = 18
+  TAB_SHAPSHOT = 18
 
   class << self
     def strongmind_default_tabs
@@ -13,11 +13,11 @@ Course.class_eval do
 
       default_tabs.push(
         {
-          :id => TAB_AT_A_GLANCE,
-          :label => t('#tabs.at_a_glance', "Snapshot"),
-          :css_class => 'at-a-glance',
-          :href => :course_at_a_glance_path,
-          :screenreader => t('#tabs.course_at_a_glance', "Snapshot")
+          :id => TAB_SHAPSHOT,
+          :label => t('#tabs.snapshot', "Snapshot"),
+          :css_class => 'course-snapshot',
+          :href => :course_snapshot_path,
+          :screenreader => t('#tabs.course_snapshot', "Snapshot")
         }
       )
 
@@ -64,7 +64,7 @@ Course.class_eval do
     ).payload.size
   end
 
-  def caag_student_details
+  def course_snapshot_student_details
     return if no_active_students?
     active_students.map do |student|
       {
