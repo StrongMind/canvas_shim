@@ -18,7 +18,7 @@ module SettingsService
     end
 
     def self.table_name
-      [SettingsService.canvas_domain, '-', 'user_settings'].join('')
+      [SettingsService.settings_table_prefix, '-', 'user_settings'].join('')
     end
 
     def table_name

@@ -10,16 +10,16 @@ describe SettingsService::Enrollment do
       allow(SettingsService::Repository).to receive(:create_table)
     end
 
-    xit 'blows up if canvas domain is not present' do
+    xit 'blows up if settings table prefix is not set' do
       expect do
         subject.create_table
-      end.to raise_error("missing canvas domain!")
+      end.to raise_error("missing settings table prefix!")
     end
   end
 
   context 'canvas domain present' do
     before do
-      SettingsService.canvas_domain = 'integration.example.com'
+      SettingsService.settings_table_prefix = 'integration.example.com'
     end
 
     describe '#create_table' do

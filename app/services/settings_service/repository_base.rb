@@ -3,7 +3,7 @@ module SettingsService
     include Singleton
 
     def initialize
-      raise "missing canvas domain!" if SettingsService.canvas_domain.nil?
+      raise "missing settings table prefix!" if SettingsService.settings_table_prefix.nil?
       @secret_key = ENV['S3_ACCESS_KEY']
       @id_key = ENV['S3_ACCESS_KEY_ID']
       Aws.config.update(
@@ -27,7 +27,7 @@ module SettingsService
       rescue
       end
     end
-    
+
     def dynamodb
       @dynamodb || Aws::DynamoDB::Client.new
     end

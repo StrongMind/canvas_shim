@@ -1,7 +1,7 @@
 module SettingsService
   class Submission
     def self.table_name
-      [SettingsService.canvas_domain, '-', 'submission_settings'].join('')
+      [SettingsService.settings_table_prefix, '-', 'submission_settings'].join('')
     end
     def self.put(id:, setting: , value:)
       Repository.put(
