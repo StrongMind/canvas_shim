@@ -119,6 +119,7 @@ CoursesController.class_eval do
     if authorized_action(@context, @current_user, :manage_grades)
       @active_tab = "course-snapshot"
       @course_list ||= course_snapshot_course_urls
+      @is_blank = @course_list.none? { |item| item.first == @context }
       @avg_grade = @context.average_score.round(1)
       @avg_completion_pct = @context.average_completion_percentage.round(1)
       @assignments_need_grading = @context.needs_grading_count
