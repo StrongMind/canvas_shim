@@ -4,7 +4,7 @@ Course.class_eval do
   after_commit -> { PipelineService.publish(self) }
   after_create -> { RequirementsService.set_school_thresholds_on_course(course: self) }
 
-  TAB_SHAPSHOT = 18
+  TAB_SNAPSHOT = 18
 
   class << self
     def strongmind_default_tabs
@@ -13,7 +13,7 @@ Course.class_eval do
 
       default_tabs.push(
         {
-          :id => TAB_SHAPSHOT,
+          :id => TAB_SNAPSHOT,
           :label => t('#tabs.snapshot', "Snapshot"),
           :css_class => 'course-snapshot',
           :href => :course_snapshot_path,
