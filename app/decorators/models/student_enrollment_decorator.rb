@@ -16,7 +16,7 @@ StudentEnrollment.class_eval do
   end
 
   def current_score
-    scores.first.try(:current_score) || 0
+    scores.first.try(:current_score) || 0.0
   end
 
   def string_progress
