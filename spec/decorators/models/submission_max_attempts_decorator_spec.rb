@@ -48,7 +48,7 @@ describe "SubmissionMaxAttemptsDecorator" do
       allow(submission).to receive(:user).and_return(user)
 
       expect(AlertsService::Client).to receive(:create).with(
-        :max_attempts_reached,
+        :max_attempts_reached_min_score,
         teacher_id: teacher.id,
         student_id: user.id,
         assignment_id: assignment.id,
