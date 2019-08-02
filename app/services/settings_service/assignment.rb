@@ -1,7 +1,7 @@
 module SettingsService
   class Assignment
     def self.table_name
-      [SettingsService.canvas_domain, '-', 'assignment_settings'].join('')
+      [SettingsService.settings_table_prefix, '-', 'assignment_settings'].join('')
     end
     def self.put(id:, setting: , value:)
       AssignmentRepository.put(

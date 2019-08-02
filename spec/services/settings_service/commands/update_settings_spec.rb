@@ -1,6 +1,6 @@
 describe SettingsService::Commands::UpdateSettings do
   before do
-    SettingsService.canvas_domain = 'somedomain.com'
+    SettingsService.settings_table_prefix = 'somedomain.com'
   end
   subject do
     described_class.new(
