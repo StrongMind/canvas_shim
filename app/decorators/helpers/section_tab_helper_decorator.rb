@@ -1,6 +1,8 @@
 SectionTabHelper::AvailableSectionTabs.class_eval do
   def strongmind_to_a
-    if is_teacher_or_admin? && snapshot_enabled?
+    return instructure_to_a unless snapshot_enabled?
+
+    if is_teacher_or_admin?
       instructure_to_a
     else
       tabs_without_snapshot
