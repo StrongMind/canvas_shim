@@ -1,5 +1,8 @@
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
-
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
 <h2>Alerts (<%= @alerts.count %>)</h2>
 
 <table id="alertsTable" class="stripe">
@@ -18,12 +21,13 @@
 </table>
 
 <script>
+  var table;
   var dismissAlert = function(form) {
     form.submit()
   };
 
   document.addEventListener("DOMContentLoaded", function(){
-    $('#alertsTable').DataTable(
+    table = $('#alertsTable').DataTable(
       {
         "columnDefs": [
           {
@@ -38,5 +42,11 @@
         ]
       }
     );
+  });
+
+  $(window).on("load", function(event) {
+    $('.icon-x').click(function(e) {
+      table.row($(this).parents('tr')).remove().draw();
+    });
   });
 </script>

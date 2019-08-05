@@ -1,4 +1,9 @@
 $(window).on("load", function(event) {
+  $('.icon-x').click(function(e) {
+    $(this).parents('tr').remove();
+    table.rows().draw(false)
+  });
+
   $("#course-snapshot-course-select").change(function(e) {
     var oldURL = window.location.pathname;
     var newURL = $(this).children(":selected").data("url");
