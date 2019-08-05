@@ -6,7 +6,7 @@ Submission.class_eval do
     return unless send_max_attempts_alert?
     teachers_to_alert.each do |teacher|
       AlertsService::Client.create(
-        :max_attempts_reached,
+        :max_attempts_reached_min_score,
         teacher_id: teacher.id,
         student_id: user.id,
         assignment_id: assignment.id,

@@ -5,7 +5,7 @@
       <%= alert.student.name %>
     </td>
     <td>
-      <%= link_to alert.assignment.name, 
+      <%= link_to alert.assignment.name,
         [
           "/courses/#{alert.assignment.course.id}/gradebook/speed_grader?assignment_id=#{alert.assignment.id}#",
             url_encode("{\"student_id\":\"#{alert.student.id}\"}")
@@ -16,7 +16,7 @@
        <%= alert.detail %>
     </td>
     <td>
-      <%= alert.updated_at.try(:in_time_zone).try(:strftime, "%u/%e/%y %l:%M %P") %>
+      <%= alert.updated_at.try(:in_time_zone).try(:strftime, "%m/%d/%y %I:%M %P") %>
     </td>
     <td>
       <%= alert.description %>
