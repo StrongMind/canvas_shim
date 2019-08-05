@@ -30,13 +30,13 @@ module AlertsService
     end
 
     private
-    
+
     def api_endpoint
       secret['API_ENDPOINT'] + '/schools/' + self.class.school.id
     end
 
     def self.school
-      School.new(ENV['CANVAS_DOMAIN'])
+      School.new(ENV['ALERT_SERVICE_SCHOOL_NAME'])
     end
   end
 end

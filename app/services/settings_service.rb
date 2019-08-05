@@ -1,7 +1,7 @@
 # Usage:
 # SettingsService.update_enrollment_setting(id: 1, setting: 'foo', value: 'bar')
 module SettingsService
-  cattr_writer :canvas_domain
+  cattr_writer :settings_table_prefix
 
   def self.update_settings(id:, setting:, value:, object:)
     Commands::UpdateSettings.new(
@@ -40,8 +40,8 @@ module SettingsService
     Commands::GetUserSettings.new(id: id).call
   end
 
-  def self.canvas_domain
-    @@canvas_domain || ENV['CANVAS_DOMAIN']
+  def self.settings_table_prefix
+    @@settings_table_prefix || ENV['SETTINGS_TABLE_PREFIX']
   end
 
   def self.query

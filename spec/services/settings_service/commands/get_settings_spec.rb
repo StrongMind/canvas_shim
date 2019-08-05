@@ -1,6 +1,6 @@
 describe SettingsService::Commands::GetSettings do
   before do
-    SettingsService.canvas_domain = 'somedomain.com'
+    SettingsService.settings_table_prefix = 'somedomain.com'
   end
 
   subject do
