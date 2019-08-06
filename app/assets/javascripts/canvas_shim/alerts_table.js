@@ -1,6 +1,12 @@
   var alertsTable;
   var xIcon;
 
+  function toggleHidden(arr) {
+    arr.forEach(function(element) {
+      element.toggleClass("hidden");
+    });
+  }
+
   $(function(){
     alertsTable = $('#alertsTable').DataTable(
       {
@@ -32,7 +38,14 @@
     });
 
     $('#bulk-delete-btn').click(function(e) {
-       $(".icon-x").toggleClass("hidden");
-       $(".bulk-delete-checks").toggleClass("hidden");
+       toggleHidden(
+         [$(".icon-x"), $(".bulk-delete-checks"), $('#bulk-delete-confirm')]
+       );
+
+       if ($(this).text() === "Go Back") {
+         $(this).text("Delete Multiple");
+       } else {
+         $(this).text("Go Back");
+       }
     });
   });
