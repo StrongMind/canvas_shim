@@ -5,6 +5,5 @@ class CsAlertsController < ApplicationController
 
   def destroy
     AlertsService::Client.destroy(params[:alert_id])
-    redirect_to(cs_alerts_path)
   end    
 end
