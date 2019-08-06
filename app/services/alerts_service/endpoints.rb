@@ -22,6 +22,8 @@ module AlertsService
         "/alerts/#{ids[:alert_id]}"
       when :create_alert
         "/alerts"
+      when :bulk_delete
+        "/alerts/bulk_delete"
       end
     end
 

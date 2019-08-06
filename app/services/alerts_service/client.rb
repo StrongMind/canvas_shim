@@ -33,6 +33,16 @@ module AlertsService
       get(endpoints(:show_alert, alert_id: id))
     end
 
+    def bulk_delete(ids)
+      http_client.post(
+        endpoints(:bulk_delete),
+        body: {alert_ids: ids}.to_json,
+        headers: headers
+      ).tap do |response|
+          return Response.new(response.code, nil)
+        end
+    end
+
     def destroy(id)
       http_client.delete(
         endpoints(:destroy_alert, alert_id: id),
