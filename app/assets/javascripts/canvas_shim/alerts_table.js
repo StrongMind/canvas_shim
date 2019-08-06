@@ -64,7 +64,7 @@
         headers: {
           contentType: "application/json"
         },
-        data: { alert_ids: JSON.stringify(submits) },
+        data: { alert_ids: submits },
         success: function() {
           removableRows.forEach(function(row) {
             alertsTable.row(row).remove().draw();
