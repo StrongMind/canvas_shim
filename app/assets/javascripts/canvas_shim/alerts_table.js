@@ -48,4 +48,28 @@
          $(this).text("Go Back");
        }
     });
+
+    $('#bulk-delete-confirm').click(function(e) {
+       var submits = [];
+       var removableRows = [];
+       var self = this;
+       $(".bulk-delete-checks:checked").each(function(i) {
+         submits.push($(this).val());
+         removableRows.push($(this).parents('tr'));
+       });
+
+       $.ajax({
+        url: $(self).data('url'),
+        type: 'POST',
+        headers: {
+          contentType: "application/json"
+        },
+        data: { alert_ids: JSON.stringify(submits) },
+        success: function() {
+          removableRows.forEach(function(row) {
+            alertsTable.row(row).remove().draw();
+          });
+        }
+      });
+    });
   });
