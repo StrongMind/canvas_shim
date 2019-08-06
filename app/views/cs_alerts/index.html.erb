@@ -22,6 +22,7 @@
 
 <script>
   var table;
+  var xIcon;
   var dismissAlert = function(form) {
     form.submit()
   };
@@ -46,7 +47,16 @@
 
   $(window).on("load", function(event) {
     $('.icon-x').click(function(e) {
-      table.row($(this).parents('tr')).remove().draw();
+      xIcon = $(this);
+
+      $.ajax({
+        url: xIcon.data('url'),
+        type: 'DELETE',
+        data: { alert_id: xIcon.data('alert') },
+        success: function() {
+          table.row(xIcon.parents('tr')).remove().draw();
+        }
+      });
     });
   });
 </script>

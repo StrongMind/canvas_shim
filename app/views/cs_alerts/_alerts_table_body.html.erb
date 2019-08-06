@@ -22,7 +22,8 @@
       <%= alert.description %>
     </td>
     <td>
-      <i class="icon-x" style="cursor: pointer"></i>
+      <i class="icon-x" style="cursor: pointer"
+      data-alert='<%= alert.alert_id %>' data-url='<%= cs_alert_path(alert.alert_id) %>'></i>
     </td>
   </tr>
 <% end %>
