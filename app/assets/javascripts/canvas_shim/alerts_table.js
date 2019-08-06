@@ -30,4 +30,9 @@
         }
       });
     });
+
+    $('#bulk-delete-btn').click(function(e) {
+       $(".icon-x").toggleClass("hidden");
+       $(".bulk-delete-checks").toggleClass("hidden");
+    });
   });
