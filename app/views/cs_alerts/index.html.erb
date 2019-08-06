@@ -1,8 +1,14 @@
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
-<script
-  src="https://code.jquery.com/jquery-3.3.1.min.js"
-  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  crossorigin="anonymous"></script>
+<% content_for :strongmind_assets do %>
+  <link rel="stylesheet" type="text/css"
+  href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+  <script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+
+  <%= javascript_include_tag 'canvas_shim/application' %>
+<% end %>
+
 <h2>Alerts (<%= @alerts.count %>)</h2>
 
 <table id="alertsTable" class="stripe">
@@ -19,44 +25,3 @@
   
   <%= render partial: 'alerts_table_body', locals: { alert: alert } %>
 </table>
-
-<script>
-  var table;
-  var xIcon;
-  var dismissAlert = function(form) {
-    form.submit()
-  };
-
-  document.addEventListener("DOMContentLoaded", function(){
-    table = $('#alertsTable').DataTable(
-      {
-        "columnDefs": [
-          {
-            "targets": [4],
-            "orderable": false,
-            "searchable": false,
-          },
-          {
-            targets: [ 0, 1, 2, 3 ],
-            className: 'mdl-data-table__cell--non-numeric'
-          }
-        ]
-      }
-    );
-  });
-
-  $(window).on("load", function(event) {
-    $('.icon-x').click(function(e) {
-      xIcon = $(this);
-
-      $.ajax({
-        url: xIcon.data('url'),
-        type: 'DELETE',
-        data: { alert_id: xIcon.data('alert') },
-        success: function() {
-          table.row(xIcon.parents('tr')).remove().draw();
-        }
-      });
-    });
-  });
-</script>
