@@ -42,7 +42,7 @@
          [$(".icon-x"), $(".bulk-delete-checks"), $('#bulk-delete-confirm')],
           "hidden"
        );
-       toggleHidden([$('#bulk-delete-select')], "visibility-hidden");
+       toggleHidden([$('#delete-column-header')], "visibility-hidden");
 
        if ($(this).text() === "Go Back") {
          $(this).text("Delete Multiple");
@@ -81,10 +81,12 @@
 
     $('#bulk-delete-select').click(function() {
       if(this.checked){
+        $(this).siblings("label").text("Deselect All");
         $(':checkbox').each(function() {
           this.checked = true;
         });
       } else {
+        $(this).siblings("label").text("Select All");
         $(':checkbox').each(function() {
           this.checked = false;
         });

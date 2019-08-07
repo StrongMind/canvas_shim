@@ -1,21 +1,37 @@
-#alertsTable {
-  input[type="checkbox"] {
-    margin-top: 0;
-  }
-
-  #bulk-delete-btn {
-    margin-left: 5px;
-  }
-
-  #bulk-delete-select {
-    margin-left: 5px;
-    margin-right: 8px;
-  }
+.alerts-table-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 
   .flex-row-reverse {
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
+  }
+
+  .Button--primary {
+    &:focus {
+      color: #ffffff;
+    }
+  }
+}
+
+#bulk-delete-btn {
+  margin-left: 5px;
+}
+
+#alertsTable {
+  input[type="checkbox"] {
+    margin-top: 0;
+  }
+
+  #bulk-delete-select {
+    margin-right: 8px;
+  }
+
+  #delete-column-header {
+    text-align: right;
   }
 
   .visibility-hidden {
@@ -32,6 +48,10 @@
     .icon-x {
       &::before {
         font-size: 0.8rem;
+      }
+
+      &.hidden {
+        display: none;
       }
     }
   }

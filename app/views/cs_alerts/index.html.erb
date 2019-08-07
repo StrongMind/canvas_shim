@@ -10,7 +10,14 @@
   <%= javascript_include_tag 'canvas_shim/application' %>
 <% end %>
 
-<h2>Alerts (<%= @alerts.count %>)</h2>
+<div class="alerts-table-heading">
+    <h2>Alerts (<%= @alerts.count %>)</h2>
+    <div class="flex-row-reverse">
+        <button class="Button Button--small Button--primary" id="bulk-delete-btn">Delete Multiple</button>
+        <button class="Button Button--small Button--danger hidden" id="bulk-delete-confirm"
+        data-url='<%= bulk_delete_cs_alerts_path %>'>Confirm</button>
+    </div>
+</div>
 
 <table id="alertsTable">
   <thead>
@@ -21,11 +28,9 @@
       <th>Details</th>
       <th>Time</th>
       <th>Type</th>
-      <th class="flex-row-reverse">
-        <input id="bulk-delete-select" class="visibility-hidden" type="checkbox" />
-        <button class="Button Button--small Button--primary" id="bulk-delete-btn">Delete Multiple</button>
-        <button class="Button Button--small Button--danger hidden" id="bulk-delete-confirm"
-        data-url='<%= bulk_delete_cs_alerts_path %>'>Confirm</button>
+      <th id="delete-column-header" class="visibility-hidden">
+        <label for="bulk-delete-select">Select All</label>
+        <input id="bulk-delete-select" name="bulk-delete-select" type="checkbox" />
       </th>
     </tr>
   </thead>
