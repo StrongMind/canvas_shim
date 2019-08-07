@@ -24,7 +24,7 @@ ContextModulesController.class_eval do
   alias_method :add_item, :strongmind_add_item
 
   def strongmind_item_redirect
-    if @context && @current_user && RequirementsService.course_has_set_threshold?(@context)
+    if @context && @context.user_is_student?(@current_user) && RequirementsService.course_has_set_threshold?(@context)
       course_progress = CourseProgress.new(@context, @current_user)
       @assignment = course_progress.try(&:current_content_tag).try(&:assignment)
       submission = @assignment.submissions.find_by(user: @current_user) if @assignment
