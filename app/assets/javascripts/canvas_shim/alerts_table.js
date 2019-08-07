@@ -53,23 +53,27 @@
        var submits = [];
        var removableRows = [];
        var self = this;
-       $(".bulk-delete-checks:checked").each(function(i) {
+       var checkedAlerts = $(".bulk-delete-checks:checked");
+
+       checkedAlerts.each(function(i) {
          submits.push($(this).val());
          removableRows.push($(this).parents('tr'));
        });
 
-       $.ajax({
-        url: $(self).data('url'),
-        type: 'POST',
-        headers: {
-          contentType: "application/json"
-        },
-        data: { alert_ids: submits },
-        success: function() {
-          removableRows.forEach(function(row) {
-            alertsTable.row(row).remove().draw();
-          });
-        }
-      });
+      if (checkedAlerts.length) {
+        $.ajax({
+          url: $(self).data('url'),
+          type: 'POST',
+          headers: {
+            contentType: "application/json"
+          },
+          data: { alert_ids: submits },
+          success: function() {
+            removableRows.forEach(function(row) {
+              alertsTable.row(row).remove().draw();
+            });
+          }
+        });
+      }
     });
   });
