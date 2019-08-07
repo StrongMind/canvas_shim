@@ -1,0 +1,19 @@
+#alertsTable {
+  #bulk-delete-btn {
+    margin-left: 5px;
+  }
+
+  .delete-column {
+    text-align: right;
+
+    > * {
+      margin-right: 1rem;
+    }
+
+    .icon-x {
+      &::before {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
