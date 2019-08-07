@@ -7,6 +7,21 @@
     margin-left: 5px;
   }
 
+  #bulk-delete-select {
+    margin-left: 5px;
+    margin-right: 8px;
+  }
+
+  .flex-row-reverse {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+  }
+
+  .visibility-hidden {
+    visibility: hidden;
+  }
+
   .delete-column {
     text-align: right;
 

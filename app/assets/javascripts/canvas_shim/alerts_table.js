@@ -1,9 +1,9 @@
   var alertsTable;
   var xIcon;
 
-  function toggleHidden(arr) {
+  function toggleHidden(arr, className) {
     arr.forEach(function(element) {
-      element.toggleClass("hidden");
+      element.toggleClass(className);
     });
   }
 
@@ -39,8 +39,10 @@
 
     $('#bulk-delete-btn').click(function(e) {
        toggleHidden(
-         [$(".icon-x"), $(".bulk-delete-checks"), $('#bulk-delete-confirm')]
+         [$(".icon-x"), $(".bulk-delete-checks"), $('#bulk-delete-confirm')],
+          "hidden"
        );
+       toggleHidden([$('#bulk-delete-select')], "visibility-hidden");
 
        if ($(this).text() === "Go Back") {
          $(this).text("Delete Multiple");
@@ -73,6 +75,18 @@
               alertsTable.row(row).remove().draw();
             });
           }
+        });
+      }
+    });
+
+    $('#bulk-delete-select').click(function() {
+      if(this.checked){
+        $(':checkbox').each(function() {
+          this.checked = true;
+        });
+      } else {
+        $(':checkbox').each(function() {
+          this.checked = false;
         });
       }
     });
