@@ -101,4 +101,14 @@ describe AlertsService::Client do
       end
     end
   end
+
+  describe '#bulk_delete' do
+    it 'can bulk delete' do
+      VCR.use_cassette 'alerts_service/client/bulk_delete' do
+        expect(subject.bulk_delete([2]).code).to eq 200
+      end
+    end
+  end
+
+
 end

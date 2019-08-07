@@ -1,6 +1,7 @@
 <% content_for :strongmind_assets do %>
   <link rel="stylesheet" type="text/css"
   href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+  <%= stylesheet_link_tag "canvas_shim/application", media: "all" %>
   <script
     src="https://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -9,17 +10,28 @@
   <%= javascript_include_tag 'canvas_shim/application' %>
 <% end %>
 
-<h2>Alerts (<%= @alerts.count %>)</h2>
+<div class="alerts-table-heading">
+    <h2>Alerts (<%= @alerts.count %>)</h2>
+    <div class="flex-row-reverse">
+        <button class="Button Button--small Button--primary" id="bulk-delete-btn">Delete Multiple</button>
+        <button class="Button Button--small Button--danger hidden" id="bulk-delete-confirm"
+        data-url='<%= bulk_delete_cs_alerts_path %>'>Confirm</button>
+    </div>
+</div>
 
-<table id="alertsTable" class="stripe">
+<table id="alertsTable">
   <thead>
     <tr>
       <th>Student</th>
       <th>Assignment</th>
+      <th>Course</th>
       <th>Details</th>
       <th>Time</th>
       <th>Type</th>
-      <th></th>
+      <th id="delete-column-header" class="visibility-hidden">
+        <label for="bulk-delete-select">Select All</label>
+        <input id="bulk-delete-select" name="bulk-delete-select" type="checkbox" />
+      </th>
     </tr>
   </thead>
   
