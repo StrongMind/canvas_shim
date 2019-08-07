@@ -1,0 +1,50 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://kom06r8apf.execute-api.us-west-2.amazonaws.com/dev/schools/bXlzY2hvb2w/alerts/bulk_delete
+    body:
+      encoding: UTF-8
+      string: '{"alert_ids":[2]}'
+    headers:
+      X-Api-Key:
+      - "<REDACTED>"
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '17'
+      Connection:
+      - keep-alive
+      Date:
+      - Wed, 07 Aug 2019 17:11:57 GMT
+      X-Amzn-Requestid:
+      - 7675e107-b936-11e9-997f-e5ba28fc75e9
+      X-Amzn-Remapped-Content-Length:
+      - '17'
+      X-Amz-Apigw-Id:
+      - eD3uqHDcvHcFwLw=
+      X-Amzn-Trace-Id:
+      - Root=1-5d4b065d-93eb7b989775bdf4fcc4a788;Sampled=0
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 fd80b38c6538fc322af77f34f7ce8ede.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - PHX50-C2
+      X-Amz-Cf-Id:
+      - z1LYyeeJNwt1memO68chwv8JIYaZEvuYTIntGBvr-bRR-zdaks48dg==
+    body:
+      encoding: UTF-8
+      string: '{"success":true}
+
+        '
+    http_version: 
+  recorded_at: Wed, 07 Aug 2019 17:13:49 GMT
+recorded_with: VCR 5.0.0
