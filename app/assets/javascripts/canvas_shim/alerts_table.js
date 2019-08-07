@@ -12,7 +12,7 @@
       {
         "columnDefs": [
           {
-            "targets": [4],
+            "targets": [4, 5],
             "orderable": false,
             "searchable": false,
           },
