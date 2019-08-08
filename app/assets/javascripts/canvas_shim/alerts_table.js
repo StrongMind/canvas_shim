@@ -45,7 +45,7 @@
        toggleHidden([$('#delete-column-header')], "visibility-hidden");
 
        if ($(this).text() === "Go Back") {
-         $(this).text("Delete Multiple");
+         $(this).text("Delete Multiple Messages");
        } else {
          $(this).text("Go Back");
        }
@@ -71,9 +71,20 @@
           },
           data: { alert_ids: submits },
           success: function() {
+            // remove deleted rows
             removableRows.forEach(function(row) {
               alertsTable.row(row).remove().draw();
             });
+
+            // revert table to single-delete state
+            if ($('#bulk-delete-btn').text() !== "Delete Multiple Messages") {
+              $('#bulk-delete-btn').text("Delete Multiple Messages");
+            }
+            toggleHidden(
+              [$(".icon-x"), $(".bulk-delete-checks"), $('#bulk-delete-confirm')],
+              "hidden"
+            );
+            toggleHidden([$('#delete-column-header')], "visibility-hidden");
           }
         });
       }
