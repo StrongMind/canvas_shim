@@ -108,13 +108,13 @@ module RequirementsService
 
   private
   def self.apply_or_reset_thresholds(context_module)
-    if get_course_assignment_passing_threshold?(context_module.course).zero?
+    if get_course_assignment_passing_threshold?(context_module.course)&.zero?
       # reset
     else
       apply_assignment_min_scores(context_module: context_module, force: true)
     end
 
-    if get_course_exam_passing_threshold?(context_module.course).zero?
+    if get_course_exam_passing_threshold?(context_module.course)&.zero?
       # reset
     else
       apply_unit_exam_min_scores(context_module: context_module, force: true)
