@@ -101,4 +101,19 @@ module RequirementsService
       value: false
     )
   end
+
+  private
+  def self.assignment_threshold_resettable?(context_module)
+    SettingsService.get_settings(
+      object: :course,
+      id: context_module.course&.id
+    )["assignment_threshold_resettable"]
+  end
+
+  def self.exam_threshold_resettable?(context_module)
+    SettingsService.get_settings(
+      object: :course,
+      id: context_module.course&.id
+    )["exam_threshold_resettable"]
+  end
 end
