@@ -63,6 +63,10 @@
        });
 
       if (checkedAlerts.length) {
+        // show the loading icon and disable the buttons
+        toggleHidden([$('.loader')], "hidden");
+        $('#bulk-delete-confirm, #bulk-delete-btn').attr("disabled", "disabled");
+
         $.ajax({
           url: $(self).data('url'),
           type: 'POST',
@@ -77,16 +81,24 @@
             });
 
             // revert table to single-delete state
-            if ($('#bulk-delete-btn').text() !== "Delete Multiple Messages") {
-              $('#bulk-delete-btn').text("Delete Multiple Messages");
-            }
             toggleHidden(
-              [$(".icon-x"), $(".bulk-delete-checks"), $('#bulk-delete-confirm')],
+              [$(".icon-x"), $(".bulk-delete-checks"), $('#bulk-delete-confirm'), $('.loader')],
               "hidden"
             );
             toggleHidden([$('#delete-column-header')], "visibility-hidden");
+            $('#bulk-delete-confirm, #bulk-delete-btn').removeAttr("disabled");
+            $('#bulk-delete-btn').text("Delete Multiple Messages")
+          },
+          error: function() {
+            return $.flashError(
+              "Something went wrong!  Please wait a moment and try again.  If the problem persists, contact an administrator."
+            )
           }
         });
+      } else {
+        return $.flashError(
+          "Please select at least one alert to delete."
+        )
       }
     });
 
