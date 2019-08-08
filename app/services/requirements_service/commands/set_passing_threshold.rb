@@ -40,7 +40,7 @@ module RequirementsService
       end
 
       def send_originals
-        course = Course.find(id)
+        RequirementsService.send_original_requirements(course: Course.find(id))
       end
     end
   end
