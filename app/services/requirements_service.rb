@@ -1,7 +1,11 @@
 module RequirementsService
   def self.apply_minimum_scores(context_module:, force: false)
-    apply_assignment_min_scores(context_module: context_module, force: force)
-    apply_unit_exam_min_scores(context_module: context_module, force: force)
+    if force
+      apply_or_reset_thresholds(context_module)
+    else
+      apply_assignment_min_scores(context_module: context_module, force: force)
+      apply_unit_exam_min_scores(context_module: context_module, force: force)
+    end
   end
 
   def self.apply_assignment_min_scores(context_module:, force: false)
@@ -103,17 +107,17 @@ module RequirementsService
   end
 
   private
-  def self.assignment_threshold_resettable?(context_module)
-    SettingsService.get_settings(
-      object: :course,
-      id: context_module.course&.id
-    )["assignment_threshold_resettable"]
-  end
+  def self.apply_or_reset_thresholds(context_module)
+    if get_course_assignment_passing_threshold?(context_module.course).zero?
+      # reset
+    else
+      apply_assignment_min_scores(context_module: context_module, force: true)
+    end
 
-  def self.exam_threshold_resettable?(context_module)
-    SettingsService.get_settings(
-      object: :course,
-      id: context_module.course&.id
-    )["exam_threshold_resettable"]
+    if get_course_exam_passing_threshold?(context_module.course).zero?
+      # reset
+    else
+      apply_unit_exam_min_scores(context_module: context_module, force: true)
+    end
   end
 end

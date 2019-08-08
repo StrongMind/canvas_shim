@@ -14,6 +14,7 @@ module RequirementsService
 
       def call
         return unless id && edited && valid_threshold?
+        send_originals if last_threshold.nil? && type == "course"
         set_threshold
       end
 
@@ -36,6 +37,10 @@ module RequirementsService
       def valid_compared_to_last_threshold?
         last_threshold.nil? && threshold.positive? ||
         last_threshold.to_f != threshold
+      end
+
+      def send_originals
+        # send_original_requirements
       end
     end
   end
