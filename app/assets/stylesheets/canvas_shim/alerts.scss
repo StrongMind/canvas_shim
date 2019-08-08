@@ -32,6 +32,11 @@
 
   #delete-column-header {
     text-align: right;
+
+    label {
+      margin-bottom: 0;
+      margin-right: 3px;
+    }
   }
 
   .visibility-hidden {
