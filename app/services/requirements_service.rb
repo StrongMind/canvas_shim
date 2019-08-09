@@ -114,15 +114,19 @@ module RequirementsService
     )
   end
 
+  def self.reset_requirements(context_module:, exam: false)
+    Commands::ResetRequirements.new(context_module: context_module, exam: exam)
+  end
+
   def self.apply_or_reset_thresholds(context_module)
     if resettable?(:get_course_assignment_passing_threshold?, context_module)
-      # reset
+      reset_requirements(context_module: context_module)
     else
       apply_assignment_min_scores(context_module: context_module, force: true)
     end
 
     if resettable?(:get_course_exam_passing_threshold?, context_module)
-      # reset
+      reset_requirements(context_module: context_module, exam: true)
     else
       apply_unit_exam_min_scores(context_module: context_module, force: true)
     end
