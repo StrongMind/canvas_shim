@@ -3,6 +3,10 @@ module RequirementsService
     Commands::SendOriginalRequirements.new(course: course).call
   end
 
+  def self.get_original_requirements(course:)
+    Queries::GetOriginalRequirements.new(course: course).call
+  end
+
   def self.apply_minimum_scores(context_module:, force: false)
     if force
       apply_or_reset_thresholds(context_module)
