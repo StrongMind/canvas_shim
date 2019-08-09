@@ -10,7 +10,7 @@ module RequirementsService
       end
 
       def call
-        return [] unless requirements
+        return {} unless requirements
         get_format
       end
 
@@ -19,7 +19,7 @@ module RequirementsService
 
       def get_format
         reqs = JSON.parse(requirements)
-        return [] unless reqs.is_a?(Array)
+        return {} unless reqs.is_a?(Hash)
       end
     end
   end

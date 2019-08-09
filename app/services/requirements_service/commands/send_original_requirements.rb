@@ -13,9 +13,13 @@ module RequirementsService
       private
       attr_reader :course
       def originals_json
-        course.context_modules.map do |cm|
-          {"#{cm.id}" => cm.completion_requirements}
-        end.to_json
+        originals = {}
+
+        course.context_modules.each do |cm|
+          originals["#{cm.id}"] = cm.completion_requirements
+        end
+
+        originals.to_json
       end
 
       def send_originals
