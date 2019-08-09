@@ -8,14 +8,6 @@ module RequirementsService
     end
   end
 
-  def self.apply_assignment_min_scores(context_module:, force: false)
-    Commands::ApplyAssignmentMinScores.new(context_module: context_module, force: force).call
-  end
-
-  def self.apply_unit_exam_min_scores(context_module:, force: false)
-    Commands::ApplyUnitExamMinScores.new(context_module: context_module, force: force).call
-  end
-
   def self.force_min_scores(course:)
     Commands::ForceMinScores.new(course: course).call
   end
@@ -108,16 +100,28 @@ module RequirementsService
 
   private
   def self.apply_or_reset_thresholds(context_module)
-    if get_course_assignment_passing_threshold?(context_module.course)&.zero?
+    if resettable?(:get_course_assignment_passing_threshold?, context_module)
       # reset
     else
       apply_assignment_min_scores(context_module: context_module, force: true)
     end
 
-    if get_course_exam_passing_threshold?(context_module.course)&.zero?
+    if resettable?(:get_course_exam_passing_threshold?, context_module)
       # reset
     else
       apply_unit_exam_min_scores(context_module: context_module, force: true)
     end
+  end
+
+  def self.resettable?(setting, context_module)
+    send(setting, context_module.course)&.zero?
+  end
+
+  def self.apply_assignment_min_scores(context_module:, force: false)
+    Commands::ApplyAssignmentMinScores.new(context_module: context_module, force: force).call
+  end
+
+  def self.apply_unit_exam_min_scores(context_module:, force: false)
+    Commands::ApplyUnitExamMinScores.new(context_module: context_module, force: force).call
   end
 end
