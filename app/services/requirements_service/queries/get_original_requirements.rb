@@ -1,12 +1,9 @@
 module RequirementsService
   module Queries
     class GetOriginalRequirements
-      def intialize(course:)
+      def initialize(course:)
         @course = course
-        @requirements = SettingsService.get_settings(
-            object: :course,
-            id: course&.id
-          )['original_requirements']
+        @requirements = SettingsService.get_settings(object: :course, id: course.id)['original_requirements']
       end
 
       def call
@@ -19,7 +16,7 @@ module RequirementsService
 
       def get_format
         reqs = JSON.parse(requirements)
-        return {} unless reqs.is_a?(Hash)
+        reqs.is_a?(Hash) ? reqs : {}
       end
     end
   end
