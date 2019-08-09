@@ -13,6 +13,8 @@ module PipelineService
           PipelineService::V2::Nouns::ContentTag
         when /Submission/
           PipelineService::V2::Nouns::Submission
+        when /User/
+          PipelineService::V2::Nouns::User
         else
           PipelineService::V2::Nouns::Base
         end
