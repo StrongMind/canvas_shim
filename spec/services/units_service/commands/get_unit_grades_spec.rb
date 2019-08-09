@@ -37,7 +37,7 @@ describe UnitsService::Commands::GetUnitGrades do
       course_score: 90,
       school_domain: "canvasdomain.com",
       student_id: user.id,
-      sis_user_id: 1001,
+      sis_user_id: "1001",
       submitted_at: submitted_at,
       units: [{
         score: 54,
