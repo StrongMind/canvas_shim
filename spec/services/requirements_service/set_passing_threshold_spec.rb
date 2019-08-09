@@ -2,6 +2,11 @@ describe RequirementsService::Commands::SetPassingThreshold do
   include_context 'stubbed_network'
   
   describe "#call" do
+    before do
+      allow(RequirementsService).to receive(:send_original_requirements).and_return nil
+      Course.create
+    end
+
     context "Happy path school" do
       subject { described_class.new(type: 'school', threshold: 70, edited: 'true') }
 
@@ -24,7 +29,7 @@ describe RequirementsService::Commands::SetPassingThreshold do
     end
 
     context "Happy path course" do
-      subject { described_class.new(type: 'course', threshold: 70, edited: 'true') }
+      subject { described_class.new(type: 'course', id: Course.first.id, threshold: 70, edited: 'true') }
 
       it "receives set_threshold" do
         expect(subject).to receive(:set_threshold)
@@ -34,7 +39,7 @@ describe RequirementsService::Commands::SetPassingThreshold do
       it "has the correct setting" do
         new_threshold = {
           object: 'course',
-          id: 1,
+          id: Course.first.id,
           setting: "passing_threshold",
           value: 70
         }
