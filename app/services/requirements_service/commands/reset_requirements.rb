@@ -31,7 +31,7 @@ module RequirementsService
           older = find_requirement(req)
           if older
             req.delete("min_score")
-            req.merge!(older)
+            req.merge!(older.symbolize_keys)
           end
         end
       end
@@ -42,7 +42,7 @@ module RequirementsService
 
       def find_requirement(requirement)
         old_requirements.find do |old_req|
-          old_req["id"] == requirement["id"]
+          old_req["id"] == requirement[:id]
         end
       end
 

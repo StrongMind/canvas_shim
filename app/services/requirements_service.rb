@@ -115,7 +115,7 @@ module RequirementsService
   end
 
   def self.reset_requirements(context_module:, exam: false)
-    Commands::ResetRequirements.new(context_module: context_module, exam: exam)
+    Commands::ResetRequirements.new(context_module: context_module, exam: exam).call
   end
 
   def self.apply_or_reset_thresholds(context_module)
