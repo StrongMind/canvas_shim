@@ -179,7 +179,7 @@ ActiveRecord::Schema.define(version: 20190722221551) do
   end
 
   create_table "pseudonyms", force: :cascade do |t|
-    t.integer "sis_user_id"
+    t.string  "sis_user_id"
     t.integer "user_id"
   end
 
