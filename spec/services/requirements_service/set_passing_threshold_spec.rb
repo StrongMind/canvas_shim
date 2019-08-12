@@ -3,7 +3,6 @@ describe RequirementsService::Commands::SetPassingThreshold do
   
   describe "#call" do
     before do
-      allow(RequirementsService).to receive(:send_original_requirements).and_return nil
       Course.create
     end
 
