@@ -29,17 +29,21 @@ module RequirementsService
       attr_reader :completion_requirements, :context_module, :course, :force, :score_threshold, :threshold_overrides, :settings, :threshold_exists
 
       def run_command
-        reset_or_add_requirements
-        context_module.update_column(:completion_requirements, completion_requirements)
-        context_module.touch
-      end
-
-      def reset_or_add_requirements
         if score_threshold.zero?
-          RequirementsService.reset_requirements(context_module: context_module)
+          reset_requirements
         else
           add_min_score_to_requirements
+          finalize_update
         end
+      end
+
+      def reset_requirements
+        RequirementsService.reset_requirements(context_module: context_module)
+      end
+
+      def finalize_update
+        context_module.update_column(:completion_requirements, completion_requirements)
+        context_module.touch
       end
 
       def threshold_changes_needed?

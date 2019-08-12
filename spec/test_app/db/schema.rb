@@ -189,10 +189,6 @@ ActiveRecord::Schema.define(version: 20190722221551) do
     t.integer "current_score"
   end
 
-  create_table "student_enrollments", force: :cascade do |t|
-    t.datetime "last_activity_at"
-  end
-
   create_table "students", force: :cascade do |t|
     t.integer "course_id"
   end

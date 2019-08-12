@@ -73,14 +73,6 @@ module RequirementsService
     get_course_exam_passing_threshold?(context)
   end
 
-  def self.send_original_requirements(course:)
-    Commands::SendOriginalRequirements.new(course: course).call
-  end
-
-  def self.get_original_requirements(course:)
-    Queries::GetOriginalRequirements.new(course: course).call
-  end
-
   def self.is_unit_exam?(content_tag:)
     Queries::FindUnitExam.new(content_tag: content_tag).call
   end

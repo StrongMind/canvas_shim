@@ -7,15 +7,11 @@ module RequirementsService
         @score_threshold = settings['passing_exam_threshold'].to_f
       end
 
-      def reset_or_add_requirements
-        if score_threshold.zero?
-          RequirementsService.reset_requirements(
+      def reset_requirements
+        RequirementsService.reset_requirements(
             context_module: context_module,
             exam: true
           )
-        else
-          add_min_score_to_requirements
-        end
       end
 
       def threshold_changes_needed?
