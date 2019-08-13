@@ -8,7 +8,7 @@ module PipelineService
 
         def call
           # Return the default, non-overrriden from #as_json
-          passing_threshold
+          super.merge(passing_threshold)
         end
 
         def passing_threshold
