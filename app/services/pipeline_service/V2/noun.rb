@@ -15,6 +15,8 @@ module PipelineService
           PipelineService::V2::Nouns::Submission
         when /User/
           PipelineService::V2::Nouns::User
+        when /Course/
+          PipelineService::V2::Nouns::Course
         else
           PipelineService::V2::Nouns::Base
         end
