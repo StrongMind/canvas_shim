@@ -137,80 +137,9 @@
   margin: 2rem auto;
 }
 
-#course-snapshot-student-activity-chart, #course-snapshot-activity-chart-legend {
-  .week .day > * {
-    flex: 1 1 0;
-  }
-
-  .hour {
-    flex: 1 1 0;
-    box-sizing: border-box;
-  }
-
-  .band-0 {
-    background-color: #eef3f7;
-  }
-
-  .band-1 {
-    background-color: #CAE0EC;
-  }
-
-  .band-2 {
-    background-color: #AACDE1;
-  }
-
-  .band-3 {
-    background-color: #8BBBD6;
-  }
-
-  .band-4 {
-    background-color: #5CA0C6;
-  }
-
-  .band-5 {
-    background-color: #2E85B6;
-  }
-
-  .band-6 {
-    background-color: #006BA6;
-  }
-
-  .band-7 {
-    background-color: #005888;
-  }
-
-  .band-8 {
-    background-color: #00456A;
-  }
-
-  .band-9 {
-    background-color: #00314C;
-  }
-
-  .band-10 {
-    background-color: #00101a;
-  }
-}
-
 #course-snapshot-activity-chart-legend {
-  align-items: center;
-  margin: 2rem auto;
-  position: relative;
-
   div:not(.course-snapshot-activity-chart-popover) {
     height: 18px;
-  }
-
-  p {
-    font-size: 0.575rem;
-
-    &:first-of-type {
-      margin-right: .5rem;
-    }
-
-    &:last-of-type {
-      margin-left: .5rem;
-    }
   }
 }
 

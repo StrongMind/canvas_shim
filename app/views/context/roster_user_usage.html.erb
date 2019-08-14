@@ -37,7 +37,7 @@
 <h1><%= t 'headings.user_access_report', '%{user} Access Report', :user => @user.name %></h1>
 
 <!-- StrongMind Added -->
-<div class="student-activity-chart">
+<div class="activity-table" id="student-activity-chart">
   <% week_start = @report.start_date %>
 
   <div class="hour-labels">
@@ -60,11 +60,9 @@
   <div class="week">
     <% @report.dataset.keys.sort.reverse.each do |day_key| %>
       <div class="day">
-        <div class="hour hour--no-border">
           <label class="day-label">
             <%= Chronic.parse(day_key).strftime("%a") %>
           </label>
-        </div>
 
         <% @report.dataset[day_key].each do |hour, count| %>
           <div class="hour <%= @report.class_for_databand(count) %>">
@@ -74,18 +72,20 @@
       </div>
     <% end %>
   </div>
-</div>
 
-<div class="student-activity-chart-legend">
-  <div class="band-0"></div>
-  <div class="band-1"></div>
-  <div class="band-2"></div>
-  <div class="band-3"></div>
-  <div class="band-4"></div>
-  <div class="band-5"></div>
-  <div class="band-6"></div>
-  <div class="band-7"></div>
-  <div class="band-8"></div>
+    <div class="activity-table-legend">
+      <p>Less activity</p>
+      <div class="band-0"></div>
+      <div class="band-1"></div>
+      <div class="band-2"></div>
+      <div class="band-3"></div>
+      <div class="band-4"></div>
+      <div class="band-5"></div>
+      <div class="band-6"></div>
+      <div class="band-7"></div>
+      <div class="band-8"></div>
+      <p>More activity</p>
+    </div>
 </div>
 
 <div>
