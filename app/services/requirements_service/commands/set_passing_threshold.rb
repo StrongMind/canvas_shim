@@ -15,6 +15,7 @@ module RequirementsService
       def call
         return unless id && edited && valid_threshold?
         set_threshold
+        Course.find(id)&.touch if type == "course"
       end
 
       private
