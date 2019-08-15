@@ -15,6 +15,8 @@ module PipelineService
           PipelineService::V2::Nouns::Submission
         when /User/
           PipelineService::V2::Nouns::User
+        when /Pseudonym/
+          PipelineService::V2::Nouns::Pseudonym
         else
           PipelineService::V2::Nouns::Base
         end
