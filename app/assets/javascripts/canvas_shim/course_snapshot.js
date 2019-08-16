@@ -1,14 +1,16 @@
 $(window).on("load", function(event) {
+
+  ga('create', ENV['analytics']['ga_tracking_id']);
+  
   $("#course-snapshot-course-select").change(function(e) {
     var oldURL = window.location.pathname;
     var newURL = $(this).children(":selected").data("url");
 
     if (oldURL !== newURL) {
       ga('send', 'event', 
-        'Snapshot', 
-        'clicked', 
-        'Course Selection',
-        {'oldUrl': oldURL, 'newUrl': newURL}
+        'Snapshot: Course Selection', 
+        'click', 
+        $(this).children(":selected").text()
       );
       var finalURL = window.location.href.replace(oldURL, newURL)
       window.location.replace(finalURL);
@@ -25,20 +27,18 @@ $(window).on("load", function(event) {
   // Capture card link clicks
   $('body').on('click', '.card-link', function() {
     ga('send', 'event', 
-        'Snapshot', 
-        'clicked', 
-        'Card Link',
-        {linkText: $(this).text(), linkUrl: $(this).href}
+        'Snapshot: Card Link', 
+        'click', 
+        $(this).text(),
     );
   });
 
   // capture table sorts
   $('#studentDetails').on('click', 'thead th', function() {
     ga('send', 'event', 
-      'Snapshot', 
-      'clicked', 
-      'Student Detail Table Sort',
-      {column: $(this).text(), order: $(this).attr('class')}
+      'Snapshot: Student Detail Table', 
+      $(this).attr('class'), 
+      $(this).text(),
     );
   });
 
@@ -54,17 +54,16 @@ $(window).on("load", function(event) {
   // capture access report info click
   $('#activity-chart-info').on('click', '.icon-info', function() {
     ga('send', 'event', 
-      'Snapshot', 
-      'clicked', 
-      'Access Report Info'
+      'Snapshot: Access Report', 
+      'click', 
+      'Access Report Info Icon'
     );
   });
 });
 
 function triggerSearchEvent() {
   ga('send', 'event', 
-      'Snapshot', 
-      'search', 
-      'Student Detail Table Search'
+      'Snapshot: Student Detail Table', 
+      'search'
     );
 }
