@@ -199,7 +199,7 @@ CoursesController.class_eval do
     js_env({:COURSE_WIZARD => {
       :analytics => {
         :ga_tracking_id => SettingsService.get_settings(object: 'school', id: 1)['google_analytics_tracking_id'],
-      }
+      },
       :just_saved =>  @context_just_saved,
       :checklist_states => {
         :import_step => !@context.attachments.active.exists?,
