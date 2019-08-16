@@ -21,7 +21,7 @@ describe StudentEnrollment do
      end
 
      it "returns two days ago" do
-       subject.update(last_activity_at: (3.days.ago - 1.hour))
+       subject.update(last_activity_at: (3.days.ago.beginning_of_day - 1.hour))
        expect(subject.days_since_active).to eq 3
      end
   end
@@ -37,7 +37,7 @@ describe StudentEnrollment do
     end
 
      it "returns one day ago" do
-       submission.update(submitted_at: (2.days.ago - 1.hour))
+       submission.update(submitted_at: (2.days.ago.beginning_of_day - 1.hour))
        expect(subject.days_since_last_submission).to eq 2
      end
   end
