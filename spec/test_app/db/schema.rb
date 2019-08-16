@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190722221551) do
+ActiveRecord::Schema.define(version: 20190816004428) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -179,8 +179,15 @@ ActiveRecord::Schema.define(version: 20190722221551) do
   end
 
   create_table "pseudonyms", force: :cascade do |t|
-    t.string  "sis_user_id"
-    t.integer "user_id"
+    t.string   "sis_user_id"
+    t.integer  "user_id"
+    t.string   "crypted_password"
+    t.string   "password_salt"
+    t.string   "persistence_token"
+    t.string   "single_access_token"
+    t.string   "perishable_token"
+    t.datetime "created_at"
+    t.datetime "last_login_at"
   end
 
   create_table "scores", force: :cascade do |t|
