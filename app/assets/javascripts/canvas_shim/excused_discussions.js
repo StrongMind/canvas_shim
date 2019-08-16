@@ -1,5 +1,5 @@
 $(window).on("load", function(event) {
-  if (ENV['excused_discussions'].length) {
+  if ((ENV['excused_discussions'] || []).length) {
     var excusedInterval = setInterval(function() {
       ENV['excused_discussions'].forEach(function(topic) { 
         var discussion = $(topic).find('.title');
