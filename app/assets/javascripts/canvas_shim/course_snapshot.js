@@ -1,6 +1,6 @@
 $(window).on("load", function(event) {
 
-  ga('create', ENV['analytics']['ga_tracking_id']);
+  ga('create', ENV["analytics"]["ga_tracking_id"]);
   
   $("#course-snapshot-course-select").change(function(e) {
     var oldURL = window.location.pathname;
