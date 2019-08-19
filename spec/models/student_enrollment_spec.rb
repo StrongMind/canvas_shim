@@ -15,6 +15,10 @@ describe StudentEnrollment do
     described_class.create(course: course, user: user)
   end
 
+  before do
+    allow(Time).to receive(:now).and_return(Time.now.utc)
+  end
+
   describe "#days_since_active" do
      it "returns N/A when compared against a bad date" do
        expect(subject.days_since_active).to eq "N/A"

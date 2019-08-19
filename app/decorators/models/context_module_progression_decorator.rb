@@ -29,7 +29,7 @@ ContextModuleProgression.class_eval do
   end
 
   def sequence_control_on?
-    enrollment = Enrollment.where(user_id: user.id, course_id: context_module.context.id).first
+    enrollment = StudentEnrollment.where(user_id: user.id, course_id: context_module.context.id).first
     settings = enrollment ? SettingsService.get_enrollment_settings(id: enrollment.id) : {}
     settings.fetch('sequence_control', true)
   end

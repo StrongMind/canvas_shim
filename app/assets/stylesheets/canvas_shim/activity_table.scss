@@ -1,0 +1,123 @@
+.activity-table {
+  .hour-labels {
+    .day {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+
+      height: 20px;
+
+      .hour {
+        width: 50px;
+        flex: 1 1 0;
+        box-sizing: border-box;
+
+        .col-label {
+          font-size: 0.575rem;
+          margin: 0 auto;
+          display: block;
+          width: 17px;
+        }
+      }
+    }
+  }
+
+  .week {
+    .day-label {
+      min-width: 32px;
+      font-size: 0.575rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .day {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      height: 25px;
+
+      .hour {
+        width: 50px;
+        border: 1px solid #fff;
+        border-radius: 3px;
+        text-align: center;
+      }
+
+      > * {
+        flex: 1 1 0;
+      }
+    }
+  }
+
+  .band-0 {
+    background-color: #eef3f7;
+  }
+
+  .band-1 {
+    background-color: #CAE0EC;
+  }
+
+  .band-2 {
+    background-color: #AACDE1;
+  }
+
+  .band-3 {
+    background-color: #8BBBD6;
+  }
+
+  .band-4 {
+    background-color: #5CA0C6;
+  }
+
+  .band-5 {
+    background-color: #2E85B6;
+  }
+
+  .band-6 {
+    background-color: #006BA6;
+  }
+
+  .band-7 {
+    background-color: #005888;
+  }
+
+  .band-8 {
+    background-color: #00456A;
+  }
+
+  .band-9 {
+    background-color: #00314C;
+  }
+
+  .band-10 {
+    background-color: #00101a;
+  }
+
+  .activity-table-legend {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    margin: 2rem auto;
+    position: relative;
+
+    div {
+      height: 20px;
+      width: 20px;
+      border: 1px solid #e6e6e6;
+      border-radius: 3px;
+    }
+
+    p {
+      font-size: 0.575rem;
+
+      &:first-of-type {
+        margin-right: .5rem;
+      }
+
+      &:last-of-type {
+        margin-left: .5rem;
+      }
+    }
+  }
+}
