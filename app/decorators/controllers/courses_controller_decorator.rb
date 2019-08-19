@@ -119,6 +119,10 @@ CoursesController.class_eval do
     if authorized_action(@context, @current_user, :manage_grades)
       set_snapshot_variables
     end
+
+    js_env({:analytics => {
+        :ga_tracking_id => SettingsService.get_settings(object: "school", id: 1)['ga_tracking_id']
+    }})
   end
 
   private
@@ -197,9 +201,6 @@ CoursesController.class_eval do
   def set_js_course_wizard_data
     # Course Wizard JS Info
     js_env({:COURSE_WIZARD => {
-      :analytics => {
-        :ga_tracking_id => SettingsService.get_settings(object: 'school', id: 1)['google_analytics_tracking_id'],
-      },
       :just_saved =>  @context_just_saved,
       :checklist_states => {
         :import_step => !@context.attachments.active.exists?,
