@@ -5,7 +5,7 @@ $(window).on("load", function(event) {
       event.preventDefault();
       if (!ENV["OLD_START_DATE"] || !ENV["OLD_END_DATE"]) {
         return $.flashError(
-          "Course must have start and end dates before importing content, please visit set these via the course settings page."
+          "Course must have start and end dates before importing content, please set dates on the course settings page."
         )
       } else {
         form.trigger("submit");
