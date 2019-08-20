@@ -1,0 +1,2 @@
+class ContentMigrationsController < ApplicationController
+end
