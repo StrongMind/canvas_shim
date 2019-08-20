@@ -120,9 +120,10 @@ CoursesController.class_eval do
       set_snapshot_variables
     end
 
-    js_env({:analytics => {
-        :ga_tracking_id => SettingsService.get_settings(object: "school", id: 1)['ga_tracking_id']
-    }})
+    ## Testing this shit
+    # js_env({:analytics => {
+    #     :ga_tracking_id => SettingsService.get_settings(object: "school", id: 1)['ga_tracking_id']
+    # }})
   end
 
   private
