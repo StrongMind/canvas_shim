@@ -103,7 +103,10 @@
               data-item-href="<%= context_url(@context, :context_url) %>/modules/items/<%= module_item.id %>"
             >
                <%= module_item.title %>
-               <%= module_item_excused?(module_item) %>
+               <% if module_item_excused?(module_item) %>
+                 <span class="excused-assignment">
+                 </span>
+               <% end %>
             </a>
           <% else %>
             <a
@@ -115,12 +118,18 @@
               <% end %>
             >
               <%= module_item && module_item.title %>
-              <%= module_item_excused?(module_item) %>
+               <% if module_item_excused?(module_item) %>
+                 <span class="excused-assignment">
+                 </span>
+               <% end %>
             </a>
           <% end %>
           <span title="<%= module_item && module_item.title %>" class="title locked_title">
             <%= module_item && module_item.title %>
-            <%= module_item_excused?(module_item) %>
+            <% if module_item_excused?(module_item) %>
+              <span class="excused-assignment">
+              </span>
+            <% end %>
           </span>
           <span class="points_possible" style="display: none;"><%= round_if_whole(module_item.try_rescue(:assignment).try_rescue(:points_possible)) || nbsp %></span>
           <span class="requirement" style="display: none;">&nbsp;</span>
