@@ -1,8 +1,6 @@
 $(window).on("load", function(event) {
 
-  // Test8ng this shit
-  // ga('create', ENV["analytics"]["ga_tracking_id"]);
-  ga('create', 'UA-36373320-13');
+  ga('create', ENV["analytics"]["ga_tracking_id"]);
   
   $("#course-snapshot-course-select").change(function(e) {
     var oldURL = window.location.pathname;
