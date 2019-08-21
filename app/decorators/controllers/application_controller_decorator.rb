@@ -1,5 +1,14 @@
 ApplicationController.class_eval do
+  before_action :set_jsenv
+
   prepend_view_path CanvasShim::Engine.root.join('app', 'views')
+
+
+  def set_jsenv
+    js_env({:analytics => {
+      :ga_tracking_id => SettingsService.get_settings(object: "school", id: 1)['ga_tracking_id']
+    }})
+  end
 
   def custom_placement_enabled?
     SettingsService.get_settings(object: :school, id: 1)['enable_custom_placement']
