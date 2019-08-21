@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'pandarus', '0.7.0'
   s.add_dependency 'decorators'
   s.add_dependency 'groupdate'
-  s.add_dependency 'sass-rails'
+  s.add_dependency 'sass-rails', '5.0.7'
   s.add_dependency 'coffee-rails'
   s.add_dependency 'uglifier'
   s.add_dependency 'chronic'  

@@ -1,0 +1,34 @@
+<%
+# Copyright (C) 2013 - present Instructure, Inc.
+#
+# This file is part of Canvas.
+#
+# Canvas is free software: you can redistribute it and/or modify it under
+# the terms of the GNU Affero General Public License as published by the Free
+# Software Foundation, version 3 of the License.
+#
+# Canvas is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+# details.
+#
+# You should have received a copy of the GNU Affero General Public License along
+# with this program. If not, see <http://www.gnu.org/licenses/>.
+%>
+
+<% content_for :strongmind_assets do %>
+  <%= javascript_include_tag 'canvas_shim/application' %>
+<% end %>
+
+<%
+  folders = @context.active_folders.by_position.select([:id, :name, :parent_folder_id]).to_a
+  root_folders = folders.select{|f| f.parent_folder_id == nil}
+
+  content_for :page_title, join_title(t(:page_title, "Import Content"), @context.name)
+  js_bundle :content_migration
+  js_env :FOLDER_OPTIONS => folders_as_options(root_folders, :all_folders => folders)
+  css_bundle :content_migrations
+%>
+
+<form id="migrationConverterContainer" class="form-horizontal"></form>
+<div id="progress" class="span10"></div>
