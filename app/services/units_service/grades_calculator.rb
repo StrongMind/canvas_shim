@@ -31,11 +31,7 @@ module UnitsService
           !sub.excused?
         end
         result[group.name] = [] unless result[group]
-        if non_excused.count == 0
-          average = 0
-        else
-          average = non_excused.map(&:score).compact.sum.to_f / non_excused.count
-        end
+        average = non_excused.map(&:score).compact.sum.to_f / non_excused.count
         weight  = category_weights[group.name] / category_weights.values.sum
         result[group.name] << average * weight
       end
