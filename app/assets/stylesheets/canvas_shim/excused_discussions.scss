@@ -1,0 +1,34 @@
+@mixin excused-chip-appearance {
+  background-color: #333333;
+  border-radius: 3px;
+  color: #f2f2f2;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 3px 8px;
+  text-transform: uppercase;
+}
+
+.discussion-title-block {
+  .excused-discussion {
+    display: flex;
+    align-items: center;
+
+    &::after {
+      content: 'Excused';
+      margin-left: 25px;
+      @include excused-chip-appearance;
+    }
+  }
+}
+
+.ig-info {
+  .excused-assignment {
+    display: inline;
+
+    &::after {
+      content: 'Excused';
+      margin-left: 10px;
+      @include excused-chip-appearance;
+    }
+  }
+}

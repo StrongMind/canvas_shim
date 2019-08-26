@@ -64,7 +64,7 @@
 
       if (checkedAlerts.length) {
         // show the loading icon and disable the buttons
-        toggleHidden([$('.loader')], "hidden");
+        toggleHidden([$('.dot-loader')], "hidden");
         $('#bulk-delete-confirm, #bulk-delete-btn').attr("disabled", "disabled");
 
         $.ajax({
@@ -82,7 +82,7 @@
 
             // revert table to single-delete state
             toggleHidden(
-              [$(".icon-x"), $(".bulk-delete-checks"), $('#bulk-delete-confirm'), $('.loader')],
+              [$(".icon-x"), $(".bulk-delete-checks"), $('#bulk-delete-confirm'), $('.dot-loader')],
               "hidden"
             );
             toggleHidden([$('#delete-column-header')], "visibility-hidden");
