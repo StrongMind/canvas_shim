@@ -21,7 +21,13 @@ SectionTabHelper::AvailableSectionTabs.class_eval do
 
   def is_teacher_or_admin?
     return false unless @context.is_a?(Course) && @current_user
-    @context.user_is_instructor?(@current_user) || @context.user_is_admin?(@current_user)
+    @context.user_is_instructor?(@current_user) || is_admin?
+  end
+
+  def is_admin?
+    Account.default.account_users.find do |account_user|
+      account_user.role.name == 'AccountAdmin' && account_user.user == @current_user
+    end
   end
 
   def snapshot_enabled?
