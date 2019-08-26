@@ -64,6 +64,10 @@ DiscussionTopicsController.class_eval do
     tiny_student_hash(submissions)
   end
 
+  def students_in_course
+    tiny_student_hash(@context.student_enrollments.where(type: "StudentEnrollment"))
+  end
+
   def get_discussion_assignment
     @assignment = @context.discussion_topics.find(params[:id])&.assignment
   end
