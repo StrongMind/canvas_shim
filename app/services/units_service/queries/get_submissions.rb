@@ -15,6 +15,10 @@ module UnitsService
             subs
               .where(user_id: @student.id).each do |submission|
                 result[unit] ||= []
+                if submission.excused?
+                  submission = submission.dup
+                  submission.score = nil
+                end
                 result[unit] << submission
               end
           end

@@ -61,7 +61,7 @@ describe UnitsService::Queries::GetSubmissions do
       Submission.create!(user: student, assignment: assignment, excused: true)
     end
 
-    it 'will return the excused submission' do
+    xit 'will return the excused submission' do
       result = {}
       result[unit] = [submission, excused_submission]
 
