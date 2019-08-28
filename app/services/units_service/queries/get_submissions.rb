@@ -13,12 +13,10 @@ module UnitsService
             subs = item.content.try(:submissions) ||
                   item.content.try(:assignment).submissions
             subs
-              .where(user_id: @student.id).each do |submission|
+              .where(user_id: @student.id)
+              .each do |submission|
                 result[unit] ||= []
-                if submission.excused?
-                  submission = submission.dup
-                  submission.score = nil
-                end
+                submission.score = submission.excused? ? nil : submission.score
                 result[unit] << submission
               end
           end

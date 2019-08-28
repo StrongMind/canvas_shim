@@ -28,7 +28,7 @@ module UnitsService
         submission.assignment.assignment_group
       end.each do |group, submissions|
         result[group.name] = [] unless result[group]
-        average = submissions.map(&:score).compact.sum.to_f / zero_guard(submissions.select(&:score).count)
+        average = submissions.map(&:score).compact.sum.to_f / zero_guard(submissions.reject(&:excused?).count)
         weight  = category_weights[group.name] / category_weights.values.sum
         result[group.name] << average * weight
       end
