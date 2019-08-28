@@ -61,11 +61,11 @@ describe UnitsService::Queries::GetSubmissions do
       Submission.create!(user: student, assignment: assignment, excused: true)
     end
 
-    it 'will not return the excused submission' do
+    it 'will return the excused submission' do
       result = {}
-      result[unit] = [submission]
+      result[unit] = [submission, excused_submission]
 
-      expect(subject.query[unit]).to_not include(excused_submission)
+      expect(subject.query[unit]).to include(excused_submission)
     end
   end
 end

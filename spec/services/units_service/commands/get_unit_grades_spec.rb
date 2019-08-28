@@ -69,7 +69,11 @@ describe UnitsService::Commands::GetUnitGrades do
     end
   end
 
-  describe "#unit_excused?" do
+    context "#unit_excused?" do
+      before do
+        allow(submission).to receive(:excused?).and_return(true)
+     end
+  
     it 'returns true if all are excused' do
       unit_submissions[cm] = [Submission.create(excused: true)]
       expect(subject.send(:unit_excused?, cm)).to eq true
@@ -79,5 +83,25 @@ describe UnitsService::Commands::GetUnitGrades do
       unit_submissions[cm] = [Submission.create(excused: true), Submission.create()]
       expect(subject.send(:unit_excused?, cm)).to eq false
     end
+
+        it 'returns the calculator results' do
+            unit_submissions[unit] = [submission]
+            expect(subject.call).to eq(
+              course_id: course.id,
+              course_score: 90,
+              school_domain: "canvasdomain.com",
+              student_id: user.id,
+              sis_user_id: "1001",
+              submitted_at: submitted_at,
+              units: [{
+                score: nil,
+                id: unit.id,
+                position: unit.position,
+                excused: true
+              }]
+            )
+          end
+
+
   end
 end
