@@ -1,6 +1,6 @@
 $(window).on("load", function(event) {
 
-  if (typeof ga == 'function') {
+  if (typeof ga === 'function') {
     ga('create', ENV["analytics"]["ga_tracking_id"]);
   }
   
@@ -8,7 +8,7 @@ $(window).on("load", function(event) {
     var oldURL = window.location.pathname;
     var newURL = $(this).children(":selected").data("url");
 
-    if ((typeof ga == 'function') && oldURL !== newURL) {
+    if ((typeof ga === 'function') && oldURL !== newURL) {
       ga('send', 'event', 
         'Snapshot: Course Selection', 
         'click', 
@@ -26,7 +26,7 @@ $(window).on("load", function(event) {
     $('.course-snapshot-activity-chart-popover').toggleClass('popover-visible');
   })
 
-  if(typeof ga == 'function') {
+  if(typeof ga === 'function') {
     // Capture card link clicks
     $('body').on('click', '.card-link', function() {
       ga('send', 'event', 
