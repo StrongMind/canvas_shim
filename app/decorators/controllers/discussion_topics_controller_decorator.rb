@@ -1,6 +1,4 @@
 DiscussionTopicsController.class_eval do
-  before_action :get_discussion_assignment, only: :edit
-
   def strongmind_index
     @discussions = @context&.discussion_topics
     js_env(excused_discussions: excused_discussion_topics)
@@ -9,15 +7,6 @@ DiscussionTopicsController.class_eval do
 
   alias_method :instructure_index, :index
   alias_method :index, :strongmind_index
-
-  def strongmind_update
-    get_discussion_assignment
-    ExcusedService.bulk_excuse(assignment: @assignment, exclusions: params['excluded_students'])
-    instructure_update
-  end
-
-  alias_method :instructure_update, :update
-  alias_method :update, :strongmind_update
 
   private
   def excused_discussion_topics
@@ -29,9 +18,5 @@ DiscussionTopicsController.class_eval do
 
   def topics_available?
     @discussions && @context.is_a?(Course) && @context.user_is_student?(@current_user)
-  end
-
-  def get_discussion_assignment
-    @assignment = @context.discussion_topics.find(params[:id])&.assignment
   end
 end
