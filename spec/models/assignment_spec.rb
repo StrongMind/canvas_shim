@@ -2,7 +2,7 @@ describe Assignment do
   include_context "stubbed_network"
   let(:assignment) { Assignment.create }
   let(:user) { User.create }
-  let(:submission) { Submission.create(assignment: assignment, user: user, excused: nil) }
+  let(:submission) { Submission.create(assignment: assignment, user: user, excused: nil, grader_id: 1) }
   let(:user_2) { User.create }
 
   describe "#toggle_exclusion" do
