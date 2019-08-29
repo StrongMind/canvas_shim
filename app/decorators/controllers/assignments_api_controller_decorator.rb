@@ -19,7 +19,7 @@ AssignmentsApiController.class_eval do
   private
 
   def exclusion_params
-    params&.fetch("assignment")&.fetch("excluded_students")
+    params&.fetch("assignment")&.fetch("excluded_students", nil)
   end
 
   def bulk_excuse
