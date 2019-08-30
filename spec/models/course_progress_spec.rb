@@ -50,7 +50,7 @@ describe CourseProgress do
 
       it "counts excused submissions" do
         excused_submission_count.times do
-          Submission.create!(user: user, assignment: Assignment.create(course: course), excused: true)
+          Submission.create!(user: user, assignment: Assignment.create(course: course), excused: true, grader_id: 1)
         end
 
         expect(course_progress_student.send(:excused_submission_count)).to eq excused_submission_count
@@ -62,7 +62,7 @@ describe CourseProgress do
     context "with excused submission" do
       before do
         excused_submission_count.times do
-          Submission.create!(user: user, assignment: Assignment.create(course: course), excused: true)
+          Submission.create!(user: user, assignment: Assignment.create(course: course), excused: true, grader_id: 1)
         end
       end
 

@@ -58,7 +58,7 @@ describe UnitsService::Queries::GetSubmissions do
     end
 
     let(:excused_submission) do
-      Submission.create!(user: student, assignment: assignment, excused: true)
+      Submission.create!(user: student, assignment: assignment, excused: true, grader_id: 1)
     end
 
     it 'will not return the excused submission' do
