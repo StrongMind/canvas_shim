@@ -33,8 +33,23 @@ describe Submission do
 
       end
     end
+  end
 
+  context "Message callbacks" do
+    include_context 'stubbed_network'
+    let!(:submission) { Submission.create(score: 30, assignment: assignment, excused: true) }
+    let!(:submission2) { Submission.create(score: 30, assignment: assignment, excused: true) }
 
+    let(:assignment) { Assignment.new }
 
+    it "records a comment when the excused tag is removed" do
+      submission.update(excused: false)
+      expect(submission.submission_comments.first.comment).to eq("This assignment is no longer excused. \nIf you have questions, please contact your teacher.\n")
+    end
+
+    it "does not record a comment when the excused tag is not removed" do
+      submission.update(score: 55, grader_id: 5)
+      expect(submission2.submission_comments).to eq([])
+    end
   end
 end

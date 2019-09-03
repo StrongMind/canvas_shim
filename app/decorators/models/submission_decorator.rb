@@ -1,6 +1,7 @@
 Submission.class_eval do
   after_commit :bust_context_module_cache
   after_commit -> { PipelineService::V2.publish(self) }
+  after_update :record_excused_removed
 
   def bust_context_module_cache
     if self.previous_changes.include?(:excused)
@@ -13,6 +14,17 @@ Submission.class_eval do
 
     tags.each do |tag|
       tag.context_module.send_later_if_production(:touch)
+    end
+  end
+
+  def record_excused_removed
+    if changes[:excused] == [true, false]
+      unexcused_message = <<~MSG
+        This assignment is no longer excused. 
+        If you have questions, please contact your teacher.
+      MSG
+
+      submission_comments.create(comment: unexcused_message)
     end
   end
 end
