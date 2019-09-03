@@ -28,7 +28,7 @@ Submission.class_eval do
 
   private
   def teacher
-    assignment&.course&.teacher_enrollments&.first
+    assignment&.course&.teacher_enrollments&.first&.user
   end
 
   def unexcused_comment
