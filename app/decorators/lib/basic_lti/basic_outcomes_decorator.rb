@@ -16,7 +16,7 @@ BasicLTI::BasicOutcomes::LtiResponse.class_eval do
   def strongmind_handle_replaceResult(_tool, _course, assignment, user)
     existing_submission = assignment.submissions.where(user_id: user.id).first
     return true if existing_submission&.excused?
-    instructure_handle_replaceResult
+    instructure_handle_replaceResult(_tool, _course, assignment, user)
   end
 
   alias_method :instructure_handle_replaceResult, :handle_replaceResult
