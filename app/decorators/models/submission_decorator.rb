@@ -19,12 +19,21 @@ Submission.class_eval do
 
   def record_excused_removed
     if changes[:excused] == [true, false]
-      unexcused_message = <<~MSG
-        This assignment is no longer excused. 
-        If you have questions, please contact your teacher.
-      MSG
-
-      submission_comments.create(comment: unexcused_message)
+      submission_comments.create(
+        comment: unexcused_comment,
+        author: teacher
+      )
     end
+  end
+
+  private
+  def teacher
+    assignment&.course&.teacher_enrollments&.first
+  end
+
+  def unexcused_comment
+    "This assignment is no longer excused. " +
+    "Please complete the required work. " +
+    "If you have questions, please contact your teacher."
   end
 end

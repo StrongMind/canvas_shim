@@ -44,7 +44,7 @@ describe Submission do
 
     it "records a comment when the excused tag is removed" do
       submission.update(excused: false)
-      expect(submission.submission_comments.first.comment).to eq("This assignment is no longer excused. \nIf you have questions, please contact your teacher.\n")
+      expect(submission.submission_comments.first.comment).to eq(Submission.new.send(:unexcused_comment))
     end
 
     it "does not record a comment when the excused tag is not removed" do

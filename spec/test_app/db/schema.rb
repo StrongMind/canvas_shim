@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190903200533) do
+ActiveRecord::Schema.define(version: 20190903221017) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -203,6 +203,7 @@ ActiveRecord::Schema.define(version: 20190903200533) do
   create_table "submission_comments", force: :cascade do |t|
     t.integer "submission_id"
     t.string  "comment"
+    t.bigint  "author_id"
   end
 
   create_table "submission_versions", force: :cascade do |t|
