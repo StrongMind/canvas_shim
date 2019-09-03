@@ -11,7 +11,7 @@ module RequirementsService
         return false unless assignment
         SettingsService.get_settings(
           object: "assignment",
-          id: assignment.try(:migration_id)
+          id: assignment&.migration_id || " "
         )["module_exam"]
       end
 
