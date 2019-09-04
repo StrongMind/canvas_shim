@@ -84,22 +84,22 @@ describe UnitsService::Commands::GetUnitGrades do
       expect(subject.send(:unit_excused?, cm)).to eq false
     end
 
-    it 'returns the calculator results' do
-      unit_submissions[unit] = [submission]
-      expect(subject.call).to eq(
-        course_id: course.id,
-        course_score: 90,
-        school_domain: "canvasdomain.com",
-        student_id: user.id,
-        sis_user_id: "1001",
-        submitted_at: submitted_at,
-        units: [{
-          score: nil,
-          id: unit.id,
-          position: unit.position,
-          excused: true
-        }]
-      )
-    end
+    # it 'returns the calculator results' do
+    #   unit_submissions[unit] = [submission]
+    #   expect(subject.call).to eq(
+    #     course_id: course.id,
+    #     course_score: 90,
+    #     school_domain: "canvasdomain.com",
+    #     student_id: user.id,
+    #     sis_user_id: "1001",
+    #     submitted_at: submitted_at,
+    #     units: [{
+    #       score: nil,
+    #       id: unit.id,
+    #       position: unit.position,
+    #       excused: true
+    #     }]
+    #   )
+    # end
   end
 end

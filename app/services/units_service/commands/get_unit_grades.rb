@@ -52,7 +52,7 @@ module UnitsService
       end
 
       def submissions_graded?(unit, score)
-        score if unit_submissions[unit].any? { |sub| sub.graded_at && sub.grader_id != GradesService::Account.account_admin.try(:id) && !sub.excused? }
+        score if unit_submissions[unit].any? { |sub| sub.graded_at && sub.grader_id != GradesService::Account.account_admin.try(:id) }
       end
 
       def unit_excused?(unit)

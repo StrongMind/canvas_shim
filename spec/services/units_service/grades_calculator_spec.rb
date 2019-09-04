@@ -1,22 +1,13 @@
 describe UnitsService::GradesCalculator do
   let(:unit) { double('unit', id: 1, position: 1) }
   let(:course) { double('course') }
-  let(:submissions) { [checkpoint_submission, discussion_group_submission, excused_submission] }
+  let(:submissions) { [checkpoint_submission, discussion_group_submission] }
   let(:checkpoint_submission) do
     double(
       :submission,
       excused?: false,
       score: 70,
       assignment: checkpoint_assignment
-    )
-  end
-
-  let(:excused_submission) do
-    double(
-      :submission,
-      excused?: true,
-      score: 99,
-      assignment: excused_assignment
     )
   end
 
@@ -41,10 +32,6 @@ describe UnitsService::GradesCalculator do
   end
 
   let(:checkpoint_assignment) do
-    double(:checkpoint_assignment, assignment_group: checkpoint_assignment_group)
-  end
-
-  let(:excused_assignment) do
     double(:checkpoint_assignment, assignment_group: checkpoint_assignment_group)
   end
 
