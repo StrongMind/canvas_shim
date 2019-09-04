@@ -5,7 +5,7 @@ describe UnitsService::Commands::GetUnitGrades do
   let(:user) { User.create(pseudonym: pseudonym) }
   let(:query_instance) { double('query instance', query: nil) }
   let(:current_time) { Time.now }
-  let(:unit) { double('unit', id: 1, created_at: current_time, position: 3 ) }
+  let(:unit) { double('unit', id: cm.id, created_at: current_time, position: 3 ) }
   let(:calculator_instance) { double('calculator_instance', call: { unit => 54 }) }
   let(:submitted_at) { Time.now }
   let(:submission) { double('submission', submitted_at: submitted_at, graded_at: current_time, grader_id: 2) }
@@ -70,36 +70,49 @@ describe UnitsService::Commands::GetUnitGrades do
   end
 
   context "#unit_excused?" do
+    let!(:cm) {ContextModule.create()}
+    let!(:assignment) { Assignment.create(workflow_state: 'active') }
+    let!(:content_tag) { ContentTag.create(context_module: cm, assignment: assignment, content_type: 'Assignment', content_id: assignment.id) }
+    let!(:submission) { Submission.create(grader_id: 2, submitted_at: current_time, user: user, assignment: assignment) }
+
     before do
       allow(submission).to receive(:excused?).and_return(true)
+      submission.update(excused: true)
     end
 
     it 'returns true if all are excused' do
-      unit_submissions[cm] = [Submission.create(excused: true)]
       expect(subject.send(:unit_excused?, cm)).to eq true
     end
 
     it 'returns false if not all are excused' do
-      unit_submissions[cm] = [Submission.create(excused: true), Submission.create()]
+      cm = ContextModule.create()
+      assignment = Assignment.create(workflow_state: 'active')
+      assignment_2 = Assignment.create(workflow_state: 'active')
+
+      content_tag = ContentTag.create(context_module: cm, assignment: assignment, content_type: 'Assignment', content_id: assignment.id)
+      content_tag_2 = ContentTag.create(context_module: cm, assignment: assignment_2, content_type: 'Assignment', content_id: assignment.id)
+
+      submission = Submission.create(grader_id: 2, submitted_at: current_time, user: user, assignment: assignment)
+      submission_2 = Submission.create(grader_id: 2, submitted_at: current_time, user: user, assignment: assignment_2)
+      submission_2.update(excused: true)
       expect(subject.send(:unit_excused?, cm)).to eq false
     end
 
-    # it 'returns the calculator results' do
-    #   unit_submissions[unit] = [submission]
-    #   expect(subject.call).to eq(
-    #     course_id: course.id,
-    #     course_score: 90,
-    #     school_domain: "canvasdomain.com",
-    #     student_id: user.id,
-    #     sis_user_id: "1001",
-    #     submitted_at: submitted_at,
-    #     units: [{
-    #       score: nil,
-    #       id: unit.id,
-    #       position: unit.position,
-    #       excused: true
-    #     }]
-    #   )
-    # end
+    it 'returns the calculator results' do
+      expect(subject.call).to eq(
+        course_id: course.id,
+        course_score: 90,
+        school_domain: "canvasdomain.com",
+        student_id: user.id,
+        sis_user_id: "1001",
+        submitted_at: current_time,
+        units: [{
+          score: nil,
+          id: unit.id,
+          position: unit.position,
+          excused: true
+        }]
+      )
+    end
   end
 end

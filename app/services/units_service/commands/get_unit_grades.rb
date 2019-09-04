@@ -52,11 +52,11 @@ module UnitsService
       end
 
       def submissions_graded?(unit, score)
-        score if unit_submissions[unit].any? { |sub| sub.graded_at && sub.grader_id != GradesService::Account.account_admin.try(:id) }
+        score unless unit_excused?(unit) || unit_submissions[unit].none? { |sub| sub.graded_at && sub.grader_id != GradesService::Account.account_admin.try(:id) }
       end
 
       def unit_excused?(unit)
-        unit_submissions[unit].all? { |sub| sub.excused? }
+        UnitsService::Queries::IsUnitExcused.new(unit_id: unit.id, student: @student).query
       end
     end
   end
