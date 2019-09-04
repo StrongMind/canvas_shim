@@ -1,9 +1,9 @@
 module UnitsService
   module Queries
     class IsUnitExcused
-      def initialize(unit_id:, student:)
+      def initialize(unit:, student:)
         @student = student
-        @unit = ContextModule.find(unit_id)
+        @unit = unit
       end
 
       def query

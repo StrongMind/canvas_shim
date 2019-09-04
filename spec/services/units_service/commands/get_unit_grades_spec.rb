@@ -5,11 +5,10 @@ describe UnitsService::Commands::GetUnitGrades do
   let(:user) { User.create(pseudonym: pseudonym) }
   let(:query_instance) { double('query instance', query: nil) }
   let(:current_time) { Time.now }
-  let(:unit) { double('unit', id: cm.id, created_at: current_time, position: 3 ) }
-  let(:calculator_instance) { double('calculator_instance', call: { unit => 54 }) }
+  let(:calculator_instance) { double('calculator_instance', call: { cm => 54}) }
   let(:submitted_at) { Time.now }
   let(:submission) { double('submission', submitted_at: submitted_at, graded_at: current_time, grader_id: 2) }
-  let(:cm) {ContextModule.create()}
+  let(:cm) {ContextModule.create(position: 3)}
   let(:unit_submissions) { Hash.new }
 
   subject { described_class.new(course: course, student: user, submission: submission) }
@@ -31,7 +30,7 @@ describe UnitsService::Commands::GetUnitGrades do
 
 
   it 'returns the calculator results' do
-    unit_submissions[unit] = [submission]
+    unit_submissions[cm] = [submission]
     expect(subject.call).to eq(
       course_id: course.id,
       course_score: 90,
@@ -41,8 +40,8 @@ describe UnitsService::Commands::GetUnitGrades do
       submitted_at: submitted_at,
       units: [{
         score: 54,
-        id: unit.id,
-        position: unit.position,
+        id: cm.id,
+        position: cm.position,
         excused: false
       }]
     )
@@ -70,7 +69,7 @@ describe UnitsService::Commands::GetUnitGrades do
   end
 
   context "#unit_excused?" do
-    let!(:cm) {ContextModule.create()}
+    let!(:cm) {ContextModule.create(position: 3)}
     let!(:assignment) { Assignment.create(workflow_state: 'active') }
     let!(:content_tag) { ContentTag.create(context_module: cm, assignment: assignment, content_type: 'Assignment', content_id: assignment.id) }
     let!(:submission) { Submission.create(grader_id: 2, submitted_at: current_time, user: user, assignment: assignment) }
@@ -108,8 +107,8 @@ describe UnitsService::Commands::GetUnitGrades do
         submitted_at: current_time,
         units: [{
           score: nil,
-          id: unit.id,
-          position: unit.position,
+          id: cm.id,
+          position: cm.position,
           excused: true
         }]
       )

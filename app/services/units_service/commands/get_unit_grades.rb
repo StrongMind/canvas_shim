@@ -51,7 +51,7 @@ module UnitsService
       end
 
       def unit_excused?(unit)
-        UnitsService::Queries::IsUnitExcused.new(unit_id: unit.id, student: @student).query
+        UnitsService::Queries::IsUnitExcused.new(unit: unit, student: @student).query
       end
 
       def all_units
