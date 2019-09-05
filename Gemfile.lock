@@ -385,7 +385,6 @@ DEPENDENCIES
   railties (~> 5)
   rake (~> 12)
   rb-fsevent (~> 0)
-  rb-inotify (~> 0)
   rspec-core (~> 3)
   rspec-expectations (~> 3)
   rspec-mocks (~> 3)
