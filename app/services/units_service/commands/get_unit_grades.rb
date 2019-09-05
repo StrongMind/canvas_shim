@@ -47,7 +47,7 @@ module UnitsService
       end
 
       def submissions_graded?(unit, score)
-        score unless unit_excused?(unit) || unit_submissions[unit].none? { |sub| sub.graded_at && sub.grader_id != GradesService::Account.account_admin.try(:id) }
+        score if unit_submissions[unit].any? { |sub| sub.graded_at && sub.grader_id != GradesService::Account.account_admin.try(:id) }
       end
 
       def unit_excused?(unit)
@@ -60,7 +60,7 @@ module UnitsService
             id: unit.id,
             position: unit.position,
             score: submissions_graded?(unit, score),
-            excused: unit_excused?(unit)
+            excused: false
           }
         end.concat(excused_units)
       end

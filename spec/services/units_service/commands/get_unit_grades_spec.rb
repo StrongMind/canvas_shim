@@ -4,7 +4,7 @@ describe UnitsService::Commands::GetUnitGrades do
   let(:pseudonym) { Pseudonym.create(sis_user_id: 1001) }
   let(:user) { User.create(pseudonym: pseudonym) }
   let(:query_instance) { double('query instance', query: nil) }
-  let(:current_time) { Time.now }
+  let(:current_time) { Time.now.in_time_zone('UTC') }
   let(:calculator_instance) { double('calculator_instance', call: { cm => 54}) }
   let(:submitted_at) { Time.now }
   let(:submission) { double('submission', submitted_at: submitted_at, graded_at: current_time, grader_id: 2) }
@@ -69,8 +69,9 @@ describe UnitsService::Commands::GetUnitGrades do
   end
 
   context "#unit_excused?" do
-    let!(:cm) {ContextModule.create(position: 3)}
-    let!(:assignment) { Assignment.create(workflow_state: 'active') }
+    let!(:course) {Course.create()}
+    let!(:cm) {ContextModule.create(position: 3, course: course)}
+    let!(:assignment) { Assignment.create(workflow_state: 'active', course: course)}
     let!(:content_tag) { ContentTag.create(context_module: cm, assignment: assignment, content_type: 'Assignment', content_id: assignment.id) }
     let!(:submission) { Submission.create(grader_id: 2, submitted_at: current_time, user: user, assignment: assignment) }
 
@@ -97,7 +98,10 @@ describe UnitsService::Commands::GetUnitGrades do
       expect(subject.send(:unit_excused?, cm)).to eq false
     end
 
-    it 'returns the calculator results' do
+    it 'returns the excused calculator results' do
+      allow(subject).to receive(:calculate_grades).and_return([])
+      subject.instance_variable_set(:@grades, [])
+      unit_submissions[cm] = [Submission.create()]
       expect(subject.call).to eq(
         course_id: course.id,
         course_score: 90,
