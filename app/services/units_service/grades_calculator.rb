@@ -27,11 +27,8 @@ module UnitsService
       submissions.group_by do |submission|
         submission.assignment.assignment_group
       end.each do |group, submissions|
-        non_excused = submissions.select do |sub|
-          !sub.excused?
-        end
         result[group.name] = [] unless result[group]
-        average = non_excused.map(&:score).compact.sum.to_f / non_excused.count
+        average = submissions.map(&:score).compact.sum.to_f / submissions.count
         weight  = category_weights[group.name] / category_weights.values.sum
         result[group.name] << average * weight
       end

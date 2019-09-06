@@ -38,12 +38,7 @@ module UnitsService
           student_id: @student.id,
           sis_user_id: get_sis_user_id,
           submitted_at: @submission.submitted_at,
-          units: @grades.map {|unit, score| {
-            id: unit.id,
-            position: unit.position,
-            score: submissions_graded?(unit, score),
-            excused: unit_excused?(unit)
-          }}
+          units: all_units
         }
       end
 
@@ -52,11 +47,35 @@ module UnitsService
       end
 
       def submissions_graded?(unit, score)
-        score if unit_submissions[unit].any? { |sub| sub.graded_at && sub.grader_id != GradesService::Account.account_admin.try(:id) && !sub.excused? }
+        score if unit_submissions[unit].any? { |sub| sub.graded_at && sub.grader_id != GradesService::Account.account_admin.try(:id) }
       end
 
       def unit_excused?(unit)
-        unit_submissions[unit].all? { |sub| sub.excused? }
+        UnitsService::Queries::IsUnitExcused.new(unit: unit, student: @student).query
+      end
+
+      def all_units
+        @grades.map do |unit, score|
+          {
+            id: unit.id,
+            position: unit.position,
+            score: submissions_graded?(unit, score),
+            excused: false
+          }
+        end.concat(excused_units)
+      end
+
+      def excused_units
+        @course.context_modules.select do |context_module|
+          unit_excused?(context_module)
+        end.map do |excused_module|
+          {
+            id: excused_module.id,
+            position: excused_module.position,
+            score: nil,
+            excused: true
+          }
+        end
       end
     end
   end
