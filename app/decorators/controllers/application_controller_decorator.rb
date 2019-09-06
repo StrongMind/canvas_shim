@@ -5,7 +5,9 @@ ApplicationController.class_eval do
   def custom_placement_enabled?
     @current_user &&
     @current_user.roles(Account.site_admin).include?('admin') ||
-    @current_user.enrollments.active.any? { |e| e.has_permission_to?(:custom_placement) }
+    @current_user.teacher_enrollments.find_by(
+      course: @context
+    )&.has_permission_to?(:custom_placement)
   end
 
   def strongmind_update_enrollment_last_activity_at
