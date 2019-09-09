@@ -87,8 +87,12 @@ module GradesService
         @course.includes_user?(@student, @course.admin_visible_student_enrollments)
       end
 
+      def not_excused?
+        !@submission.excused?
+      end
+
       def should_grade?
-        unsubmitted? && unscored? && late? && published? && enrolled?
+        not_excused? && unsubmitted? && unscored? && late? && published? && enrolled?
       end
     end
   end
