@@ -129,7 +129,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
         subject.call!(log_file: 'logfile')
       end
 
-      it 'when submission is graded' do
+      it 'when submission is excused' do
         allow(submission).to receive(:excused?).and_return(true)
         expect(assignment).to_not receive(:grade_student)
         subject.call!(log_file: 'logfile')
