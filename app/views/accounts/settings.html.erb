@@ -268,14 +268,6 @@ TEXT
                     </td>
                   </tr>
                   <tr>
-                    <td colspan="2">
-                        <%= settings.check_box :enable_custom_placement,
-                              checked: @custom_placement_enabled,
-                              title: "Allow teachers to custom place a student anywhere in a course's content" %>
-                        <%= settings.label :enable_custom_placement, :en => "Enable student custom placement" %>
-                    </td>
-                  </tr>
-                  <tr>
                     <td colspan="2"><%= settings.check_box :prevent_course_renaming_by_teachers, :checked => @account.settings[:prevent_course_renaming_by_teachers] %>
                     <%= settings.label :prevent_course_renaming_by_teachers, :en => "Don't let teachers rename their courses" %>
                     </td>

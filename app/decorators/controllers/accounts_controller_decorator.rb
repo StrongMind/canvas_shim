@@ -6,7 +6,6 @@ AccountsController.class_eval do
     @school_threshold         = RequirementsService.get_passing_threshold(type: :school)
     @school_exam_threshold    = RequirementsService.get_passing_threshold(type: :school, exam: true)
     @course_thresh_enabled    = RequirementsService.course_threshold_setting_enabled?
-    @custom_placement_enabled = custom_placement_enabled?
 
     if @course_thresh_enabled
       @post_enrollment_thresh_enabled = RequirementsService.post_enrollment_thresholds_enabled?
@@ -32,8 +31,6 @@ AccountsController.class_eval do
     set_allowed_filetypes if params[:allowed_filetypes]
     set_holidays if params[:holidays]
 
-    set_custom_placement
-
     instructure_update
   end
 
@@ -53,19 +50,6 @@ AccountsController.class_eval do
     @holidays = SettingsService.get_settings(object: :school, id: 1)['holidays']
     @holidays = @holidays.split(",") if @holidays
     @holidays ||= (ENV["HOLIDAYS"] && @holidays != false) ? ENV["HOLIDAYS"].split(",") : []
-  end
-
-  def enable_custom_placement_param
-    @enable_custom_placement_param ||= ActiveModel::Type::Boolean.new.cast(strong_account_params[:settings][:enable_custom_placement])
-  end
-
-  def set_custom_placement
-    SettingsService.update_settings(
-      object: 'school',
-      id: 1,
-      setting: 'enable_custom_placement',
-      value: enable_custom_placement_param
-    )
   end
   
   def get_allowed_filetypes
