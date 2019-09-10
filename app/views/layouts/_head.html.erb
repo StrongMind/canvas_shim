@@ -17,6 +17,9 @@
 %>
 
 <%-
+  @ga_tracking_id = SettingsService.get_settings(object: 'school', id: 1)['ga_tracking_id']
+  @property_ga_tracking_id = SettingsService.get_settings(object: 'school', id: 1)['property_ga_tracking_id']
+
   @locale = raw I18n.locale.to_json
   @body_classes ||= []
   @body_classes << "context-#{@context.asset_string}" if @context
@@ -27,13 +30,16 @@
 <head>
   <!-- StrongMind Added -->
   <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=<%= SettingsService.get_settings(object: 'school', id: 1)['ga_tracking_id'] %>"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=<%= @ga_tracking_id %>"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
 
-    gtag('config', <%= SettingsService.get_settings(object: 'school', id: 1)['ga_tracking_id'] %>);
+    gtag('js', new Date());
+    gtag('config', <%= @ga_tracking_id %>);
+    <% if @property_ga_tracking_id %>
+    gtag('config', <%= @property_ga_tracking_id %>);
+    <% end %>
   </script>
 
   <meta charset="utf-8">
