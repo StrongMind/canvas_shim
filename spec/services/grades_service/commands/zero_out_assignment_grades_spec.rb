@@ -43,6 +43,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       score: nil,
       grade: nil,
       grader: nil,
+      excused?: nil,
       cached_due_date: 1.hour.ago
     )
   end
@@ -124,6 +125,12 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
 
       it 'when submission is graded' do
         allow(submission).to receive(:workflow_state).and_return('graded')
+        expect(assignment).to_not receive(:grade_student)
+        subject.call!(log_file: 'logfile')
+      end
+
+      it 'when submission is excused' do
+        allow(submission).to receive(:excused?).and_return(true)
         expect(assignment).to_not receive(:grade_student)
         subject.call!(log_file: 'logfile')
       end
