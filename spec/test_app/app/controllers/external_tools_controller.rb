@@ -1,0 +1,1 @@
+class ExternalToolsController < ApplicationController; end
