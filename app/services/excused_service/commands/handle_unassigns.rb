@@ -55,7 +55,7 @@ module ExcusedService
       end
 
       def skipped_student_ids
-        @all_unassigns.map(&:to_i).concat(existing_assignment_overrides)
+        @all_unassigns.concat(existing_assignment_overrides)
       end
 
       def existing_assignment_overrides
