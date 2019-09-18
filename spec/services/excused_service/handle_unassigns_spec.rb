@@ -94,8 +94,11 @@ describe ExcusedService::Commands::HandleUnassigns do
   end
 
   describe "call" do
-    it "mutates assignment_params when successful" do
+    before do
       allow(SettingsService).to receive(:update_settings).with(settings)
+    end
+
+    it "mutates assignment_params when successful" do
       subject.call
       expect(subject.send(:assignment_params)[:only_visible_to_overrides]).to be(true)
     end
@@ -104,6 +107,24 @@ describe ExcusedService::Commands::HandleUnassigns do
       subject.instance_variable_set(:@assignment, nil)
       expect(subject).to_not receive(:send_unassigns_to_settings)
       subject.call
+    end
+
+    it "saves the thing" do
+      subject.call
+      expectation = [
+        { "due_at"=>nil,
+          "due_at_overridden"=>true,
+          "lock_at"=>nil,
+          "lock_at_overridden"=>false,
+          "unlock_at"=>nil,
+          "unlock_at_overridden"=>false,
+          "rowKey"=>"",
+          "student_ids"=>["#{assigned_student.id}"],
+          "all_day"=>false,
+          "all_day_date"=>nil,
+          "persisted"=>false }
+        ]
+      expect(subject.send(:assignment_params)[:assignment_overrides]).to eq(expectation)
     end
   end
 end
