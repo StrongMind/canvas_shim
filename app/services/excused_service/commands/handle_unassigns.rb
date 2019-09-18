@@ -56,7 +56,8 @@ module ExcusedService
       end
 
       def existing_assignment_overrides
-        assignment.assignment_overrides.pluck(:student_id)
+        assignment.assignment_overrides&.
+        assignment_override_students&.pluck(:user_id)
       end
 
       def skipped_student_ids
