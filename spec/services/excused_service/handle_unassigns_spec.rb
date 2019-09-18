@@ -39,25 +39,36 @@ describe ExcusedService::Commands::HandleUnassigns do
     )
   end
 
+  let!(:settings) do
+    {
+      object: 'assignment',
+      id: assignment.id,
+      setting: 'unassigned_students',
+      value: unassigned_student.id.to_s
+    }
+  end
+
   before do
+    SettingsService.settings_table_prefix = 'integration.example.com'
     allow(SettingsService).to receive(:get_settings).and_return({})
   end
 
-  it "calls" do
-    subject.call
-  end
-
   describe "#send_unassigns_to_settings" do
-    let(:settings) do
-      {
-        object: 'assignment',
-        id: assignment.id,
-        setting: 'unassigned_students',
-        value: unassigned_student.id.to_s
-      }
+    it "sends an id" do
+      expect(SettingsService).to receive(:update_settings).with(settings)
+      subject.send(:send_unassigns_to_settings)
     end
 
-    it "sends an id" do
+    it "sends false with nothing" do
+      settings[:value] = false
+      subject.instance_variable_set(:@new_unassigns, [])
+      expect(SettingsService).to receive(:update_settings).with(settings)
+      subject.send(:send_unassigns_to_settings)
+    end
+
+    it "sends multiple with nothing" do
+      settings[:value] = false
+      subject.instance_variable_set(:@new_unassigns, [])
       expect(SettingsService).to receive(:update_settings).with(settings)
       subject.send(:send_unassigns_to_settings)
     end
@@ -67,6 +78,14 @@ describe ExcusedService::Commands::HandleUnassigns do
     it "gets the assigned user" do
       subject.instance_variable_set(:@all_unassigns, subject.send(:conjoin_unassigned_students))
       expect(subject.send(:students_to_be_overridden)).to eq(["#{assigned_student.id}"])
+    end
+  end
+
+  describe "call" do
+    it "mutates assignment_params when successful" do
+      allow(SettingsService).to receive(:update_settings).with(settings)
+      subject.call
+      expect(subject.send(:assignment_params)[:only_visible_to_overrides]).to be(true)
     end
   end
 end

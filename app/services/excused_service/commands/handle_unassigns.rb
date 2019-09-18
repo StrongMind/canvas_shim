@@ -3,7 +3,7 @@ module ExcusedService
     class HandleUnassigns
       def initialize(assignment:, assignment_params:)
         @assignment = assignment
-        @assingment_params = assignment_params
+        @assignment_params = assignment_params
         @new_unassigns = assignment_params&.fetch(:bulk_unassign, nil)
         @previous_unassigns = SettingsService.get_settings(
                                 object: :assignment,
