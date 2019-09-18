@@ -66,11 +66,23 @@ describe ExcusedService::Commands::HandleUnassigns do
       subject.send(:send_unassigns_to_settings)
     end
 
-    it "sends multiple with nothing" do
-      settings[:value] = false
-      subject.instance_variable_set(:@new_unassigns, [])
-      expect(SettingsService).to receive(:update_settings).with(settings)
-      subject.send(:send_unassigns_to_settings)
+    context "Multiple unassigned" do
+      let!(:unassigned_student_2) { User.create }
+      let!(:unassigned_student_enrollment_2) do
+        Enrollment.create(
+          type: "StudentEnrollment",
+          user: unassigned_student_2,
+          course: course,
+          workflow_state: "active"
+        )
+      end
+
+      it "sends multiple with nothing" do
+        settings[:value] = "#{unassigned_student_2.id},#{unassigned_student.id}"
+        subject.instance_variable_set(:@new_unassigns, [unassigned_student_2.id.to_s, unassigned_student.id.to_s])
+        expect(SettingsService).to receive(:update_settings).with(settings)
+        subject.send(:send_unassigns_to_settings)
+      end
     end
   end
 
