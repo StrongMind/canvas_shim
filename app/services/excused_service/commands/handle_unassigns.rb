@@ -65,7 +65,7 @@ module ExcusedService
       end
 
       def override_originally_assigned_students
-        assignment_params[:assignment_overrides] = {
+        assignment_params[:assignment_overrides] << {
           "due_at"=> assignment_params[:due_at],
           "due_at_overridden"=> true,
           "lock_at"=> nil,
