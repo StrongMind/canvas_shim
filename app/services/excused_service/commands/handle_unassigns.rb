@@ -49,10 +49,10 @@ module ExcusedService
         end
       end
 
-      def filter_out_overrides_and_new_unassigns
+      def students_to_be_overridden
         assignment.course.users.where(
           "id NOT IN (?)", skipped_student_ids
-        )
+        ).pluck(:id)
       end
 
       def existing_assignment_overrides
