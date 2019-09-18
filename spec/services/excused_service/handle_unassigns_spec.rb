@@ -99,5 +99,11 @@ describe ExcusedService::Commands::HandleUnassigns do
       subject.call
       expect(subject.send(:assignment_params)[:only_visible_to_overrides]).to be(true)
     end
+
+    it "does not execure without variables" do
+      subject.instance_variable_set(:@assignment, nil)
+      expect(subject).to_not receive(:send_unassigns_to_settings)
+      subject.call
+    end
   end
 end
