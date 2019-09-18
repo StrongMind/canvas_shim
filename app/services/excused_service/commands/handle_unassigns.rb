@@ -22,9 +22,7 @@ module ExcusedService
       end
 
       def send_unassigns_to_settings
-        @all_unassigns = conjoin_unassigned_students(
-                           assignment_params[:bulk_unassign]
-                         )
+        @all_unassigns = conjoin_unassigned_students
         @all_unassigns = @all_unassigns.blank? ? false : @all_unassigns.join(",")
         SettingsService.update_settings(
           object: 'assignment',
