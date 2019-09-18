@@ -59,8 +59,9 @@ module ExcusedService
       end
 
       def existing_assignment_overrides
-        assignment.assignment_overrides&.
-        assignment_override_students&.pluck(:user_id)
+        assignment.assignment_overrides.flat_map do |ao|
+          ao.assignment_override_students.pluck(:user_id)
+        end
       end
 
       def override_originally_assigned_students
