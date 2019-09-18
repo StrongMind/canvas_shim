@@ -49,9 +49,9 @@ module ExcusedService
       end
 
       def students_to_be_overridden
-        assignment.course.users.where(
-          "id NOT IN (?)", skipped_student_ids
-        ).pluck(:id).map(&:to_s)
+        assignment.course.active_or_invited_students.where(
+          "user_id NOT IN (?)", skipped_student_ids
+        ).pluck(:user_id).map(&:to_s)
       end
 
       def skipped_student_ids
