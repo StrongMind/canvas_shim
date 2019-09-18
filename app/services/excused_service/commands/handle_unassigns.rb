@@ -14,9 +14,8 @@ module ExcusedService
       def call
         return unless all_objects_present?
         send_unassigns_to_settings
-        return unless @all_unassigns
-        # mutate assignment_params[:assignment_overrides]
-        # assignment_params[:only_visible_to_overides] = true
+        override_originally_assigned_students
+        assignment_params[:only_visible_to_overrides] = true
       end
 
       private
@@ -52,7 +51,11 @@ module ExcusedService
       def students_to_be_overridden
         assignment.course.users.where(
           "id NOT IN (?)", skipped_student_ids
-        ).pluck(:id)
+        ).pluck(:id).map(&:to_s)
+      end
+
+      def skipped_student_ids
+        @all_unassigns.map(&:to_i).concat(existing_assignment_overrides)
       end
 
       def existing_assignment_overrides
@@ -60,8 +63,20 @@ module ExcusedService
         assignment_override_students&.pluck(:user_id)
       end
 
-      def skipped_student_ids
-        @all_unassigns.map(&:to_i).concat(existing_assignment_overrides)
+      def override_originally_assigned_students
+        assignment_params[:assignment_overrides] = {
+          "due_at"=> assignment_params[:due_at],
+          "due_at_overridden"=> true,
+          "lock_at"=> nil,
+          "lock_at_overridden"=> false,
+          "unlock_at"=> nil,
+          "unlock_at_overridden"=>false,
+          "rowKey"=>"",
+          "student_ids"=> students_to_be_overridden,
+          "all_day"=> false,
+          "all_day_date"=> nil,
+          "persisted"=> false
+        }
       end
     end
   end
