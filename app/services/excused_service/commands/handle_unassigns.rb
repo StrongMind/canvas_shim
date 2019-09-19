@@ -26,14 +26,17 @@ module ExcusedService
       end
 
       def send_unassigns_to_settings
-        @all_unassigns = conjoin_unassigned_students
-        @sent_unassigns = @all_unassigns.blank? ? false : @all_unassigns.join(",")
+        @sent_unassigns = all_unassigns.blank? ? false : all_unassigns.join(",")
         SettingsService.update_settings(
           object: 'assignment',
           id: assignment.id,
           setting: 'unassigned_students',
           value: @sent_unassigns
         )
+      end
+
+      def all_unassigns
+        @all_unassigns ||= conjoin_unassigned_students
       end
 
       def conjoin_unassigned_students
@@ -55,7 +58,7 @@ module ExcusedService
       end
 
       def skipped_student_ids
-        @all_unassigns.concat(existing_assignment_overrides)
+        all_unassigns.concat(existing_assignment_overrides)
       end
 
       def existing_assignment_overrides
