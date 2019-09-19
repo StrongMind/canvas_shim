@@ -4,7 +4,7 @@ module ExcusedService
       def initialize(assignment:, assignment_params:)
         @assignment = assignment
         @assignment_params = assignment_params
-        @new_unassigns = assignment_params&.fetch(:bulk_unassign, nil)
+        @new_unassigns = map_bulk_unassign_param
         @previous_unassigns = ExcusedService.unassigned_students(assignment)
       end
 
@@ -17,6 +17,12 @@ module ExcusedService
 
       private
       attr_reader :assignment, :assignment_params, :new_unassigns, :previous_unassigns
+
+      def map_bulk_unassign_param
+        full_list = assignment_params&.fetch(:bulk_unassign, nil)
+        return unless full_list
+        full_list.map { |student| student[:id] }
+      end
 
       def all_objects_present?
         assignment && assignment_params && new_unassigns

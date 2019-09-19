@@ -6,7 +6,9 @@ describe ExcusedService::Commands::HandleUnassigns do
       assignment: assignment,
       assignment_params: {
         :assignment_overrides => [],
-        :bulk_unassign => ["#{unassigned_student_enrollment.user_id}"]
+        :bulk_unassign => [
+          { name: "student", id: "#{unassigned_student_enrollment.user_id}" }
+        ]
       }
     )
   end
