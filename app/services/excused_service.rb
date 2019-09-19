@@ -19,4 +19,16 @@ module ExcusedService
     submissions = assignment ? assignment.excused_submissions : []
     student_names_ids(submissions)
   end
+
+  def self.unassigned_students(assignment)
+    return nil unless assignment
+    SettingsService.get_settings(
+      object: :assignment,
+      id: "#{assignment.id}"
+    )['unassigned_students']
+  end
+
+  def self.formatted_unassigned_students(assignment)
+    (unassigned_students(assignment) || "").split(",")
+  end
 end
