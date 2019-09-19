@@ -13,8 +13,8 @@ module ExcusedService
 
       def call
         return unless all_objects_present?
-        send_unassigns_to_settings
         override_originally_assigned_students
+        send_unassigns_to_settings
         assignment_params[:only_visible_to_overrides] = true
       end
 
@@ -62,9 +62,7 @@ module ExcusedService
       end
 
       def existing_assignment_overrides
-        assignment.assignment_overrides.flat_map do |ao|
-          ao.assignment_override_students.pluck(:user_id)
-        end
+        assignment_params[:assignment_overrides].flat_map { |ao| ao[:student_ids] }
       end
 
       def override_originally_assigned_students
