@@ -42,7 +42,7 @@ describe ExcusedService::Commands::HandleUnassigns do
   let!(:settings) do
     {
       object: 'assignment',
-      id: assignment.id,
+      id: assignment.id.to_s,
       setting: 'unassigned_students',
       value: unassigned_student.id.to_s
     }

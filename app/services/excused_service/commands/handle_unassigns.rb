@@ -5,10 +5,7 @@ module ExcusedService
         @assignment = assignment
         @assignment_params = assignment_params
         @new_unassigns = assignment_params&.fetch(:bulk_unassign, nil)
-        @previous_unassigns = SettingsService.get_settings(
-                                object: :assignment,
-                                id: assignment.id
-                              )['unassigned_students']
+        @previous_unassigns = get_previous_unassigns if assignment
       end
 
       def call
@@ -21,6 +18,13 @@ module ExcusedService
       private
       attr_reader :assignment, :assignment_params, :new_unassigns, :previous_unassigns
 
+      def get_previous_unassigns
+        SettingsService.get_settings(
+          object: :assignment,
+          id: "#{assignment.id}"
+        )['unassigned_students']
+      end
+
       def all_objects_present?
         assignment && assignment_params && new_unassigns
       end
@@ -29,7 +33,7 @@ module ExcusedService
         @sent_unassigns = all_unassigns.blank? ? false : all_unassigns.join(",")
         SettingsService.update_settings(
           object: 'assignment',
-          id: assignment.id,
+          id: "#{assignment.id}",
           setting: 'unassigned_students',
           value: @sent_unassigns
         )
