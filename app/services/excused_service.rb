@@ -29,6 +29,11 @@ module ExcusedService
   end
 
   def self.formatted_unassigned_students(assignment)
-    (unassigned_students(assignment) || "").split(",")
+    formatted = (unassigned_students(assignment) || "").split(",")
+    formatted.map do |student_id|
+      student = User.find(student_id)
+      return nil unless student
+      { id: student_id, name: student.name }
+    end.compact
   end
 end
