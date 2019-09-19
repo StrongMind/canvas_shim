@@ -3,6 +3,10 @@ module ExcusedService
     Commands::HandleExclusions.new(assignment: assignment, exclusions: exclusions).call
   end
 
+  def self.bulk_unassign(assignment:, assignment_params:)
+    Commands::HandleUnassigns.new(assignment: assignment, assignment_params: assignment_params).call
+  end
+
   def self.student_names_ids(group)
     group.map {|obj| {id: obj.user_id, name: obj.user.name} }
   end
