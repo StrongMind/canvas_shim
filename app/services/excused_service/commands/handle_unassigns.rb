@@ -44,9 +44,7 @@ module ExcusedService
 
       def conjoin_unassigned_students
         if previous_unassigns
-          previous_unassigns.split(",").select do |unassign|
-            new_unassigns.include?(unassign)
-          end.concat(new_not_previous).uniq
+          persisted_and_new_unassigns
         elsif new_unassigns.any?
           new_unassigns
         else
@@ -54,8 +52,10 @@ module ExcusedService
         end
       end
 
-      def new_not_previous
-        new_unassigns.reject { |un| previous_unassigns.split(",").include?(un) }
+      def persisted_and_new_unassigns
+        persisted = previous_unassigns.split(",").select { |un| new_unassigns.include?(un) }
+        new_not_previous = new_unassigns.reject { |un| previous_unassigns.split(",").include?(un) }
+        persisted.concat(new_not_previous).uniq
       end
 
       def students_to_be_overridden
@@ -71,10 +71,10 @@ module ExcusedService
       def existing_assignment_overrides
         ov_ids = assignment_params[:assignment_overrides].flat_map { |ao| ao[:student_ids] }
         return ov_ids unless previous_unassigns
-        ov_ids.reject { |id| filter_reassigned_student(id) }
+        ov_ids.reject { |id| reassigned_student?(id) }
       end
 
-      def filter_reassigned_student(id)
+      def reassigned_student?(id)
         previous_unassigns.split(",").include?(id) && !new_unassigns.include?(id)
       end
 
