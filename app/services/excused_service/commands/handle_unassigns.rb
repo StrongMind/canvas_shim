@@ -18,12 +18,6 @@ module ExcusedService
       private
       attr_reader :assignment, :assignment_params, :new_unassigns, :previous_unassigns
 
-      def map_bulk_unassign_param
-        full_list = assignment_params&.fetch(:bulk_unassign, nil)
-        return unless full_list
-        full_list.map { |student| student[:id] }
-      end
-
       def all_objects_present?
         assignment && assignment_params && new_unassigns
       end
@@ -78,7 +72,22 @@ module ExcusedService
         previous_unassigns.split(",").include?(id) && !new_unassigns.include?(id)
       end
 
+      def same_time_override
+        assignment_params[:assignment_overrides].find do |override|
+          override["due_at"] == assignment_params[:due_at]
+        end
+      end
+
       def override_originally_assigned_students
+        current_override = same_time_override
+        if current_override
+          current_override["student_ids"].concat(students_to_be_overridden)
+        else
+          add_new_override
+        end
+      end
+
+      def add_new_override
         assignment_params[:assignment_overrides] << {
           "due_at"=> assignment_params[:due_at],
           "due_at_overridden"=> true,
@@ -92,6 +101,12 @@ module ExcusedService
           "all_day_date"=> nil,
           "persisted"=> false
         }
+      end
+
+      def map_bulk_unassign_param
+        full_list = assignment_params&.fetch(:bulk_unassign, nil)
+        return unless full_list
+        full_list.map { |student| student[:id] }
       end
     end
   end
