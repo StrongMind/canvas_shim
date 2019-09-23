@@ -85,6 +85,14 @@ describe ExcusedService::Commands::HandleUnassigns do
         expect(SettingsService).to receive(:update_settings).with(settings)
         subject.send(:send_unassigns_to_settings)
       end
+
+      it "Filters out previous unassigns that are not in current params" do
+        settings[:value] = "-26,#{unassigned_student_2.id},#{unassigned_student.id}"
+        subject.instance_variable_set(:@previous_unassigns, '-25,-26')
+        subject.instance_variable_set(:@new_unassigns, ["-26", unassigned_student_2.id.to_s, unassigned_student.id.to_s])
+        expect(SettingsService).to receive(:update_settings).with(settings)
+        subject.send(:send_unassigns_to_settings)
+      end
     end
   end
 
