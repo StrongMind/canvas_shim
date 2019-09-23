@@ -4,7 +4,7 @@ module ExcusedService
       def initialize(assignment:, assignment_params:)
         @assignment = assignment
         @assignment_params = assignment_params
-        @new_unassigns = map_bulk_unassign_param
+        @new_unassigns = extract_ids_from_bulk_unassign
         @previous_unassigns = ExcusedService.unassigned_students(assignment)
       end
 
@@ -27,6 +27,15 @@ module ExcusedService
         new_unassigns.any? || previous_unassigns
       end
 
+      def send_original_due_date
+        SettingsService.update_settings(
+          object: 'assignment',
+          id: "#{assignment.id}",
+          setting: 'original_due_date',
+          value: assignment.due_at.to_s
+        )
+      end
+
       def send_unassigns_to_settings
         @sent_unassigns = all_unassigns.blank? ? false : all_unassigns.join(",")
         SettingsService.update_settings(
@@ -37,20 +46,29 @@ module ExcusedService
         )
       end
 
-      def send_original_due_date
-        SettingsService.update_settings(
-          object: 'assignment',
-          id: "#{assignment.id}",
-          setting: 'original_due_date',
-          value: assignment.due_at.to_s
-        )
+      def override_originally_assigned_students
+        current_override = same_time_override
+        if current_override
+          current_override["student_ids"].concat(students_to_be_overridden)
+        else
+          add_new_override
+        end
       end
 
-      def original_due_date
-        SettingsService.get_settings(
-          object: :assignment,
-          id: "#{assignment.id}"
-        )['original_due_date']
+      def same_time_override
+        assignment_params[:assignment_overrides].find do |override|
+          override["due_at"]&.to_datetime == original_due_date&.to_datetime
+        end
+      end
+
+      def students_to_be_overridden
+        assignment.course.active_or_invited_students.where(
+          "user_id NOT IN (?)", skipped_student_ids
+        ).pluck(:user_id).map(&:to_s)
+      end
+
+      def skipped_student_ids
+        all_unassigns.concat(existing_assignment_overrides).uniq
       end
 
       def all_unassigns
@@ -73,16 +91,6 @@ module ExcusedService
         persisted.concat(new_not_previous).uniq
       end
 
-      def students_to_be_overridden
-        assignment.course.active_or_invited_students.where(
-          "user_id NOT IN (?)", skipped_student_ids
-        ).pluck(:user_id).map(&:to_s)
-      end
-
-      def skipped_student_ids
-        all_unassigns.concat(existing_assignment_overrides).uniq
-      end
-
       def existing_assignment_overrides
         ov_ids = assignment_params[:assignment_overrides].flat_map { |ao| ao[:student_ids] }
         return ov_ids unless previous_unassigns
@@ -93,19 +101,11 @@ module ExcusedService
         previous_unassigns.split(",").include?(id) && !new_unassigns.include?(id)
       end
 
-      def same_time_override
-        assignment_params[:assignment_overrides].find do |override|
-          override["due_at"]&.to_datetime == original_due_date&.to_datetime
-        end
-      end
-
-      def override_originally_assigned_students
-        current_override = same_time_override
-        if current_override
-          current_override["student_ids"].concat(students_to_be_overridden)
-        else
-          add_new_override
-        end
+      def original_due_date
+        SettingsService.get_settings(
+          object: :assignment,
+          id: "#{assignment.id}"
+        )['original_due_date']
       end
 
       def add_new_override
@@ -124,7 +124,7 @@ module ExcusedService
         }
       end
 
-      def map_bulk_unassign_param
+      def extract_ids_from_bulk_unassign
         full_list = assignment_params&.fetch(:bulk_unassign, nil)
         return unless full_list
         full_list.map { |student| student[:id] }
