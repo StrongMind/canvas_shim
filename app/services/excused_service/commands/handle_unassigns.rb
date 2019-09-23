@@ -10,6 +10,7 @@ module ExcusedService
 
       def call
         return unless all_objects_present?
+        send_original_due_date if assignment.due_at
         send_unassigns_to_settings
         override_originally_assigned_students
         assignment_params[:only_visible_to_overrides] = true
@@ -19,7 +20,11 @@ module ExcusedService
       attr_reader :assignment, :assignment_params, :new_unassigns, :previous_unassigns
 
       def all_objects_present?
-        assignment && assignment_params && new_unassigns
+        assignment && assignment_params && new_unassigns && needs_to_change?
+      end
+
+      def needs_to_change?
+        new_unassigns.any? || previous_unassigns
       end
 
       def send_unassigns_to_settings
@@ -30,6 +35,22 @@ module ExcusedService
           setting: 'unassigned_students',
           value: @sent_unassigns
         )
+      end
+
+      def send_original_due_date
+        SettingsService.update_settings(
+          object: 'assignment',
+          id: "#{assignment.id}",
+          setting: 'original_due_date',
+          value: assignment.due_at.to_s
+        )
+      end
+
+      def original_due_date
+        SettingsService.get_settings(
+          object: :assignment,
+          id: "#{assignment.id}"
+        )['original_due_date']
       end
 
       def all_unassigns
@@ -74,7 +95,7 @@ module ExcusedService
 
       def same_time_override
         assignment_params[:assignment_overrides].find do |override|
-          override["due_at"] == assignment_params[:due_at]
+          override["due_at"]&.to_datetime == original_due_date&.to_datetime
         end
       end
 
@@ -89,7 +110,7 @@ module ExcusedService
 
       def add_new_override
         assignment_params[:assignment_overrides] << {
-          "due_at"=> assignment_params[:due_at],
+          "due_at"=> original_due_date,
           "due_at_overridden"=> true,
           "lock_at"=> nil,
           "lock_at_overridden"=> false,
