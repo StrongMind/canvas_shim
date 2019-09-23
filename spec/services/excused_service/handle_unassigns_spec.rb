@@ -136,5 +136,25 @@ describe ExcusedService::Commands::HandleUnassigns do
         ]
       expect(subject.send(:assignment_params)[:assignment_overrides]).to eq(expectation)
     end
+
+    it "uses an original due date" do
+       original_due_date = Time.now
+       allow(SettingsService).to receive(:get_settings).and_return({"original_due_date" => original_due_date})
+       subject.call
+       expectation = [
+         { "due_at"=>original_due_date,
+           "due_at_overridden"=>true,
+           "lock_at"=>nil,
+           "lock_at_overridden"=>false,
+           "unlock_at"=>nil,
+           "unlock_at_overridden"=>false,
+           "rowKey"=>"",
+           "student_ids"=>["#{assigned_student.id}"],
+           "all_day"=>false,
+           "all_day_date"=>nil,
+           "persisted"=>false }
+        ]
+      expect(subject.send(:assignment_params)[:assignment_overrides]).to eq(expectation)
+    end
   end
 end
