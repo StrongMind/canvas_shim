@@ -10,8 +10,8 @@ module ExcusedService
 
       def call
         return unless all_objects_present?
-        override_originally_assigned_students
         send_unassigns_to_settings
+        override_originally_assigned_students
         assignment_params[:only_visible_to_overrides] = true
       end
 
@@ -46,12 +46,16 @@ module ExcusedService
         if previous_unassigns
           previous_unassigns.split(",").select do |unassign|
             new_unassigns.include?(unassign)
-          end
+          end.concat(new_not_previous).uniq
         elsif new_unassigns.any?
           new_unassigns
         else
           []
         end
+      end
+
+      def new_not_previous
+        new_unassigns.reject { |un| previous_unassigns.split(",").include?(un) }
       end
 
       def students_to_be_overridden
@@ -61,11 +65,17 @@ module ExcusedService
       end
 
       def skipped_student_ids
-        all_unassigns.concat(existing_assignment_overrides)
+        all_unassigns.concat(existing_assignment_overrides).uniq
       end
 
       def existing_assignment_overrides
-        assignment_params[:assignment_overrides].flat_map { |ao| ao[:student_ids] }
+        ov_ids = assignment_params[:assignment_overrides].flat_map { |ao| ao[:student_ids] }
+        return ov_ids unless previous_unassigns
+        ov_ids.reject { |id| filter_reassigned_student(id) }
+      end
+
+      def filter_reassigned_student(id)
+        previous_unassigns.split(",").include?(id) && !new_unassigns.include?(id)
       end
 
       def override_originally_assigned_students
