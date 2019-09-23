@@ -21,7 +21,7 @@ module ExcusedService
   end
 
   def self.unassigned_students(assignment)
-    return nil unless assignment
+    return nil unless assignment&.id
     SettingsService.get_settings(
       object: :assignment,
       id: "#{assignment.id}"
