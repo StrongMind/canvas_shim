@@ -12,6 +12,7 @@ module ExcusedService
         return unless all_objects_present?
         send_original_due_date if assignment.due_at
         send_unassigns_to_settings
+        remove_unassigns_from_overrides
         override_originally_assigned_students
         assignment_params[:only_visible_to_overrides] = true
       end
@@ -44,6 +45,12 @@ module ExcusedService
           setting: 'unassigned_students',
           value: @sent_unassigns
         )
+      end
+
+      def remove_unassigns_from_overrides
+        assignment_params[:assignment_overrides].each do |override|
+          override["student_ids"].delete_if { |st_id| new_unassigns.include?(st_id) }
+        end
       end
 
       def override_originally_assigned_students
