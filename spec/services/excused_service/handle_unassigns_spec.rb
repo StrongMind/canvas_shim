@@ -119,7 +119,7 @@ describe ExcusedService::Commands::HandleUnassigns do
       subject.call
     end
 
-    it "saves the thing" do
+    it "saves the assignment_override params with no due date" do
       subject.call
       expectation = [
         { "due_at"=>nil,
