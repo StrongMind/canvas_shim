@@ -103,6 +103,17 @@ describe ExcusedService::Commands::HandleUnassigns do
     end
   end
 
+  describe "#remove_unassigns_from_overrides" do
+    it "removes the assignment override if the student is bulk unassigned" do
+      subject.send(:assignment_params)[:assignment_overrides] = [
+        { "student_ids" => ["#{unassigned_student_enrollment.user_id}"] }
+      ]
+
+      subject.send(:remove_unassigns_from_overrides)
+      expect(subject.send(:assignment_params)[:assignment_overrides].first["student_ids"].size).to eq 0
+    end
+  end
+
   describe "call" do
     before do
       allow(SettingsService).to receive(:update_settings).with(settings)
