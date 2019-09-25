@@ -13,6 +13,7 @@ DiscussionTopicsController.class_eval do
   def strongmind_update
     get_discussion_assignment
     ExcusedService.bulk_excuse(assignment: @assignment, exclusions: params['excluded_students'])
+    ExcusedService.bulk_unassign(assignment: @assignment, assignment_params: params[:assignment])
     instructure_update
   end
 
