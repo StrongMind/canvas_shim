@@ -13,6 +13,7 @@ module ExcusedService
         send_original_due_date if assignment.due_at
         send_unassigns_to_settings
         remove_unassigns_from_overrides
+        remove_scores_from_unassigns
         override_originally_assigned_students
         assignment_params[:only_visible_to_overrides] = true
       end
@@ -50,6 +51,17 @@ module ExcusedService
       def remove_unassigns_from_overrides
         assignment_params[:assignment_overrides].each do |override|
           override["student_ids"].delete_if { |st_id| new_unassigns.include?(st_id) }
+        end
+      end
+
+      def remove_scores_from_unassigns
+        new_unassigns.each do |student_id|
+          submission = Submission.find_by(
+            assignment_id: assignment.id,
+            user_id: student_id
+          )
+
+          submission.update(score: nil) if submission
         end
       end
 
