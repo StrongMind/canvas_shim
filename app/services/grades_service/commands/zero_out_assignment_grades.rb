@@ -91,14 +91,8 @@ module GradesService
         !@submission.excused?
       end
 
-      def not_unassigned
-        !ExcusedService.formatted_unassigned_students(@assignment).find do |un_student|
-          un_student[:id].to_i == @student.id
-        end
-      end
-
       def should_grade?
-        not_excused? && not_unassigned && unsubmitted? && unscored? && late? && published? && enrolled?
+        not_excused? && unsubmitted? && unscored? && late? && published? && enrolled?
       end
     end
   end
