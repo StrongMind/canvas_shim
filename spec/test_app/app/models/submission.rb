@@ -24,6 +24,10 @@ class Submission < ActiveRecord::Base
     (assignment.due_at || 1.day.from_now) < Time.now && !submitted_at
   end
 
+  def excused?
+    self.excused
+  end
+
   def late?
     return unless assignment && submitted_at
     true

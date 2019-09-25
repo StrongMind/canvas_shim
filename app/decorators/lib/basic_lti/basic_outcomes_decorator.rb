@@ -26,6 +26,7 @@ BasicLTI::BasicOutcomes::LtiResponse.class_eval do
 
   def update_submission_with_best_score
     return unless @submission
+    return if @submission.excused?
 
     best_score = @submission.score
     best_grade = @submission.grade
