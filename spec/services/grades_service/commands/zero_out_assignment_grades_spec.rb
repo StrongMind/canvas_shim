@@ -11,6 +11,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
   let(:assignment) do
     double(
       "assignment",
+      id: 1,
       grade_student: nil,
       published?: true,
       due_at: nil,
