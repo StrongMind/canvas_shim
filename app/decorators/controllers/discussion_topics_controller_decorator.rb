@@ -12,7 +12,9 @@ DiscussionTopicsController.class_eval do
 
   def strongmind_update
     get_discussion_assignment
+    merge_unassign_params
     ExcusedService.bulk_excuse(assignment: @assignment, exclusions: params['excluded_students'])
+    ExcusedService.bulk_unassign(assignment: @assignment, assignment_params: params[:assignment])
     instructure_update
   end
 
@@ -33,5 +35,9 @@ DiscussionTopicsController.class_eval do
 
   def get_discussion_assignment
     @assignment = @context.discussion_topics.find(params[:id])&.assignment
+  end
+
+  def merge_unassign_params
+    params[:assignment].merge!(bulk_unassign: params[:bulk_unassign]) if params[:assignment]
   end
 end

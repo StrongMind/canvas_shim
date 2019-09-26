@@ -24,4 +24,12 @@ AssignmentsController.class_eval do
 
   alias_method :instructure_show, :show
   alias_method :show, :strongmind_show
+
+  def strongmind_new
+    js_env(new_assignment: true)
+    instructure_new
+  end
+
+  alias_method :instructure_new, :new
+  alias_method :new, :strongmind_new
 end

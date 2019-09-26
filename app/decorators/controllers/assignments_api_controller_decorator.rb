@@ -2,6 +2,7 @@ AssignmentsApiController.class_eval do
   def strongmind_update
     @assignment = @context.active_assignments.api_id(params[:id])
     bulk_excuse
+    bulk_unassign
     instructure_update
   end
 
@@ -24,5 +25,9 @@ AssignmentsApiController.class_eval do
 
   def bulk_excuse
     ExcusedService.bulk_excuse(assignment: @assignment, exclusions: exclusion_params)
+  end
+
+  def bulk_unassign
+    ExcusedService.bulk_unassign(assignment: @assignment, assignment_params: params[:assignment])
   end
 end
