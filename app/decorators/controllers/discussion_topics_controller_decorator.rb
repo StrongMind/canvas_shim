@@ -10,14 +10,6 @@ DiscussionTopicsController.class_eval do
   alias_method :instructure_index, :index
   alias_method :index, :strongmind_index
 
-  def strongmind_edit
-    js_env(new_assignment: !get_discussion_assignment)
-    instructure_edit
-  end
-
-  alias_method :instructure_edit, :edit
-  alias_method :edit, :strongmind_edit
-
   def strongmind_update
     get_discussion_assignment
     merge_unassign_params
