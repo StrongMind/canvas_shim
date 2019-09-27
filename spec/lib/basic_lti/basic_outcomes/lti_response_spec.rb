@@ -3,12 +3,12 @@ describe BasicLTI::BasicOutcomes::LtiResponse do
   describe '#create_homework_submission' do
     context 'featured' do
       let(:submission) do
-        Submission.create(versions: [version, version2, version3], score: 10, grade: 10)
+        Submission.create(excused: false, versions: [version, version2, version3], score: 10, grade: 10)
       end
 
-      let(:version) { SubmissionVersion.create(yaml: {score: 100, grade: 100}.to_yaml) }
-      let(:version2) { SubmissionVersion.create(yaml: {score: 90, grade: 90}.to_yaml) }
-      let(:version3) { SubmissionVersion.create(yaml: {score: 80, grade: 80}.to_yaml) }
+      let(:version) { SubmissionVersion.create(yaml: {score: 100, grade: 100, excused: false}.to_yaml) }
+      let(:version2) { SubmissionVersion.create(yaml: {score: 90, grade: 90, excused: false}.to_yaml) }
+      let(:version3) { SubmissionVersion.create(yaml: {score: 80, grade: 80, excused: false}.to_yaml) }
 
       before do
         allow(PipelineService).to receive(:publish)
@@ -48,5 +48,19 @@ describe BasicLTI::BasicOutcomes::LtiResponse do
         subject.create_homework_submission(1,2,3,4,5,6)
       end
     end
+
+    context 'excused submission' do
+      before do
+        allow(SettingsService).to receive(:get_settings).and_return('lti_keep_highest_score' => true)
+      end
+      let(:submission) do
+        Submission.create(excused: true)
+      end
+      it 'wont update' do
+        expect(submission).to_not receive(:update)
+        subject.create_homework_submission(1,2,3,4,5,6)
+      end
+    end
+
   end
 end
