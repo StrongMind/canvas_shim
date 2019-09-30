@@ -35,7 +35,7 @@ module PipelineService
         @request = OpenStruct.new
         @object = object
         @enrollment = ::Enrollment.find(object.id)
-        @admin = account_admin
+        @current_user = account_admin
       end
 
       def call
@@ -52,7 +52,7 @@ module PipelineService
       private
 
       def get_json
-        @json = enrollment_json(@enrollment, @admin, {})
+        @json = enrollment_json(@enrollment, @current_user, {})
       end
 
       def get_grades
