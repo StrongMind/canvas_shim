@@ -19,9 +19,7 @@ module UnitsService
     private
 
     def weighted_average(submissions)
-      category_weights = submissions.map do |submission|
-        submission.assignment.assignment_group
-      end.map { |ag| [ag.name, ag.group_weight] }.to_h
+      category_weights = submissions.map do |submission| submission.assignment.assignment_group end.map { |ag| [ag.name, ag.group_weight] }.to_h
 
       result = {}
       submissions.group_by do |submission|
@@ -29,11 +27,19 @@ module UnitsService
       end.each do |group, submissions|
         result[group.name] = [] unless result[group]
         average = submissions.map(&:score).compact.sum.to_f / submissions.count
-        weight  = category_weights[group.name] / category_weights.values.sum
-        result[group.name] << average * weight
+        weight  = category_weights[group.name] / zero_guard_weights(category_weights.values.sum)
+        result[group.name] << zero_guard_average_weight(average, weight)
       end
 
       result.sum { |r, weighted| weighted.sum }
+    end
+
+    def zero_guard_weights(n)
+      n.zero? ? 1 : n
+    end
+
+    def zero_guard_average_weight(average, weight)
+      average * weight == 0 ? average : average * weight
     end
   end
 end
