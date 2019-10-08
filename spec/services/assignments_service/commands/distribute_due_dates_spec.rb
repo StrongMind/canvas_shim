@@ -210,5 +210,19 @@ describe AssignmentsService::Commands::DistributeDueDates do
         subject.call
       end
     end
+
+    context 'The course has multiple imports' do
+      let(:content_migrations) do
+        double(
+          :content_migrations,
+          where: [1, 2]
+        )
+      end
+
+      it 'wont distribute the due dates' do
+        expect(assignment).to_not receive(:update)
+        subject.call
+      end
+    end
   end
 end
