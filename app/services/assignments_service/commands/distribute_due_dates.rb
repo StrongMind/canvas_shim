@@ -8,6 +8,7 @@ module AssignmentsService
       end
 
       def call
+        return if multiple_imports?
         course_assignments = assignments
         clear_due_dates(course_assignments)
         return unless SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on'
@@ -49,6 +50,10 @@ module AssignmentsService
         course_assignments.each do |asst|
           asst.update(due_at: nil)
         end
+      end
+
+      def multiple_imports?
+        @course.content_migrations.where(workflow_state: "imported").count > 1
       end
     end
   end
