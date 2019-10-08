@@ -25,6 +25,8 @@ module AssignmentsService
 
           update_assignments(course_assignments.slice!(offset..count - 1), date)
         end
+
+        claim_import
       end
 
       private
@@ -52,8 +54,17 @@ module AssignmentsService
         end
       end
 
+      def claim_import
+        SettingsService.update_settings(
+          object: 'course',
+          id: @course.id,
+          setting: 'imported_content',
+          value: true
+        )
+      end
+
       def multiple_imports?
-        @course.content_migrations.where(workflow_state: "imported").count > 1
+        SettingsService.get_settings(object: :course, id: @course.id)['imported_content']
       end
     end
   end

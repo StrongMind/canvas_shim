@@ -1,5 +1,4 @@
 describe AssignmentsService::Commands::DistributeDueDates do
-
   let(:account_instance) {
     double(
       'default_account',
@@ -14,18 +13,13 @@ describe AssignmentsService::Commands::DistributeDueDates do
   }
 
   before do
+    allow(SettingsService).to receive(:update_settings).and_return({})
     allow(SettingsService).to receive(:get_settings).and_return('auto_due_dates' => 'on')
     allow(Account).to receive(:default).and_return(account_instance)
   end
 
   let(:start_at) { Date.parse("Mon Nov 26 2018") }
   let(:end_at)   { start_at + 7.days }
-  let(:content_migrations) do
-    double(
-      :content_migrations,
-      where: [1]
-    )
-  end
 
   let(:course) do
     double(
@@ -34,7 +28,6 @@ describe AssignmentsService::Commands::DistributeDueDates do
       end_at: end_at,
       id: 1,
       time_zone: Time.zone,
-      content_migrations: content_migrations
     )
   end
 
@@ -97,8 +90,7 @@ describe AssignmentsService::Commands::DistributeDueDates do
           :course,
           start_at: nil,
           end_at: start_at + 5.days,
-          id: 1,
-          content_migrations: content_migrations
+          id: 1
         )
       end
 
@@ -114,8 +106,7 @@ describe AssignmentsService::Commands::DistributeDueDates do
           :course,
           start_at: start_at,
           end_at: nil,
-          id: 1,
-          content_migrations: content_migrations
+          id: 1
         )
       end
 
@@ -161,15 +152,15 @@ describe AssignmentsService::Commands::DistributeDueDates do
           start_at: start_at,
           end_at: end_at + 1.year,
           id: 1,
-          time_zone: Time.zone,
-          content_migrations: content_migrations
+          time_zone: Time.zone
         )
       end
 
       it 'assigns the last assignment on the last day' do
         expect(assignment10).to(receive(:update)).with(due_at: nil)
         expect(assignment10).to(receive(:update)).with(due_at: Time.parse('2019-11-29 23:59:59.999999999 +0000'))
-        dates = subject.call
+        subject.call
+        dates = subject.instance_variable_get(:@scheduler).course_dates
         expect(dates.values.last).to eq 1
       end
     end
@@ -181,8 +172,7 @@ describe AssignmentsService::Commands::DistributeDueDates do
             start_at: start_at,
             end_at: nil,
             id: 1,
-            time_zone: Time.zone,
-            content_migrations: content_migrations
+            time_zone: Time.zone
         )
       end
 
@@ -212,11 +202,8 @@ describe AssignmentsService::Commands::DistributeDueDates do
     end
 
     context 'The course has multiple imports' do
-      let(:content_migrations) do
-        double(
-          :content_migrations,
-          where: [1, 2]
-        )
+      before do
+        allow(SettingsService).to receive(:get_settings).and_return('auto_due_dates' => 'on', 'imported_content' => true)
       end
 
       it 'wont distribute the due dates' do
