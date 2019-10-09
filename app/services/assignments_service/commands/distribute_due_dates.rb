@@ -8,6 +8,7 @@ module AssignmentsService
       end
 
       def call
+        return if multiple_imports?
         course_assignments = assignments
         clear_due_dates(course_assignments)
         return unless SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on'
@@ -24,6 +25,8 @@ module AssignmentsService
 
           update_assignments(course_assignments.slice!(offset..count - 1), date)
         end
+
+        claim_import
       end
 
       private
@@ -49,6 +52,19 @@ module AssignmentsService
         course_assignments.each do |asst|
           asst.update(due_at: nil)
         end
+      end
+
+      def claim_import
+        SettingsService.update_settings(
+          object: 'course',
+          id: @course.id,
+          setting: 'imported_content',
+          value: true
+        )
+      end
+
+      def multiple_imports?
+        SettingsService.get_settings(object: :course, id: @course.id)['imported_content']
       end
     end
   end
