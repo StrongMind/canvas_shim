@@ -55,12 +55,14 @@ module AssignmentsService
       end
 
       def claim_import
-        SettingsService.update_settings(
-          object: 'course',
-          id: @course.id,
-          setting: 'imported_content',
-          value: true
-        )
+        if @course.content_migrations.where(workflow_state: "imported").one?
+          SettingsService.update_settings(
+            object: 'course',
+            id: @course.id,
+            setting: 'imported_content',
+            value: true
+          )
+        end
       end
 
       def multiple_imports?
