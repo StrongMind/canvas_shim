@@ -21,6 +21,13 @@ describe AssignmentsService::Commands::DistributeDueDates do
   let(:start_at) { Date.parse("Mon Nov 26 2018") }
   let(:end_at)   { start_at + 7.days }
 
+  let(:content_migrations) do
+    double(
+      :content_migrations,
+      where: [1, 2]
+    )
+  end
+
   let(:course) do
     double(
       :course,
@@ -28,6 +35,7 @@ describe AssignmentsService::Commands::DistributeDueDates do
       end_at: end_at,
       id: 1,
       time_zone: Time.zone,
+      content_migrations: content_migrations
     )
   end
 
@@ -90,7 +98,8 @@ describe AssignmentsService::Commands::DistributeDueDates do
           :course,
           start_at: nil,
           end_at: start_at + 5.days,
-          id: 1
+          id: 1,
+          content_migrations: content_migrations
         )
       end
 
@@ -106,7 +115,8 @@ describe AssignmentsService::Commands::DistributeDueDates do
           :course,
           start_at: start_at,
           end_at: nil,
-          id: 1
+          id: 1,
+          content_migrations: content_migrations
         )
       end
 
@@ -152,7 +162,8 @@ describe AssignmentsService::Commands::DistributeDueDates do
           start_at: start_at,
           end_at: end_at + 1.year,
           id: 1,
-          time_zone: Time.zone
+          time_zone: Time.zone,
+          content_migrations: content_migrations
         )
       end
 
