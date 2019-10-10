@@ -11,4 +11,13 @@ module AssignmentsService
       Delayed::Job.enqueue(command)
     end
   end
+
+  def self.claim_import(course:)
+    SettingsService.update_settings(
+      object: 'course',
+      id: course&.id,
+      setting: 'imported_content',
+      value: true
+    )
+  end
 end

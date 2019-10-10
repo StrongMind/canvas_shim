@@ -25,8 +25,6 @@ module AssignmentsService
 
           update_assignments(course_assignments.slice!(offset..count - 1), date)
         end
-
-        claim_import
       end
 
       private
@@ -52,15 +50,6 @@ module AssignmentsService
         course_assignments.each do |asst|
           asst.update(due_at: nil)
         end
-      end
-
-      def claim_import
-        SettingsService.update_settings(
-          object: 'course',
-          id: @course.id,
-          setting: 'imported_content',
-          value: true
-        )
       end
 
       def multiple_imports?
