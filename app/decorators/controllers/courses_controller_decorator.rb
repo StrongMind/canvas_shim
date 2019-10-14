@@ -67,10 +67,11 @@ CoursesController.class_eval do
   end
 
   def strongmind_show
-    instructure_show
+    get_context
     score_threshold = RequirementsService.get_course_assignment_passing_threshold?(@context)
     js_env(score_threshold: score_threshold.to_s) if score_threshold
     js_env(module_editing_disabled: RequirementsService.disable_module_editing_on?)
+    instructure_show
   end
 
   alias_method :instructure_show, :show
@@ -194,42 +195,42 @@ CoursesController.class_eval do
     @accesses_per_hour = @context.get_accesses_by_hour
   end
 
-  def set_js_course_wizard_data
-    # Course Wizard JS Info
-    js_env({:COURSE_WIZARD => {
-      :just_saved =>  @context_just_saved,
-      :checklist_states => {
-        :import_step => !@context.attachments.active.exists?,
-        :assignment_step => !@context.assignments.active.exists?,
-        :add_student_step => !@context.students.exists?,
-        :navigation_step => @context.tab_configuration.empty?,
-        :home_page_step => true, # The current wizard just always marks this as complete.
-        :calendar_event_step => !@context.calendar_events.active.exists?,
-        :add_ta_step => !@context.tas.exists?,
-        :publish_step => @context.workflow_state === "available"
-      },
-      :urls => {
-        :content_import => context_url(@context, :context_content_migrations_url),
-        :add_assignments => context_url(@context, :context_assignments_url, :wizard => 1),
-        :add_students => course_users_path(course_id: @context),
-        :add_files => context_url(@context, :context_files_url, :wizard => 1),
-        :select_navigation => context_url(@context, :context_details_url),
-        :course_calendar => calendar_path(course_id: @context),
-        :add_tas => course_users_path(:course_id => @context),
-        :publish_course => course_path(@context)
-      },
-      :permissions => {
-        # Sending the permissions just so maybe later we can extract this easier.
-        :can_manage_content => can_do(@context, @current_user, :manage_content),
-        :can_manage_students => can_do(@context, @current_user, :manage_students),
-        :can_manage_assignments => can_do(@context, @current_user, :manage_assignments),
-        :can_manage_files => can_do(@context, @current_user, :manage_files),
-        :can_update => can_do(@context, @current_user, :update),
-        :can_manage_calendar => can_do(@context, @current_user, :manage_calendar),
-        :can_manage_admin_users => can_do(@context, @current_user, :manage_admin_users),
-        :can_change_course_state => can_do(@context, @current_user, :change_course_state)
-      }
-    }
-    })
-  end
+  # def set_js_course_wizard_data
+  #   # Course Wizard JS Info
+  #   js_env({:COURSE_WIZARD => {
+  #     :just_saved =>  @context_just_saved,
+  #     :checklist_states => {
+  #       :import_step => !@context.attachments.active.exists?,
+  #       :assignment_step => !@context.assignments.active.exists?,
+  #       :add_student_step => !@context.students.exists?,
+  #       :navigation_step => @context.tab_configuration.empty?,
+  #       :home_page_step => true, # The current wizard just always marks this as complete.
+  #       :calendar_event_step => !@context.calendar_events.active.exists?,
+  #       :add_ta_step => !@context.tas.exists?,
+  #       :publish_step => @context.workflow_state === "available"
+  #     },
+  #     :urls => {
+  #       :content_import => context_url(@context, :context_content_migrations_url),
+  #       :add_assignments => context_url(@context, :context_assignments_url, :wizard => 1),
+  #       :add_students => course_users_path(course_id: @context),
+  #       :add_files => context_url(@context, :context_files_url, :wizard => 1),
+  #       :select_navigation => context_url(@context, :context_details_url),
+  #       :course_calendar => calendar_path(course_id: @context),
+  #       :add_tas => course_users_path(:course_id => @context),
+  #       :publish_course => course_path(@context)
+  #     },
+  #     :permissions => {
+  #       # Sending the permissions just so maybe later we can extract this easier.
+  #       :can_manage_content => can_do(@context, @current_user, :manage_content),
+  #       :can_manage_students => can_do(@context, @current_user, :manage_students),
+  #       :can_manage_assignments => can_do(@context, @current_user, :manage_assignments),
+  #       :can_manage_files => can_do(@context, @current_user, :manage_files),
+  #       :can_update => can_do(@context, @current_user, :update),
+  #       :can_manage_calendar => can_do(@context, @current_user, :manage_calendar),
+  #       :can_manage_admin_users => can_do(@context, @current_user, :manage_admin_users),
+  #       :can_change_course_state => can_do(@context, @current_user, :change_course_state)
+  #     }
+  #   }
+  #   })
+  # end
 end

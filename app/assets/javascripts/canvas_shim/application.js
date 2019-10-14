@@ -11,6 +11,7 @@
 // about supported directives.
 //
 //= require jquery/dist/jquery
+//= require datatables.net/js/jquery.dataTables.min.js
 //
 // Add some Shim asset require directives here
 // i.e.
