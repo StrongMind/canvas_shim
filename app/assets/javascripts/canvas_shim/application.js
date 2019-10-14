@@ -11,6 +11,9 @@
 // about supported directives.
 //
 //= require jquery/dist/jquery
+// BEGIN ANSIBLE MANAGED BLOCK 
+//= require datatables.net/js/jquery.dataTables.min.js
+// END ANSIBLE MANAGED BLOCK 
 //
 // Add some Shim asset require directives here
 // i.e.

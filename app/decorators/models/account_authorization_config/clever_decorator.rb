@@ -1,4 +1,4 @@
-AccountAuthorizationConfig::Clever.class_eval do
+AuthenticationProvider::Clever.class_eval do
   class << self
     alias_method :login_attributes_alias, :login_attributes
   end

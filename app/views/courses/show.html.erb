@@ -15,11 +15,9 @@
 # You should have received a copy of the GNU Affero General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 %>
-
 <% content_for :strongmind_assets do %>
     <%= stylesheet_link_tag "canvas_shim/application", media: "all" %>
 <% end %>
-
 <% content_for :page_title, @context.name %>
 <% css_bundle :course_show %>
 <% @active_tab ||= "home" %>
@@ -31,7 +29,6 @@
     <%= auto_discovery_link_tag(:atom, feeds_course_format_path(@context.feed_code, :atom), {:title => t("Course Atom Feed")}) %>
   <% end %>
 <% end %>
-
 <% content_for :right_side do %>
   <div id="course_show_secondary">
     <% if @current_requirement %>
@@ -41,12 +38,10 @@
             <i class="icon-bookmark"></i>
             <span id="left-off">Pick up where you left off</span>
           </h2>
-
           <div class="resume-text">
             <b><%= @context.name %></b>
           </div>
           <div class="resume-text"><%= @current_requirement.title %></div>
-
           <%= link_to(course_context_modules_item_redirect_path(@context, @current_requirement), class: 'btn button-sidebar-wide') do %>
             <i class="icon-play"></i>
             <span><%= t('Resume Course') %></span>
@@ -54,7 +49,6 @@
         </div>
       </div>
     <% end %>
-
     <% @can_manage = can_do(@context, @current_user, :manage) %>
     <% @can_create_announcements = @context.announcements.temp_record.grants_right?(@current_user, session, :create) %>
     <% if can_do(@context, @current_user, :change_course_state) && (@context.unpublished? || @context.unpublishable?) %>
@@ -85,7 +79,6 @@
         </div>
       </div>
     <% end %>
-
     <% if @can_manage || @can_create_announcements || @course_home_view != 'feed' || @course_home_sub_navigation_tools.present? %>
       <div class="course-options">
         <%= external_tools_menu_items(@course_home_sub_navigation_tools, {link_class: "btn button-sidebar-wide course-home-sub-navigation-lti", settings_key: :course_home_sub_navigation}) %>
@@ -93,34 +86,70 @@
           <div id="choose_home_page"></div>
           <div id="choose_home_page_not_modules"></div>
         <% end %>
-
         <% if @course_home_view != 'feed' %>
           <a class="btn button-sidebar-wide" href="<%= context_url(@context, :context_url, :view => 'feed') %>">
             <i class="icon-stats"></i>
             <%= t('links.view_course_stream', %{View Course Stream}) %>
           </a>
         <% end %>
-
         <% if @can_manage && !@domain_root_account.try(:feature_enabled?, :new_user_tutorial) %>
-          <% set_js_course_wizard_data %>
+          <script>
+            Object.assign(
+              ENV,
+              <%= raw StringifyIds.recursively_stringify_ids({
+                COURSE_WIZARD: {
+                  just_saved: @context_just_saved,
+                  checklist_states: {
+                    import_step: !@context.attachments.active.exists?,
+                    assignment_step: !@context.assignments.active.exists?,
+                    add_student_step: !@context.students.exists?,
+                    navigation_step: @context.tab_configuration.empty?,
+                    home_page_step: true,
+                    # The current wizard just always marks this as complete.
+                    calendar_event_step: !@context.calendar_events.active.exists?,
+                    add_ta_step: !@context.tas.exists?,
+                    publish_step: @context.workflow_state === 'available'
+                  },
+                  urls: {
+                    content_import: context_url(@context, :context_content_migrations_url),
+                    add_assignments: context_url(@context, :context_assignments_url, wizard: 1),
+                    add_students: course_users_path(course_id: @context),
+                    add_files: context_url(@context, :context_files_url, wizard: 1),
+                    select_navigation: context_url(@context, :context_details_url),
+                    course_calendar: calendar_path(course_id: @context),
+                    add_tas: course_users_path(course_id: @context),
+                    publish_course: course_path(@context)
+                  },
+                  permissions: {
+                    # Sending the permissions just so maybe later we can extract this easier.
+                    can_manage_content: can_do(@context, @current_user, :manage_content),
+                    can_manage_students: can_do(@context, @current_user, :manage_students),
+                    can_manage_assignments: can_do(@context, @current_user, :manage_assignments),
+                    can_manage_files: can_do(@context, @current_user, :manage_files),
+                    can_update: can_do(@context, @current_user, :update),
+                    can_manage_calendar: can_do(@context, @current_user, :manage_calendar),
+                    can_manage_admin_users: can_do(@context, @current_user, :manage_admin_users),
+                    can_change_course_state: can_do(@context, @current_user, :change_course_state)
+                  }
+                }
+              }).to_json %>
+            )
+          </script>
           <% js_bundle :course_wizard %>
           <% css_bundle :course_wizard %>
           <a href="#" class="btn button-sidebar-wide wizard_popup_link  <%= 'auto_open' if @context.created? || @context.claimed? %>">
             <i class="icon-question"></i> <%= t('links.course_setup', %{Course Setup Checklist}) %>
           </a>
         <% end %>
-
         <% if @can_create_announcements %>
           <a class="btn button-sidebar-wide" href="<%= context_url(@context, :new_context_discussion_topic_url, :is_announcement => true) %>"><i class="icon-announcement"></i> <%= t('links.new_announcement', %{New Announcement}) %>
           </a>
         <% end %>
-
         <% course_custom_links.each do |link| %>
           <a class="btn button-sidebar-wide" href="<%= link[:url] %>"><i class="<%= link[:icon_class] %>" role="presentation"></i> <%= link[:text] %></a>
         <% end %>
       </div>
     <% end %>
-
     <% if @context.available? && @context.self_enrollment_enabled? && @context.open_enrollment && (!@context_enrollment || !@context_enrollment.active?) %>
       <a href="<%= enroll_url(@context.self_enrollment_code) %>" class="btn button-sidebar-wide self_enrollment_link" data-open-as-dialog>
         <i class="icon-user-add"></i>
@@ -165,7 +194,6 @@
     <%= render :partial => "shared/event_list", :object => @recent_feedback, :locals => {:title => t('titles.recent_feedback', "Recent Feedback"), :contexts_to_link_to => @context, :is_recent_feedback => true} %>
   <% end %>
 <% end %>
-
 <%
   css_bundle :dashboard
   case @course_home_view
@@ -184,12 +212,10 @@
     js_bundle :dashboard
   end
 %>
-
 <% js_bundle 'legacy/courses_show' %>
 <% if @pending_enrollment %>
   <%= render :partial => 'shared/dashboard_invitation', :object => @pending_enrollment %>
 <% end %>
-
 <% if @context.show_announcements_on_home_page? %>
   <div id="announcements_on_home_page"></div>
   <% js_bundle :announcements_on_home_page %>
@@ -216,12 +242,10 @@
 </div>
 <% if @context.public_license? %>
   <div class="public-license" style="margin-top: 20px;">
-
     <a class="public-license-image-link" href="<%= @context.license_url %>"><%= image_tag "cc/#{@context.license}.png", :alt => @context.readable_license   %></a>
     <span class="public-license-text"><%= t 'license_notice', %{This course content is offered under a %{license_type} license.  Content in this course can be considered under this license unless otherwise noted.}, :license_type => content_tag('b', link_to(@context.readable_license, @context.license_url)) %></span>
     <div class="clear"></div>
   </div>
 <% end %>
 <div id="wizard_box"></div>
-
 <% js_bundle :course %>

@@ -6,6 +6,7 @@
   "author": "Chris Irish <supairish@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "jquery": "^3.3.1"
+    "jquery": "^3.3.1",
+    "datatables.net-bs4": "3.2.2"
   }
 }
