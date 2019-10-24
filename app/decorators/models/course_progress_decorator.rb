@@ -82,6 +82,12 @@ CourseProgress.class_eval do
     end
   end
 
+  def get_submissions_from_content_tag(ct)
+    ct.content.try(:submissions).try(:where, { user: course_progress_user }) ||
+    ct.content.try(:assignment).try(:submissions).try(:where, { user: course_progress_user }) ||
+    quiz_submissions(ct)
+  end
+
   def quiz_submissions(item)
     if item.content_type == "Quizzes::Quiz"
       item.content.quiz_submissions.where(user: course_progress_user).map { |qs| qs.submission }
