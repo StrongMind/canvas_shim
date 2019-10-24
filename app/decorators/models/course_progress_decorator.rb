@@ -26,11 +26,11 @@ CourseProgress.class_eval do
   end
 
   def requirement_count
-    filter_out_excused_requirements(requirements).size
+    account_for_excused_submissions(requirements.size)
   end
 
   def requirement_completed_count
-    filter_out_excused_requirements(requirements_completed).size
+    account_for_excused_submissions(requirements_completed.size)
   end
 
   def to_json
@@ -50,6 +50,11 @@ CourseProgress.class_eval do
 
   private
 
+  def account_for_excused_submissions(count)
+    count = count - excused_submission_count
+    count < 1 ? 0 : count
+  end
+
   def find_user_id
     observer_enrollment ? observer_enrollment.associated_user_id : @user.id
   end
@@ -67,24 +72,11 @@ CourseProgress.class_eval do
     (course.module_based? && observer_enrollment && course.user_is_student?(course_progress_user, include_all: true))
   end
 
-  def filter_out_excused_requirements(reqs)
-    reqs.select do |req|
-      ct = ContentTag.find(req[:id])
-      return false unless ct
-      subs = ct.content.try(:submissions) || ct.content.try(:assignment).try(:submissions) || quiz_submissions(ct)
-      if subs.is_a?(Array)
-        req if subs.find { |sub| sub.user_id == course_progress_user.id && !sub.excused? }
-      elsif subs
-        req if subs.find_by("user_id = ? AND excused is not true", course_progress_user.id)
-      else
-        req
-      end
-    end
+  def excused_submissions
+    course.submissions.where(user: course_progress_user, excused: true)
   end
 
-  def quiz_submissions(item)
-    if item.content_type == "Quizzes::Quiz"
-      item.content.quiz_submissions.map { |qs| qs.submission }
-    end
+  def excused_submission_count
+    excused_submissions.count
   end
 end
