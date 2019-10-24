@@ -71,7 +71,7 @@ CourseProgress.class_eval do
     reqs.select do |req|
       ct = ContentTag.find(req[:id])
       return false unless ct
-      subs = ct.content&.submissions&.where(user: course_progress_user) || ct.content&.assignment&.submissions&.where(user: course_progress_user) || quiz_submissions(ct)
+      subs = get_submissions_from_content_tag(ct)
       if subs.is_a?(Array)
         req if subs.find { |sub| sub.user_id == course_progress_user.id && !sub.excused? }
       elsif subs
