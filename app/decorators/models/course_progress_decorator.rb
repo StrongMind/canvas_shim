@@ -68,6 +68,7 @@ CourseProgress.class_eval do
   end
 
   def filter_out_excused_requirements(reqs)
+    return reqs unless student_has_excused_submission?
     reqs.select do |req|
       ct = ContentTag.find(req[:id])
       return false unless ct
@@ -91,5 +92,9 @@ CourseProgress.class_eval do
     if item.content_type == "Quizzes::Quiz"
       item.content.quiz_submissions.find_by(user: course_progress_user).try(:submission)
     end
+  end
+
+  def student_has_excused_submission?
+    @user.submissions.exists?(excused: true, context_code: "course_#{@course.id}")
   end
 end
