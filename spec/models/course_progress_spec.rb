@@ -12,6 +12,13 @@ describe CourseProgress do
   let(:course_progress_student) { CourseProgress.new(course, user) }
   let(:student_enrollment) { Enrollment.create(user: user, course: course, type: 'StudentEnrollment') }
   let(:course_progress_student_2) { CourseProgress.new(course, user_2) }
+  let(:excused_submission_count) { rand(2..5) }
+
+  before do
+    allow(SettingsService).to receive(:get_settings).and_return(
+      "excused_requirement_count" => excused_submission_count
+    )
+  end
 
   describe "#find_user_id" do
     it 'returns the first observed user' do
@@ -46,13 +53,7 @@ describe CourseProgress do
 
   describe "#excused_submission_count" do
     context "with excused submission" do
-      let(:excused_submission_count) { rand(2..5) }
-
       it "counts excused submissions" do
-        excused_submission_count.times do
-          Submission.create!(user: user, assignment: Assignment.create(course: course), excused: true)
-        end
-
         expect(course_progress_student.send(:excused_submission_count)).to eq excused_submission_count
       end
     end
