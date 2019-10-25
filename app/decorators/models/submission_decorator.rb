@@ -1,6 +1,7 @@
 Submission.class_eval do
   after_commit :bust_context_module_cache
   after_commit -> { PipelineService::V2.publish(self) }
+  before_update :calculate_excused_requirements?
   after_update :record_excused_removed
 
   def bust_context_module_cache
@@ -35,5 +36,12 @@ Submission.class_eval do
     "This assignment is no longer excused. " +
     "Please complete the required work. " +
     "If you have questions, please contact your teacher."
+  end
+
+  def calculate_excused_requirements?
+    if excused_changed?
+      enrollment = Enrollment.find_by(user: self.user, course: self.assignment.try(:course))
+      ExcusedService.calculate_excused_requirements(enrollment: enrollment)
+    end
   end
 end
