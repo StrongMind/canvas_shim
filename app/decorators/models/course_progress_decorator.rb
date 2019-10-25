@@ -68,23 +68,33 @@ CourseProgress.class_eval do
   end
 
   def filter_out_excused_requirements(reqs)
+    return reqs unless student_has_excused_submission?
     reqs.select do |req|
       ct = ContentTag.find(req[:id])
       return false unless ct
-      subs = ct.content.try(:submissions) || ct.content.try(:assignment).try(:submissions) || quiz_submissions(ct)
-      if subs.is_a?(Array)
-        req if subs.find { |sub| sub.user_id == course_progress_user.id && !sub.excused? }
-      elsif subs
-        req if subs.find_by("user_id = ? AND excused is not true", course_progress_user.id)
+      sub = get_submissions_from_content_tag(ct)
+
+      if sub
+        req unless sub.excused?
       else
         req
       end
     end
   end
 
+  def get_submissions_from_content_tag(ct)
+    ct.content.try(:submissions).try(:find_by, { user: course_progress_user }) ||
+    ct.content.try(:assignment).try(:submissions).try(:find_by, { user: course_progress_user }) ||
+    quiz_submissions(ct)
+  end
+
   def quiz_submissions(item)
     if item.content_type == "Quizzes::Quiz"
-      item.content.quiz_submissions.map { |qs| qs.submission }
+      item.content.quiz_submissions.find_by(user: course_progress_user).try(:submission)
     end
+  end
+
+  def student_has_excused_submission?
+    @user.submissions.exists?(excused: true, context_code: "course_#{@course.id}")
   end
 end

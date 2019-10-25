@@ -49,7 +49,7 @@ describe CourseProgress do
       let(:assn) { Assignment.create(course_id: course.id) }
       let(:assn_2) { Assignment.create(course_id: course.id) }
       let!(:sub) { Submission.create(assignment: assn, user: user) }
-      let(:excused_sub) { Submission.create(assignment: assn_2, user: user) }
+      let(:excused_sub) { Submission.create(assignment: assn_2, user: user, context_code: "course_#{course.id}") }
       let(:content_tag_1) { ContentTag.create }
       let(:content_tag_2) { ContentTag.create(content_id: assn.id, content_type: 'Assignment') }
       let(:content_tag_3) { ContentTag.create(content_id: assn_2.id, content_type: 'Assignment') }
