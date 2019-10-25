@@ -48,6 +48,15 @@ CourseProgress.class_eval do
     end
   end
 
+  def excused_requirement_count
+    requirements.select do |req|
+      ct = ContentTag.find(req[:id])
+      return false unless ct
+      sub = get_submissions_from_content_tag(ct)
+      sub && sub.excused?
+    end.size
+  end
+
   private
 
   def account_for_excused_submissions(count)
@@ -72,11 +81,19 @@ CourseProgress.class_eval do
     (course.module_based? && observer_enrollment && course.user_is_student?(course_progress_user, include_all: true))
   end
 
-  def excused_submissions
-    course.submissions.where(user: course_progress_user, excused: true)
+  def excused_submission_count
+    0 # Dynamo Setting
   end
 
-  def excused_submission_count
-    excused_submissions.count
+  def get_submissions_from_content_tag(ct)
+    ct.content.try(:submissions).try(:find_by, { user: course_progress_user }) ||
+    ct.content.try(:assignment).try(:submissions).try(:find_by, { user: course_progress_user }) ||
+    quiz_submissions(ct)
+  end
+
+  def quiz_submissions(item)
+    if item.content_type == "Quizzes::Quiz"
+      item.content.quiz_submissions.find_by(user: course_progress_user).try(:submission)
+    end
   end
 end
