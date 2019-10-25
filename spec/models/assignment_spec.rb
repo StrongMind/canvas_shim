@@ -5,6 +5,10 @@ describe Assignment do
   let(:submission) { Submission.create(assignment: assignment, user: user, excused: nil) }
   let(:user_2) { User.create }
 
+  before do
+    allow_any_instance_of(Submission).to receive(:excused_changed?).and_return(false)
+  end
+
   describe "#toggle_exclusion" do
     it "flips the excused status to true" do
       submission
