@@ -15,6 +15,7 @@ describe UnitsService::Commands::GetUnitGrades do
 
   before do
     allow(SettingsService).to receive(:get_settings).and_return('auto_due_dates' => nil, 'auto_enrollment_due_dates' => nil)
+    allow(SettingsService).to receive(:update_settings).and_return({})
     @enrollment = Enrollment.create(user: user, course: course)
     ENV['CANVAS_DOMAIN'] = 'canvasdomain.com'
     allow(UnitsService::Queries::GetSubmissions).to receive(:new).and_return(query_instance)
@@ -77,6 +78,7 @@ describe UnitsService::Commands::GetUnitGrades do
 
     before do
       allow(submission).to receive(:excused?).and_return(true)
+      allow(submission).to receive(:excused_changed?).and_return(false)
       submission.update(excused: true)
     end
 
@@ -94,6 +96,7 @@ describe UnitsService::Commands::GetUnitGrades do
 
       submission = Submission.create(grader_id: 2, submitted_at: current_time, user: user, assignment: assignment)
       submission_2 = Submission.create(grader_id: 2, submitted_at: current_time, user: user, assignment: assignment_2)
+      allow(submission_2).to receive(:excused_changed?).and_return(false)
       submission_2.update(excused: true)
       expect(subject.send(:unit_excused?, cm)).to eq false
     end
