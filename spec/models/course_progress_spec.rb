@@ -44,47 +44,38 @@ describe CourseProgress do
     end
   end
 
-  describe "#excused_submission_count" do
-    context "with excused submission" do
-      let(:excused_submission_count) { rand(2..5) }
-
-      it "counts excused submissions" do
-        excused_submission_count.times do
-          Submission.create!(user: user, assignment: Assignment.create(course: course), excused: true)
-        end
-
-        expect(course_progress_student.send(:excused_submission_count)).to eq excused_submission_count
-      end
-    end
-  end
-
   describe "#requirement_count" do
     context "with excused submission" do
+      let(:assn) { Assignment.create(course_id: course.id) }
+      let(:assn_2) { Assignment.create(course_id: course.id) }
+      let!(:sub) { Submission.create(assignment: assn, user: user) }
+      let(:excused_sub) { Submission.create(assignment: assn_2, user: user, context_code: "course_#{course.id}") }
+      let(:content_tag_1) { ContentTag.create }
+      let(:content_tag_2) { ContentTag.create(content_id: assn.id, content_type: 'Assignment') }
+      let(:content_tag_3) { ContentTag.create(content_id: assn_2.id, content_type: 'Assignment') }
+
+        
+      let(:fake_requirements) do
+        [
+          {:id=>content_tag_1.id, :type=>"must_view"},
+          {:id=>content_tag_2.id, :type=>"must_submit"},
+          {:id=>content_tag_3.id, :type=>"must_submit"}
+        ]
+      end
+
       before do
-        excused_submission_count.times do
-          Submission.create!(user: user, assignment: Assignment.create(course: course), excused: true)
-        end
-      end
-
-      let(:excused_submission_count) { 6 }
-      let(:fake_requirements) { Array.new(excused_submission_count + 1) }
-      let(:fake_completed_reqs) { Array.new(excused_submission_count + 1) }
-
-      it "subtracts excused submissions from requirement count" do
         allow(course_progress_student).to receive(:requirements).and_return(fake_requirements)
-        expect(course_progress_student.requirement_count).to eq 1
+        allow(course_progress_student).to receive(:requirements_completed).and_return(fake_requirements[1..-1])
+        excused_sub.update(excused: true)
+
       end
 
-      it "subtracts excused submissions from requirement completed count" do
-        allow(course_progress_student).to receive(:requirements_completed).and_return(fake_completed_reqs)
-        expect(course_progress_student.requirement_completed_count).to eq 1
+      it "removes excused submissions from requirement count" do
+        expect(course_progress_student.send(:filter_out_excused_requirements, course_progress_student.requirements)).to eq(fake_requirements[0..1])
       end
 
-      it "doesnt have more completed requirements than total requirements" do
-        allow(course_progress_student).to receive(:requirements).and_return(fake_requirements)
-        allow(course_progress_student).to receive(:requirements_completed).and_return(fake_completed_reqs)
-
-        expect(course_progress_student.requirement_completed_count).to be <= course_progress_student.requirement_count
+      it "removes excused submissions from requirement completed count" do
+        expect(course_progress_student.send(:filter_out_excused_requirements, course_progress_student.requirements_completed)).to eq([fake_requirements[1]])
       end
     end
   end
