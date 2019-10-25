@@ -37,10 +37,19 @@ describe Submission do
 
   context "Message callbacks" do
     include_context 'stubbed_network'
-    let!(:submission) { Submission.create(score: 30, assignment: assignment, excused: true) }
-    let!(:submission2) { Submission.create(score: 30, assignment: assignment, excused: true) }
+    before do
+      allow(SettingsService).to receive(:update_settings).and_return({})
+      allow(course).to receive(:teacher_enrollments).and_return([teacher])
+    end
 
-    let(:assignment) { Assignment.new }
+    let!(:course) { Course.create }
+    let!(:user) { User.create }
+    let!(:assignment) { Assignment.create(course: course) }
+    let!(:enrollment) { Enrollment.create(user: user, course: course) }
+    let!(:teacher) { Enrollment.create(user: User.create, course: course, type: "TeacherEnrollment") }
+    let!(:submission) { Submission.create(user: user, score: 30, assignment: assignment, excused: true) }
+    let!(:submission2) { Submission.create(user: user, score: 30, assignment: assignment, excused: true) }
+
 
     it "records a comment when the excused tag is removed" do
       submission.update(excused: false)
