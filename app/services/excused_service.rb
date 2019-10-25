@@ -36,4 +36,10 @@ module ExcusedService
       { id: student_id, name: student.name }
     end.compact
   end
+
+  def self.calculate_excused_requirements(enrollment:)
+    Delayed::Job.enqueue(
+      Commands::CalculateExcusedSubmissions.new(enrollment: enrollment)
+    )
+  end
 end

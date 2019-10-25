@@ -82,7 +82,8 @@ CourseProgress.class_eval do
   end
 
   def excused_submission_count
-    0 # Dynamo Setting
+    enrollment_id = Enrollment.find_by(course: @course, user: @user).try(:id)
+    SettingsService.get_settings(object: :enrollment, id: enrollment_id)['excused_requirement_count'].to_i
   end
 
   def get_submissions_from_content_tag(ct)
