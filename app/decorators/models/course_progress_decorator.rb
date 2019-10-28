@@ -26,11 +26,11 @@ CourseProgress.class_eval do
   end
 
   def requirement_count
-    account_for_excused_submissions(requirements.size)
+    filter_out_excused_requirements(requirements).size
   end
 
   def requirement_completed_count
-    account_for_excused_submissions(requirements_completed.size)
+    filter_out_excused_requirements(requirements_completed).size
   end
 
   def to_json
@@ -50,11 +50,6 @@ CourseProgress.class_eval do
 
   private
 
-  def account_for_excused_submissions(count)
-    count = count - excused_submission_count
-    count < 1 ? 0 : count
-  end
-
   def find_user_id
     observer_enrollment ? observer_enrollment.associated_user_id : @user.id
   end
@@ -72,11 +67,34 @@ CourseProgress.class_eval do
     (course.module_based? && observer_enrollment && course.user_is_student?(course_progress_user, include_all: true))
   end
 
-  def excused_submissions
-    course.submissions.where(user: course_progress_user, excused: true)
+  def filter_out_excused_requirements(reqs)
+    return reqs unless student_has_excused_submission?
+    reqs.select do |req|
+      ct = ContentTag.find(req[:id])
+      return false unless ct
+      sub = get_submissions_from_content_tag(ct)
+
+      if sub
+        req unless sub.excused?
+      else
+        req
+      end
+    end
   end
 
-  def excused_submission_count
-    excused_submissions.count
+  def get_submissions_from_content_tag(ct)
+    ct.content.try(:submissions).try(:find_by, { user: course_progress_user }) ||
+    ct.content.try(:assignment).try(:submissions).try(:find_by, { user: course_progress_user }) ||
+    quiz_submissions(ct)
+  end
+
+  def quiz_submissions(item)
+    if item.content_type == "Quizzes::Quiz"
+      item.content.quiz_submissions.find_by(user: course_progress_user).try(:submission)
+    end
+  end
+
+  def student_has_excused_submission?
+    @user.submissions.exists?(excused: true, context_code: "course_#{@course.id}")
   end
 end
