@@ -3,11 +3,10 @@ ApplicationController.class_eval do
   prepend_view_path CanvasShim::Engine.root.join('app', 'views')
 
   def custom_placement_enabled?
-    @current_user &&
-    @current_user.roles(Account.site_admin).include?('admin') ||
-    @current_user.teacher_enrollments.find_by(
-      course: @context
-    )&.has_permission_to?(:custom_placement)
+    @current_user && @context.is_a?(Course) &&
+    @context.grants_right?(@current_user, session, :read_as_admin) ||
+    @current_user.teacher_enrollments.find_by(course: @context)&.has_permission_to?(:custom_placement) ||
+    @current_user.ta_enrollments.find_by(course: @context)&.has_permission_to?(:custom_placement)
   end
 
   def strongmind_update_enrollment_last_activity_at
