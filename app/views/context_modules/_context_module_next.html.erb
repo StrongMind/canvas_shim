@@ -211,7 +211,10 @@
               :editable => editable,
             }
           %>
+<% end %>
           <%= render :partial => 'context_modules/module_item_next', :object => item, :as => :module_item, :locals => locals %>
+<% cache_if_module(context_module, editable, @is_student, @can_view_unpublished, @current_user, @context) do %>
+
           <% if item_data[:show_cyoe_placeholder] %>
             <%= render :partial => 'context_modules/module_item_conditional_next', :object => item, :as => :module_item, :locals => locals %>
           <% end %>
