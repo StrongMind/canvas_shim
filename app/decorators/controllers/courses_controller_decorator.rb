@@ -68,8 +68,6 @@ CoursesController.class_eval do
 
   def strongmind_show
     instructure_show
-    return unless @context && @current_user
-    touch_context_modules?
     score_threshold = RequirementsService.get_course_assignment_passing_threshold?(@context)
     js_env(score_threshold: score_threshold.to_s) if score_threshold
     js_env(module_editing_disabled: RequirementsService.disable_module_editing_on?)
@@ -233,28 +231,5 @@ CoursesController.class_eval do
       }
     }
     })
-  end
-
-  def current_user_doesnt_match?
-    SettingsService.get_settings(
-      object: :course,
-      id: @context.id
-    )['last_current_user'] != @current_user.id
-  end
-
-  def set_new_current_user
-    SettingsService.update_settings(
-      object: 'course',
-      id: @context.id,
-      setting: 'last_current_user',
-      value: @current_user.id
-    )
-  end
-
-  def touch_context_modules?
-    if current_user_doesnt_match?
-      @context.context_modules.each(&:touch)
-      set_new_current_user
-    end
   end
 end
