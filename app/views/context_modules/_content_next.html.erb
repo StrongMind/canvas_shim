@@ -293,7 +293,6 @@
   $(window).on('load', function() {
     if (ENV['IS_STUDENT']) {
       for (page = 1; page < 11; page++) {
-        console.log("page: " + page)
         var ajaxResponse = $.ajax('/api/v1/courses/' + ENV['COURSE_ID'] + '/students/submissions?page=' + page + '&per_page=100')
         ajaxResponse.done(function(response) {
           excused =  $.map(response, function(o) {if (o['excused'] === true) { return o } })
