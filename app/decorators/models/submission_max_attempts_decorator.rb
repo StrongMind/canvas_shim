@@ -1,5 +1,5 @@
 Submission.class_eval do
-  after_commit :send_max_attempts_callback
+  after_save :send_max_attempts_callback
 
   def send_max_attempts_callback
     return unless student_locked?
