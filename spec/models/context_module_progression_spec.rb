@@ -34,12 +34,12 @@ describe ContextModuleProgression do
       end
     end
 
-    it 'publishes course progress to the pipeline' do
+    xit 'publishes course progress to the pipeline' do
       expect(PipelineService).to receive(:publish)
       ContextModuleProgression.create(user: user, context_module: context_module)
     end
 
-    it 'builds a course progress noun' do
+    xit 'builds a course progress noun' do
       cmp = ContextModuleProgression.create(user: user, context_module: context_module)
       expect(PipelineService::Nouns::CourseProgress).to receive(:new).with(cmp)
       cmp.update(user: user)

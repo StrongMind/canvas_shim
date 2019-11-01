@@ -1,5 +1,4 @@
 ContextModuleProgression.class_eval do
-  after_commit :publish_course_progress
 
   def strongmind_prerequisites_satisfied?
     sequence_control_on? ? instructure_prerequisites_satisfied? : true
