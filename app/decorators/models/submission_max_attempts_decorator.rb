@@ -1,5 +1,5 @@
 Submission.class_eval do
-  after_commit :send_max_attempts_callback
+  after_save :send_max_attempts_callback
 
   def send_max_attempts_callback
     return unless student_locked?
@@ -18,12 +18,12 @@ Submission.class_eval do
 
 
   def send_max_attempts_alert?
-    used_attempts == max_attempts
+    lti_graded_attempts == max_attempts
   end
 
   def student_locked?
-    return unless used_attempts && max_attempts
-    return unless used_attempts >= max_attempts
+    return unless lti_graded_attempts && max_attempts
+    return unless lti_graded_attempts >= max_attempts
 
     content_tag = ContentTag.find_by(content_id: assignment.id, content_type: 'Assignment')
     return unless content_tag
@@ -76,9 +76,14 @@ Submission.class_eval do
     end
   end
 
-  def used_attempts
+  def lti_graded_attempts
     versions = self.try(:versions)
     return unless versions
-    versions.map.select { |ver| YAML.load(ver.yaml)['grader_id'] && YAML.load(ver.yaml)['grader_id'] < 0 }.map {|ver| YAML.load(ver.yaml)['attempt'] || 0}.uniq.sort.last
+    versions.select do |ver|
+      yaml_ver = YAML.load(ver.yaml)
+      yaml_ver['grader_id'] &&
+      yaml_ver['grader_id'] < 0 &&
+      yaml_ver['workflow_state'] == 'graded'
+    end.size
   end
 end
