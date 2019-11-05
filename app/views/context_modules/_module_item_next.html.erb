@@ -52,7 +52,6 @@
     <%= 'progression_requirement' if criterion %>
     <%= criterion[:type] if criterion %>_requirement
     <%= module_item.item_class if module_item %>
-    <%= 'excused_req' if module_item&.assignment&.is_excused?(@current_user) %>
   "
 >
   <div class="sm-ig-row sm-activity-row context_module_sub_header_expander <%= 'with-completion-requirements' if criterion %> <%= 'ig-published' if module_item && module_item.published? %> <%= 'student-view' if @is_student %>"  href="<%= context_url(@context, :context_url) %>/modules/items/<%= module_item ? module_item.id : "{{ id }}" %>">
@@ -60,6 +59,14 @@
       aria-label='<%= module_item && module_item.title %>'
       tabindex="-1"
       class="for-nvda"
+      content_type="<%= module_item ? module_item.content_type : '' %>"
+      assignment_id=
+      <% if module_item.try(:content_type) == "DiscussionTopic" %>
+        <%= module_item.content.try(:assignment_id) %>
+      <% elsif module_item %>
+        <%= module_item.content_id %>
+      <% end %>
+
       href="<%= context_url(@context, :context_url) %>/modules/items/<%= module_item ? module_item.id : "{{ id }}" %>">
       <%= module_item && module_item.title %>
     </a>
@@ -98,38 +105,47 @@
             <a
               title="<%= module_item && module_item.title %>"
               class="title external_url_link"
+                content_type="<%= module_item ? module_item.content_type : '' %>"
+                assignment_id=
+                <% if module_item.try(:content_type) == "DiscussionTopic" %>
+                  <%= module_item.content.try(:assignment_id) %>
+                <% elsif module_item %>
+                  <%= module_item.content_id %>
+                <% end %> 
               target="_blank"
               href="<%= module_item.url %>"
               data-item-href="<%= context_url(@context, :context_url) %>/modules/items/<%= module_item.id %>"
             >
                <%= module_item.title %>
-               <% if module_item_excused?(module_item) %>
-                 <span class="excused-assignment">
+                 <span class="excused-assignment-state">
                  </span>
-               <% end %>
             </a>
           <% else %>
             <a
               title="<%= module_item && module_item.title %>"
               class="ig-title title"
+                content_type="<%= module_item ? module_item.content_type : '' %>"
+                assignment_id=
+                <% if module_item.try(:content_type) == "DiscussionTopic" %>
+                  <%= module_item.content.try(:assignment_id) %>
+                <% elsif module_item %>
+                  <%= module_item.content_id %>
+                <% end %>
+
               href="<%= context_url(@context, :context_url) %>/modules/items/<%= module_item ? module_item.id : "{{ id }}" %>"
               <% if item_data[:mastery_paths] && item_data[:mastery_paths][:locked] %>
               aria-describedby="module-item-locked-<%= module_item && module_item.id %>"
               <% end %>
             >
               <%= module_item && module_item.title %>
-               <% if module_item_excused?(module_item) %>
-                 <span class="excused-assignment">
-                 </span>
-               <% end %>
+               <span class="excused-assignment-state">
+               </span>
             </a>
           <% end %>
           <span title="<%= module_item && module_item.title %>" class="title locked_title">
             <%= module_item && module_item.title %>
-            <% if module_item_excused?(module_item) %>
-              <span class="excused-assignment">
+              <span class="excused-assignment-state">
               </span>
-            <% end %>
           </span>
           <span class="points_possible" style="display: none;"><%= round_if_whole(module_item.try_rescue(:assignment).try_rescue(:points_possible)) || nbsp %></span>
           <span class="requirement" style="display: none;">&nbsp;</span>
@@ -206,12 +222,6 @@
               <span class="fulfilled">
                 <%= t('must_submit.fulfilled', 'Submitted') %>
                 <span class="screenreader-only"><%= t('Module item submitted and is complete') %></span>
-              </span>
-            </span>
-            <span class="requirement_type excused">
-              <span>
-                Excused
-                <span class="screenreader-only">Excused</span>
               </span>
             </span>
           </span>

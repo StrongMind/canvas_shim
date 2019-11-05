@@ -43,6 +43,7 @@ describe "SubmissionMaxAttemptsDecorator" do
       allow(assignment).to receive(:course).and_return(course)
 
       allow(submission).to receive(:student_locked?).and_return(true)
+      allow(submission).to receive(:send_max_attempts_alert?).and_return(true)
       allow(submission).to receive(:teachers_to_alert).and_return([teacher])
       allow(submission).to receive(:teacher).and_return([])
       allow(submission).to receive(:user).and_return(user)
@@ -61,14 +62,14 @@ describe "SubmissionMaxAttemptsDecorator" do
 
   describe "#student_locked?" do
     it "does not error is score is nil" do
-      allow(submission).to receive(:used_attempts).and_return(3)
+      allow(submission).to receive(:lti_graded_attempts).and_return(3)
       allow(submission).to receive(:max_attempts).and_return(3)
       allow(submission).to receive(:score).and_return(nil)
       expect(submission.student_locked?).to eq(true)
     end
 
     it "does not error is best score is nil" do
-      allow(submission).to receive(:used_attempts).and_return(3)
+      allow(submission).to receive(:lti_graded_attempts).and_return(3)
       allow(submission).to receive(:max_attempts).and_return(3)
       allow(submission).to receive(:score).and_return(nil)
       allow(submission).to receive(:score).and_return(nil)
@@ -79,20 +80,20 @@ describe "SubmissionMaxAttemptsDecorator" do
 
     it "returns true if max_attempts reached and min_score not reached" do
       allow(submission).to receive(:max_attempts).and_return(3)
-      allow(submission).to receive(:used_attempts).and_return(3)
+      allow(submission).to receive(:lti_graded_attempts).and_return(3)
       expect(submission.student_locked?).to eq(true)
     end
 
     it "returns false if max_attempts reached and score greater than min_score" do
       allow(submission).to receive(:max_attempts).and_return(3)
-      allow(submission).to receive(:used_attempts).and_return(3)
+      allow(submission).to receive(:lti_graded_attempts).and_return(3)
       allow(submission).to receive(:score).and_return(60)
       expect(submission.student_locked?).to be_nil
     end
 
     it "returns false if best score is higher than threshold" do
       allow(submission).to receive(:max_attempts).and_return(3)
-      allow(submission).to receive(:used_attempts).and_return(3)
+      allow(submission).to receive(:lti_graded_attempts).and_return(3)
       allow(submission).to receive(:score).and_return(10)
       allow(submission).to receive(:best_score).and_return(55)
       expect(submission.student_locked?).to be_nil
@@ -102,19 +103,19 @@ describe "SubmissionMaxAttemptsDecorator" do
     describe "#send_max_attempts_alert?" do
       it "if false if used attempts is greater than max_attempts" do
         allow(submission).to receive(:max_attempts).and_return(3)
-        allow(submission).to receive(:used_attempts).and_return(4)
+        allow(submission).to receive(:lti_graded_attempts).and_return(4)
         expect(submission.send_max_attempts_alert?).to eq(false)
       end
 
       it "is false if used attempts is less than max_attempts" do
         allow(submission).to receive(:max_attempts).and_return(3)
-        allow(submission).to receive(:used_attempts).and_return(2)
+        allow(submission).to receive(:lti_graded_attempts).and_return(2)
         expect(submission.send_max_attempts_alert?).to eq(false)
       end
 
       it "is true if used attempts is equal to max_attempts" do
         allow(submission).to receive(:max_attempts).and_return(3)
-        allow(submission).to receive(:used_attempts).and_return(3)
+        allow(submission).to receive(:lti_graded_attempts).and_return(3)
         expect(submission.send_max_attempts_alert?).to eq(true)
       end
 
