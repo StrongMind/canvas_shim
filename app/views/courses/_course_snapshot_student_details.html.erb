@@ -17,9 +17,9 @@
   </thead>
 
   <tbody>
-    <% @context.active_students.each do |student| %>
-      <tr class="course-snapshot-detail-row" data-course-id=<%= @context.id %> data-enr-id=<%= student.id %>>
-        <td><%= link_to student.user.name, course_user_path(@context, student.user), class: "course-snapshot-link-color" %></td>
+    <% @active_students.each do |id_name| %>
+      <tr class="course-snapshot-detail-row" data-course-id=<%= @context.id %> data-enr-id=<%= id_name.first %>>
+        <td><%= link_to id_name.last, course_user_path(@context.id, id_name.second), class: "course-snapshot-link-color" %></td>
         <td class="enr-last-active">
           Waiting...
         </td>
