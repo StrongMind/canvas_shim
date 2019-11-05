@@ -113,15 +113,6 @@ Course.class_eval do
     end
   end
 
-  private
-  def time_zone_name
-    time_zone.name
-  end
-
-  def working_denominator(arr)
-    arr.none? ? 1 : arr.size
-  end
-
   def calculate_progress(student)
     cp = CourseProgress.new(self, student.user)
     req_count = cp.requirement_count.zero? ? 1 : cp.requirement_count
@@ -134,6 +125,15 @@ Course.class_eval do
       course_id: id,
       student_id: student.id,
     ).payload.size
+  end
+
+  private
+  def time_zone_name
+    time_zone.name
+  end
+
+  def working_denominator(arr)
+    arr.none? ? 1 : arr.size
   end
 
   def scale_count(count)
