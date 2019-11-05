@@ -1,6 +1,6 @@
 ContextModuleProgression.class_eval do
   after_commit :publish_course_progress
-
+  after_commit -> { PipelineService::V2.publish self }
   def strongmind_prerequisites_satisfied?
     sequence_control_on? ? instructure_prerequisites_satisfied? : true
   end
