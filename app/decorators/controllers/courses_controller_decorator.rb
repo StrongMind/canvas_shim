@@ -190,7 +190,7 @@ CoursesController.class_eval do
     @assignments_need_grading = @context.needs_grading_count
     @alerts_need_attention = @context.get_relevant_alerts_count(@current_user)
     @student_count = @context&.active_students&.count || 0
-    @student_details = @context.try(:course_snapshot_student_details) || []
+    #@student_details = @context.try(:course_snapshot_student_details) || []
     @accesses_per_hour = @context.get_accesses_by_hour
   end
 

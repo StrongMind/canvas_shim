@@ -17,33 +17,33 @@
   </thead>
 
   <tbody>
-    <% @student_details.each do |student| %>
-      <tr class="course-snapshot-detail-row">
-        <td><%= link_to student[:user].name, course_user_path(@context, student[:user]), class: "course-snapshot-link-color" %></td>
-        <td>
-          <%= student[:last_active] %>
+    <% @context.active_students.each do |student| %>
+      <tr class="course-snapshot-detail-row" data-course-id=<%= @context.id %> data-enr-id=<%= student.id %>>
+        <td><%= link_to student.user.name, course_user_path(@context, student.user), class: "course-snapshot-link-color" %></td>
+        <td class="enr-last-active">
+          Waiting...
         </td>
-        <td>
-          <%= student[:last_submission] %>
+        <td class="enr-last-submission">
+          Waiting...
         </td>
-        <td>
-          <%= student[:missing_assignments] %>
+        <td class="enr-missing-assignments">
+          Waiting...
         </td>
-        <td>
-          <%= student[:current_score] %>
+        <td class="enr-current-score">
+          Waiting...
         </td>
-        <td>
-          <div class="progress" data-label='<%= student[:course_progress] %>'>
-            <span class="value" style='<%= "width: #{student[:course_progress]};" %>'>
-              <span style="display: none;"><%= student[:course_progress] %></span>
+        <td class="enr-progress-bar">
+          <div class="progress" data-label='Waiting...'>
+            <span class="value">
+              <span style="display: none;"></span>
             </span>
           </div>
         </td>
-        <td>
-          <%= student[:requirements_completed] %>
+        <td class="enr-requirements-completed">
+          Waiting...
         </td>
-        <td>
-          <%= student[:alerts] %>
+        <td class="enr-alerts-count">
+          Waiting...
         </td>
       </tr>
     <% end %>
