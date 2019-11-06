@@ -96,7 +96,7 @@ function fillDetailRow(student) {
     student.find('.enr-progress-bar .value').css('width', response.course_progress);
     student.find('.enr-progress-bar .progress').attr('data-label', response.course_progress);
 
-    if (student.get(0) === $('.course-snapshot-detail-row').last().get(0)) {
+    if (doneLoading()) {
       $('#studentDetails').DataTable();
       $("#placeHolderStudentDetails").remove();
       $('#placeHolderStudentDetails_wrapper').remove();
@@ -110,5 +110,11 @@ function fillDetailRow(student) {
     student.children('.enr-requirements-completed').text('Unavailable');
     student.children('.enr-alerts-count').text('Unavailable');
     student.find('.enr-progress-bar .progress').attr('data-label', 'Unavailable');
+  });
+}
+
+function doneLoading() {
+  return !$('.course-snapshot-detail-row td').get().some(function(element) {
+    return $(element).text().trim() === "Waiting...";
   });
 }
