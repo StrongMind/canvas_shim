@@ -63,6 +63,8 @@ $(window).on("load", function(event) {
   }
 
   if ($('.course-snapshot-detail-row').length) {
+    $('#studentDetails').hide();
+    $("#placeHolderStudentDetails").DataTable();
     $('.course-snapshot-detail-row').each(function(student) {
       fillDetailRow($(this));
     });
@@ -96,6 +98,9 @@ function fillDetailRow(student) {
 
     if (student.get(0) === $('.course-snapshot-detail-row').last().get(0)) {
       $('#studentDetails').DataTable();
+      $("#placeHolderStudentDetails").remove();
+      $('#placeHolderStudentDetails_wrapper').remove();
+      $('#studentDetails').show();
     }
   }).fail(function() {
     student.children('.enr-last-active').text('Unavailable');

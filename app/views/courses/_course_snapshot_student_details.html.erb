@@ -2,6 +2,48 @@
     Student Details <span>(<%= pluralize(@student_count, 'active student') %>)</span>
 </h3>
 
+<table id="placeHolderStudentDetails">
+  <thead>
+    <tr>
+      <th>Student Name</th>
+      <th>Days Since Active</th>
+      <th>Days Since Last Submission</th>
+      <th>Missing Assignments</th>
+      <th>Current Score</th>
+      <th>Course Progress</th>
+      <th>Requirements Completed</th>
+      <th>Alerts</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr class="course-snapshot-detail-row">
+      <td>Waiting...</td>
+      <td class="enr-last-active">
+        Waiting...
+      </td>
+      <td class="enr-last-submission">
+        Waiting...
+      </td>
+      <td class="enr-missing-assignments">
+        Waiting...
+      </td>
+      <td class="enr-current-score">
+        Waiting...
+      </td>
+      <td class="enr-progress-bar">
+        Waiting...
+      </td>
+      <td class="enr-requirements-completed">
+        Waiting...
+      </td>
+      <td class="enr-alerts-count">
+        Waiting...
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 <table id="studentDetails">
   <thead>
     <tr>
