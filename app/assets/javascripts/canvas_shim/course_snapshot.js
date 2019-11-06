@@ -103,13 +103,7 @@ function fillDetailRow(student) {
       $('#studentDetails').show();
     }
   }).fail(function() {
-    student.children('.enr-last-active').text('Unavailable');
-    student.children('.enr-last-submission').text('Unavailable');
-    student.children('.enr-missing-assignments').text('Unavailable');
-    student.children('.enr-current-score').text('Unavailable');
-    student.children('.enr-requirements-completed').text('Unavailable');
-    student.children('.enr-alerts-count').text('Unavailable');
-    student.find('.enr-progress-bar .progress').attr('data-label', 'Unavailable');
+    $('#loading-cell').text("Request failed. Please try again.");
   });
 }
 
