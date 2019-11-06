@@ -24,4 +24,25 @@ EnrollmentsApiController.class_eval do
     Raven.capture_exception(exception)
     render :json => {}, :status => :bad_request
   end
+
+  def snapshot
+    student = StudentEnrollment.find(params[:id])
+
+    return render :json => {}, :status => :unprocessable_entity unless student
+
+    render :json => {
+      user: student.user,
+      last_active: student.days_since_active,
+      last_submission: student.days_since_last_submission,
+      missing_assignments: student.missing_assignments_count,
+      current_score: student.current_score,
+      course_progress: "#{@context.calculate_progress(student).round(1)}%",
+      requirements_completed: student.string_progress,
+      alerts: @context.get_relevant_alerts_count(student.user)
+    }, status => :ok
+
+  rescue StandardError => exception
+    Raven.capture_exception(exception)
+    render :json => {}, :status => :bad_request
+  end
 end

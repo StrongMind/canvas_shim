@@ -19,8 +19,6 @@ $(window).on("load", function(event) {
     }
   });
 
-  $('#studentDetails').DataTable();
-
   // toggle popover on the activity chart
   $('#activity-chart-info, .popover-close').click(function() {
     $('.course-snapshot-activity-chart-popover').toggleClass('popover-visible');
@@ -63,6 +61,14 @@ $(window).on("load", function(event) {
       );
     });
   }
+
+  if ($('.course-snapshot-detail-row').length) {
+    $('#studentDetails').hide();
+    $("#placeHolderStudentDetails").DataTable();
+    $('.course-snapshot-detail-row').each(function(student) {
+      fillDetailRow($(this));
+    });
+  }
 });
 
 function triggerSearchEvent() {
@@ -70,4 +76,39 @@ function triggerSearchEvent() {
       'Snapshot: Student Detail Table', 
       'search'
     );
+}
+
+function fillDetailRow(student) {
+  var courseID = student.data('course-id');
+  var enrID = student.data('enr-id');
+  if (!enrID || !courseID) { return }
+
+  var ajaxResponse = $.getJSON('/api/v1/courses/' + courseID + '/enrollments/' + enrID + '/snapshot');
+  ajaxResponse.done(function(response) {
+    student.children('.enr-last-active').text(response.last_active);
+    student.children('.enr-last-submission').text(response.last_submission);
+    student.children('.enr-missing-assignments').text(response.missing_assignments);
+    student.children('.enr-current-score').text(response.current_score);
+    student.children('.enr-requirements-completed').text(response.requirements_completed);
+    student.children('.enr-alerts-count').text(response.alerts);
+
+    student.find('.enr-progress-bar .value span').text(response.course_progress);
+    student.find('.enr-progress-bar .value').css('width', response.course_progress);
+    student.find('.enr-progress-bar .progress').attr('data-label', response.course_progress);
+
+    if (doneLoading()) {
+      $('#studentDetails').DataTable();
+      $("#placeHolderStudentDetails").remove();
+      $('#placeHolderStudentDetails_wrapper').remove();
+      $('#studentDetails').show();
+    }
+  }).fail(function() {
+    $('#loading-cell').text("Request failed. Please try again.");
+  });
+}
+
+function doneLoading() {
+  return !$('.course-snapshot-detail-row td').get().some(function(element) {
+    return $(element).text().trim() === "Waiting...";
+  });
 }

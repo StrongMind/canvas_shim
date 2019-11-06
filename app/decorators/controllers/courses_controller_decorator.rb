@@ -189,8 +189,8 @@ CoursesController.class_eval do
     @avg_completion_pct = @context.average_completion_percentage.round(1)
     @assignments_need_grading = @context.needs_grading_count
     @alerts_need_attention = @context.get_relevant_alerts_count(@current_user)
-    @student_count = @context&.active_students&.count || 0
-    @student_details = @context.try(:course_snapshot_student_details) || []
+    @active_students ||= @context.active_students.eager_load(:user).pluck(:id, :user_id, 'users.name')
+    @student_count ||= @active_students.count
     @accesses_per_hour = @context.get_accesses_by_hour
   end
 
