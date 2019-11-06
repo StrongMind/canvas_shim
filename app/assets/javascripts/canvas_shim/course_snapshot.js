@@ -19,8 +19,6 @@ $(window).on("load", function(event) {
     }
   });
 
-  $('#studentDetails').DataTable();
-
   // toggle popover on the activity chart
   $('#activity-chart-info, .popover-close').click(function() {
     $('.course-snapshot-activity-chart-popover').toggleClass('popover-visible');
@@ -92,8 +90,13 @@ function fillDetailRow(student) {
     student.children('.enr-requirements-completed').text(response.requirements_completed);
     student.children('.enr-alerts-count').text(response.alerts);
 
+    student.find('.enr-progress-bar .value span').text(response.course_progress);
     student.find('.enr-progress-bar .value').css('width', response.course_progress);
     student.find('.enr-progress-bar .progress').attr('data-label', response.course_progress);
+
+    if (student.get(0) === $('.course-snapshot-detail-row').last().get(0)) {
+      $('#studentDetails').DataTable();
+    }
   }).fail(function() {
     student.children('.enr-last-active').text('Unavailable');
     student.children('.enr-last-submission').text('Unavailable');
