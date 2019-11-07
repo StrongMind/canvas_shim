@@ -16,10 +16,10 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
-  s.add_dependency 'aws-sdk-core'
+  s.add_dependency 'aws-sdk-core', '3.0'
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'aws-sdk-sqs'
-  s.add_dependency 'aws-sdk-dynamodb', '1.15.0'
+  s.add_dependency 'aws-sdk-dynamodb', '1.3.0'
   s.add_dependency 'aws-sdk-secretsmanager'
 
   s.add_dependency "pipeline_publisher_ruby"
