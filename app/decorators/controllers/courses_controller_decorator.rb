@@ -79,7 +79,15 @@ CoursesController.class_eval do
   def clear_due_dates
     get_context
     if authorized_action(@context, @current_user, :change_course_state)
+      AssignmentsService.clear_due_dates(course: @context)
+      render :json => {}, :status => :ok
+    else
+      render :json => {}, :status => :unprocessable_entity
     end
+
+  rescue StandardError => exception
+    Raven.capture_exception(exception)
+    render :json => {}, :status => :bad_request
   end
 
   def user_can_conclude_enrollments?
