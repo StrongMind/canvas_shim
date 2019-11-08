@@ -39,4 +39,31 @@ $(window).on("load", function(event) {
 
     flipIcon($(this), unitPassThreshDisabled);
   });
+
+  $(".endpoint-btn").click(function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!(ENV.start_date && ENV.end_date)) {
+      return $.flashError(
+        "Please save a start and end date to this course before distributing due dates."
+      )
+    }
+    
+    var target = $(this).data("target")
+
+    $.ajax({
+      url: target,
+      type: 'POST',
+      success: function() {
+        return $.flashMessage(
+          "Your due dates are currently being distributed. They should be visible on the modules page momentarily. "
+        )
+      },
+      error: function() {
+        return $.flashError(
+          "Something went wrong!  Please wait a moment and try again.  If the problem persists, contact an administrator."
+        )
+      }
+    });
+  });
 });

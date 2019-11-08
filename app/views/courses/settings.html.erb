@@ -249,7 +249,16 @@
           <%= f.label :restrict_enrollments_to_course_dates, :en => "Users can only participate in the course between these dates" %>
         </td>
       <% end %>
-      
+
+      </tr><tr>
+        <td class="form-label"><label for="distribute_due_dates" id="distribute_due_dates_label"><%= t("Due Dates:") %></label></td>
+        <td class="nobr tall-row">
+          <div>
+            <button id="distribute_due_dates" data-target=<%= course_distribute_due_dates_path(@context) %> class="btn btn-primary endpoint-btn">Distrubute Due Dates</button>
+            <button id="clear_due_dates" data-target=<%= course_clear_due_dates_path(@context) %> class="btn endpoint-btn">Clear Dates</button>
+          </div>
+        </td>
+
       <% if @threshold_visible %>
         </tr><tr>
           <td class="form-label"><label for="passing_threshold" id="passing_threshold_label"><%= t("Passing Threshold (Assignments):") %></label></td>
