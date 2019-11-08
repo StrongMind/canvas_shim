@@ -18,7 +18,11 @@ module AssignmentsService
   end
 
   def self.clear_due_dates(course:)
-    command = Commands::DistributeDueDates.new(course: course)
+    command = Commands::ClearDueDates.new(course: course)
     Delayed::Job.enqueue(command)
+  end
+
+  def self.clear_due_dates!(course:)
+    Commands::ClearDueDates.new(course: course).call
   end
 end
