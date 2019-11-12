@@ -8,9 +8,9 @@ module AssignmentsService
       end
 
       def perform
-        AssignmentsService.toggle_distribution_state(course, true)
+        AssignmentsService.dist_on(course)
         call
-        AssignmentsService.toggle_distribution_state(course, false)
+        AssignmentsService.dist_off(course)
       end
 
       def call

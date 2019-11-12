@@ -35,6 +35,14 @@ module AssignmentsService
     )
   end
 
+  def self.dist_on(course)
+    toggle_distribution_state(course, true)
+  end
+
+  def self.dist_off(course)
+    toggle_distribution_state(course, false)
+  end
+
   def self.get_distribution_state(course)
     SettingsService.get_settings(object: :course, id: course.try(:id))['distribution_state']
   end
