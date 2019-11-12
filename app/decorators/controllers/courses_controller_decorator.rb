@@ -264,7 +264,10 @@ CoursesController.class_eval do
 
   def get_course_dates
     get_context
-    js_env(start_date: @context.start_at, end_date: @context.end_at)
+    js_env(
+      start_date: @context.start_at.try(:strftime, "%m-%d-%Y"),
+      end_date: @context.end_at.try(:strftime, "%m-%d-%Y")
+    )
   end
 
   def dates_distributable?

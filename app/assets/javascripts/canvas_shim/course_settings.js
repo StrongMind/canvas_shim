@@ -9,6 +9,13 @@ function flipIcon(element, threshDisabled) {
   }
 }
 
+function confirmDistribute() {
+  return confirm(
+    "You are about to distribute between " + ENV.start_date +
+    " & " + ENV.end_date + ". Are you sure you want to do this?"
+  )
+}
+
 $(window).on("load", function(event) {
   var initialVal = $('#passing_threshold').val();
   $('#edit_threshold_btn').click(function(e) {
@@ -48,16 +55,7 @@ $(window).on("load", function(event) {
       return $.flashError(
         "Please save a start and end date to this course before distributing due dates."
       )
-    } else if (id === "distribute_due_dates" ) {
-      $('.due-date-button-popover').addClass("popover-visible");
-      $('.due-date-button-popover').removeClass("popover-close");
-      setTimeout(function() {
-        $('.due-date-button-popover').removeClass("popover-visible");
-        $('.due-date-button-popover').addClass("popover-close");
-      }, 8000);
-
-      $('#distribute_due_dates').prop("disabled", "true");
-    }
+    } else if (id === "distribute_due_dates" && !confirmDistribute()) { return }
     
     var target = $(this).data("target");
     var id = $(this).attr("id");
@@ -66,6 +64,8 @@ $(window).on("load", function(event) {
       url: target,
       type: 'POST',
       success: function() {
+        $(".endpoint-btn").prop("disabled", "true");
+
         if (id === "clear_due_dates") {
           return $.flashMessage(
             "Your due dates are currently being cleared. They should be removed from the modules page in a few minutes.. "

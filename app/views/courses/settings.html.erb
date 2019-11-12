@@ -266,14 +266,6 @@
               <button id="distribute_due_dates" data-target=<%= course_distribute_due_dates_path(@context) %> class="btn btn-primary endpoint-btn">Distrubute Due Dates</button>
               <button id="clear_due_dates" data-target=<%= course_clear_due_dates_path(@context) %> class="btn endpoint-btn">Clear Dates</button>
             </div>
-            <div class="due-date-button-popover">
-              <h5>Warning:</h5>
-              <p>
-                Your due dates are currently being distributed between <strong><%= @context.start_at.try(:strftime, "%m-%d-%Y") %></strong>
-                and <strong><%= @context.end_at.try(:strftime, "%m-%d-%Y") %></strong> If you would like to distribute
-                different dates, please change the start and end fields, then click the save button at the bottom of this page and try again.
-              </p>
-            </div>
           <% end %>
         </td>
 
