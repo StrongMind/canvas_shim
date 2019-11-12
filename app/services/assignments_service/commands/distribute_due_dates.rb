@@ -16,7 +16,9 @@ module AssignmentsService
       end
 
       def perform
+        AssignmentsService.toggle_distribution_state(course, true)
         distribute
+        AssignmentsService.toggle_distribution_state(course, false)
       end
 
       private

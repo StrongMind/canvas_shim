@@ -25,4 +25,17 @@ module AssignmentsService
   def self.clear_due_dates!(course:)
     Commands::ClearDueDates.new(course: course).call
   end
+
+  def self.toggle_distribution_state(course, state)
+    SettingsService.update_settings(
+      object: 'course',
+      id: course.try(:id),
+      setting: 'distribution_state',
+      value: state
+    )
+  end
+
+  def self.get_distribution_state(course)
+    SettingsService.get_settings(object: :course, id: course.try(:id))['distribution_state']
+  end
 end
