@@ -48,6 +48,8 @@ $(window).on("load", function(event) {
       return $.flashError(
         "Please save a start and end date to this course before distributing due dates."
       )
+    } else if (id === "distribute_due_dates" ) {
+      $('.due-date-button-popover').addClass("popover-visible");
     }
     
     var target = $(this).data("target");

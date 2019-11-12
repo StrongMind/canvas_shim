@@ -1,0 +1,65 @@
+.due-date-button-popover {
+  background-color: white;
+  box-shadow: 0 3px 5px #969696;
+  width: 300px;
+  padding: 1rem;
+  position: absolute;
+  z-index: 1;
+
+  // visibility styles
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s cubic-bezier(0.38, 0.48, 0.45, 0.93);
+
+  h5 {
+    color: #006BA6;
+    font-family: "Montserrat", sans-serif;
+    font-size: .8rem;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 1rem 0;
+    font-size: 0.7rem;
+    word-break: break-all;
+    white-space: normal;
+    display: inline;
+  }
+
+  .popover-close {
+    position: absolute;
+    top: -16px;
+    right: -16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    width: 30px;
+    border: 0;
+    color: #cccccc;
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      color: #8f8f8f;
+      cursor: pointer;
+    }
+  }
+
+  &.popover-visible {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  &:before {
+    position: absolute;
+    z-index: -1;
+    content: '';
+    left: -13px;
+    top: 19px;
+    border-style: solid;
+    border-width: 0 8px 8px 8px;
+    border-color: transparent transparent #ccc transparent;
+    transform: rotate(-90deg);
+  }
+}

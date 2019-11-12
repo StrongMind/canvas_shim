@@ -261,7 +261,7 @@
             <h5>Warning:</h5>
             <p>
               Your due dates are currently being distributed between <%= @context.start_at %> and <%= @context.end_at %> If you would like to distribute 
-              them between the dates selected above, please click the save button at the bottom of this page and try again.
+              different dates, please change the start and end fields, then click the save button at the bottom of this page and try again.
             </p>
           </div>
         </td>
@@ -810,5 +810,6 @@
 
 
 <% content_for :strongmind_assets do %>
+  <%= stylesheet_link_tag "canvas_shim/application", media: "all" %>
   <%= javascript_include_tag 'canvas_shim/application' %>
 <% end %>
