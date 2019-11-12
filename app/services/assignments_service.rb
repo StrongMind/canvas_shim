@@ -14,36 +14,27 @@ module AssignmentsService
 
   def self.distribute_dates_job(args={})
     command = Commands::DistributeDueDates.new(course: args[:course])
-    Delayed::Job.enqueue(command)
+    send_later(command)
   end
 
   def self.clear_due_dates(course:)
     command = Commands::ClearDueDates.new(course: course)
-    Delayed::Job.enqueue(command)
+    send_later(command)
   end
 
   def self.clear_due_dates!(course:)
     Commands::ClearDueDates.new(course: course).call
   end
 
-  def self.toggle_distribution_state(course, state)
-    SettingsService.update_settings(
-      object: 'course',
-      id: course.try(:id),
-      setting: 'distribution_state',
-      value: state
+  def self.is_distributing?(course)
+    Delayed::Job.current.exists?(strand: "course_due_dates:#{course.try(:id)}")
+  end
+
+  def self.send_later(command)
+    command.send_later_if_production_enqueue_args(
+      :perform,
+      { strand: "course_due_dates:#{course.try(:id)}" },
+      { course: course }
     )
-  end
-
-  def self.dist_on(course)
-    toggle_distribution_state(course, true)
-  end
-
-  def self.dist_off(course)
-    toggle_distribution_state(course, false)
-  end
-
-  def self.get_distribution_state(course)
-    SettingsService.get_settings(object: :course, id: course.try(:id))['distribution_state']
   end
 end

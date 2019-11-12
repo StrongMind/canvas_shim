@@ -8,9 +8,7 @@ module AssignmentsService
       end
 
       def perform
-        AssignmentsService.dist_on(course)
         call
-        AssignmentsService.dist_off(course)
       end
 
       def call

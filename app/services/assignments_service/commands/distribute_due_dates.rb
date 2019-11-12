@@ -16,9 +16,7 @@ module AssignmentsService
       end
 
       def perform
-        AssignmentsService.dist_on(course)
         distribute
-        AssignmentsService.dist_off(course)
       end
 
       private
