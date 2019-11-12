@@ -260,7 +260,8 @@
           <div class="due-date-button-popover">
             <h5>Warning:</h5>
             <p>
-              Your due dates are currently being distributed between <%= @context.start_at %> and <%= @context.end_at %> If you would like to distribute 
+              Your due dates are currently being distributed between <strong><%= @context.start_at.try(:strftime, "%m-%d-%Y") %></strong>
+              and <strong><%= @context.end_at.try(:strftime, "%m-%d-%Y") %></strong> If you would like to distribute 
               different dates, please change the start and end fields, then click the save button at the bottom of this page and try again.
             </p>
           </div>

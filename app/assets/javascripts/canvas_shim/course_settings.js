@@ -50,6 +50,13 @@ $(window).on("load", function(event) {
       )
     } else if (id === "distribute_due_dates" ) {
       $('.due-date-button-popover').addClass("popover-visible");
+      $('.due-date-button-popover').removeClass("popover-close");
+      setTimeout(function() {
+        $('.due-date-button-popover').removeClass("popover-visible");
+        $('.due-date-button-popover').addClass("popover-close");
+      }, 8000);
+
+      $('#distribute_due_dates').prop("disabled", "true");
     }
     
     var target = $(this).data("target");
