@@ -81,7 +81,7 @@ $(window).on("load", function(event) {
 
         if (id === "clear_due_dates") {
           return $.flashMessage(
-            "Your due dates are currently being cleared. They should be removed from the modules page in a few minutes.. "
+            "Your due dates are currently being cleared. They should be removed from the modules page in a few minutes."
           )
         }
 
