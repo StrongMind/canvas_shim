@@ -11,8 +11,10 @@ function flipIcon(element, threshDisabled) {
 
 function confirmDistribute() {
   return confirm(
-    "You are about to distribute between " + ENV.start_date +
-    " & " + ENV.end_date + ". Are you sure you want to do this?"
+    "You are about to distribute due dates between " + ENV.start_date +
+    " and " + ENV.end_date + ". If you have different dates selected, " +
+    "please click the 'Update Course Details' button at the bottom of the page. " +
+    "Are you sure you want to distribute between " + ENV.start_date + " and " + ENV.end_date + "?"
   )
 }
 
