@@ -1,5 +1,6 @@
 CoursesController.class_eval do
   before_action :get_course_threshold, only: :settings
+  before_action :get_course_dates, only: :settings
   helper_method :enrollment_name, :user_can_conclude_enrollments?
 
   def show_course_enrollments
@@ -59,6 +60,34 @@ CoursesController.class_eval do
     when "DesignerEnrollment"
       "Designer"
     end
+  end
+
+  def distribute_due_dates
+    get_context
+    if authorized_action(@context, @current_user, :change_course_state) && dates_distributable?
+      AssignmentsService.distribute_dates_job(course: @context)
+      render :json => {}, :status => :ok
+    else
+      render :json => {}, :status => :unprocessable_entity
+    end
+
+  rescue StandardError => exception
+    Raven.capture_exception(exception)
+    render :json => {}, :status => :bad_request
+  end
+
+  def clear_due_dates
+    get_context
+    if authorized_action(@context, @current_user, :change_course_state)
+      AssignmentsService.clear_due_dates(course: @context)
+      render :json => {}, :status => :ok
+    else
+      render :json => {}, :status => :unprocessable_entity
+    end
+
+  rescue StandardError => exception
+    Raven.capture_exception(exception)
+    render :json => {}, :status => :bad_request
   end
 
   def user_can_conclude_enrollments?
@@ -231,5 +260,19 @@ CoursesController.class_eval do
       }
     }
     })
+  end
+
+  def get_course_dates
+    get_context
+    js_env(
+      start_date: @context.start_at.try(:strftime, "%m-%d-%Y"),
+      end_date: @context.end_at.try(:strftime, "%m-%d-%Y")
+    )
+  end
+
+  def dates_distributable?
+    get_context
+    SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on' &&
+    @context.start_at && @context.end_at
   end
 end

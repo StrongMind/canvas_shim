@@ -5,14 +5,24 @@ module AssignmentsService
         @args = args
         @course = args[:course]
         @assignment_query = Queries::AssignmentsWithDueDates.new(course: @course)
+        @course_assignments = assignments
       end
 
       def call
-        return if multiple_imports?
-        course_assignments = assignments
-        clear_due_dates(course_assignments)
+        AssignmentsService.clear_due_dates!(course: course)
         return unless SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on'
         return unless course.start_at && course.end_at
+        distribute
+      end
+
+      def perform
+        distribute
+      end
+
+      private
+      attr_reader :course, :course_assignments, :assignments_per_day
+
+      def distribute
         offset = 0
         scheduler.course_dates.each do |date, count|
 
@@ -25,13 +35,7 @@ module AssignmentsService
 
           update_assignments(course_assignments.slice!(offset..count - 1), date)
         end
-
-        claim_import
       end
-
-      private
-
-      attr_reader :course, :assignments_per_day
 
       def scheduler
         @scheduler ||= Scheduler.new(@args.merge(assignment_count: assignments.count))
@@ -52,21 +56,6 @@ module AssignmentsService
         course_assignments.each do |asst|
           asst.update(due_at: nil)
         end
-      end
-
-      def claim_import
-        if @course.content_migrations.where(workflow_state: "imported").one?
-          SettingsService.update_settings(
-            object: 'course',
-            id: @course.id,
-            setting: 'imported_content',
-            value: true
-          )
-        end
-      end
-
-      def multiple_imports?
-        SettingsService.get_settings(object: :course, id: @course.id)['imported_content']
       end
     end
   end
