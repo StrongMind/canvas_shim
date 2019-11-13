@@ -13,8 +13,16 @@ function confirmDistribute() {
   return confirm(
     "You are about to distribute due dates between " + ENV.start_date +
     " and " + ENV.end_date + ". If you have different dates selected, " +
-    "please click the 'Update Course Details' button at the bottom of the page. " +
-    "Are you sure you want to distribute between " + ENV.start_date + " and " + ENV.end_date + "?"
+    "click the 'Update Course Details' button at the bottom of this page to save those dates. " +
+    "Please confirm that you want to distribute between " + ENV.start_date + " and " + ENV.end_date + "."
+  )
+}
+
+function confirmClear() {
+  return confirm(
+    "You are about to clear all due dates from this course. " +
+    "Course assignments will no longer have due dates or calendar events. " +
+    "Please confirm that you want to complete this action."
   )
 }
 
@@ -57,7 +65,9 @@ $(window).on("load", function(event) {
       return $.flashError(
         "Please save a start and end date to this course before distributing due dates."
       )
-    } else if (id === "distribute_due_dates" && !confirmDistribute()) { return }
+    } else if (id === "distribute_due_dates" && !confirmDistribute() || id === "clear_due_dates" && !confirmClear()) {
+      return;
+    }
     
     var target = $(this).data("target");
     var id = $(this).attr("id");
