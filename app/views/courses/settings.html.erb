@@ -254,17 +254,20 @@
         <td class="form-label"><label for="distribute_due_dates" id="distribute_due_dates_label"><%= t("Due Dates:") %></label></td>
         <td class="nobr tall-row">
           <% if AssignmentsService.is_distributing?(@context) %>
-            <div>
+            <div style="padding: .75rem 0;">
               <button class="btn btn-primary" disabled>Distrubute Due Dates</button>
               <button class="btn" disabled>Clear Dates</button>
-            </div>
-            <div>
-              <small><strong>*Due date distribution is currently in process for this course. Please wait a few minutes and refresh to try again.</strong></small>
+              <div id="distributing-msg" style="padding-top: .25rem">
+                <small><strong>*Due date distribution is currently in process for this course. Please wait a few minutes and refresh to try again.</strong></small>
+              </div>
             </div>
           <% else %>
-            <div>
+            <div style="padding: .75rem 0;">
               <button id="distribute_due_dates" data-target=<%= course_distribute_due_dates_path(@context) %> class="btn btn-primary endpoint-btn">Distrubute Due Dates</button>
               <button id="clear_due_dates" data-target=<%= course_clear_due_dates_path(@context) %> class="btn endpoint-btn">Clear Dates</button>
+              <div id="distributing-msg" class="hidden" style="padding-top: .25rem">
+                <small><strong>*Due date distribution is currently in process for this course. Please wait a few minutes and refresh to try again.</strong></small>
+              </div>
             </div>
           <% end %>
         </td>
@@ -813,6 +816,5 @@
 
 
 <% content_for :strongmind_assets do %>
-  <%= stylesheet_link_tag "canvas_shim/application", media: "all" %>
   <%= javascript_include_tag 'canvas_shim/application' %>
 <% end %>

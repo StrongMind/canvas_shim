@@ -65,6 +65,7 @@ $(window).on("load", function(event) {
       type: 'POST',
       success: function() {
         $(".endpoint-btn").prop("disabled", "true");
+        $("#distributing-msg").removeClass("hidden");
 
         if (id === "clear_due_dates") {
           return $.flashMessage(
