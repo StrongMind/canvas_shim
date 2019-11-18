@@ -1,6 +1,6 @@
 Submission.class_eval do
   after_commit :bust_context_module_cache
-  after_commit -> { PipelineService::V2.publish(self) }
+  after_save -> { PipelineService::V2.publish(self) }
   after_update :record_excused_removed
 
   def bust_context_module_cache

@@ -31,7 +31,9 @@ module PipelineService
         def self.additional_identifier_fields
           [
             Identifier.new(Proc.new {|ar_model| [:assignment_id, ar_model.assignment.id]}),
-            Identifier.new(Proc.new {|ar_model| [:course_id, ar_model.assignment.course.id]})
+            Identifier.new(Proc.new {|ar_model| [:course_id, ar_model.assignment.course.id]}),
+            Identifier.new(Proc.new {|ar_model| [:created_at, ar_model.created_at]}),
+            Identifier.new(Proc.new {|ar_model| [:updated_at, ar_model.updated_at]})
           ]
         end
       end
