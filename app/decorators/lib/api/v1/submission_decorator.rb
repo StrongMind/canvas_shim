@@ -1,4 +1,4 @@
-module Api::V1::Submission
+Api::V1::Submission.class_eval do
   def strongmind_submission_json submission, assignment, user, session, context=nil, includes=[], timestamps=nil
     instructure_json = instructure_submission_json
     return instructure_json unless timestamps
