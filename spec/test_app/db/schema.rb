@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190903221017) do
+ActiveRecord::Schema.define(version: 20191118214432) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -224,6 +224,7 @@ ActiveRecord::Schema.define(version: 20190903221017) do
     t.datetime "cached_due_date"
     t.datetime "updated_at"
     t.string   "context_code"
+    t.datetime "created_at"
   end
 
   create_table "user_observers", force: :cascade do |t|

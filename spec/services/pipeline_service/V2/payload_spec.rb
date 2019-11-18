@@ -20,6 +20,8 @@ describe PipelineService::V2::Payload do
         :assignment_id => assignment.id,
         :course_id => course.id,
         :id => submission.id,
+        :created_at => submission.created_at,
+        :updated_at => submission.updated_at
       })
   end
 end
