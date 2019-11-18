@@ -24,7 +24,8 @@ module PipelineService
             GradesService::Account.account_admin,
             {},
             nil,
-            ['submission_history']
+            ['submission_history'],
+            true
           )
         end
 
