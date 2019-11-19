@@ -12,8 +12,6 @@ describe PipelineService::V2::Payload do
       PageView.new)).call
   end
 
-
-
   it 'adds additional identifiers to submissions' do
     res = described_class.new(object: PipelineService::V2::Noun.new(submission)).call
     expect(res[:identifiers]).to eq ({
