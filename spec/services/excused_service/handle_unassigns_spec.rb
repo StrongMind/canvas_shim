@@ -56,8 +56,15 @@ describe ExcusedService::Commands::HandleUnassigns do
   end
 
   describe "#send_unassigns_to_settings" do
+
     it "sends an id" do
       expect(SettingsService).to receive(:update_settings).with(settings)
+      subject.send(:send_unassigns_to_settings)
+    end
+
+    it "publishes an unassignmed message to the pipeline" do
+      allow(SettingsService).to receive(:update_settings).with(settings)
+      expect(PipelineService).to receive(:publish)
       subject.send(:send_unassigns_to_settings)
     end
 

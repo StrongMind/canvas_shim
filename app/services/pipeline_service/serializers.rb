@@ -19,7 +19,8 @@ module PipelineService
         :CanvasAPIEnrollment, 
         :UnitGrades, 
         :CourseProgress, 
-        :ModuleItem
+        :ModuleItem,
+        :Unassigned
       ]
       ).map { |name| name.to_s.constantize }
     end

@@ -46,6 +46,7 @@ module ExcusedService
           setting: 'unassigned_students',
           value: @sent_unassigns
         )
+        PipelineService.publish(PipelineService::Nouns::Unassigned.new(assignment))
       end
 
       def remove_unassigns_from_overrides
