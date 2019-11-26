@@ -6,16 +6,19 @@ module PipelineService
       end
 
       def call
+        unassigned_student_ids
+
         @payload = {
-          assignment_id: assignment.id,
-          unassigned_at: Time.now.utc.iso8601,
-          unassigned_students: unassigned_student_ids
+          assignment_id: @assignment.id,
+          unassigned_students: unassigned_student_ids.map {|id| {student_id: id, unassigned_at: AssignmentOverrideStudent.find_by(user_id: id, assignment_id: @assignment.id).try(:created_at).iso8601} }
       }.to_json
       end
 
       private
 
       attr_reader :assignment
+
+
 
       def unassigned_student_ids
         unassigned_students = SettingsService.get_settings(

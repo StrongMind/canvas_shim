@@ -1,7 +1,7 @@
 module PipelineService
   module Nouns
     class Unassigned
-      attr_reader :assignment
+      attr_reader :assignment, :id
       def initialize(assignment)
         @assignment = assignment
       end
