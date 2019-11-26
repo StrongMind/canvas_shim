@@ -1,8 +1,10 @@
 module PipelineService
   module Serializers
     class Unassigned
+      attr_reader :assignment, :id
       def initialize object:
         @assignment = object
+        @id = assignment.id
       end
 
       def call
@@ -13,12 +15,6 @@ module PipelineService
           unassigned_students: unassigned_student_ids
       }.to_json
       end
-
-      private
-
-      attr_reader :assignment
-
-
 
       def unassigned_student_ids
         unassigned_students = SettingsService.get_settings(
