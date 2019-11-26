@@ -10,7 +10,7 @@ module PipelineService
 
         @payload = {
           assignment_id: @assignment.id,
-          unassigned_students: unassigned_student_ids.map {|id| {student_id: id, unassigned_at: AssignmentOverrideStudent.find_by(user_id: id, assignment_id: @assignment.id).try(:created_at).iso8601} }
+          unassigned_students: unassigned_student_ids
       }.to_json
       end
 
@@ -23,7 +23,7 @@ module PipelineService
       def unassigned_student_ids
         unassigned_students = SettingsService.get_settings(
           object: 'assignment',
-          id: "160771"
+          id: @assignment.id.to_s,
         )['unassigned_students']
         unless unassigned_students.empty?
           unassigned_students.split(",").map { |s| s.to_i } 
@@ -34,6 +34,4 @@ module PipelineService
     end
   end
 end
-
-
 
