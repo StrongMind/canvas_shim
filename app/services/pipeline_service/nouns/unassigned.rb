@@ -4,6 +4,7 @@ module PipelineService
       attr_reader :assignment, :id
       def initialize(assignment)
         @assignment = assignment
+        @id = assignment.id
       end
 
       def serializer
