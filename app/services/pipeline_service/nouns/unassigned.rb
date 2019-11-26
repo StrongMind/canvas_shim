@@ -14,6 +14,10 @@ module PipelineService
         'unassigned'
       end
 
+      def self.primary_key
+        'id'
+      end
+
     end
   end
 end
