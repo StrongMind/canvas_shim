@@ -12,7 +12,7 @@ describe PipelineService::Serializers::Unassigned do
         allow(SettingsService).to receive(:get_settings).and_return({"unassigned_students"=>"#{student_1.id},#{student_2.id}"})
     end
 
-    it 'returns an unassigned object with things' do
+    it 'returns an unassigned object with assignment and unassigned_student ids' do
         result = subject.call
         expect(result).to eq("{\"assignment_id\":#{assignment.id},\"unassigned_students\":[#{student_1.id},#{student_2.id}]}")
     end
