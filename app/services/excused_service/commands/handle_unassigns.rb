@@ -13,6 +13,7 @@ module ExcusedService
         return unless all_objects_present?
         send_original_due_date if assignment.due_at
         send_unassigns_to_settings
+        send_unassign_context
         remove_unassigns_from_overrides
         remove_scores_from_unassigns
         override_originally_assigned_students
@@ -20,7 +21,7 @@ module ExcusedService
       end
 
       private
-      attr_reader :assignment, :assignment_params, :new_unassigns, :previous_unassigns
+      attr_reader :assignment, :assignment_params, :new_unassigns, :previous_unassigns, :grader_id
 
       def all_objects_present?
         assignment && assignment_params && new_unassigns && needs_to_change?

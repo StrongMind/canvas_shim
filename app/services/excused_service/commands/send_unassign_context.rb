@@ -11,10 +11,11 @@ module ExcusedService
 
       def perform
         return unless performable?
+        clean_previous_context
 
         SettingsService.update_settings(
           object: 'assignment',
-          id: assignment.id,
+          id: "#{assignment.id}",
           setting: 'unassign_context',
           value: merged_unassigns.to_json
         )
@@ -37,36 +38,49 @@ module ExcusedService
                   )['unassign_context']
 
         return JSON.parse(setting) if setting
-        {}
+        previous_unassigns.any? ? legacy_unassign_context : {}
       end
 
-      def cleaned_previous_context
+      def legacy_unassign_context
+        {
+          "" => {
+            grader_id: nil,
+            unassigns: previous_unassigns
+          }
+        }
+      end
+
+      def clean_previous_context
         previous_unassign_context.each do |ts, unassign_group|
-          if unassign_group[:unassigns]
-            clean_unassign_group(group)
+          if unassign_group["unassigns"]
+            clean_unassigns(unassign_group["unassigns"])
           end
         end
       end
 
-      def clean_unassign_group(group)
-        group.reject! { |id| reassigned_student?(id) }
+      def clean_unassigns(group)
+        group.select! { |id| still_unassigned_student?(id) }
       end
 
-      def reassigned_student?(id)
-        previous_unassigns.include?(id) && !new_unassigns.include?(id)
+      def still_unassigned_student?(id)
+        (ExcusedService.unassigned_students(assignment) || "").split(",").include?(id)
       end
 
       def new_unassign_context
         {
           timestamp => {
-            grader_id: grader_id,
-            unassigns: new_unassigns
+            "grader_id" => grader_id,
+            "unassigns" => new_unassigns
           }
         }
       end
 
       def merged_unassigns
-        cleaned_previous_context.merge(new_unassign_context)
+        if new_unassigns.any?
+          previous_unassign_context.merge(new_unassign_context)
+        else
+          previous_unassign_context
+        end
       end
     end
   end

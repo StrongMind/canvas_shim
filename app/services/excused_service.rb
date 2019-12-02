@@ -15,8 +15,8 @@ module ExcusedService
     Commands::SendUnassignContext.new(
       assignment: assignment,
       new_unassigns: new_unassigns,
-      grader_id: grader_id,
       previous_unassigns: previous_unassigns,
+      grader_id: grader_id,
       timestamp: Time.now
     ).send_later(:perform)
   end
