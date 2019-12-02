@@ -3,8 +3,12 @@ module ExcusedService
     Commands::HandleExclusions.new(assignment: assignment, exclusions: exclusions).call
   end
 
-  def self.bulk_unassign(assignment:, assignment_params:)
-    Commands::HandleUnassigns.new(assignment: assignment, assignment_params: assignment_params).call
+  def self.bulk_unassign(assignment:, assignment_params:, grader_id:)
+    Commands::HandleUnassigns.new(
+      assignment: assignment,
+      assignment_params: assignment_params,
+      grader_id: grader_id
+    ).call
   end
 
   def self.student_names_ids(group)

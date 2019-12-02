@@ -28,6 +28,10 @@ AssignmentsApiController.class_eval do
   end
 
   def bulk_unassign
-    ExcusedService.bulk_unassign(assignment: @assignment, assignment_params: params[:assignment])
+    ExcusedService.bulk_unassign(
+      assignment: @assignment,
+      assignment_params: params[:assignment],
+      grader_id: @current_user.try(:id)
+    )
   end
 end

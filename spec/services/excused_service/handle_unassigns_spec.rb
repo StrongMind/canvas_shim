@@ -9,7 +9,8 @@ describe ExcusedService::Commands::HandleUnassigns do
         :bulk_unassign => [
           { name: "student", id: "#{unassigned_student_enrollment.user_id}" }
         ]
-      }
+      },
+      grader_id: 1
     )
   end
 

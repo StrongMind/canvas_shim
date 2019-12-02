@@ -1,11 +1,12 @@
 module ExcusedService
   module Commands
     class HandleUnassigns
-      def initialize(assignment:, assignment_params:)
+      def initialize(assignment:, assignment_params:, grader_id:)
         @assignment = assignment
         @assignment_params = assignment_params
         @new_unassigns = extract_ids_from_bulk_unassign
         @previous_unassigns = ExcusedService.unassigned_students(assignment)
+        @grader_id = grader_id
       end
 
       def call
@@ -109,8 +110,11 @@ module ExcusedService
 
       def persisted_and_new_unassigns
         persisted = previous_unassigns.split(",").select { |un| new_unassigns.include?(un) }
-        new_not_previous = new_unassigns.reject { |un| previous_unassigns.split(",").include?(un) }
         persisted.concat(new_not_previous).uniq
+      end
+
+      def new_not_previous
+        new_unassigns.reject { |un| previous_unassigns.split(",").include?(un) }
       end
 
       def existing_assignment_overrides
