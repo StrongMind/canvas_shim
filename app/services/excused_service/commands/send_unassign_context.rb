@@ -1,9 +1,10 @@
 module ExcusedService
   module Commands
     class SendUnassignContext
-      def initialize(assignment:, new_unassigns:, grader_id:, timestamp:)
+      def initialize(assignment:, new_unassigns:, previous_unassigns:, grader_id:, timestamp:)
         @assignment = assignment
         @new_unassigns = new_unassigns
+        @previous_unassigns = previous_unassigns
         @grader_id = grader_id
         @timestamp = timestamp
       end
@@ -23,14 +24,10 @@ module ExcusedService
 
       private
 
-      attr_reader :assignment, :new_unassigns, :grader_id, :timestamp
+      attr_reader :assignment, :new_unassigns, :previous_unassigns, :grader_id, :timestamp
 
       def performable?
         assignment && timestamp
-      end
-
-      def previous_unassigns
-        (ExcusedService.unassigned_students(assignment) || "").split(",")
       end
 
       def previous_unassign_context

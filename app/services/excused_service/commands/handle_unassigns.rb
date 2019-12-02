@@ -50,6 +50,15 @@ module ExcusedService
         PipelineService.publish(PipelineService::Nouns::Unassigned.new(assignment))
       end
 
+      def send_unassign_context
+        ExcusedService.send_unassign_context(
+          assignment: assignment,
+          new_unassigns: new_not_previous,
+          previous_unassigns: formatted_previous_unassigns,
+          grader_id: grader_id
+        )
+      end
+
       def remove_unassigns_from_overrides
         assignment_params[:assignment_overrides].each do |override|
           if override["student_ids"]
@@ -114,7 +123,11 @@ module ExcusedService
       end
 
       def new_not_previous
-        new_unassigns.reject { |un| previous_unassigns.split(",").include?(un) }
+        new_unassigns.reject { |un| formatted_previous_unassigns.include?(un) }
+      end
+
+      def formatted_previous_unassigns
+        (previous_unassigns || "").split(",")
       end
 
       def existing_assignment_overrides
@@ -124,7 +137,7 @@ module ExcusedService
       end
 
       def reassigned_student?(id)
-        previous_unassigns.split(",").include?(id) && !new_unassigns.include?(id)
+        formatted_previous_unassigns.include?(id) && !new_unassigns.include?(id)
       end
 
       def original_due_date

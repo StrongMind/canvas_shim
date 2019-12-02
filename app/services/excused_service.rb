@@ -11,11 +11,12 @@ module ExcusedService
     ).call
   end
 
-  def self.send_unassign_context(assignment:, new_unassigns:, grader_id:)
+  def self.send_unassign_context(assignment:, new_unassigns:, previous_unassigns:, grader_id:)
     Commands::SendUnassignContext.new(
       assignment: assignment,
       new_unassigns: new_unassigns,
       grader_id: grader_id,
+      previous_unassigns: previous_unassigns,
       timestamp: Time.now
     ).send_later(:perform)
   end
