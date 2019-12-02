@@ -11,6 +11,15 @@ module ExcusedService
     ).call
   end
 
+  def self.send_unassign_context(assignment:, new_unassigns:, grader_id:)
+    Commands::SendUnassignContext.new(
+      assignment: assignment,
+      new_unassigns: new_unassigns,
+      grader_id: grader_id,
+      timestamp: Time.now
+    ).send_later(:perform)
+  end
+
   def self.student_names_ids(group)
     group.map {|obj| {id: obj.user_id, name: obj.user.name} }
   end
