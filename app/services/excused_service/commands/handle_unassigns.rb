@@ -1,17 +1,19 @@
 module ExcusedService
   module Commands
     class HandleUnassigns
-      def initialize(assignment:, assignment_params:)
+      def initialize(assignment:, assignment_params:, grader_id:)
         @assignment = assignment
         @assignment_params = assignment_params
         @new_unassigns = extract_ids_from_bulk_unassign
         @previous_unassigns = ExcusedService.unassigned_students(assignment)
+        @grader_id = grader_id
       end
 
       def call
         return unless all_objects_present?
         send_original_due_date if assignment.due_at
         send_unassigns_to_settings
+        send_unassign_context
         remove_unassigns_from_overrides
         remove_scores_from_unassigns
         override_originally_assigned_students
@@ -19,7 +21,7 @@ module ExcusedService
       end
 
       private
-      attr_reader :assignment, :assignment_params, :new_unassigns, :previous_unassigns
+      attr_reader :assignment, :assignment_params, :new_unassigns, :previous_unassigns, :grader_id
 
       def all_objects_present?
         assignment && assignment_params && new_unassigns && needs_to_change?
@@ -46,7 +48,15 @@ module ExcusedService
           setting: 'unassigned_students',
           value: @sent_unassigns
         )
-        PipelineService.publish(PipelineService::Nouns::Unassigned.new(assignment))
+      end
+
+      def send_unassign_context
+        ExcusedService.send_unassign_context(
+          assignment: assignment,
+          new_unassigns: new_not_previous,
+          previous_unassigns: formatted_previous_unassigns,
+          grader_id: grader_id
+        )
       end
 
       def remove_unassigns_from_overrides
@@ -109,8 +119,15 @@ module ExcusedService
 
       def persisted_and_new_unassigns
         persisted = previous_unassigns.split(",").select { |un| new_unassigns.include?(un) }
-        new_not_previous = new_unassigns.reject { |un| previous_unassigns.split(",").include?(un) }
         persisted.concat(new_not_previous).uniq
+      end
+
+      def new_not_previous
+        new_unassigns.reject { |un| formatted_previous_unassigns.include?(un) }
+      end
+
+      def formatted_previous_unassigns
+        (previous_unassigns || "").split(",")
       end
 
       def existing_assignment_overrides
@@ -120,7 +137,7 @@ module ExcusedService
       end
 
       def reassigned_student?(id)
-        previous_unassigns.split(",").include?(id) && !new_unassigns.include?(id)
+        formatted_previous_unassigns.include?(id) && !new_unassigns.include?(id)
       end
 
       def original_due_date

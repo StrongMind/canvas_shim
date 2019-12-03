@@ -8,24 +8,19 @@ module PipelineService
       end
 
       def call
-        unassigned_student_ids
-
         @payload = {
-          assignment_id: @assignment.id,
-          unassigned_students: unassigned_student_ids
-      }.to_json
+          assignment_id: id,
+          unassigned_students: unassigned_students
+        }.to_json
       end
 
-      def unassigned_student_ids
-        unassigned_students = SettingsService.get_settings(
-          object: 'assignment',
-          id: @assignment.id.to_s,
-        )['unassigned_students']
-        unless unassigned_students.empty?
-          unassigned_students.split(",").map { |s| s.to_i } 
-        else
-          []
-        end
+      def unassigned_students
+        setting = SettingsService.get_settings(
+                    object: :assignment,
+                    id: "#{id}"
+                  )['unassign_context']
+
+        setting ? JSON.parse(setting) : {}
       end
     end
   end

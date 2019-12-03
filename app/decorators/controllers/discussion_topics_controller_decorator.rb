@@ -14,7 +14,11 @@ DiscussionTopicsController.class_eval do
     get_discussion_assignment
     merge_unassign_params
     ExcusedService.bulk_excuse(assignment: @assignment, exclusions: params['excluded_students'])
-    ExcusedService.bulk_unassign(assignment: @assignment, assignment_params: params[:assignment])
+    ExcusedService.bulk_unassign(
+      assignment: @assignment,
+      assignment_params: params[:assignment],
+      grader_id: @current_user.try(:id)
+    )
     instructure_update
   end
 

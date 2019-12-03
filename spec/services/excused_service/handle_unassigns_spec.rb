@@ -9,7 +9,8 @@ describe ExcusedService::Commands::HandleUnassigns do
         :bulk_unassign => [
           { name: "student", id: "#{unassigned_student_enrollment.user_id}" }
         ]
-      }
+      },
+      grader_id: 1
     )
   end
 
@@ -59,12 +60,6 @@ describe ExcusedService::Commands::HandleUnassigns do
 
     it "sends an id" do
       expect(SettingsService).to receive(:update_settings).with(settings)
-      subject.send(:send_unassigns_to_settings)
-    end
-
-    it "publishes an unassignmed message to the pipeline" do
-      allow(SettingsService).to receive(:update_settings).with(settings)
-      expect(PipelineService).to receive(:publish)
       subject.send(:send_unassigns_to_settings)
     end
 
@@ -124,6 +119,7 @@ describe ExcusedService::Commands::HandleUnassigns do
   describe "call" do
     before do
       allow(SettingsService).to receive(:update_settings).with(settings)
+      allow(SettingsService).to receive(:update_settings)
     end
 
     it "mutates assignment_params when successful" do
