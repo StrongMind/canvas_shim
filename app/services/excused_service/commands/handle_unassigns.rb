@@ -48,7 +48,6 @@ module ExcusedService
           setting: 'unassigned_students',
           value: @sent_unassigns
         )
-        PipelineService.publish(PipelineService::Nouns::Unassigned.new(assignment))
       end
 
       def send_unassign_context
