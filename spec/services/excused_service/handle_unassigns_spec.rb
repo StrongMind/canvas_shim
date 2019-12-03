@@ -125,6 +125,7 @@ describe ExcusedService::Commands::HandleUnassigns do
   describe "call" do
     before do
       allow(SettingsService).to receive(:update_settings).with(settings)
+      allow(SettingsService).to receive(:update_settings)
     end
 
     it "mutates assignment_params when successful" do
