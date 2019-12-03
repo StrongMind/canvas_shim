@@ -94,6 +94,7 @@ describe ExcusedService::Commands::SendUnassignContext do
     
     it "returns a merged object" do
       expect(subject.send(:merged_unassigns)).not_to eq(subject.send(:previous_context))
+      expect(subject.send(:merged_unassigns).size).to eq(2)
     end
 
     it "returns the previous context" do
