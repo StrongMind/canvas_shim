@@ -56,6 +56,7 @@ module ExcusedService
         previous_context.each do |ts, unassign_group|
           if unassign_group["unassigns"]
             clean_unassigns(unassign_group["unassigns"])
+            previous_context.delete(ts) if unassign_group["unassigns"].empty?
           end
         end
       end
