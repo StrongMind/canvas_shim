@@ -11,6 +11,7 @@ module ExcusedService
 
       def perform
         return unless performable?
+        self.previous_context = previous_unassign_context
         clean_previous_context
 
         SettingsService.update_settings(
@@ -26,6 +27,7 @@ module ExcusedService
       private
 
       attr_reader :assignment, :new_unassigns, :previous_unassigns, :grader_id, :timestamp
+      attr_accessor :previous_context
 
       def performable?
         assignment && timestamp
@@ -51,7 +53,7 @@ module ExcusedService
       end
 
       def clean_previous_context
-        previous_unassign_context.each do |ts, unassign_group|
+        previous_context.each do |ts, unassign_group|
           if unassign_group["unassigns"]
             clean_unassigns(unassign_group["unassigns"])
           end
@@ -77,9 +79,9 @@ module ExcusedService
 
       def merged_unassigns
         if new_unassigns.any?
-          previous_unassign_context.merge(new_unassign_context)
+          previous_context.merge(new_unassign_context)
         else
-          previous_unassign_context
+          previous_context
         end
       end
     end
