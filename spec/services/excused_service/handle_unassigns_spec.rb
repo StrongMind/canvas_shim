@@ -63,12 +63,6 @@ describe ExcusedService::Commands::HandleUnassigns do
       subject.send(:send_unassigns_to_settings)
     end
 
-    it "publishes an unassignmed message to the pipeline" do
-      allow(SettingsService).to receive(:update_settings).with(settings)
-      expect(PipelineService).to receive(:publish)
-      subject.send(:send_unassigns_to_settings)
-    end
-
     it "sends false with nothing" do
       settings[:value] = false
       subject.instance_variable_set(:@new_unassigns, [])

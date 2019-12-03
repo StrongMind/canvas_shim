@@ -102,4 +102,12 @@ describe ExcusedService::Commands::SendUnassignContext do
       expect(subject.send(:merged_unassigns)).to eq(subject.send(:previous_context))
     end
   end
+
+  describe "#perform" do
+    it "publishes an unassignmed message to the pipeline" do
+      expect(SettingsService).to receive(:update_settings)
+      expect(PipelineService).to receive(:publish)
+      subject.send(:perform)
+    end
+  end
 end
