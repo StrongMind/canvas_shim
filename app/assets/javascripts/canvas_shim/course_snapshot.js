@@ -68,6 +68,8 @@ $(window).on("load", function(event) {
     $('.course-snapshot-detail-row').each(function(student) {
       fillDetailRow($(this));
     });
+  } else {
+    replaceDataTable();
   }
 });
 
@@ -96,12 +98,8 @@ function fillDetailRow(student) {
     student.find('.enr-progress-bar .value').css('width', response.course_progress);
     student.find('.enr-progress-bar .progress').attr('data-label', response.course_progress);
 
-    if (doneLoading()) {
-      $('#studentDetails').DataTable();
-      $("#placeHolderStudentDetails").remove();
-      $('#placeHolderStudentDetails_wrapper').remove();
-      $('#studentDetails').show();
-    }
+    if (doneLoading()) { replaceDataTable() }
+
   }).fail(function() {
     $('#loading-cell').text("Request failed. Please try again.");
   });
@@ -111,4 +109,11 @@ function doneLoading() {
   return !$('.course-snapshot-detail-row td').get().some(function(element) {
     return $(element).text().trim() === "Waiting...";
   });
+}
+
+function replaceDataTable() {
+  $('#studentDetails').DataTable();
+  $("#placeHolderStudentDetails").remove();
+  $('#placeHolderStudentDetails_wrapper').remove();
+  $('#studentDetails').show();
 }
