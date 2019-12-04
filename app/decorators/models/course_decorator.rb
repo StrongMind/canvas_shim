@@ -13,8 +13,6 @@ Course.class_eval do
 
   class << self
     def strongmind_default_tabs
-      return instructure_default_tabs unless snapshot_enabled?
-
       default_tabs = instructure_default_tabs
       settings_tab = default_tabs.pop
 
@@ -33,10 +31,6 @@ Course.class_eval do
 
     alias_method :instructure_default_tabs, :default_tabs
     alias_method :default_tabs, :strongmind_default_tabs
-
-    def snapshot_enabled?
-      SettingsService.get_settings(object: :school, id: 1)['enable_course_snapshot']
-    end
   end
 
   def force_min_scores
