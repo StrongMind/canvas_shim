@@ -250,7 +250,7 @@
         </td>
       <% end %>
 
-      <% if @context.content_migrations.exists?(workflow_state: 'imported') && SettingsService.get_settings(object: :school, id: 1)['due_date_buttons'] %>
+      <% if @context.content_migrations.exists?(workflow_state: 'imported') %>
 
         </tr><tr>
           <td class="form-label"><label for="distribute_due_dates" id="distribute_due_dates_label"><%= t("Due Dates:") %></label></td>
