@@ -33,6 +33,10 @@
 <% end %>
 
 <% content_for :right_side do %>
+  <%= button_to 'Tutapoint', 'http://www.example.com',
+      params: { username: "myname", last_name: "name", first_name: "my", email: "mail@example.com" },
+      class: 'btn btn-primary'
+  %>
   <div id="course_show_secondary">
     <% if @current_requirement %>
       <div id="resume-container">
