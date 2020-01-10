@@ -1,3 +1,4 @@
+require 'sanitize'
 module AlertsService
   module Alerts
     class StudentDiscussionEntry < Alert
@@ -16,11 +17,11 @@ module AlertsService
       end
 
       def detail
-        @message
+        Sanitize.clean(@message).strip
       end
 
       def description
-        'A student has replied to a discussion topic.'
+        'Student Replied To Discussion Topic'
       end
     end
   end
