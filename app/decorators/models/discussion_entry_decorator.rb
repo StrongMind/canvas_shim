@@ -1,5 +1,6 @@
 DiscussionEntry.class_eval do
   alias_method :change_read_state_alias, :change_read_state
+  after_create :send_new_discussion_alert, if: :is_from_student?
   after_save :set_unread_status
 
   def set_unread_status
@@ -27,5 +28,13 @@ DiscussionEntry.class_eval do
     result = change_read_state_alias(new_state, current_user, opts)
     set_unread_status
     result
+  end
+
+  def send_new_discussion_alert
+    #AlertsService.create_discussion_alert(self.discussion_topic)
+  end
+
+  def is_from_student?
+    user.student_enrollments.exists?(course: discussion_topic.course)
   end
 end
