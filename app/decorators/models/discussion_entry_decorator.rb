@@ -1,6 +1,6 @@
 DiscussionEntry.class_eval do
   alias_method :change_read_state_alias, :change_read_state
-  after_create :send_new_discussion_alert, if: :is_from_student?
+  after_create :send_new_discussion_alert, if: :is_alert_worthy?
   after_save :set_unread_status
 
   def set_unread_status
@@ -45,8 +45,17 @@ DiscussionEntry.class_eval do
     end
   end
 
+  private
+  def is_alert_worthy?
+    is_from_student? && is_subentry?
+  end
+
   def is_from_student?
     user.student_enrollments.exists?(course: discussion_topic.course)
+  end
+
+  def is_subentry?
+    flattened_discussion_subentries.pluck(:id).include?(id)
   end
 
   def teacher_ids_to_alert
