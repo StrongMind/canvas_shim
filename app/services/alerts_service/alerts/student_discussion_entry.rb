@@ -1,3 +1,4 @@
+require 'sanitize'
 module AlertsService
   module Alerts
     class StudentDiscussionEntry < Alert
@@ -16,7 +17,7 @@ module AlertsService
       end
 
       def detail
-        @message
+        Sanitize.clean(@message).strip
       end
 
       def description
