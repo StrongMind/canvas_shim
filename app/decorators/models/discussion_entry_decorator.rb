@@ -31,10 +31,25 @@ DiscussionEntry.class_eval do
   end
 
   def send_new_discussion_alert
-    #AlertsService.create_discussion_alert(self.discussion_topic)
+    assignment = discussion_topic.assignment
+    return unless assignment
+    teachers_to_alert.each do |teacher|
+      AlertsService::Client.create(
+        :student_discussion_entry,
+        teacher_id: teacher.id,
+        student_id: user.id,
+        assignment_id: assignment.id,
+        course_id: assignment.course.id,
+        message: message
+      )
+    end
   end
 
   def is_from_student?
     user.student_enrollments.exists?(course: discussion_topic.course)
+  end
+
+  def teachers_to_alert
+    discussion_topic.course.teacher_enrollments.map { |enrollment| enrollment.user }
   end
 end

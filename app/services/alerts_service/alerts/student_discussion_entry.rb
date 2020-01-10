@@ -1,7 +1,7 @@
 module AlertsService
   module Alerts
     class StudentDiscussionEntry < Alert
-      ALERT_ATTRIBUTES = %i{ teacher_id student_id assignment_id score course_id}
+      ALERT_ATTRIBUTES = %i{ teacher_id student_id assignment_id message course_id}
 
       def initialize(atts)
         super
@@ -16,12 +16,11 @@ module AlertsService
       end
 
       def detail
-        return unless @score.present?
-        "Last Score: #{@score}"
+        @message
       end
 
       def description
-        'Max Attempts & Minimum Score Not Reached'
+        'A student has replied to a discussion topic.'
       end
     end
   end
