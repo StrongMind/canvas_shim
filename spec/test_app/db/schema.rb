@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191126181033) do
+ActiveRecord::Schema.define(version: 20200110223816) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -129,6 +129,7 @@ ActiveRecord::Schema.define(version: 20191126181033) do
   create_table "discussion_entries", force: :cascade do |t|
     t.integer "discussion_topic_id"
     t.boolean "unread"
+    t.integer "user_id"
   end
 
   create_table "discussion_topics", force: :cascade do |t|

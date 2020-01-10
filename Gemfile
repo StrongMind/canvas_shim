@@ -132,4 +132,5 @@ group :development, :test do
   gem 'timecop'
   gem 'vcr'
   gem 'sentry-raven'
+  gem 'sanitize', '2.1.0', require: false
 end

@@ -1,5 +1,6 @@
 class DiscussionEntry < ActiveRecord::Base
   belongs_to :discussion_topic
+  belongs_to :user
 
   def unread?(teacher)
     self[:unread] == true

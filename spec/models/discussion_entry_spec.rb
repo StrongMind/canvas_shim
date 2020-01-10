@@ -21,12 +21,12 @@ describe DiscussionEntry do
       allow(HTTParty).to receive(:delete)
       allow(SettingsService).to receive(:get_settings).and_return('show_unread_discussions' => true)
 
-      DiscussionEntry.create(discussion_topic: discussion_topic, unread: true)
+      DiscussionEntry.create(discussion_topic: discussion_topic, unread: true, user_id: teacher.id)
 
     end
 
     subject do
-      DiscussionEntry.create(discussion_topic: discussion_topic, unread: true)
+      DiscussionEntry.create(discussion_topic: discussion_topic, unread: true, user_id: teacher.id)
     end
 
     context 'when the entry has not been read' do
@@ -38,7 +38,7 @@ describe DiscussionEntry do
 
     context 'when the entry has been read' do
       subject do
-        DiscussionEntry.create(discussion_topic: discussion_topic, unread: false)
+        DiscussionEntry.create(discussion_topic: discussion_topic, unread: false, user_id: teacher.id)
       end
 
       it 'delete to the endpoint on save' do
