@@ -59,7 +59,7 @@ DiscussionEntry.class_eval do
   end
 
   def discussion_alerts_on?
-    SettingsService.get_settingsSettingsService.get_settings(object: :school, id: 1)['discussion_alerts']
+    SettingsService.get_settings(object: :school, id: 1)['discussion_alerts']
   end
 
   def teacher_ids_to_alert
