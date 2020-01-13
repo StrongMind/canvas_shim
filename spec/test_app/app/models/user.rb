@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
   has_many :enrollments
   has_many :courses, through: :enrollments
   has_many :submissions
+  has_many :discussion_entries
 
   has_many :pseudonyms
   has_one :pseudonym, -> { where("pseudonyms.workflow_state<>'deleted'").order(:position) }
@@ -21,5 +22,9 @@ class User < ActiveRecord::Base
 
   def name
     "Chris Young"
+  end
+
+  def student_enrollments
+    enrollments.where(type: "StudentEnrollment")
   end
 end
