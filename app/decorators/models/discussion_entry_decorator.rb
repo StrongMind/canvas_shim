@@ -32,7 +32,7 @@ DiscussionEntry.class_eval do
 
   def send_new_discussion_alert
     assignment = discussion_topic.assignment
-    return unless assignment
+    return unless assignment && discussion_alerts_on?
     teacher_ids_to_alert.each do |teacher_id|
       AlertsService::Client.create(
         :student_discussion_entry,
@@ -56,6 +56,10 @@ DiscussionEntry.class_eval do
 
   def is_subentry?
     flattened_discussion_subentries.pluck(:id).include?(id)
+  end
+
+  def discussion_alerts_on?
+    SettingsService.get_settingsSettingsService.get_settings(object: :school, id: 1)['discussion_alerts']
   end
 
   def teacher_ids_to_alert
