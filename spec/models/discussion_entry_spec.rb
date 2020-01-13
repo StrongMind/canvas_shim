@@ -79,7 +79,7 @@ describe DiscussionEntry do
     end
   end
 
-  describe "#is_alert_worthy?" do
+  describe "#is_discussion_reply_from_student?" do
     let(:course) { Course.create(users: [teacher, student]) }
     let(:discussion_topic) { DiscussionTopic.create(context: course) }
     let(:teacher) { User.create }
@@ -100,21 +100,21 @@ describe DiscussionEntry do
 
       context "Root Entry" do
         before do
-          allow(subject).to receive(:flattened_discussion_subentries).and_return([])
+          allow(subject).to receive(:parent_id).and_return(nil)
         end
 
         it "returns false if root entry" do
-          expect(subject.send(:is_alert_worthy?)).to be false
+          expect(subject.send(:is_discussion_reply_from_student?)).to be_falsy
         end
       end
 
       context "Non-root Entry" do
         before do
-          allow(subject).to receive(:flattened_discussion_subentries).and_return(discussion_topic.discussion_entries)
+          allow(subject).to receive(:parent_id).and_return(subject.id)
         end
 
         it "returns true if reply" do
-          expect(subject.send(:is_alert_worthy?)).to be true
+          expect(subject.send(:is_discussion_reply_from_student?)).to be_truthy
         end
       end
     end
@@ -126,21 +126,21 @@ describe DiscussionEntry do
 
       context "Root Entry" do
         before do
-          allow(subject).to receive(:flattened_discussion_subentries).and_return([])
+          allow(subject).to receive(:parent_id).and_return(nil)
         end
 
         it "returns false if teacher (root entry)" do
-          expect(subject.send(:is_alert_worthy?)).to be false
+          expect(subject.send(:is_discussion_reply_from_student?)).to be_falsy
         end
       end
 
       context "Non-root Entry" do
         before do
-          allow(subject).to receive(:flattened_discussion_subentries).and_return(discussion_topic.discussion_entries)
+          allow(subject).to receive(:parent_id).and_return(subject.id)
         end
 
         it "returns false if teacher (reply)" do
-          expect(subject.send(:is_alert_worthy?)).to be false
+          expect(subject.send(:is_discussion_reply_from_student?)).to be_falsy
         end
       end
     end
