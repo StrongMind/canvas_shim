@@ -36,8 +36,8 @@ DiscussionEntry.class_eval do
         :student_discussion_entry,
         teacher_id: teacher_id,
         student_id: user.id,
-        assignment_id: assignment.id,
-        course_id: assignment.course.id,
+        assignment_id: discussion_topic.assignment_id,
+        course_id: discussion_topic.context_id,
         message: message
       )
     end
@@ -45,9 +45,8 @@ DiscussionEntry.class_eval do
 
   private
   def alertable_discussion_reply?
-    is_discussion_reply_from_student? &&
-    discussion_topic.assignment &&
-    discussion_alerts_on?
+    is_discussion_reply_from_student? && discussion_topic.assignment &&
+    discussion_topic.try(:course) && discussion_alerts_on?
   end
 
   def is_discussion_reply_from_student?
