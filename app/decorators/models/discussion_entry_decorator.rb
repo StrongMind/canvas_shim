@@ -48,7 +48,7 @@ DiscussionEntry.class_eval do
 
   private
   def alertable_discussion_reply?
-    is_discussion_reply_from_student? && discussion_alerts_on?
+    discussion_alerts_on? && is_discussion_reply_from_student?
   end
 
   def is_discussion_reply_from_student?
