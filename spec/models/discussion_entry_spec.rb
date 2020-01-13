@@ -86,7 +86,7 @@ describe DiscussionEntry do
     let(:student) { User.create }
 
     before do
-      allow(SettingsService).to receive(:get_settings).and_return('discussion_alerts' => true)
+      allow(SettingsService).to receive(:get_settings).and_return('reply_alerts' => true)
     end
 
     context 'Student Discussion Entry' do
