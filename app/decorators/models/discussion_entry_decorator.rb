@@ -1,6 +1,6 @@
 DiscussionEntry.class_eval do
   alias_method :change_read_state_alias, :change_read_state
-  after_create :send_new_discussion_alert, if: :is_discussion_reply_from_student?
+  after_create :send_new_discussion_alert, if: :alertable_discussion_reply?
   after_save :set_unread_status
 
   def set_unread_status
@@ -31,8 +31,6 @@ DiscussionEntry.class_eval do
   end
 
   def send_new_discussion_alert
-    assignment = discussion_topic.assignment
-    return unless assignment && discussion_alerts_on?
     teacher_ids_to_alert.each do |teacher_id|
       AlertsService::Client.create(
         :student_discussion_entry,
@@ -46,6 +44,12 @@ DiscussionEntry.class_eval do
   end
 
   private
+  def alertable_discussion_reply?
+    is_discussion_reply_from_student? &&
+    discussion_topic.assignment &&
+    discussion_alerts_on?
+  end
+
   def is_discussion_reply_from_student?
     is_from_student? && parent_id
   end
