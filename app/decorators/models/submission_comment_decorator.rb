@@ -1,5 +1,5 @@
 SubmissionComment.class_eval do
-  after_create :send_feedback_alert, if: :is_submission_comment_from_student?
+  after_commit :send_feedback_alert, if: :is_submission_comment_from_student?
 
   def is_submission_comment_from_student?
     return unless reply_alerts_on? && context.is_a?(Course)
@@ -21,7 +21,7 @@ SubmissionComment.class_eval do
 
   private
   def teacher_ids
-    context.teacher_enrollments.pluck(:id)
+    context.teacher_enrollments.pluck(:user_id)
   end
 
   def reply_alerts_on?
