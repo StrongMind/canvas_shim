@@ -1,13 +1,13 @@
 SubmissionComment.class_eval do
-  after_commit :send_feedback_alert, if: :is_submission_comment_from_student?
+  after_create :send_feedback_alert, if: :is_submission_comment_from_student?
 
   def is_submission_comment_from_student?
     return unless reply_alerts_on? && context.is_a?(Course)
-    !teacher_ids.include?(author_id)
+    context_student_ids.include?(author_id)
   end
 
   def send_feedback_alert
-    teacher_ids.each do |teacher_id|
+    context_teacher_ids.each do |teacher_id|
       AlertsService::Client.create(
         :student_feedback,
         teacher_id: teacher_id,
@@ -20,8 +20,12 @@ SubmissionComment.class_eval do
   end
 
   private
-  def teacher_ids
+  def context_teacher_ids
     context.teacher_enrollments.pluck(:user_id)
+  end
+
+  def context_student_ids
+    context.student_enrollments.pluck(:user_id)
   end
 
   def reply_alerts_on?
