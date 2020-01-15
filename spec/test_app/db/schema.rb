@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200110223816) do
+ActiveRecord::Schema.define(version: 20200115170546) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -207,6 +207,8 @@ ActiveRecord::Schema.define(version: 20200110223816) do
     t.integer "submission_id"
     t.string  "comment"
     t.bigint  "author_id"
+    t.integer "context_id"
+    t.string  "context_type"
   end
 
   create_table "submission_versions", force: :cascade do |t|

@@ -38,7 +38,7 @@ DiscussionEntry.class_eval do
       AlertsService::Client.create(
         :student_discussion_entry,
         teacher_id: teacher_id,
-        student_id: user.id,
+        student_id: user_id,
         assignment_id: assignment.id,
         course_id: assignment.course.id,
         message: message
