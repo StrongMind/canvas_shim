@@ -38,7 +38,7 @@ ApplicationController.class_eval do
   private
   def destructive_options_hidden?
     get_context
-    return false if @context.grants_right?(@current_user, session, :read_as_admin)
+    return false if @current_user.roles(@domain_root_account).include?('admin')
     SettingsService.get_settings(object: :school, id: 1)['hide_destructive_course_options']
   end
 end
