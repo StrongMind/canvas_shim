@@ -1,6 +1,4 @@
 CoursesController.class_eval do
-  before_action :get_course_threshold, only: :settings
-  before_action :get_course_dates, only: :settings
   helper_method :enrollment_name, :user_can_conclude_enrollments?
 
   def show_course_enrollments
@@ -104,6 +102,17 @@ CoursesController.class_eval do
 
   alias_method :instructure_show, :show
   alias_method :show, :strongmind_show
+
+
+  def strongmind_settings
+    get_course_threshold
+    get_course_dates
+    hide_destructive_course_options?
+    instructure_settings
+  end
+
+  alias_method :instructure_settings, :settings
+  alias_method :settings, :strongmind_settings
 
   def strongmind_update
     instructure_update
@@ -274,5 +283,9 @@ CoursesController.class_eval do
     get_context
     SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on' &&
     @context.start_at && @context.end_at
+  end
+
+  def hide_destructive_course_options?
+    @hide_destructive_course_options ||= SettingsService.get_settings(object: :school, id: 1)['hide_destructive_course_options']
   end
 end
