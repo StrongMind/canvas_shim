@@ -1,7 +1,7 @@
 ContentMigrationsController.class_eval do
 
   def strongmind_index
-    return render_unauthorized_action if SettingsService.get_settings(object: :school, id: 1)['hide_destructive_course_options']
+    return render_unauthorized_action if hide_destructive_course_options?
     auto_due_dates = SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on'
     js_env(:AUTO_DUE_DATES => auto_due_dates)
 

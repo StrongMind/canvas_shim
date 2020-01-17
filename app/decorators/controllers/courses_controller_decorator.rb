@@ -285,8 +285,4 @@ CoursesController.class_eval do
     SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on' &&
     @context.start_at && @context.end_at
   end
-
-  def hide_destructive_course_options?
-    @hide_destructive_course_options ||= SettingsService.get_settings(object: :school, id: 1)['hide_destructive_course_options']
-  end
 end
