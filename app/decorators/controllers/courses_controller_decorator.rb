@@ -128,6 +128,7 @@ CoursesController.class_eval do
   alias_method :update, :strongmind_update
 
   def strongmind_copy
+    return render_unauthorized_action if hide_destructive_course_options?
     instructure_copy
     display_wo_auto_due_dates?
   end
