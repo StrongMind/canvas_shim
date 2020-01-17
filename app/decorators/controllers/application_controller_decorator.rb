@@ -33,8 +33,8 @@ ApplicationController.class_eval do
 
   def hide_destructive_course_options?
     get_context
-    @hide_destructive_course_options ||= (
-      @context.grants_right?(@current_user, session, :read_as_admin) ||
+    @hide_destructive_course_options = (
+      !@context.grants_right?(@current_user, session, :read_as_admin) ||
       SettingsService.get_settings(object: :school, id: 1)['hide_destructive_course_options']
     )
   end
