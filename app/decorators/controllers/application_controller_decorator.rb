@@ -2,6 +2,12 @@ ApplicationController.class_eval do
 
   prepend_view_path CanvasShim::Engine.root.join('app', 'views')
 
+  before_action :logout_unless_current_user
+
+  def logout_unless_current_user
+    destroy_session unless @current_user
+  end
+
   def custom_placement_enabled?
     @current_user && @context.is_a?(Course) &&
     @context.grants_right?(@current_user, session, :read_as_admin) ||
