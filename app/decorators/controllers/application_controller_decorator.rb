@@ -30,4 +30,15 @@ ApplicationController.class_eval do
 
   alias_method :instructure_content_tag_redirect, :content_tag_redirect
   alias_method :content_tag_redirect, :strongmind_content_tag_redirect
+
+  def hide_destructive_course_options?
+    @hide_destructive_course_options ||= destructive_options_hidden?
+  end
+
+  private
+  def destructive_options_hidden?
+    get_context
+    return false if @current_user.roles(@domain_root_account).include?('admin')
+    SettingsService.get_settings(object: :school, id: 1)['hide_destructive_course_options']
+  end
 end

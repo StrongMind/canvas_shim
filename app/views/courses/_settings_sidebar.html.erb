@@ -62,6 +62,7 @@
     <% end %>
   <% end %>
 
+<% unless @hide_destructive_course_options %>
   <% if can_do(@context, @current_user, :read) && show_user_create_course_button(@current_user, @context.account) %>
     <%= link_to context_url(@context, :context_start_copy_url), :class => 'Button Button--link Button--link--has-divider Button--course-settings copy_course_link' do %>
       <i class="icon-copy-course"></i><%= t('links.copy', 'Copy this Course') %>
@@ -100,7 +101,7 @@
       <% end %>
     </div>
   <% end %>
-
+<% end %>
   <% if can_do(@context, @current_user, :manage_content) %>
     <%= link_to context_url(@context, :course_link_validator_url), :class => 'Button Button--link Button--link--has-divider Button--course-settings validator_link' do %>
       <i class="icon-link"></i><%= t('Validate Links in Content') %>

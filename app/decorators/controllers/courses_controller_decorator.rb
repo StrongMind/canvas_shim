@@ -1,6 +1,4 @@
 CoursesController.class_eval do
-  before_action :get_course_threshold, only: :settings
-  before_action :get_course_dates, only: :settings
   helper_method :enrollment_name, :user_can_conclude_enrollments?
 
   def show_course_enrollments
@@ -105,6 +103,17 @@ CoursesController.class_eval do
   alias_method :instructure_show, :show
   alias_method :show, :strongmind_show
 
+
+  def strongmind_settings
+    get_course_threshold
+    get_course_dates
+    hide_destructive_course_options?
+    instructure_settings
+  end
+
+  alias_method :instructure_settings, :settings
+  alias_method :settings, :strongmind_settings
+
   def strongmind_update
     instructure_update
     return if params[:course].blank?
@@ -119,6 +128,7 @@ CoursesController.class_eval do
   alias_method :update, :strongmind_update
 
   def strongmind_copy
+    return render_unauthorized_action if hide_destructive_course_options?
     instructure_copy
     display_wo_auto_due_dates?
   end
