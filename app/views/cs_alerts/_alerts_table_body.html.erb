@@ -5,12 +5,7 @@
       <%= alert.student.name %>
     </td>
     <td>
-      <%= link_to alert.assignment.name,
-        [
-          "/courses/#{alert.assignment.course.id}/gradebook/speed_grader?assignment_id=#{alert.assignment.id}#",
-            url_encode("{\"student_id\":\"#{alert.student.id}\"}")
-        ].join
-       %>
+      <%= link_to alert.assignment.name, alert_link(alert) %>
     </td>
     <td>
       <%= alert.assignment&.course&.name || "-" %>
