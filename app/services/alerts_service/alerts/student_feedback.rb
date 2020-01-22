@@ -20,7 +20,7 @@ module AlertsService
       end
 
       def description
-        'A Student Provided Feedback On An Assignment'
+        'Student Responded To Teacher Comment'
       end
     end
   end
