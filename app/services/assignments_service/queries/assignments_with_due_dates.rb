@@ -3,7 +3,12 @@ module AssignmentsService
     class AssignmentsWithDueDates
       def initialize(course:)
         @course  = course
-        @modules = ContextModule.where('context_modules.context_id = ? AND context_modules.context_type = \'Course\' AND context_modules.name IS NOT NULL', @course.id).order(:position)
+        @modules = ContextModule.where(
+          'context_modules.context_id = ? ' +
+          'AND context_modules.context_type = \'Course\' ' +
+          'AND context_modules.workflow_state = \'active\' ' +
+          'AND context_modules.name IS NOT NULL',
+          @course.id).order(:position)
       end
 
       def query
