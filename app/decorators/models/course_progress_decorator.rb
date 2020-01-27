@@ -29,7 +29,7 @@ CourseProgress.class_eval do
       end
   end
 
-  def requirement_count(cached:)
+  def requirement_count(cached: false)
     if cached
       count = Rails.cache.read(cache_key)
       return count if count
@@ -41,7 +41,7 @@ CourseProgress.class_eval do
     end
   end
 
-  def requirement_completed_count(cached:)
+  def requirement_completed_count(cached: false)
     if cached
       count = Rails.cache.read(cache_key)
       return count if count
