@@ -76,6 +76,10 @@ User.class_eval do
     sleep(Rails.env.production? ? 5 : 1)
   end
 
+  def timezone_name
+    self.try(:time_zone).try(:tzinfo).try(:name) || self.account.try(:time_zone).try(:tzinfo).try(:name) || Time.zone.name
+  end
+
   def exclude_submissions(tag)
     tag.context_module.completion_requirements.each do |req|
       next unless req[:id] == tag.id
