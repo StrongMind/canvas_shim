@@ -21,7 +21,7 @@ StudentEnrollment.class_eval do
 
   def string_progress
     cp = CourseProgress.new(course, user)
-    "#{cp.requirement_completed_count.to_i}/#{cp.requirement_count.to_i}"
+    "#{cp.requirement_completed_count(cached: true).to_i}/#{cp.requirement_count(cached: true).to_i}"
   end
 
   private

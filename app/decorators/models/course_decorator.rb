@@ -53,7 +53,7 @@ Course.class_eval do
 
   def average_completion_percentage
     avgs = active_students.map do |student|
-      calculate_progress(student)
+      calculate_progress(student, cached: true)
     end.reduce(&:+).to_f / working_denominator(active_students)
   end
 
