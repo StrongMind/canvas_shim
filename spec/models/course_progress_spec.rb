@@ -78,5 +78,25 @@ describe CourseProgress do
         expect(course_progress_student.send(:filter_out_excused_requirements, course_progress_student.requirements_completed)).to eq([fake_requirements[1]])
       end
     end
+
+    context "cached calculation" do
+      before do
+        allow(Rails.cache).to receive(:read).with(
+          course_progress_student.cache_key
+        ).and_return(2)
+
+        allow(Rails.cache).to receive(:read).with(
+          course_progress_student.cache_key(completed: true)
+        ).and_return(4)
+      end
+
+      it "returns cached results (reqirement count)" do
+        expect(course_progress_student.requirement_count(cached: true)).to eq(2)
+      end
+
+      it "returns cached results (reqirement completed count)" do
+        expect(course_progress_student.requirement_completed_count(cached: true)).to eq(4)
+      end
+    end
   end
 end
