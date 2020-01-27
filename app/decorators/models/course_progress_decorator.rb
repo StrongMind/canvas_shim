@@ -4,6 +4,14 @@ CourseProgress.class_eval do
                                   where(user_id: course_progress_user, context_module_id: modules).to_a
   end
 
+  def cache_key(completed: false)
+    if completed
+      "#{@course.id}/#{course_progress_user.id}/course_progress/requirement_completed_count"
+    else
+      "#{@course.id}/#{course_progress_user.id}/course_progress/requirement_count"
+    end
+  end
+
   def requirements
     # e.g. [{id: 1, type: 'must_view'}, {id: 2, type: 'must_view'}]
     @_requirements ||=
@@ -25,12 +33,29 @@ CourseProgress.class_eval do
       end
   end
 
-  def requirement_count
-    filter_out_excused_requirements(requirements).size
+  def requirement_count(cached: false)
+    if cached
+      count = Rails.cache.read(cache_key)
+      return count if count
+    end
+
+    cache_and_return_count
   end
 
-  def requirement_completed_count
-    filter_out_excused_requirements(requirements_completed).size
+  def requirement_completed_count(cached: false)
+    if cached
+      count = Rails.cache.read(cache_key(completed: true))
+      return count if count
+    end
+
+    cache_and_return_count(completed: true)
+  end
+
+  def cache_and_return_count(completed: false)
+    reqs = completed ? requirements_completed : requirements
+    count = filter_out_excused_requirements(reqs).size
+    Rails.cache.write(cache_key(completed: completed), count)
+    count
   end
 
   def to_json

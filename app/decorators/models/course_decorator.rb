@@ -52,9 +52,16 @@ Course.class_eval do
   end
 
   def average_completion_percentage
+    average_cache_key = "#{self.id}/average_completion_percentage"
+    cached_average = Rails.cache.read(average_cache_key)
+    return cached_average if cached_average
+
     avgs = active_students.map do |student|
-      calculate_progress(student)
+      calculate_progress(student, cached: true)
     end.reduce(&:+).to_f / working_denominator(active_students)
+
+    Rails.cache.write(average_cache_key, avgs)
+    avgs
   end
 
   def needs_grading_count
@@ -91,10 +98,10 @@ Course.class_eval do
     end
   end
 
-  def calculate_progress(student)
+  def calculate_progress(student, cached: false)
     cp = CourseProgress.new(self, student.user)
-    req_count = cp.requirement_count.zero? ? 1 : cp.requirement_count
-    (cp.requirement_completed_count.to_f / req_count.to_f) * 100
+    req_count = cp.requirement_count.zero? ? 1 : cp.requirement_count(cached: cached)
+    (cp.requirement_completed_count(cached: cached).to_f / req_count.to_f) * 100
   end
 
   def get_relevant_student_alerts_count(student)
