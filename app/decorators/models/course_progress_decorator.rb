@@ -42,7 +42,7 @@ CourseProgress.class_eval do
   end
 
   def requirement_completed_count(cached:)
-    if cached:
+    if cached
       count = Rails.cache.read(cache_key)
       return count if count
       count = filter_out_excused_requirements(requirements_completed).size
