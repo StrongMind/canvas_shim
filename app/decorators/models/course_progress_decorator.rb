@@ -4,8 +4,12 @@ CourseProgress.class_eval do
                                   where(user_id: course_progress_user, context_module_id: modules).to_a
   end
 
-  def cache_key
-    "#{@course.id}/#{course_progress_user.id}/course_progress"
+  def cache_key(completed: false)
+    if completed
+      "#{@course.id}/#{course_progress_user.id}/course_progress/requirement_completed_count"
+    else
+      "#{@course.id}/#{course_progress_user.id}/course_progress/requirement_count"
+    end
   end
 
   def requirements
@@ -34,7 +38,7 @@ CourseProgress.class_eval do
       count = Rails.cache.read(cache_key)
       return count if count
       count = filter_out_excused_requirements(requirements).size
-      Rails.cache.write(cache_key, count, :expires_in => 5.minutes)
+      Rails.cache.write(cache_key, count)
       count
     else
       filter_out_excused_requirements(requirements).size
@@ -43,10 +47,10 @@ CourseProgress.class_eval do
 
   def requirement_completed_count(cached: false)
     if cached
-      count = Rails.cache.read(cache_key)
+      count = Rails.cache.read(cache_key(completed: true))
       return count if count
       count = filter_out_excused_requirements(requirements_completed).size
-      Rails.cache.write(cache_key, count, :expires_in => 5.minutes)
+      Rails.cache.write(cache_key(completed: true), count)
       count
     else
       filter_out_excused_requirements(requirements_completed).size

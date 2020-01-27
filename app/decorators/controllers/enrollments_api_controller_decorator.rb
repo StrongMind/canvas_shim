@@ -36,7 +36,7 @@ EnrollmentsApiController.class_eval do
       last_submission: student.days_since_last_submission,
       missing_assignments: student.missing_assignments_count,
       current_score: student.current_score,
-      course_progress: "#{@context.calculate_progress(student).round(1)}%",
+      course_progress: "#{@context.calculate_progress(student, cached: true).round(1)}%",
       requirements_completed: student.string_progress,
       alerts: @context.get_relevant_alerts_count(student.user)
     }, status => :ok

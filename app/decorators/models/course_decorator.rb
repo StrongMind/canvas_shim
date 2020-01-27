@@ -91,10 +91,10 @@ Course.class_eval do
     end
   end
 
-  def calculate_progress(student, cache: false)
+  def calculate_progress(student, cached: false)
     cp = CourseProgress.new(self, student.user)
-    req_count = cp.requirement_count.zero? ? 1 : cp.requirement_count(cache: cache)
-    (cp.requirement_completed_count(cache: cache).to_f / req_count.to_f) * 100
+    req_count = cp.requirement_count.zero? ? 1 : cp.requirement_count(cached: cached)
+    (cp.requirement_completed_count(cached: cached).to_f / req_count.to_f) * 100
   end
 
   def get_relevant_student_alerts_count(student)
