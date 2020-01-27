@@ -52,9 +52,16 @@ Course.class_eval do
   end
 
   def average_completion_percentage
+    average_cache_key = "#{self.id}/average_completion_percentage"
+    cached_average = Rails.cache.read(average_cache_key)
+    return cached_average if cached_average
+
     avgs = active_students.map do |student|
       calculate_progress(student, cached: true)
     end.reduce(&:+).to_f / working_denominator(active_students)
+
+    Rails.cache.write(average_cache_key, avgs)
+    avgs
   end
 
   def needs_grading_count
