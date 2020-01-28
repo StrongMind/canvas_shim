@@ -104,17 +104,6 @@ Course.class_eval do
     (cp.requirement_completed_count(cached: cached).to_f / req_count.to_f) * 100
   end
 
-  def self.update_course_progress_cache
-    courses = Course.where('conclude_at > ?', Time.now).where(workflow_state: 'available')
-    courses = courses.select {|course| course.active_students.count > 25}
-
-    courses.each do |course|
-      course.active_students.each do |student|
-          course.calculate_progress(student, cached: true)
-      end
-    end
-  end
-
   def get_relevant_student_alerts_count(student)
     return unless student
     AlertsService::Client.course_student_alerts(
