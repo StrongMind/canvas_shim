@@ -1,5 +1,8 @@
 $(window).on("load", function(event) {
 
+  $('#course-progress-average-card .card-text').hide()
+
+
   if (typeof ga === 'function') {
     ga('create', ENV["analytics"]["ga_tracking_id"]);
   }
@@ -95,10 +98,13 @@ function fillDetailRow(student) {
     student.children('.enr-alerts-count').text(response.alerts);
 
     student.find('.enr-progress-bar .value span').text(response.course_progress);
+    student.children('.course-progress-data').text(parseFloat(response.course_progress));
+
     student.find('.enr-progress-bar .value').css('width', response.course_progress);
     student.find('.enr-progress-bar .progress').attr('data-label', response.course_progress);
+  
 
-    if (doneLoading()) { replaceDataTable() }
+    if (doneLoading()) { replaceDataTable(); updateAverageCourseProgress() }
 
   }).fail(function() {
     $('#loading-cell').text("Request failed. Please try again.");
@@ -112,8 +118,39 @@ function doneLoading() {
 }
 
 function replaceDataTable() {
-  $('#studentDetails').DataTable();
+  $('#studentDetails').DataTable(
+    {
+      "columnDefs": [
+        {
+          "targets": [6],
+          "orderable": false,
+          "visible": false,
+        }
+      ]
+    }
+  );
   $("#placeHolderStudentDetails").remove();
   $('#placeHolderStudentDetails_wrapper').remove();
   $('#studentDetails').show();
+}
+
+
+function updateAverageCourseProgress() {
+
+  jQuery.fn.dataTable.Api.register( 'course_progress_average()', function () {
+    var data = this.flatten();
+    var sum = data.reduce( function ( a, b ) {
+        return (a*1) + (b*1); // cast values in-case they are strings
+    }, 0 );
+  
+    return sum / data.length;
+  } );
+
+
+  var table = $('#studentDetails').DataTable()
+  var average = table.column( 6 ).data().course_progress_average()
+  $('#course-progress-average-card .dot-loader').toggle()
+  $('#course-progress-average').append(average.toFixed(1))
+  $('#course-progress-average-card .card-text').toggle()
+
 }

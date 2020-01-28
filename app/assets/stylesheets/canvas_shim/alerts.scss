@@ -10,6 +10,10 @@
     align-items: center;
   }
 
+  .dot-loader {
+    transform: translate(-30px, -25px);
+  }
+
   .Button--primary {
     &:focus {
       color: #ffffff;
