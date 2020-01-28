@@ -119,7 +119,7 @@ CoursesController.class_eval do
     return if params[:course].blank?
     set_course_passing_threshold
     set_course_exam_passing_threshold
-    if RequirementsService.course_has_set_threshold?(@course)
+    if params[:threshold_edited] && RequirementsService.course_has_set_threshold?(@course)
       RequirementsService.force_min_scores(course: @course)
     end
   end
