@@ -1,7 +1,8 @@
 Submission.class_eval do
   after_commit :bust_context_module_cache
-  after_save -> { PipelineService::V2.publish(self) }
+  after_commit -> { PipelineService::V2.publish(self) }
   after_update :record_excused_removed
+  after_save :update_course_completion_cache_after_submit
 
   def bust_context_module_cache
     if self.previous_changes.include?(:excused)
@@ -23,6 +24,12 @@ Submission.class_eval do
         comment: unexcused_comment,
         author: teacher
       )
+    end
+  end
+
+  def update_course_completion_cache_after_submit
+    if changes[:workflow_state] == ['unsubmitted', 'submitted']
+      self.assignment.course.calculate_progress(self.assignment.course.enrollments.find_by(user: self.user))
     end
   end
 

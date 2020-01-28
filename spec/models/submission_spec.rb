@@ -31,6 +31,25 @@ describe Submission do
           s.save
         end
 
+        context "Updating course progress cache" do
+          let(:user) { User.create }
+          let(:course) { Course.create }
+          let(:assignment) { Assignment.create(course: course) }
+          let(:enrollment) { StudentEnrollment.create(course: course, user: user) }
+
+          it "updates course progress cache when submitted" do
+            submission = Submission.create(user: user, assignment: assignment, workflow_state: "unsubmitted")
+            expect(course).to receive(:calculate_progress)
+            submission.update(workflow_state: 'submitted')
+          end
+
+          it "doesent update course progress cache when state is not unsubmitted" do
+            submission = Submission.create(user: user, assignment: assignment, workflow_state: "submitted")
+            expect(course).to_not receive(:calculate_progress)
+            submission.update(workflow_state: 'graded')
+          end
+        end
+
       end
     end
   end
