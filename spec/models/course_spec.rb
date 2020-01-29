@@ -65,29 +65,6 @@ describe Course do
     end
   end
 
-  describe "#average_completion_percentage" do
-    let!(:course) { Course.create }
-    let!(:student) { User.create }
-    let!(:student_enrollment) do
-      StudentEnrollment.create(course: course, user: student, workflow_state: "active")
-    end
-    let!(:student_enrollment_2) do
-      StudentEnrollment.create(course: course, user: student, workflow_state: "active")
-    end
-
-    before do
-      allow(course).to receive(:calculate_progress).and_return(25.0, 75.0)
-    end
-
-    it "returns an average" do
-      expect(course.average_completion_percentage).to eq(50.0)
-    end
-
-    it "returns 0 with no examples" do
-      expect(Course.create.average_completion_percentage).to eq (0.0)
-    end
-  end
-
   describe "#needs_grading_count" do
     let!(:course) { Course.create }
 

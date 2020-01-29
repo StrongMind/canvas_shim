@@ -225,7 +225,6 @@ CoursesController.class_eval do
     @course_list ||= course_snapshot_course_urls
     @is_blank = context_not_in_snapshot?
     @avg_grade = @context.average_score.round(1)
-    @avg_completion_pct = @context.average_completion_percentage.round(1)
     @assignments_need_grading = @context.needs_grading_count
     @alerts_need_attention = @context.get_relevant_alerts_count(@current_user)
     @active_students ||= @context.active_students.eager_load(:user).pluck(:id, :user_id, 'users.name')

@@ -9,9 +9,10 @@
     </div>
   </div>
   <div class="card content-box border border-trbl border-round">
-    <div class="card-body">
+    <div class="card-body" id="course-progress-average-card">
       <h5><strong>Average Course % Completed</strong></h5>
-      <p class="card-text"><%= @avg_completion_pct %><span class="percent-superscript">%</span></p>
+      <div class="dot-loader"></div>
+      <p class="card-text" ><span id="course-progress-average"></span><span class="percent-superscript">%</span></p>
     </div>
     <div class="card-footer">
       <%= link_to 'View Student Progress', progressions_course_context_modules_path, class: "card-link border border-t course-snapshot-link-color" %>
