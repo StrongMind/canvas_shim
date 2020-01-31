@@ -183,6 +183,7 @@ ActiveRecord::Schema.define(version: 20200131165759) do
   end
 
   create_table "page_views", primary_key: "request_id", force: :cascade do |t|
+    t.integer "user_id"
   end
 
   create_table "pseudonyms", force: :cascade do |t|
