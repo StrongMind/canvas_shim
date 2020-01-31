@@ -1,0 +1,2 @@
+ContentMigration.class_eval do
+end
