@@ -52,6 +52,9 @@ ActiveRecord::Schema.define(version: 20200131214715) do
     t.string "workflow_state"
   end
 
+  create_table "big_blue_button_conferences", force: :cascade do |t|
+  end
+
   create_table "content_tags", force: :cascade do |t|
     t.integer "context_module_id"
     t.integer "content_id"
