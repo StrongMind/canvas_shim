@@ -35,6 +35,15 @@ ApplicationController.class_eval do
     @hide_destructive_course_options ||= destructive_options_hidden?
   end
 
+  def strongmind_badge_counts_for(context, user, enrollment=nil)
+    counts = instructure_badge_counts_for(context, user, enrollment)
+    counts['people'] = context.try(:online_user_count)
+    counts
+  end
+
+  alias_method :instructure_badge_counts_for, :badge_counts_for
+  alias_method :badge_counts_for, :strongmind_badge_counts_for
+
   private
   def destructive_options_hidden?
     get_context
