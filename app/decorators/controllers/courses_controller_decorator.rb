@@ -266,7 +266,7 @@ CoursesController.class_eval do
         :can_manage_calendar => can_do(@context, @current_user, :manage_calendar),
         :can_manage_admin_users => can_do(@context, @current_user, :manage_admin_users),
         :can_change_course_state => can_do(@context, @current_user, :change_course_state)
-      },
+      }
     }
     })
   end
@@ -284,5 +284,4 @@ CoursesController.class_eval do
     SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on' &&
     @context.start_at && @context.end_at
   end
-
 end

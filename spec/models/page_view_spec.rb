@@ -2,6 +2,9 @@ describe PageView do
   include_context "stubbed_network"
 
   describe "#after_commit" do
+    before do
+      allow(SettingsService).to receive(:update_settings)
+    end
 
     context "when page view publishing is featured" do
       before do
@@ -19,6 +22,5 @@ describe PageView do
         PageView.create
       end
     end
-
   end
 end

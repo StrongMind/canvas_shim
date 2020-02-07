@@ -48,11 +48,11 @@ ActiveRecord::Schema.define(version: 20200131214715) do
     t.datetime "updated_at"
   end
 
-  create_table "content_migrations", force: :cascade do |t|
-    t.string "workflow_state"
+  create_table "big_blue_button_conferences", force: :cascade do |t|
   end
 
-  create_table "big_blue_button_conferences", force: :cascade do |t|
+  create_table "content_migrations", force: :cascade do |t|
+    t.string "workflow_state"
   end
 
   create_table "content_tags", force: :cascade do |t|
@@ -187,6 +187,7 @@ ActiveRecord::Schema.define(version: 20200131214715) do
   end
 
   create_table "page_views", primary_key: "request_id", force: :cascade do |t|
+    t.integer "user_id"
   end
 
   create_table "pseudonyms", force: :cascade do |t|
