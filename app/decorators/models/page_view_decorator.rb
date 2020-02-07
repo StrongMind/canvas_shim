@@ -10,7 +10,7 @@ PageView.class_eval do
   def update_last_online
     SettingsService.update_settings(
       object: 'user',
-      id: self.real_user_id,
+      id: self.user_id,
       setting: 'last_access_time',
       value: self.updated_at.utc.to_s
     )

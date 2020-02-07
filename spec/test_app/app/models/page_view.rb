@@ -1,5 +1,5 @@
 class PageView < ActiveRecord::Base
-  def real_user_id
+  def user_id
     1
   end
 
