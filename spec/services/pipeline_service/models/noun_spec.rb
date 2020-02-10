@@ -28,6 +28,7 @@ describe PipelineService::Models::Noun do
         allow(deleted_conversation).to receive('state').and_return 'deleted'
         allow(conversation).to receive(:changes).and_return(changes)
         class_double("PipelineService::Serializers::Enrollment").as_stubbed_const
+        allow(SettingsService).to receive(:update_settings)
     end
 
     describe '#name' do
