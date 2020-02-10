@@ -7,7 +7,8 @@ describe BigBlueButtonConference do
           {
             :recording_id=>"d7d1e678be17a7d2c32a475f09776597e09a1b04-1580489255668",
             :duration_minutes=>1,
-            :playback_url=>"https://recordings.rna1.blindsidenetworks.com/strongmind/d7d1e678be17a7d2c32a475f09776597e09a1b04-1580489255668/capture/"
+            :playback_url=>"https://recordings.rna1.blindsidenetworks.com/strongmind/d7d1e678be17a7d2c32a475f09776597e09a1b04-1580489255668/capture/",
+            :statistics_url=>"https://recordings.rna1.blindsidenetworks.com/strongmind/d7d1e678be17a7d2c32a475f09776597e09a1b04-1580489255668/statistics/"
           }
         end
 
@@ -17,8 +18,8 @@ describe BigBlueButtonConference do
           allow(bbb).to receive(:instructure_recordings).and_return([good_recording])
         end
 
-        it "does not receive #fabricate_playback_url" do
-          expect(bbb).not_to receive(:fabricate_playback_url)
+        it "does not receive #generate_recording_url" do
+          expect(bbb).to receive(:generate_recording_url).once
           bbb.recordings
         end
       end
@@ -28,7 +29,8 @@ describe BigBlueButtonConference do
           {
             :recording_id=>"d7d1e678be17a7d2c32a475f09776597e09a1b04-1580489255668",
             :duration_minutes=>1,
-            :playback_url=>"https://recordings.rna1.blindsidenetworks.com/strongmind/d7d1e678be17a7d2c32a475f09776597e09a1b04-1580489255668/statistics/"
+            :playback_url=>"https://recordings.rna1.blindsidenetworks.com/strongmind/d7d1e678be17a7d2c32a475f09776597e09a1b04-1580489255668/statistics/",
+            :statistics_url=>"https://recordings.rna1.blindsidenetworks.com/strongmind/d7d1e678be17a7d2c32a475f09776597e09a1b04-1580489255668/statistics/"
           }
         end
 
@@ -38,8 +40,8 @@ describe BigBlueButtonConference do
           allow(bbb).to receive(:instructure_recordings).and_return([bad_recording])
         end
 
-        it "does not receive #fabricate_playback_url" do
-          expect(bbb).to receive(:fabricate_playback_url)
+        it "receives #generate_recording_url" do
+          expect(bbb).to receive(:generate_recording_url).twice
           bbb.recordings
         end
 

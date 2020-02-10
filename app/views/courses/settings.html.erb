@@ -257,7 +257,7 @@
           <td class="nobr tall-row">
             <% if AssignmentsService.is_distributing?(@context) %>
               <div id="due-date-btns">
-                <button class="btn btn-primary" disabled>Distrubute Due Dates</button>
+                <button class="btn btn-primary" disabled>Distribute Due Dates</button>
                 <button class="btn" disabled>Clear Dates</button>
                 <div id="distributing-msg">
                   <small><strong>*Your request is currently being processed. Please wait a few minutes and refresh to try again.</strong></small>
@@ -265,7 +265,7 @@
               </div>
             <% else %>
               <div id="due-date-btns">
-                <button id="distribute_due_dates" data-target=<%= course_distribute_due_dates_path(@context) %> class="btn btn-primary endpoint-btn">Distrubute Due Dates</button>
+                <button id="distribute_due_dates" data-target=<%= course_distribute_due_dates_path(@context) %> class="btn btn-primary endpoint-btn">Distribute Due Dates</button>
                 <button id="clear_due_dates" data-target=<%= course_clear_due_dates_path(@context) %> class="btn endpoint-btn">Clear Dates</button>
                 <div id="distributing-msg" class="hidden">
                   <small><strong>*Your request is currently being processed. Please wait a few minutes and refresh to try again.</strong></small>
