@@ -4,11 +4,7 @@ AnnouncementsApiController.class_eval do
     get_announcements
     Announcement.transaction do
       @announcements.each do |announcement|
-        if pin_announcements.include?(announcement.id.to_s)
-          announcement.update(pinned: true) unless announcement.pinned
-        elsif announcement.pinned
-          announcement.update(pinned: false)
-        end
+        announcement.toggle_pin(pin_announcements)
       end
     end
 
