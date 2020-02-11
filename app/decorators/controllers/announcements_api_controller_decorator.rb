@@ -8,7 +8,7 @@ AnnouncementsApiController.class_eval do
       end
     end
 
-    render :json => @announcements.sort_by { |ann| ann.pinned ? 0 : 1 }, :status => :ok
+    render :json => @announcements.order("pinned DESC NULLS LAST"), :status => :ok
   end
 
   private
