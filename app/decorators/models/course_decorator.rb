@@ -101,10 +101,15 @@ Course.class_eval do
 
 
   def online_user_count
+    cache_key = "#{self.id}/online-users-count"
+    count = Rails.cache.read(cache_key)
+    return count if count
+
     count = 0
     self.enrollments.where(workflow_state: 'active').each do |en|
       count = count + 1 if en.user.is_online?
     end
+    Rails.cache.write(cache_key, count, :expires_in => 5.minutes)
     count
   end
 
