@@ -3,4 +3,5 @@ class ApplicationController < ActionController::Base
 
   def update_enrollment_last_activity_at; end
   def content_tag_redirect; end
+  def badge_counts_for; end
 end
