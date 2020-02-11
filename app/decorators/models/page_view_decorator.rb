@@ -8,12 +8,8 @@ PageView.class_eval do
   end
 
   def update_last_online
-    SettingsService.update_settings(
-      object: 'user',
-      id: self.user_id,
-      setting: 'last_access_time',
-      value: self.updated_at.utc.to_s
-    )
+    cache_key = "#{self.user_id}/last_access_time"
+    Rails.cache.write(cache_key, Time.now.utc, :expires_in => 5.minutes)
   end
 
 

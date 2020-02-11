@@ -27,8 +27,8 @@ describe PageView do
 
     it 'updates the users last access time' do
         Timecop.freeze
-        current_time = Time.now
-        expect(SettingsService).to receive(:update_settings).with({:id=>1, :object=>"user", :setting=>"last_access_time", :value=> current_time.utc.to_s})
+        current_time = Time.now.utc
+        expect(Rails.cache).to receive(:write).with("1/last_access_time", current_time, {:expires_in=> 5.minutes})
         PageView.create
         Timecop.return
     end

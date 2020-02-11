@@ -122,7 +122,8 @@ User.class_eval do
   end
 
   def is_online?()
-    last_access_time = SettingsService.get_settings(object: :user, id: self.id)['last_access_time'].try(:to_time)
+    cache_key = "#{self.id}/last_access_time"
+    last_access_time = Rails.cache.read(cache_key)
     current_time = Time.now.utc
     return true if last_access_time && last_access_time > current_time - 5.minutes
     false
