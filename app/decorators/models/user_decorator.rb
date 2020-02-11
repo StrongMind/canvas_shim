@@ -121,13 +121,6 @@ User.class_eval do
     filter_feedback(recent_feedback_without_wrap(opts))
   end
 
-  def is_online?()
-    last_access_time = SettingsService.get_settings(object: :user, id: self.id)['last_access_time'].try(:to_time)
-    current_time = Time.now.utc
-    return true if last_access_time && last_access_time > current_time - 5.minutes
-    false
-  end
-
   alias_method :recent_feedback_without_wrap, :recent_feedback
   alias_method :recent_feedback, :recent_feedback_with_wrap
 

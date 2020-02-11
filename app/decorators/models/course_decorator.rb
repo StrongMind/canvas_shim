@@ -99,15 +99,6 @@ Course.class_eval do
     ).payload.size
   end
 
-
-  def online_user_count
-    count = 0
-    self.enrollments.where(workflow_state: 'active').each do |en|
-      count = count + 1 if en.user.is_online?
-    end
-    count
-  end
-
   private
   def time_zone_name
     time_zone.name
