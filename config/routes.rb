@@ -26,5 +26,9 @@ Rails.application.routes.draw do
     post '/api/v1/courses/:course_id/enrollments/:id/custom_placement', action: :custom_placement, as: :custom_placement
     get '/api/v1/courses/:course_id/enrollments/:id/snapshot', action: :snapshot, as: :snapshot
   end
+
+  scope(controller: :announcements_api) do
+    post '/api/v1/courses/:course_id/announcements/bulk_pin', action: :bulk_pin, as: 'bulk_pin'
+  end
 end
 

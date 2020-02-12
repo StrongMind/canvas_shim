@@ -1,0 +1,2 @@
+class AnnouncementsApiController < ApplicationController
+end
