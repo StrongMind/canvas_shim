@@ -3,8 +3,10 @@ AnnouncementsApiController.class_eval do
     get_context
     get_announcements
     Announcement.transaction do
-      @announcements.each do |announcement|
-        announcement.toggle_pin(pin_announcements)
+      if params[:unpin]
+        @announcements.each { |ancmt| ancmt.remove_pin(pin_announcements) }
+      else
+        @announcements.each { |ancmt| ancmt.add_pin(pin_announcements) }
       end
     end
 
