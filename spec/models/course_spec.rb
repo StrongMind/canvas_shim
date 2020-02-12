@@ -8,6 +8,24 @@ describe Course do
     end
   end
 
+  describe "#online_user_count" do
+    let(:course) { Course.create }
+    let(:user_1) { User.create } 
+    let(:user_2) { User.create } 
+    let(:user_3) { User.create } 
+    let(:enrollent_1) { Enrollment.create(course: course, user: user_1, workflow_state: 'active', type: 'StudentEnrollment') }
+    let(:enrollent_2) { Enrollment.create(course: course, user: user_2, workflow_state: 'inactive', type: 'StudentEnrollment') }
+    let(:enrollent_3) { Enrollment.create(course: course, user: user_3, workflow_state: 'active', type: 'TeacherEnrollment') }
+    it "returns the count of 2 users online in the last 5 minutes of" do
+      allow_any_instance_of(User).to receive(:is_online?).and_return(true)
+      allow(enrollent_1).to receive(:workflow_state).and_return('active')
+      allow(enrollent_2).to receive(:workflow_state).and_return('inactive')
+      allow(enrollent_3).to receive(:workflow_state).and_return('active')
+      expect(course.online_user_count).to eq(2)
+    end
+  end
+
+
   describe "#no_active_students" do
     let(:first_user) { User.create }
     context "inactive student course" do

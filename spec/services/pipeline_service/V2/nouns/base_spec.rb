@@ -15,6 +15,10 @@ describe PipelineService::V2::Nouns::Base do
   let(:noun) { PipelineService::V2::Noun.new(active_record_object)}
 
   describe '#call'do
+    before do
+      allow(SettingsService).to receive(:update_settings)
+    end
+
     it 'returns base level json (not anything overridden)' do
       expect(subject.call).to eq('request_id' => active_record_object.id)
     end
