@@ -23,14 +23,6 @@ describe Course do
       allow(enrollent_3).to receive(:workflow_state).and_return('active')
       expect(course.online_user_count).to eq(2)
     end
-
-    it "returns cached number if available" do
-      allow(Rails.cache).to receive(:read).with(
-        "#{course.id}/online-users-count"
-      ).and_return(5)
-      expect(course.online_user_count).to eq(5)
-    end
-
   end
 
 
