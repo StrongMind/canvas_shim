@@ -109,16 +109,16 @@ Course.class_eval do
   end
 
   def non_expired_announcements
+    active_announcements.where("id IN (?)", non_expired_announcements_array.map(&:id))
+  end
+
+  private
+  def non_expired_announcements_array
     active_announcements.reject do |ancmt|
       ancmt.expiration_date? && Time.now > DateTime.parse(ancmt.expiration_date?)
     end
   end
 
-  def ar_non_expired_announcements
-    active_announcements.where("id IN (?)", non_expired_announcements.map(&:id))
-  end
-
-  private
   def time_zone_name
     time_zone.name
   end
