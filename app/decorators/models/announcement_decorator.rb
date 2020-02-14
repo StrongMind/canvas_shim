@@ -10,4 +10,8 @@ Announcement.class_eval do
       update(pinned: false) if pinned
     end
   end
+
+  def expiration_date?
+    @expiration_date ||= SettingsService.get_settings(object: :announcement, id: id)['expiration_date']
+  end
 end
