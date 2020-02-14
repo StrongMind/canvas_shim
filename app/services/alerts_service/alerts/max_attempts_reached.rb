@@ -17,7 +17,7 @@ module AlertsService
 
       def detail
         return unless @score.present?
-        "Last Score: #{@score}"
+        "Last Score: #{'%.2f' % @score}"
       end
 
       def description

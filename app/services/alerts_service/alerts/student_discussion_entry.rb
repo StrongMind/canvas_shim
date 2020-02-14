@@ -21,7 +21,7 @@ module AlertsService
       end
 
       def description
-        'Student Replied To Discussion Topic'
+        'Student responded to a discussion board'
       end
     end
   end

@@ -77,7 +77,7 @@ describe AlertsService::Alerts::MaxAttemptsReached do
     }
 
     it 'shows the score in english' do
-      expect(subject.detail).to eq "Last Score: 10"
+      expect(subject.detail).to eq "Last Score: 10.00"
     end
 
     it 'no value if no score' do
