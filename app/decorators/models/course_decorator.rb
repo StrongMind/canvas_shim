@@ -114,6 +114,10 @@ Course.class_eval do
     end
   end
 
+  def ar_non_expired_announcements
+    active_announcements.where("id IN (?)", non_expired_announcements.map(&:id))
+  end
+
   private
   def time_zone_name
     time_zone.name
