@@ -72,12 +72,12 @@ describe AlertsService::Alerts::MaxAttemptsReachedMinScore do
         assignment_id: 3,
         created_at: datetime,
         updated_at: updated_datetime,
-        score: 10
+        score: 10.2345
       )
     }
 
     it 'shows the score in english' do
-      expect(subject.detail).to eq "Last Score: 10"
+      expect(subject.detail).to eq "Last Score: 10.23"
     end
 
     it 'no value if no score' do
