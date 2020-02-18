@@ -20,7 +20,7 @@ module AlertsService
       end
 
       def description
-        'Student Commented On A Assignment'
+        'Student Commented On An Assignment'
       end
     end
   end
