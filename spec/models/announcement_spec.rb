@@ -31,4 +31,36 @@ describe Announcement do
       pinned_announcement.add_pin(pin_params)
     end
   end
+
+  describe "#expired?" do
+    context "not expired" do
+      before do
+        allow(SettingsService).to receive(:get_settings).and_return({"expiration_date" => "01-01-2222"})
+      end
+
+      it "returns false" do
+        expect(pinned_announcement.is_expired?).to be_falsy
+      end
+    end
+
+    context "no setting" do
+      before do
+        allow(SettingsService).to receive(:get_settings).and_return({"expiration_date" => false})
+      end
+
+      it "returns false" do
+        expect(pinned_announcement.is_expired?).to be_falsy
+      end
+    end
+
+    context "expired" do
+      before do
+        allow(SettingsService).to receive(:get_settings).and_return({"expiration_date" => "01-01-2010"})
+      end
+
+      it "returns false" do
+        expect(pinned_announcement.is_expired?).to be_truthy
+      end
+    end
+  end
 end
