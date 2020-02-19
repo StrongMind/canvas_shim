@@ -11,7 +11,6 @@ DiscussionTopicsController.class_eval do
   alias_method :index, :strongmind_index
 
   def strongmind_update
-    send_assignment_expiration_date if params["is_announcement"]
     get_discussion_assignment
     merge_unassign_params
     ExcusedService.bulk_excuse(assignment: @assignment, exclusions: params['excluded_students'])
@@ -21,10 +20,19 @@ DiscussionTopicsController.class_eval do
       grader_id: @current_user.try(:id)
     )
     instructure_update
+    set_announcement_expiration_date?
   end
 
   alias_method :instructure_update, :update
   alias_method :update, :strongmind_update
+
+  def strongmind_create
+    instructure_create
+    set_announcement_expiration_date?
+  end
+
+  alias_method :instructure_create, :create
+  alias_method :create, :strongmind_create
 
   private
   def excused_discussion_topics
@@ -46,10 +54,16 @@ DiscussionTopicsController.class_eval do
     params[:assignment].merge!(bulk_unassign: params[:bulk_unassign]) if params[:assignment]
   end
 
-  def send_assignment_expiration_date
+  def set_announcement_expiration_date?
+    unless @errors.any?
+      send_announcement_expiration_date if @topic.is_announcement
+    end
+  end
+
+  def send_announcement_expiration_date
     SettingsService.update_settings(
       object: 'announcement',
-      id: params[:id],
+      id: @topic.id,
       setting: 'expiration_date',
       value: params["post_expiration_date"] || false
     )
