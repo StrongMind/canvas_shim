@@ -118,7 +118,7 @@ Course.class_eval do
 
   private
   def filtered_announcements(filter)
-    active_announcements.where("id IN (?)", filter.map(&:id))
+    active_announcements.where("discussion_topics.id IN (?)", filter.map(&:id))
   end
 
   def expired_announcements_array
