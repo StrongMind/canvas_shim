@@ -61,6 +61,15 @@
   css_bundle :tinymce, :discussions, :learning_outcomes
 %>
 
+
+<% ancmt_expiration_date = SettingsService.get_settings(object: 'announcement', id: @topic.id)["expiration_date"] if @topic.is_a?(Announcement) %>
+
+<% if ancmt_expiration_date && DateTime.parse(ancmt_expiration_date) < Time.now %>
+  <div class='ic-notification' style='background: rgba(255, 0, 0, .05);'>
+    <h1 style='padding:1rem;'>This announcement has expired.</h1>
+  </div>
+<% end %>
+
 <% if @unlock_at && @unlock_at > Time.now && !can_do(@context, @current_user, :moderate_forum) %>
   <div id="discussion-managebar" class="toolbarView">
     <div class="headerBar">

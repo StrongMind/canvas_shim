@@ -108,7 +108,27 @@ Course.class_eval do
     count
   end
 
+  def expired_announcements
+    filtered_announcements(expired_announcements_array)
+  end
+
+  def non_expired_announcements
+    filtered_announcements(non_expired_announcements_array)
+  end
+
   private
+  def filtered_announcements(filter)
+    active_announcements.where("discussion_topics.id IN (?)", filter.map(&:id))
+  end
+
+  def expired_announcements_array
+    active_announcements.select(&:is_expired?)
+  end
+
+  def non_expired_announcements_array
+    active_announcements.reject(&:is_expired?)
+  end
+
   def time_zone_name
     time_zone.name
   end

@@ -19,6 +19,6 @@ AnnouncementsApiController.class_eval do
   end
 
   def get_announcements
-    @announcements = @context.active_announcements
+    @announcements = @context.is_a?(Course) ? @context.non_expired_announcements : @context.active_announcements
   end
 end
