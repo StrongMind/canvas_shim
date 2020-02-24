@@ -3,6 +3,7 @@ module RequirementsService
     class DefaultThirdPartyRequirements
       def initialize(context_module:)
         @context_module = context_module
+        @completion_requirements = []
       end
 
       def call
@@ -11,7 +12,7 @@ module RequirementsService
       end
 
       private
-      attr_reader :context_module
+      attr_reader :context_module, :completion_requirements
 
       def set_requirements
         context_module.content_tags.each do |tag|
