@@ -105,4 +105,12 @@ module RequirementsService
   def self.reset_requirements(context_module:, exam: false)
     Commands::ResetRequirements.new(context_module: context_module, exam: exam).call
   end
+
+  def self.set_third_party_requirements(course:)
+    if course
+      course.context_modules.each do |context_module|
+        Commands::DefaultThirdPartyRequirements.new(context_module: context_module).call
+      end
+    end
+  end
 end
