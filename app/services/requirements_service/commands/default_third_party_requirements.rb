@@ -16,7 +16,7 @@ module RequirementsService
 
       def set_requirements
         context_module.content_tags.each do |tag|
-          context_module.completion_requirements << create_requirement(tag)
+          completion_requirements << create_requirement(tag)
         end
       end
 
