@@ -4,6 +4,7 @@ describe "ContentMigration" do
   before do
     allow_any_instance_of(ContentMigration).to receive(:imported?).and_return(true)
     allow(Rails.cache).to receive(:read).and_return(nil)
+    allow(SettingsService).to receive(:get_settings).and_return({ 'third_party_imports' => true })
   end
     
   it 'will publish when saved' do
