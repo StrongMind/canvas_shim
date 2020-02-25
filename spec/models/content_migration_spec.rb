@@ -14,15 +14,26 @@ describe "ContentMigration" do
   end
 
   describe "#non_strongmind_cartrige?" do
+    let(:content_migration) { ContentMigration.create(context_id: 1) }
     context 'imported with strongmind cartridge' do
-      let(:content_migration) { ContentMigration.create(context_id: 1) }
-
       before do 
         allow(Rails.cache).to receive(:read).and_return('StrongMind')
       end
 
       it "does not call service" do
         expect(RequirementsService).not_to receive(:set_third_party_requirements)
+        content_migration.save
+      end
+    end
+
+    context 'imported with third-party cartridge' do
+      before do 
+        allow(Rails.cache).to receive(:read).and_return(nil)
+      end 
+
+      it "calls service" do
+        content_migration
+        expect(RequirementsService).to receive(:set_third_party_requirements)
         content_migration.save
       end
     end
