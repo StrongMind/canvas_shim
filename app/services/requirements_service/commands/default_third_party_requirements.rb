@@ -31,8 +31,10 @@ module RequirementsService
         case content_tag.content_type
         when "DiscussionTopic"
           "must_contribute"
-        else
+        when "Assignment"
           "must_submit"
+        else
+          "must_view"
         end
       end
 
