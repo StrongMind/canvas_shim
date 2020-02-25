@@ -16,8 +16,14 @@ module RequirementsService
 
       def set_requirements
         context_module.content_tags.each do |tag|
-          completion_requirements << create_requirement(tag)
+          unless requirement_exists?(content_tag)
+            completion_requirements << create_requirement(tag)
+          end
         end
+      end
+
+      def requirement_exists?(content_tag)
+        context_module.completion_requirements.find { |req| req[:id] == content_tag.id }
       end
 
       def create_requirement(content_tag)
