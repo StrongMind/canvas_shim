@@ -1,10 +1,29 @@
 describe "ContentMigration" do
   include_context "stubbed_network"
+  
+  before do
+    allow_any_instance_of(ContentMigration).to receive(:imported?).and_return(true)
+    allow(Rails.cache).to receive(:read).and_return(nil)
+  end
+    
+  it 'will publish when saved' do
+    expect(PipelineService::V2).to receive(:publish).with an_instance_of(ContentMigration)
+    cm = ContentMigration.create(context_id: 1)
+    cm.save
+  end
 
-    it 'will publish when saved' do
-      expect(PipelineService::V2).to receive(:publish).with an_instance_of(ContentMigration)
-      cm = ContentMigration.create()
-      cm.save
+  describe "#non_strongmind_cartrige?" do
+    context 'imported with strongmind cartridge' do
+      let(:content_migration) { ContentMigration.create(context_id: 1) }
+
+      before do 
+        allow(Rails.cache).to receive(:read).and_return('StrongMind')
+      end
+
+      it "does not call service" do
+        expect(RequirementsService).not_to receive(:set_third_party_requirements)
+        content_migration.save
+      end
     end
-
+  end
 end
