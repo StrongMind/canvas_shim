@@ -29,5 +29,15 @@ describe RequirementsService::Commands::DefaultThirdPartyRequirements do
       assignment = subject.send(:completion_requirements).find {|req| req[:id] == 1 }
       expect(assignment[:type]).to eq("must_submit")
     end
+
+    it "Sets an Discussion Topic to must_contribute" do
+      discussion_topic = subject.send(:completion_requirements).find {|req| req[:id] == 2 }
+      expect(discussion_topic[:type]).to eq("must_contribute")
+    end
+
+    it "Sets an WikiPage to must_view" do
+      wiki_page = subject.send(:completion_requirements).find {|req| req[:id] == 3 }
+      expect(wiki_page[:type]).to eq("must_view")
+    end
   end
 end
