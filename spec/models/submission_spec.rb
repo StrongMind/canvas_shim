@@ -41,14 +41,15 @@ describe Submission do
     let!(:submission2) { Submission.create(score: 30, assignment: assignment, excused: true) }
 
     let(:assignment) { Assignment.new }
+    let(:teacher) { User.create }
 
     it "records a comment when the excused tag is removed" do
-      submission.update(excused: false)
+      submission.update(excused: false, grader_id: teacher.id)
       expect(submission.submission_comments.first.comment).to eq(Submission.new.send(:unexcused_comment))
     end
 
     it "does not record a comment when the excused tag is not removed" do
-      submission.update(score: 55, grader_id: 5)
+      submission.update(score: 55, grader_id: teacher.id)
       expect(submission2.submission_comments).to eq([])
     end
   end
