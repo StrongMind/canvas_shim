@@ -32,4 +32,8 @@ class Submission < ActiveRecord::Base
     return unless assignment && submitted_at
     true
   end
+
+  def grader
+    User.find(grader_id)
+  end
 end
