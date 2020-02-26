@@ -39,5 +39,22 @@ describe RequirementsService::Commands::DefaultThirdPartyRequirements do
       wiki_page = subject.send(:completion_requirements).find {|req| req[:id] == 3 }
       expect(wiki_page[:type]).to eq("must_view")
     end
+
+    context "Requirement exists" do
+      let(:context_module) do 
+        double(
+          'context module', 
+          completion_requirements: [{id: 3, type: "must_submit"}],
+          update_column: nil,
+          touch: nil,
+          content_tags: content_tags,
+        )
+      end
+
+      it "Sets an WikiPage to must_view" do
+        wiki_page = subject.send(:completion_requirements).find {|req| req[:id] == 3 }
+        expect(wiki_page[:type]).to eq("must_submit")
+      end
+    end
   end
 end
