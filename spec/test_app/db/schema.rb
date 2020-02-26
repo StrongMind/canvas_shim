@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200210231400) do
+ActiveRecord::Schema.define(version: 20200225185458) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,7 +56,9 @@ ActiveRecord::Schema.define(version: 20200210231400) do
   end
 
   create_table "content_migrations", force: :cascade do |t|
-    t.string "workflow_state"
+    t.string  "workflow_state"
+    t.integer "context_id"
+    t.string  "context_type"
   end
 
   create_table "content_tags", force: :cascade do |t|
@@ -191,7 +193,6 @@ ActiveRecord::Schema.define(version: 20200210231400) do
   end
 
   create_table "page_views", primary_key: "request_id", force: :cascade do |t|
-    t.integer "user_id"
   end
 
   create_table "pseudonyms", force: :cascade do |t|
