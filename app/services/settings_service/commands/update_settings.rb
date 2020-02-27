@@ -17,6 +17,8 @@ module SettingsService
 
       def object
         case @object
+        when 'global'
+          SettingsService::Global
         when 'assignment'
           SettingsService::Assignment
         when 'user'
