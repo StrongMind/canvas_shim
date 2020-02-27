@@ -1,7 +1,8 @@
 <div class="ic-Action-header">
 </div>
 
-<%= form_tag url: course_conclude_user_enrollments_path(@context) do %>
+<form action='<%= course_conclude_user_enrollments_path(@context) %>' id='bulk-gradeout-form' method='POST'>
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
   <div>
     <div id="group_categories_tabs" class="ui-tabs-minimal ui-tabs ui-widget ui-widget-content ui-corner-all">
       <div id="tab-0" class="roster-tab tab-panel ui-tabs-panel form-inline ui-widget-content ui-corner-bottom" style="min-height: 800px;" aria-labelledby="ui-id-1" role="tabpanel" aria-expanded="true" aria-hidden="false">
@@ -63,7 +64,7 @@
       </div>
     </div>
   </div>
-<% end %>
+</form>
 
 <% content_for :strongmind_assets do %>
   <script
@@ -84,7 +85,7 @@
         if ($(':checked').length) {
           var result = confirm(label);
           if (result) {
-            $('form').trigger('submit');
+            $('#bulk-gradeout-form').trigger('submit');
           }
         }
       });
