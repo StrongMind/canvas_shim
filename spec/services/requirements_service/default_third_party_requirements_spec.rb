@@ -17,6 +17,8 @@ describe RequirementsService::Commands::DefaultThirdPartyRequirements do
       double(:content_tag, content_type: "DiscussionTopic", id: 2),
       double(:content_tag, content_type: "WikiPage", id: 3),
       double(:content_tag, content_type: "ContextExternalTool", id: 4),
+      double(:content_tag, content_type: "Attachment", id: 5),
+      double(:content_tag, content_type: "Quizzes::Quiz", id: 6),
     ]
   end
 
@@ -35,9 +37,19 @@ describe RequirementsService::Commands::DefaultThirdPartyRequirements do
       expect(discussion_topic[:type]).to eq("must_contribute")
     end
 
-    it "Sets an WikiPage to must_view" do
+    it "Sets an WikiPage to must_mark_done" do
       wiki_page = subject.send(:completion_requirements).find {|req| req[:id] == 3 }
-      expect(wiki_page[:type]).to eq("must_view")
+      expect(wiki_page[:type]).to eq("must_mark_done")
+    end
+
+    it "Sets an Attachment to must_mark_done" do
+      attachment = subject.send(:completion_requirements).find {|req| req[:id] == 5 }
+      expect(attachment[:type]).to eq("must_mark_done")
+    end
+
+    it "Sets an Quizzes::Quiz to must_submit" do
+      quizzes = subject.send(:completion_requirements).find {|req| req[:id] == 6 }
+      expect(quizzes[:type]).to eq("must_submit")
     end
 
     context "Requirement exists" do
