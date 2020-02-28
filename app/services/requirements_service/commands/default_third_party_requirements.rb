@@ -40,8 +40,10 @@ module RequirementsService
         case content_tag.content_type
         when "DiscussionTopic"
           "must_contribute"
-        when "Assignment"
+        when "Assignment", "Quizzes::Quiz"
           "must_submit"
+        when "WikiPage", "Attachment"
+          "must_mark_done"
         else
           "must_view"
         end
