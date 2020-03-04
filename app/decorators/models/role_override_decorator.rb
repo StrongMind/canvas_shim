@@ -33,6 +33,16 @@ RoleOverride.class_eval do
         'AccountAdmin',
         'AccountMembership'
       ]
-    }
+    },
+    :merge_users => {
+      :label => lambda { "Allow users to merge user accounts." },
+      :available_to => [
+        'TeacherEnrollment',
+        'AccountAdmin',
+      ],
+      :true_for => [
+        'AccountAdmin',
+      ]
+    },
   })
 end
