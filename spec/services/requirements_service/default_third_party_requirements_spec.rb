@@ -69,4 +69,39 @@ describe RequirementsService::Commands::DefaultThirdPartyRequirements do
       end
     end
   end
+
+  describe "#add_prerequisites" do
+    let(:first_context_module) do
+      double(
+        'context module',
+        completion_requirements: [],
+        prerequisites: [],
+        position: 1,
+        update_column: nil,
+        touch: nil,
+        content_tags: content_tags,
+      )
+    end
+
+    let(:second_context_module) do
+      double(
+        'context module',
+        completion_requirements: [],
+        prerequisites: [],
+        position: 1,
+        update_column: nil,
+        touch: nil,
+        content_tags: content_tags,
+      )
+    end
+
+    context "First module" do
+      subject { described_class.new(context_module: first_context_module) }
+
+      it "Does not set prerequisites to the first one" do
+        expect(first_context_module).not_to receive(:update_column)
+        subject.send(:add_prerequisites)
+      end
+    end
+  end
 end
