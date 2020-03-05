@@ -9,6 +9,7 @@ module RequirementsService
       def call
         set_requirements
         update_completion_requirements
+        add_prerequisites
       end
 
       private
@@ -50,8 +51,27 @@ module RequirementsService
       end
 
       def update_completion_requirements
-        context_module.update_column(:completion_requirements, completion_requirements)
+        context_module.update_columns(completion_requirements: completion_requirements, require_sequential_progress: true)  
         context_module.touch
+      end
+
+      def add_prerequisites
+        if context_module.position && context_module.position > 1
+          last_module = find_last_context_module
+          context_module.update_columns(:prerequisites, generate_prerequisites(last_module))
+        end
+      end
+
+      def find_last_context_module
+        ContextModule.find_by(context_id: context_module.context_id, position: context_module.position - 1)
+      end
+
+      def generate_prerequisites(last_context_module)
+        [{
+          :type => "context_module",
+          :name => last_context_module.name,
+          :id => last_context_module
+        }]
       end
     end
   end
