@@ -58,7 +58,7 @@ module RequirementsService
       def add_prerequisites
         if context_module.position && context_module.position > 1
           last_module = find_last_context_module
-          context_module.update_columns(:prerequisites, generate_prerequisites(last_module))
+          context_module.update_column(:prerequisites, generate_prerequisites(last_module))
         end
       end
 
@@ -70,7 +70,7 @@ module RequirementsService
         [{
           :type => "context_module",
           :name => last_context_module.name,
-          :id => last_context_module
+          :id => last_context_module.id
         }]
       end
     end
