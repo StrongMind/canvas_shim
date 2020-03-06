@@ -10,6 +10,7 @@ module RequirementsService
         set_requirements
         update_completion_requirements
         add_prerequisites
+        context_module.touch
       end
 
       private
@@ -51,8 +52,7 @@ module RequirementsService
       end
 
       def update_completion_requirements
-        context_module.update_columns(completion_requirements: completion_requirements, require_sequential_progress: true)  
-        context_module.touch
+        context_module.update_columns(completion_requirements: completion_requirements, require_sequential_progress: true)
       end
 
       def add_prerequisites
