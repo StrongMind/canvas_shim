@@ -56,18 +56,19 @@
     <% end %>
   <% end %>
 
+<% unless @hide_destructive_course_options %>
   <% if can_do(@context, @current_user, :delete) && !@context.deleted? %>
     <%= link_to context_url(@context, :context_confirm_action_url, :event => 'delete'), :class => 'Button Button--link Button--link--has-divider Button--course-settings' do %>
       <i class="icon-trash"></i><%= t('links.delete', 'Delete this Course') %>
     <% end %>
   <% end %>
 
-<% unless @hide_destructive_course_options %>
   <% if can_do(@context, @current_user, :read) && show_user_create_course_button(@current_user, @context.account) %>
     <%= link_to context_url(@context, :context_start_copy_url), :class => 'Button Button--link Button--link--has-divider Button--course-settings copy_course_link' do %>
       <i class="icon-copy-course"></i><%= t('links.copy', 'Copy this Course') %>
     <% end %>
   <% end %>
+<% end %>
 
   <% if can_do(@context, @current_user, :manage_content, :manage_files, :manage_quizzes) %>
     <%= link_to context_url(@context, :context_content_migrations_url), :class => 'Button Button--link Button--link--has-divider Button--course-settings import_content' do %>
@@ -81,6 +82,7 @@
     <% end %>
   <% end %>
 
+<% unless @hide_destructive_course_options %>
   <% if can_do(@context, @current_user, :reset_content) %>
     <%= link_to context_url(@context, :course_reset_url), :class => ' Button Button--link Button--link--has-divider Button--course-settings reset_course_content_button' do %>
       <i class="icon-reset"></i><%= t('links.reset', 'Reset Course Content') %>
