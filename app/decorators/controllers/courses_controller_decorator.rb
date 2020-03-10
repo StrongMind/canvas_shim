@@ -280,8 +280,6 @@ CoursesController.class_eval do
   end
 
   def dates_distributable?
-    get_context
-    SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on' &&
-    @context.start_at && @context.end_at
+    get_context && @context.start_at && @context.end_at
   end
 end
