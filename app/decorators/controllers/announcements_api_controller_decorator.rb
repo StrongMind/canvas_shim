@@ -13,6 +13,10 @@ AnnouncementsApiController.class_eval do
     render :json => @announcements.order("pinned DESC NULLS LAST"), :status => :ok
   end
 
+  def reorder_pinned
+    Announcement.reorder_pinned_announcements(params[:announcements])
+  end
+
   private
   def pin_announcements
     @pin_announcements ||= params.permit(announcement_ids: []).fetch("announcement_ids", [])

@@ -1,4 +1,12 @@
 Announcement.class_eval do
+  def self.reorder_pinned_announcements(order_params)
+    order_params.each do |k, v|
+      announcement = self.find(k)
+      next unless announcement
+      announcement.update(position: v)
+    end
+  end
+
   def add_pin(pin_announcements)
     if pin_announcements.include?(id.to_s)
       update(pinned: true) unless pinned
