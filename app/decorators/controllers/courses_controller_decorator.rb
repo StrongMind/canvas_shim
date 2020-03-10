@@ -62,7 +62,7 @@ CoursesController.class_eval do
 
   def distribute_due_dates
     get_context
-    if authorized_action(@context, @current_user, :change_course_state) && dates_distributable?
+    if authorized_action(@context, @current_user, :manage_assignments) && dates_distributable?
       AssignmentsService.distribute_dates_job(course: @context)
       render :json => {}, :status => :ok
     else
