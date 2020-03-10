@@ -3,7 +3,7 @@ Announcement.class_eval do
     order_params.each do |k, v|
       announcement = self.find(k)
       next unless announcement
-      announcement.update(position: v)
+      announcement.update(position: v.to_i)
     end
   end
 
