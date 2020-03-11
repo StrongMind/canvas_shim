@@ -297,6 +297,8 @@
         ajaxResponse.done(function(response) {
           excused =  $.map(response, function(o) {if (o['excused'] === true) { return o } })
           $.each( excused, function( key, value ) {
+            $( "a[content_type='Assignment'][assignment_id=" + value.assignment_id + "]").siblings('span.title').children('span.excused-assignment-state').addClass('excused-assignment')
+            $( "a[content_type='DiscussionTopic'][assignment_id=" + value.assignment_id + "]").siblings('span.title').children('span.excused-assignment-state').addClass('excused-assignment')
             $( "a[content_type='Assignment'][assignment_id=" + value.assignment_id + "]").children('span.excused-assignment-state').addClass('excused-assignment')
             $( "a[content_type='DiscussionTopic'][assignment_id=" + value.assignment_id + "]").children('span.excused-assignment-state').addClass('excused-assignment')
             });
