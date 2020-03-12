@@ -10,11 +10,14 @@ AnnouncementsApiController.class_eval do
       end
     end
 
-    render :json => @announcements.order("pinned DESC NULLS LAST"), :status => :ok
+    render_non_expired_announcements
   end
 
   def reorder_pinned
+    get_context
+    get_announcements
     Announcement.reorder_pinned_announcements(params[:announcements])
+    render_non_expired_announcements
   end
 
   private
@@ -24,5 +27,9 @@ AnnouncementsApiController.class_eval do
 
   def get_announcements
     @announcements = @context.is_a?(Course) ? @context.non_expired_announcements : @context.active_announcements
+  end
+
+  def render_non_expired_announcements
+    render :json => @announcements.order("pinned DESC NULLS LAST").order("CASE WHEN pinned = 'true' THEN position END"), :status => :ok
   end
 end
