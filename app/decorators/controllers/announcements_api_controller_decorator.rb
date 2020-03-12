@@ -30,6 +30,7 @@ AnnouncementsApiController.class_eval do
   end
 
   def render_non_expired_announcements
-    render :json => @announcements.order("pinned DESC NULLS LAST").order("CASE WHEN pinned = 'true' THEN position END"), :status => :ok
+    render :json => @announcements.order("pinned DESC NULLS LAST").order("CASE WHEN pinned = 'true' THEN position END")
+    .order("(CASE WHEN pinned <> 'true' THEN COALESCE(delayed_post_at, posted_at, created_at) END) DESC"), :status => :ok
   end
 end
