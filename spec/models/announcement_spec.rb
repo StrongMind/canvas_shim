@@ -63,4 +63,15 @@ describe Announcement do
       end
     end
   end
+
+  describe "::reorder_pinned_announcements" do
+    let(:pinned_announcement_2) { Announcement.create(pinned: true) }
+    let(:params) do 
+      {pinned_announcement.id.to_s => "1", pinned_announcement_2.id.to_s => "2"}
+    end
+    it "sets position of announcements" do
+      Announcement.reorder_pinned_announcements(params)
+      expect(Announcement.find(pinned_announcement.id).position).to eq 1
+    end
+  end
 end
