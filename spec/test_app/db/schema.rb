@@ -10,13 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200225185458) do
+ActiveRecord::Schema.define(version: 20200316222159) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "announcements", force: :cascade do |t|
     t.boolean "pinned"
+    t.integer "position"
   end
 
   create_table "assignment_groups", force: :cascade do |t|
@@ -71,6 +72,10 @@ ActiveRecord::Schema.define(version: 20200225185458) do
     t.string  "context_type"
     t.string  "tag_type"
     t.string  "workflow_state"
+  end
+
+  create_table "context_external_tools", force: :cascade do |t|
+    t.string "domain"
   end
 
   create_table "context_module_progressions", force: :cascade do |t|
