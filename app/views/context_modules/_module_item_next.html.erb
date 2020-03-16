@@ -228,7 +228,12 @@
         </div> <!-- requirement description end -->
       </div>
     </div>
-    <% if !editable %>
+
+    <% requirement = module_item.try(:context_module).try(:completion_requirements).try(:find) {|req| req[:id] == module_item.id} %>
+    <% if !editable && requirement && module_item.try_rescue(:indent) > 0 %>
+      <div class="module-item-status-icon" style="display: none"></div> <%# going to set this in JS-land, not here %>
+    <% end %>
+    <% if module_item.try_rescue(:indent) == 0 && !editable %>
       <div class="module-item-status-icon" style="display: none"></div> <%# going to set this in JS-land, not here %>
     <% end %>
     <% if editable || module_item.nil? %>
