@@ -1,7 +1,8 @@
 ContextExternalTool.class_eval do
   def is_oauth_lti_domain?
+    return false unless self.domain
     (SettingsService.global_settings["oauth_lti_domains"] || '').split(",").any? do |setting_domain|
-      self.domain.include?(setting_domain)
+      self.domain.downcase.include?(setting_domain.downcase)
     end
   end
 
