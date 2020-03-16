@@ -28,6 +28,10 @@ module SettingsService
     Commands::GetSettings.new(id: id, object: object).call
   end
 
+  def self.global_settings
+    Commands::GetSettings.new(id: 1, object: 'global').call
+  end
+
   def self.update_user_setting(id:, setting:, value:)
     Commands::UpdateUserSetting.new(
       id: id,
