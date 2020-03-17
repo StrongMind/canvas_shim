@@ -29,6 +29,7 @@ Rails.application.routes.draw do
 
   scope(controller: :announcements_api) do
     post '/api/v1/courses/:course_id/announcements/bulk_pin', action: :bulk_pin, as: 'bulk_pin'
+    post '/api/v1/courses/:course_id/announcements/reorder_pinned', action: :reorder_pinned, as: 'reorder_pinned'
   end
 end
 
