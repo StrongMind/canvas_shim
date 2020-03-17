@@ -62,11 +62,11 @@ CoursesController.class_eval do
 
   def distribute_due_dates
     get_context
-    if authorized_action(@context, @current_user, :change_course_state) && dates_distributable?
+    if authorized_action(@context, @current_user, :manage_assignments) && dates_distributable?
       AssignmentsService.distribute_dates_job(course: @context)
       render :json => {}, :status => :ok
     else
-      render :json => {}, :status => :unprocessable_entity
+      render :json => {}, :status => :unauthorized
     end
 
   rescue StandardError => exception
@@ -80,7 +80,7 @@ CoursesController.class_eval do
       AssignmentsService.clear_due_dates(course: @context)
       render :json => {}, :status => :ok
     else
-      render :json => {}, :status => :unprocessable_entity
+      render :json => {}, :status => :unauthorized
     end
 
   rescue StandardError => exception
@@ -280,8 +280,6 @@ CoursesController.class_eval do
   end
 
   def dates_distributable?
-    get_context
-    SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on' &&
-    @context.start_at && @context.end_at
+    @context.is_a?(Course) && @context.start_at && @context.end_at
   end
 end

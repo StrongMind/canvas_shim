@@ -17,6 +17,8 @@ describe RequirementsService::Commands::DefaultThirdPartyRequirements do
       double(:content_tag, content_type: "DiscussionTopic", id: 2),
       double(:content_tag, content_type: "WikiPage", id: 3),
       double(:content_tag, content_type: "ContextExternalTool", id: 4),
+      double(:content_tag, content_type: "Attachment", id: 5),
+      double(:content_tag, content_type: "Quizzes::Quiz", id: 6),
     ]
   end
 
@@ -35,9 +37,19 @@ describe RequirementsService::Commands::DefaultThirdPartyRequirements do
       expect(discussion_topic[:type]).to eq("must_contribute")
     end
 
-    it "Sets an WikiPage to must_view" do
+    it "Sets an WikiPage to must_mark_done" do
       wiki_page = subject.send(:completion_requirements).find {|req| req[:id] == 3 }
-      expect(wiki_page[:type]).to eq("must_view")
+      expect(wiki_page[:type]).to eq("must_mark_done")
+    end
+
+    it "Sets an Attachment to must_mark_done" do
+      attachment = subject.send(:completion_requirements).find {|req| req[:id] == 5 }
+      expect(attachment[:type]).to eq("must_mark_done")
+    end
+
+    it "Sets an Quizzes::Quiz to must_submit" do
+      quizzes = subject.send(:completion_requirements).find {|req| req[:id] == 6 }
+      expect(quizzes[:type]).to eq("must_submit")
     end
 
     context "Requirement exists" do
@@ -54,6 +66,59 @@ describe RequirementsService::Commands::DefaultThirdPartyRequirements do
       it "Sets an WikiPage to must_view" do
         wiki_page = subject.send(:completion_requirements).find {|req| req[:id] == 3 }
         expect(wiki_page[:type]).to eq("must_submit")
+      end
+    end
+  end
+
+  describe "#add_prerequisites" do
+    let(:first_context_module) do
+      double(
+        'context module',
+        id: 1,
+        completion_requirements: [],
+        prerequisites: [],
+        position: 1,
+        name: "FIRST ONE",
+        context_id: 1,
+        update_column: nil,
+        touch: nil,
+        content_tags: content_tags,
+      )
+    end
+
+    let(:second_context_module) do
+      double(
+        'context module',
+        id: 2,
+        completion_requirements: [],
+        prerequisites: [],
+        position: 2,
+        name: "SECOND ONE",
+        context_id: 1,
+        update_column: nil,
+        touch: nil,
+        content_tags: content_tags,
+      )
+    end
+
+    context "First module" do
+      subject { described_class.new(context_module: first_context_module) }
+
+      it "Does not set prerequisites to the first one" do
+        expect(first_context_module).not_to receive(:update_column)
+        subject.send(:add_prerequisites)
+      end
+    end
+
+    context "Second module" do
+      subject { described_class.new(context_module: second_context_module) }
+      before do
+        allow(subject).to receive(:find_last_context_module).and_return(first_context_module)
+      end
+
+      it "Does not set prerequisites to the first one" do
+        expect(second_context_module).to receive(:update_column)
+        subject.send(:add_prerequisites)
       end
     end
   end
