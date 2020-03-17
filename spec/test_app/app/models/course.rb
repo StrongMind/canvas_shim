@@ -6,6 +6,7 @@ class Course < ActiveRecord::Base
   has_many :assignment_groups
   has_many :assignments
   has_many :submissions, through: :assignments
+  has_many :context_external_tools
 
   def teachers
     users

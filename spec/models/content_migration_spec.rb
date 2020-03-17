@@ -9,12 +9,12 @@ describe "ContentMigration" do
     
   it 'will publish when saved' do
     expect(PipelineService::V2).to receive(:publish).with an_instance_of(ContentMigration)
-    cm = ContentMigration.create(context_id: 1)
+    cm = ContentMigration.create(context_id: 1, context: Course.find_or_create_by(id: 1))
     cm.save
   end
 
   describe "#non_strongmind_cartrige?" do
-    let(:content_migration) { ContentMigration.create(context_id: 1) }
+    let(:content_migration) { ContentMigration.create(context_id: 1, context: Course.find_or_create_by(id: 1)) }
     context 'imported with strongmind cartridge' do
       before do 
         allow(Rails.cache).to receive(:read).and_return('StrongMind')
