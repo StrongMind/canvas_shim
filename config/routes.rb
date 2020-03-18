@@ -31,5 +31,11 @@ Rails.application.routes.draw do
     post '/api/v1/courses/:course_id/announcements/bulk_pin', action: :bulk_pin, as: 'bulk_pin'
     post '/api/v1/courses/:course_id/announcements/reorder_pinned', action: :reorder_pinned, as: 'reorder_pinned'
   end
+
+  ApiRouteSet::V1.draw(self) do
+    scope(controller: :users) do
+      get 'users/:id/observer_enrollments', action: :observer_enrollments
+    end
+  end
 end
 
