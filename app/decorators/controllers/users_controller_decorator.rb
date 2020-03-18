@@ -3,7 +3,15 @@ UsersController.class_eval do
     user = User.find(params[:id])
     return render_unauthorized_action unless user
     contexts = user.observer_enrollments.map(&:course)
-    observed_enrollments = ObserverEnrollment.observed_enrollments_for_courses(contexts, user).group_by(&:user_id)
-    render :json => observed_enrollments.as_json, :status => :ok
+    observed_enrollments = ObserverEnrollment.observed_enrollments_for_courses(contexts, user)
+    .group_by(&:user_id)
+    .map do |k, v|
+      {
+        "user" => User.find(k),
+        "enrollments" => v
+      }
+    end
+
+    render :json => observed_enrollments, :status => :ok
   end
 end
