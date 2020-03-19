@@ -8,7 +8,9 @@ UsersController.class_eval do
     .map do |k, v|
       {
         "user" => User.find(k),
-        "enrollments" => v
+        "enrollments" => v.map do |enr|
+          enr.as_json(include_root: false).merge({"score" => enr.scores&.first})
+        end
       }
     end.as_json(include_root: false)
 
