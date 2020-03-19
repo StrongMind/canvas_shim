@@ -10,7 +10,7 @@ UsersController.class_eval do
         "user" => User.find(k),
         "enrollments" => v
       }
-    end
+    end.as_json(include_root: false)
 
     render :json => observed_enrollments, :status => :ok
   end
