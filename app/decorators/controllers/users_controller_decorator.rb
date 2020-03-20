@@ -9,7 +9,11 @@ UsersController.class_eval do
       {
         "user" => User.find(k),
         "enrollments" => v.map do |enr|
-          enr.as_json(include_root: false).merge({"score" => enr.scores.first})
+          enr.as_json(include_root: false).merge(
+            {
+              "score" => enr.scores.first,
+              "course_name" => enr.course.name
+            })
         end
       }
     end.as_json(include_root: false)
