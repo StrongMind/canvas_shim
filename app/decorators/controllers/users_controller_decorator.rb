@@ -7,7 +7,10 @@ UsersController.class_eval do
     .group_by(&:user_id)
     .map do |k, v|
       {
-        "user" => User.find(k),
+        "user" => User.find(k).as_json(include_root: false).merge(
+          {
+            "avatar_image_url" => avatar_image_attrs(k).first,
+          }),
         "enrollments" => v.map do |enr|
           enr.as_json(include_root: false).merge(
             {
