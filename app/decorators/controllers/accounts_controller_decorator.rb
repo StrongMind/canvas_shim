@@ -24,12 +24,14 @@ AccountsController.class_eval do
   alias_method :settings, :strongmind_settings
 
   def strongmind_update
-    set_school_passing_threshold
-    set_school_unit_exam_passing_threshold
-    set_threshold_permissions
+    if params[:account][:settings]
+      set_school_passing_threshold
+      set_school_unit_exam_passing_threshold
+      set_threshold_permissions
 
-    set_allowed_filetypes if params[:allowed_filetypes]
-    set_holidays if params[:holidays]
+      set_allowed_filetypes if params[:allowed_filetypes]
+      set_holidays if params[:holidays]
+    end
 
     instructure_update
   end
