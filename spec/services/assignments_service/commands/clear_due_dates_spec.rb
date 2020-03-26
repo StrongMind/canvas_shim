@@ -12,9 +12,15 @@ describe AssignmentsService::Commands::ClearDueDates do
   end
 
   let(:assignment) { Assignment.create(course: course, due_at: Date.parse("Mon Nov 29 2018")) }
+  let!(:assignment_override) { AssignmentOverride.create(assignment: assignment) }
 
   it "Clears the date" do
     subject.call
     expect(course.assignments.any?(&:due_at)).to be false
+  end
+
+  it "Removes assignment overrides" do
+    subject.call
+    expect(course.assignments.flat_map(&:assignment_overrides).any?).to be false
   end
 end
