@@ -44,6 +44,16 @@ ApplicationController.class_eval do
   alias_method :instructure_badge_counts_for, :badge_counts_for
   alias_method :badge_counts_for, :strongmind_badge_counts_for
 
+  def observer_dashboard_enabled?
+    SettingsService.get_settings(object: 'school', id: 1)['observer_dashboard'] &&
+    @current_user && (
+      @current_user.roles(@domain_root_account).include?('admin') ||
+      @current_user.observer_enrollments.active.any?
+    )
+  end
+
+  helper_method :observer_dashboard_enabled?
+
   private
   def destructive_options_hidden?
     get_context
