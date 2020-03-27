@@ -12,6 +12,11 @@ Rails.application.routes.draw do
       post 'bulk_delete'
     end
   end
+
+  resources :observers do
+    get 'observers', to: 'observers#index', as: :observed_enrollments
+  end
+
   resources :courses do
     post 'conclude_users', to: 'courses#conclude_users', as: :conclude_user_enrollments
     get  'conclude_users', to: 'courses#show_course_enrollments', as: :show_course_enrollments
@@ -30,6 +35,12 @@ Rails.application.routes.draw do
   scope(controller: :announcements_api) do
     post '/api/v1/courses/:course_id/announcements/bulk_pin', action: :bulk_pin, as: 'bulk_pin'
     post '/api/v1/courses/:course_id/announcements/reorder_pinned', action: :reorder_pinned, as: 'reorder_pinned'
+  end
+
+  ApiRouteSet::V1.draw(self) do
+    scope(controller: :users) do
+      get 'users/:id/observer_enrollments', action: :observer_enrollments
+    end
   end
 end
 
