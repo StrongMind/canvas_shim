@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   scope(controller: :enrollments_api) do
     post '/api/v1/courses/:course_id/enrollments/:id/custom_placement', action: :custom_placement, as: :custom_placement
     get '/api/v1/courses/:course_id/enrollments/:id/snapshot', action: :snapshot, as: :snapshot
+    get '/api/v1/courses/:course_id/enrollments/:id/course_info', action: :observer_popout, as: :popout
   end
 
   scope(controller: :announcements_api) do
