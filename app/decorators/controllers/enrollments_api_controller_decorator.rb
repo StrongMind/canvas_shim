@@ -55,7 +55,7 @@ EnrollmentsApiController.class_eval do
       last_submission: student.last_submission_formatted,
       missing_assignments: student.missing_assignments_count,
       course_progress: "#{@context.calculate_progress(student, cached: true).round(1)}%",
-      teachers: @context.teacher_enrollments.map {|te| te.user.name }
+      teachers: @context.teacher_enrollments.eager_load(:user).pluck(:name)
     }, status => :ok
   end
 end
