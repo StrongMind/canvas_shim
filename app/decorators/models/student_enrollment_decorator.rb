@@ -25,7 +25,7 @@ StudentEnrollment.class_eval do
   end
 
   def last_submission_formatted
-    last_submission ? last_submission.strftime("%B %d, %Y") : "--"
+    last_submission ? last_submission.strftime("%B %d, %Y") : "N/A"
   end
 
   private
