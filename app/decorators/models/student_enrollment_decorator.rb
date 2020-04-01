@@ -24,6 +24,10 @@ StudentEnrollment.class_eval do
     "#{cp.requirement_completed_count(cached: true).to_i}/#{cp.requirement_count(cached: true).to_i}"
   end
 
+  def last_submission_formatted
+    last_submission ? last_submission.strftime("%B %d, %Y") : "N/A"
+  end
+
   private
   def days_since(field)
     return "N/A" unless field
