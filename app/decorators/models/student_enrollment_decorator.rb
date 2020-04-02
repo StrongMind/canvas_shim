@@ -28,11 +28,6 @@ StudentEnrollment.class_eval do
     last_submission ? last_submission.strftime("%B %d, %Y") : "N/A"
   end
 
-  def locked_out?
-    sis_id = user.pseudonyms.first&.sis_user_id
-    AuthenticationMethods.send(:call_to_strongmind_psp, sis_id) if sis_id
-  end
-
   private
   def days_since(field)
     return "N/A" unless field

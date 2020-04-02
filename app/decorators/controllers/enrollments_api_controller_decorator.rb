@@ -51,7 +51,7 @@ EnrollmentsApiController.class_eval do
     return render :json => {}, :status => :unprocessable_entity unless student
 
     render :json => {
-      lockout_status: student.locked_out?,
+      lockout_status: locked_out(student),
       online_status: student.user.is_online?,
       last_active: student.days_since_active,
       last_submission: student.last_submission_formatted,
@@ -59,5 +59,11 @@ EnrollmentsApiController.class_eval do
       course_progress: "#{@context.calculate_progress(student, cached: true).round(1)}%",
       teachers: @context.teacher_enrollments.eager_load(:user).pluck(:name)
     }, status => :ok
+  end
+
+  private
+  def locked_out(student)
+    sis_id = student.user.pseudonyms.first&.sis_user_id
+    call_to_strongmind_psp(sis_id) if sis_id
   end
 end
