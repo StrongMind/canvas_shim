@@ -121,7 +121,7 @@ User.class_eval do
     filter_feedback(recent_feedback_without_wrap(opts))
   end
 
-  def is_online?()
+  def is_online?
     cache_key = "#{self.id}/last_access_time"
     last_access_time = Rails.cache.read(cache_key)
     current_time = Time.now.utc

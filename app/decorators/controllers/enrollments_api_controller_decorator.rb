@@ -51,6 +51,8 @@ EnrollmentsApiController.class_eval do
     return render :json => {}, :status => :unprocessable_entity unless student
 
     render :json => {
+      lockout_status: student.locked_out?,
+      online_status: student.user.is_online?,
       last_active: student.days_since_active,
       last_submission: student.last_submission_formatted,
       missing_assignments: student.missing_assignments_count,
