@@ -10,6 +10,7 @@ UsersController.class_eval do
         "user" => User.find(k).as_json(include_root: false).merge(
           {
             "avatar_image_url" => avatar_image_attrs(k).first,
+            "is_online" => User.find(k).is_online? #there has to be a better way to do this, right?  we find the user on line 10 already
           }),
         "enrollments" => v.map do |enr|
           enr.as_json(include_root: false).merge(
