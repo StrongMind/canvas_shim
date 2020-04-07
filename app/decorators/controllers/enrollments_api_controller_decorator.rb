@@ -51,8 +51,6 @@ EnrollmentsApiController.class_eval do
     return render :json => {}, :status => :unprocessable_entity unless student
 
     render :json => {
-      lockout_status: locked_out(student),
-      online_status: student.user.is_online?,
       last_active: student.days_since_active,
       last_submission: student.last_submission_formatted,
       missing_assignments: student.missing_assignments_count,
@@ -62,9 +60,4 @@ EnrollmentsApiController.class_eval do
     }, status => :ok
   end
 
-  private
-  def locked_out(student)
-    sis_id = student.user.pseudonyms.first&.sis_user_id
-    call_to_strongmind_psp(sis_id) if sis_id
-  end
 end
