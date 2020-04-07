@@ -9,9 +9,8 @@ StudentEnrollment.class_eval do
 
   def missing_assignments_count
     user.submissions.where(
-      "context_code = ? AND cached_due_date < ?",
-      "course_#{course.id}",
-      1.hour.ago
+      "context_code = ? AND cached_due_date < ? AND excused IS NOT true",
+      "course_#{course.id}", 1.hour.ago,
     ).where("grader_id = 1 OR workflow_state = 'unsubmitted'").count
   end
 
