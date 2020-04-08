@@ -13,7 +13,10 @@ module AssignmentsService
 
       def call
         return unless assignments
-        assignments.each { |asn| asn.update(due_at: nil) }
+        assignments.each do |assignment|
+          assignment.update(due_at: nil)
+          AssignmentsService.handle_overrides(assignment: assignment, due_at: date)
+        end
       end
 
       private
