@@ -26,6 +26,10 @@ module AssignmentsService
     Commands::ClearDueDates.new(course: course).call
   end
 
+  def self.handle_overrides(assignment:, due_at:)
+    Commands::HandleOverrides.new(assignment: assignment, due_at: due_at).call
+  end
+
   def self.is_distributing?(course)
     Delayed::Job.current.exists?(strand: "course_due_dates:#{course.try(:id)}")
   end
