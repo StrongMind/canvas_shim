@@ -4,7 +4,7 @@ describe AssignmentsService::Commands::HandleOverrides do
   context "empty overrides"
   
   describe "#call" do
-    let(:due_at) { Time.now.utc }
+    let!(:due_at) { Time.now.utc }
     let(:assignment) { Assignment.create(only_visible_to_overrides: true) }
     let!(:assignment_override) { AssignmentOverride.create(assignment: assignment, due_at: 2.days.ago) }
     subject { described_class.new(assignment: assignment, due_at: due_at) }
