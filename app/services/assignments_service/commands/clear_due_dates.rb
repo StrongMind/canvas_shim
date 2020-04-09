@@ -15,7 +15,7 @@ module AssignmentsService
         return unless assignments
         assignments.each do |assignment|
           assignment.update(due_at: nil)
-          AssignmentsService.handle_overrides(assignment: assignment, due_at: date)
+          AssignmentsService.handle_overrides(assignment: assignment, due_at: nil)
         end
       end
 
