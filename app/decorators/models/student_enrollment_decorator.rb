@@ -7,7 +7,7 @@ StudentEnrollment.class_eval do
     days_since(last_submission)
   end
 
-  def se.missing_assignments_count
+  def missing_assignments_count
     user.submissions.eager_load(:assignment).where(
       "submissions.context_code = ? AND cached_due_date < ?" +
       "AND excused IS NOT true AND assignments.workflow_state != 'deleted'",
