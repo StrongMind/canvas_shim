@@ -45,4 +45,51 @@ describe StudentEnrollment do
        expect(subject.days_since_last_submission).to eq 2
      end
   end
+
+  describe "#missing_assignments_count" do
+    context "deleted assignment" do
+      let!(:assignment) { Assignment.create(course: course, workflow_state: "deleted") }
+
+      it "counts as 0" do
+        expect(subject.missing_assignments_count).to eq(0)
+      end
+    end
+
+    context "past due and unsubmitted" do
+      let!(:assignment) { Assignment.create(course: course, workflow_state: "published") }
+
+      let!(:submission) do 
+        Submission.create(
+          assignment: assignment,
+          user: user,
+          context_code: "course_#{course.id}",
+          cached_due_date: 1.day.ago,
+          workflow_state: "unsubmitted"
+        )
+      end
+
+      it "counts as 1" do
+        expect(subject.missing_assignments_count).to eq(1)
+      end
+    end
+
+    context "Zero graded" do
+      let!(:assignment) { Assignment.create(course: course, workflow_state: "published") }
+
+      let!(:submission) do 
+        Submission.create(
+          assignment: assignment,
+          user: user,
+          context_code: "course_#{course.id}",
+          cached_due_date: 1.day.ago,
+          workflow_state: "submitted",
+          grader_id: 1
+        )
+      end
+
+      it "counts as 1" do
+        expect(subject.missing_assignments_count).to eq(1)
+      end
+    end
+  end
 end
