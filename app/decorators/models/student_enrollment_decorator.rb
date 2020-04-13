@@ -8,11 +8,11 @@ StudentEnrollment.class_eval do
   end
 
   def missing_assignments_count
-    user.submissions.eager_load(:assignment).where(
-      "submissions.context_code = ? AND cached_due_date < ?" +
-      "AND excused IS NOT true AND assignments.workflow_state != 'deleted'",
+    user.submissions.where(
+      "submissions.context_code = ? AND cached_due_date < ? AND excused IS NOT true",
       "course_#{course.id}", 1.hour.ago,
-    ).where("grader_id = 1 OR submissions.workflow_state = 'unsubmitted'").count
+    ).where("grader_id = 1 OR submissions.workflow_state = 'unsubmitted'")
+    .eager_load(:assignment).where("assignments.workflow_state <> 'deleted'").count
   end
 
   def current_score
