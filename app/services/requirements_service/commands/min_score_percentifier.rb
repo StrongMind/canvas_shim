@@ -26,7 +26,7 @@ module RequirementsService
       end
 
       def percentify_threshold
-        (passing_threshold.to_f / denominator.to_f).round(2) * 100
+        ((passing_threshold.to_f / 100.0) * denominator.to_f).round(2)
       end
     end
   end
