@@ -30,6 +30,16 @@ describe RequirementsService::Commands::MinScorePercentifier do
       end
     end
 
+    context "no points possible" do
+      let(:assignment) do
+        Assignment.create
+      end
+
+      it "returns 100" do
+        expect(subject.send(:points_possible)).to eq(100.0)
+      end
+    end
+
     context "Assignment with points possible" do
       let(:content_tag) do
         double(:content_tag, content: assignment)
@@ -65,7 +75,7 @@ describe RequirementsService::Commands::MinScorePercentifier do
         double(:content_tag, content: nil)
       end
 
-      it "returns 100" do
+      it "returns 100% of min score" do
         expect(subject.call).to eq(50.0)
       end
     end
