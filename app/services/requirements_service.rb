@@ -113,4 +113,11 @@ module RequirementsService
       end
     end
   end
+
+  def self.percentify_min_score(content_tag:, passing_threshold:)
+    Commands::MinScorePercentifier.new(
+      content_tag: content_tag,
+      passing_threshold: passing_threshold
+    ).call
+  end
 end

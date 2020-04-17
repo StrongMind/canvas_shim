@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200409193827) do
+ActiveRecord::Schema.define(version: 20200417171100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 20200409193827) do
     t.string   "workflow_state"
     t.datetime "updated_at"
     t.boolean  "only_visible_to_overrides"
+    t.float    "points_possible"
   end
 
   create_table "big_blue_button_conferences", force: :cascade do |t|

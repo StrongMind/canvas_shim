@@ -79,7 +79,12 @@ module RequirementsService
       end
     
       def update_score(requirement)
-        requirement.merge!(type: 'min_score', min_score: score_threshold)
+        content_tag = ContentTag.find_by(id: requirement[:id])
+        min_score = RequirementsService.percentify_min_score(
+                      content_tag: content_tag,
+                      passing_threshold: score_threshold
+                    )
+        requirement.merge!(type: 'min_score', min_score: min_score)
       end
 
       def unit_exam?(requirement)
