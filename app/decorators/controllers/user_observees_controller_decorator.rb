@@ -3,6 +3,8 @@ UserObserveesController.class_eval do
     observee_ids.each do |obsv_id|
       bulk_add_observee(bulk_observee(obsv_id))
     end
+
+    render json: observer.observed_users.map {|observee| observee.as_json(include_root: false)}
   end
 
   private
