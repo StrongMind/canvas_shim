@@ -38,13 +38,13 @@ Rails.application.routes.draw do
     post '/api/v1/courses/:course_id/announcements/reorder_pinned', action: :reorder_pinned, as: 'reorder_pinned'
   end
 
-  scope(controller: :user_observees) do
-    post 'users/:user_id/bulk_create_observees', action: :bulk_create
-  end
-
   ApiRouteSet::V1.draw(self) do
     scope(controller: :users) do
       get 'users/:id/observer_enrollments', action: :observer_enrollments
+    end
+
+    scope(controller: :user_observees) do
+      post 'users/:user_id/bulk_create_observees', action: :bulk_create
     end
   end
 end
