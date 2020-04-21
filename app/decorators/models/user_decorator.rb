@@ -138,7 +138,7 @@ User.class_eval do
   end
 
   def has_observee?(observee)
-    user_observees.active.where(user_id: observee).exists?
+    user_observees.active.where(user_id: observee.id).exists?
   end
 
   private
