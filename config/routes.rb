@@ -42,6 +42,10 @@ Rails.application.routes.draw do
     scope(controller: :users) do
       get 'users/:id/observer_enrollments', action: :observer_enrollments
     end
+
+    scope(controller: :user_observees) do
+      post 'users/:user_id/bulk_create_observees', action: :bulk_create
+    end
   end
 end
 

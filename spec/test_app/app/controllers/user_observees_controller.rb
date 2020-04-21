@@ -1,0 +1,2 @@
+class UserObserveesController < ApplicationController
+end
