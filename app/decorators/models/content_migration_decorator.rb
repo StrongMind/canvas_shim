@@ -1,6 +1,7 @@
 ContentMigration.class_eval do
   after_save { PipelineService::V2.publish(self) }
   after_save -> { RequirementsService.set_third_party_requirements(course: context) }, if: :non_strongmind_cartridge?
+  after_save -> { RequirementsService.force_min_scores(course: context) }, if: :non_strongmind_cartridge?
   after_save -> { update_oauth_settings? }, if: :non_strongmind_cartridge?
 
   def non_strongmind_cartridge?
