@@ -132,6 +132,15 @@ User.class_eval do
   alias_method :recent_feedback_without_wrap, :recent_feedback
   alias_method :recent_feedback, :recent_feedback_with_wrap
 
+
+  def add_observee(observee)  
+    user_observees.create_or_restore(user_id: observee.id) unless has_observee?(observee)
+  end
+
+  def has_observee?(observee)
+    user_observees.active.where(user_id: observee).exists?
+  end
+
   private
 
   def filter_feedback(submissions)

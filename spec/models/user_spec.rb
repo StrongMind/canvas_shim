@@ -90,4 +90,36 @@ describe User do
       expect(subject.recent_feedback).to include(lti_graded_submission)
     end
   end
+
+  context "Has observed user" do
+    let(:observed_user) { User.create }
+    let(:newbie) { User.create }
+
+    before do
+      subject.observed_users << observed_user
+      allow(subject.user_observees).to receive(:active).and_return(subject.user_observees)
+    end
+
+    describe "#has_observee?" do
+      it "returns true" do
+        expect(subject.has_observee?(observed_user)).to eq(true)
+      end
+
+      it "returns false for another user" do
+        expect(subject.has_observee?(newbie)).to eq(false)
+      end
+    end
+
+    describe "#add_observee" do
+      it "does not run create_or_restore" do
+        expect(subject.user_observees).not_to receive(:create_or_restore)
+        subject.add_observee(observed_user) 
+      end
+
+      it "returns false for another user" do
+        subject.add_observee(newbie)
+        expect(subject.observed_users.size).to eq(2)
+      end
+    end
+  end
 end
