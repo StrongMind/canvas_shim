@@ -1,6 +1,6 @@
 ContentMigration.class_eval do
   after_save { PipelineService::V2.publish(self) }
-  after_save -> :run_third_party_services, if: :non_strongmind_cartridge?
+  after_save :run_third_party_services, if: :non_strongmind_cartridge?
 
   def non_strongmind_cartridge?
     SettingsService.get_settings(object: :school, id: 1)['third_party_imports'] &&
