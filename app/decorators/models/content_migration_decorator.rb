@@ -7,15 +7,8 @@ ContentMigration.class_eval do
     imported? && Rails.cache.read("#{context_id}_vendor") != 'StrongMind'
   end
 
-  def update_oauth_settings?
-    self.context.context_external_tools.each do |cet|
-      cet.set_setting_oauth_to_false unless cet.is_oauth_lti_domain?
-    end
-  end
-
   def run_third_party_services
     RequirementsService.set_third_party_requirements(course: context)
     RequirementsService.force_min_scores(course: context)
-    update_oauth_settings?
   end
 end

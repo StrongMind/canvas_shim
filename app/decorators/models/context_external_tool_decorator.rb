@@ -6,8 +6,8 @@ ContextExternalTool.class_eval do
     end
   end
 
-  def set_setting_oauth_to_false
-    self.settings["oauth_compliant"] = "false"
-    save
+  def is_oauth_noncompliant?
+    SettingsService.get_settings(object: :school, id: 1)['third_party_imports'] &&
+    !is_oauth_lti_domain?
   end
 end
