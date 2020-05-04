@@ -1,4 +1,5 @@
 User.class_eval do
+  include Async::Await
   validate :validate_identity, :on => :create
   after_commit -> { PipelineService::V2.publish self }
 
@@ -148,32 +149,32 @@ User.class_eval do
     submissions.select { |sub| sub.submission_comments.any? || (sub.grader_id && sub.grader_id > GradesService::Account.account_admin.try(:id)) }
   end
 
-  def access_token
+  async def access_token
     @access_token ||= HTTParty.post(
       'https://devlogin.strongmind.com/connect/token',
       :body => "grant_type=client_credentials&scope=identity_server_api.full_access",
-      :headers => {
+      :headers => { 
         'Content-Type' => 'application/x-www-form-urlencoded',
         'Authorization' => "Basic #{SettingsService.get_settings(object: 'school', id: 1)['identity_basic_auth']}"
       }
     ).parsed_response["access_token"]
   end
 
-  def validate_identity
-    unless access_token
+  async def validate_identity
+    unless access_token.wait
       return errors.add(:name, "invalid identity response")
     end
-
+  
     identity_create = HTTParty.post(
       'devlogin.strongmind.com/api/accounts/withProfile',
       :body => {
         "Username" => name,
         "Email" => email,
         "SendPasswordResetEmail": true
-      }.to_json,
+      }.to_json, 
       :headers => {
         'Content-Type' => 'application/json',
-        'Authorization' => "Bearer #{access_token}"
+        'Authorization' => "Bearer #{access_token}" 
       })
 
     unless identity_create.success?
