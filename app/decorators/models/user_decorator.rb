@@ -148,13 +148,19 @@ User.class_eval do
     submissions.select { |sub| sub.submission_comments.any? || (sub.grader_id && sub.grader_id > GradesService::Account.account_admin.try(:id)) }
   end
 
+  def identity_client_credentials
+    @client_credentials ||= SettingsService.get_settings(object: 'school', id: 1)['identity_basic_auth']
+  end
+
   def access_token
+    return unless identity_client_credentials
+
     @access_token ||= HTTParty.post(
       'https://devlogin.strongmind.com/connect/token',
       :body => "grant_type=client_credentials&scope=identity_server_api.full_access",
       :headers => {
         'Content-Type' => 'application/x-www-form-urlencoded',
-        'Authorization' => "Basic #{SettingsService.get_settings(object: 'school', id: 1)['identity_basic_auth']}"
+        'Authorization' => "Basic #{identity_client_credentials}"
       }
     ).parsed_response["access_token"]
   end
