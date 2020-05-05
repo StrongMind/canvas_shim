@@ -1,5 +1,6 @@
 User.class_eval do
-  validate :validate_identity, on: :create, if: :identity_enabled?
+  attr_accessor :run_identity_validations
+  validate :validate_identity, on: :create, if: -> { identity_enabled? && run_identity_validations }
   after_commit -> { PipelineService::V2.publish self }
 
   # Submissions must be excused upfront else once the first requirement check happens
