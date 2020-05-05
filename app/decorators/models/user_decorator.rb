@@ -167,14 +167,14 @@ User.class_eval do
 
   def validate_identity
     unless access_token
-      return errors.add(:name, "invalid identity response")
+      return errors.add(:name, "Access Token Not Granted")
     end
 
     identity_create = HTTParty.post(
-      'devlogin.strongmind.com/api/accounts/withProfile',
+      'https://devlogin.strongmind.com/api/accounts/withProfile',
       :body => {
         "Username" => name,
-        "Email" => email,
+        "Email" => pseudonyms.first.try(:unique_id),
         "SendPasswordResetEmail": true
       }.to_json,
       :headers => {
@@ -183,7 +183,7 @@ User.class_eval do
       })
 
     unless identity_create.success?
-      errors.add(:name, "invalid identity response")
+      errors.add(:name, "User Not Created")
     end
   end
 end
