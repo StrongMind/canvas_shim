@@ -1,5 +1,5 @@
 User.class_eval do
-  validate :validate_identity, :on => :create
+  validate :validate_identity, on: :create, if: :identity_enabled?
   after_commit -> { PipelineService::V2.publish self }
 
   # Submissions must be excused upfront else once the first requirement check happens
@@ -148,8 +148,16 @@ User.class_eval do
     submissions.select { |sub| sub.submission_comments.any? || (sub.grader_id && sub.grader_id > GradesService::Account.account_admin.try(:id)) }
   end
 
+  def school_settings_service_settings
+    SettingsService.get_settings(object: 'school', id: 1)
+  end
+
   def identity_client_credentials
-    @client_credentials ||= SettingsService.get_settings(object: 'school', id: 1)['identity_basic_auth']
+    @client_credentials ||= school_settings_service_settings['identity_basic_auth']
+  end
+
+  def identity_enabled?
+    @identity_enabled ||= school_settings_service_settings['identity_server_enabled']
   end
 
   def access_token
@@ -174,6 +182,8 @@ User.class_eval do
       'https://devlogin.strongmind.com/api/accounts/withProfile',
       :body => {
         "Username" => name,
+        "FirstName" => first_name,
+        "LastName" => last_name,
         "Email" => pseudonyms.first.try(:unique_id),
         "SendPasswordResetEmail": true
       }.to_json,
