@@ -168,7 +168,7 @@ User.class_eval do
 
   def validate_identity
     unless access_token
-      return errors.add(:name, "Access Token Not Granted")
+      return errors.add(:name, "Identity Server: Access Token Not Granted")
     end
 
     identity_create = HTTParty.post(
@@ -186,7 +186,7 @@ User.class_eval do
       })
 
     unless identity_create.success?
-      errors.add(:name, "User Not Created")
+      errors.add(:name, "Identity Server: User Not Created")
     end
   end
 end
