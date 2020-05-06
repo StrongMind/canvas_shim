@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency "pipeline_publisher_ruby"
   s.add_dependency "business"
   s.add_dependency 'httparty'
-  s.add_dependency "loofah", "2.2.3"
+  s.add_dependency "loofah", "2.5.0"
   s.add_dependency 'pandarus', '0.7.0'
   s.add_dependency 'decorators'
   s.add_dependency 'groupdate'

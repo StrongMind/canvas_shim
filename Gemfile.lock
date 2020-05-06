@@ -13,7 +13,7 @@ PATH
       decorators
       groupdate
       httparty
-      loofah (= 2.2.3)
+      loofah (= 2.5.0)
       pandarus (= 0.7.0)
       pipeline_publisher_ruby
       sass-rails (= 5.0.7)
@@ -161,7 +161,7 @@ GEM
     jmespath (1.4.0)
     json (2.2.0)
     link_header (0.0.8)
-    loofah (2.2.3)
+    loofah (2.5.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.7.1)
