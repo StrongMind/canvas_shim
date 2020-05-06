@@ -1,4 +1,6 @@
 User.class_eval do
+  attr_accessor :run_identity_validations
+  validate :validate_identity, on: :create, if: :run_identity_validations
   after_commit -> { PipelineService::V2.publish self }
 
   # Submissions must be excused upfront else once the first requirement check happens
@@ -145,5 +147,46 @@ User.class_eval do
 
   def filter_feedback(submissions)
     submissions.select { |sub| sub.submission_comments.any? || (sub.grader_id && sub.grader_id > GradesService::Account.account_admin.try(:id)) }
+  end
+
+  def identity_client_credentials
+    @client_credentials ||= SettingsService.get_settings(object: 'school', id: 1)['identity_basic_auth']
+  end
+
+  def access_token
+    return unless identity_client_credentials
+
+    @access_token ||= HTTParty.post(
+      'https://devlogin.strongmind.com/connect/token',
+      :body => "grant_type=client_credentials&scope=identity_server_api.full_access",
+      :headers => {
+        'Content-Type' => 'application/x-www-form-urlencoded',
+        'Authorization' => "Basic #{identity_client_credentials}"
+      }
+    ).parsed_response["access_token"]
+  end
+
+  def validate_identity
+    unless access_token
+      return errors.add(:name, "Identity Server: Access Token Not Granted")
+    end
+
+    identity_create = HTTParty.post(
+      'https://devlogin.strongmind.com/api/accounts/withProfile',
+      :body => {
+        "Username" => name,
+        "FirstName" => first_name,
+        "LastName" => last_name,
+        "Email" => pseudonyms.first.try(:unique_id),
+        "SendPasswordResetEmail": true
+      }.to_json,
+      :headers => {
+        'Content-Type' => 'application/json',
+        'Authorization' => "Bearer #{access_token}"
+      })
+
+    unless identity_create.success?
+      errors.add(:name, "Identity Server: User Not Created")
+    end
   end
 end

@@ -27,4 +27,12 @@ class User < ActiveRecord::Base
   def student_enrollments
     enrollments.where(type: "StudentEnrollment")
   end
+
+  def first_name
+    "Forever"
+  end
+
+  def last_name
+   "Young"
+  end
 end
