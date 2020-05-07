@@ -27,10 +27,6 @@ CoursesController.class_eval do
         Raven.capture_exception(exception)
         flash.now[:error] = t("Something went wrong. Please try again.")
       ensure
-        GradeCalculator.recompute_final_score(
-          @context.all_real_student_enrollments.pluck(:user_id),
-          @context.id
-        )
         @student_enrollments = @context.student_enrollments.where(type: "StudentEnrollment")
         render 'show_course_enrollments'
       end
