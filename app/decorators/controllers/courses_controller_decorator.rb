@@ -27,6 +27,7 @@ CoursesController.class_eval do
         Raven.capture_exception(exception)
         flash.now[:error] = t("Something went wrong. Please try again.")
       ensure
+        @context.recompute_student_scores
         @student_enrollments = @context.student_enrollments.where(type: "StudentEnrollment")
         render 'show_course_enrollments'
       end
