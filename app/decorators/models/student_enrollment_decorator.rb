@@ -1,4 +1,10 @@
 StudentEnrollment.class_eval do
+  after_save :strongmind_final_score_recalculation, if: -> { workflow_state_changed? && completed? }
+
+  def strongmind_final_score_recalculation
+    self.class.send_later(:recompute_final_score, user_id, course_id)
+  end
+
   def days_since_active
     days_since(last_activity_at)
   end

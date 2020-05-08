@@ -22,6 +22,10 @@ class Enrollment < ActiveRecord::Base
     self.type == "StudentEnrollment" && self.workflow_state == "active"
   end
 
+  def completed?
+    self.workflow_state == "completed"
+  end
+
   private
 
   def distribute_due_dates

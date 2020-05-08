@@ -92,4 +92,18 @@ describe StudentEnrollment do
       end
     end
   end
+
+  describe "#strongmind_final_score_recalculation" do
+    it "will not run when workflow state is not completed" do
+      expect(StudentEnrollment).not_to receive(:send_later)
+      subject.update(workflow_state: "active")
+    end
+
+    it "will run when workflow_state is completed" do
+      expect(StudentEnrollment).to receive(:send_later).with(
+        :recompute_final_score, user.id, course.id
+      )
+      subject.update(workflow_state: "completed")
+    end
+  end
 end
