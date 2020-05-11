@@ -1,6 +1,9 @@
 User.class_eval do
-  attr_accessor :run_identity_validations
-  validate :validate_identity, on: :create, if: :run_identity_validations
+  attr_accessor :skip_identity_validations
+  validate :validate_identity,
+    on: :create,
+    if: -> { SettingsService.get_settings(object: 'school', id: 1)['identity_server_enabled'] },
+    unless: :skip_identity_validations
   after_commit -> { PipelineService::V2.publish self }
 
   # Submissions must be excused upfront else once the first requirement check happens
