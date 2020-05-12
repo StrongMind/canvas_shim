@@ -1,5 +1,5 @@
 User.class_eval do
-  attr_accessor :run_identity_validations
+  attr_accessor :run_identity_validations, :identity_email
   validate :validate_identity, if: :run_identity_validations
   after_commit -> { PipelineService::V2.publish self }
 
@@ -172,9 +172,8 @@ User.class_eval do
   end
 
   def validate_identity
-    unless access_token
-      return errors.add(:name, "Identity Server: Access Token Not Granted")
-    end
+    return errors.add(:email, "Identity Server: Email Invalid") unless identity_email.present?
+    return errors.add(:name, "Identity Server: Access Token Not Granted") unless access_token
 
     identity_create = HTTParty.post(
       'https://devlogin.strongmind.com/api/accounts/withProfile',
@@ -182,7 +181,7 @@ User.class_eval do
         "Username" => name,
         "FirstName" => first_name,
         "LastName" => last_name,
-        "Email" => pseudonyms.first.try(:unique_id),
+        "Email" => identity_email,
         "SendPasswordResetEmail": true
       }.to_json,
       :headers => {
