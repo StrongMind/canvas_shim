@@ -1,6 +1,6 @@
 User.class_eval do
   attr_accessor :run_identity_validations
-  validate :validate_identity, on: :create, if: :run_identity_validations
+  validate :validate_identity, if: :run_identity_validations
   after_commit -> { PipelineService::V2.publish self }
 
   # Submissions must be excused upfront else once the first requirement check happens
@@ -141,6 +141,11 @@ User.class_eval do
 
   def has_observee?(observee)
     user_observees.active.where(user_id: observee.id).exists?
+  end
+
+  def save_with_identity_server_create!
+    self.run_identity_validations = true
+    save!
   end
 
   private
