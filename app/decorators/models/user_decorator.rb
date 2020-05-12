@@ -178,7 +178,7 @@ User.class_eval do
     identity_create = HTTParty.post(
       'https://devlogin.strongmind.com/api/accounts/withProfile',
       :body => {
-        "Username" => name,
+        "Username" => "#{name.gsub(/\s/, "_")}_#{SecureRandom.hex(8)}",
         "FirstName" => first_name,
         "LastName" => last_name,
         "Email" => identity_email,
