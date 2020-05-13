@@ -1,6 +1,6 @@
 User.class_eval do
-  attr_accessor :run_identity_validations
-  validate :validate_identity, on: :create, if: :run_identity_validations
+  attr_accessor :run_identity_validations, :identity_email
+  validate :validate_identity, if: :run_identity_validations
   after_commit -> { PipelineService::V2.publish self }
 
   # Submissions must be excused upfront else once the first requirement check happens
@@ -143,6 +143,12 @@ User.class_eval do
     user_observees.active.where(user_id: observee.id).exists?
   end
 
+  def save_with_identity_server_create!(id_email)
+    self.identity_email = id_email if EmailAddressValidator.valid?(id_email)
+    self.run_identity_validations = true
+    save!
+  end
+
   private
 
   def filter_feedback(submissions)
@@ -167,17 +173,16 @@ User.class_eval do
   end
 
   def validate_identity
-    unless access_token
-      return errors.add(:name, "Identity Server: Access Token Not Granted")
-    end
+    return errors.add(:email, "Identity Server: Email Invalid") unless identity_email.present?
+    return errors.add(:name, "Identity Server: Access Token Not Granted") unless access_token
 
     identity_create = HTTParty.post(
       'https://devlogin.strongmind.com/api/accounts/withProfile',
       :body => {
-        "Username" => name,
+        "Username" => "#{name.gsub(/\s/, "_")}_#{SecureRandom.hex(8)}",
         "FirstName" => first_name,
         "LastName" => last_name,
-        "Email" => pseudonyms.first.try(:unique_id),
+        "Email" => identity_email,
         "SendPasswordResetEmail": true
       }.to_json,
       :headers => {
