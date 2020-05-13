@@ -11,7 +11,6 @@ module AssignmentsService
       def call
         return unless SettingsService.get_settings(object: :school, id: 1)['auto_due_dates'] == 'on'
         return unless course.start_at && course.end_at
-        AssignmentsService.clear_due_dates!(course: course)
         distribute
       end
 
