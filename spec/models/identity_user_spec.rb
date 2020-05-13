@@ -1,8 +1,16 @@
 describe User do
   include_context 'stubbed_network'
-  let(:subject) { User.new(run_identity_validations: true) }
+  let(:subject) { User.new(run_identity_validations: true, identity_email: "ryankshaw@example.com") }
   let(:success_response) do 
     instance_double(HTTParty::Response, parsed_response: JSON.parse(success_response_body), success?: true)
+  end
+
+  let!(:EmailAddressValidator) do
+    Struct.new(:valid?) do
+      def self.valid?
+        true
+      end
+    end
   end
 
   before do
