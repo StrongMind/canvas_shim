@@ -5,14 +5,6 @@ describe User do
     instance_double(HTTParty::Response, parsed_response: JSON.parse(success_response_body), success?: true)
   end
 
-  let!(:EmailAddressValidator) do
-    Struct.new(:valid?) do
-      def self.valid?
-        true
-      end
-    end
-  end
-
   before do
     allow(subject).to receive(:identity_client_credentials).and_return("12345")
   end
@@ -107,11 +99,19 @@ describe User do
 
     context "Failed email validation" do
       let(:fail_user) { User.new(run_identity_validations: true, identity_email: nil) }
-      
+
       it "does not save" do
         expect(fail_user.save).to eq(false)
         expect(fail_user.errors["email"]).to eq ["Identity Server: Email Invalid"]
       end
+    end
+  end
+
+  describe "#save_with_identity_server_create!" do
+    let(:fail_user) { User.new(run_identity_validations: true) }
+
+    it "fails validation" do
+      expect { fail_user.save_with_identity_server_create!(nil) }.to raise_error
     end
   end
 end

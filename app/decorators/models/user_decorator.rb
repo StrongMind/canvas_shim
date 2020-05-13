@@ -143,7 +143,7 @@ User.class_eval do
     user_observees.active.where(user_id: observee.id).exists?
   end
 
-  def save_with_identity_server_create(id_email)
+  def save_with_identity_server_create!(id_email)
     self.identity_email = id_email if EmailAddressValidator.valid?(id_email)
     self.run_identity_validations = true
     save!
