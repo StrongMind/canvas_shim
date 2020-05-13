@@ -104,5 +104,14 @@ describe User do
         expect(subject.errors["name"]).to eq ["Identity Server: User Not Created"]
       end
     end
+
+    context "Failed email validation" do
+      let(:fail_user) { User.new(run_identity_validations: true, identity_email: nil) }
+      
+      it "does not save" do
+        expect(fail_user.save).to eq(false)
+        expect(fail_user.errors["email"]).to eq ["Identity Server: Email Invalid"]
+      end
+    end
   end
 end
