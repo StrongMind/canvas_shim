@@ -17,6 +17,8 @@ module PipelineService
           PipelineService::V2::Nouns::User
         when /Pseudonym/
           PipelineService::V2::Nouns::Pseudonym
+        when /Score/
+          PipelineService::V2::Nouns::Score
         else
           PipelineService::V2::Nouns::Base
         end
