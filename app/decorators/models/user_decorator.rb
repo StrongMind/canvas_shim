@@ -155,15 +155,23 @@ User.class_eval do
     submissions.select { |sub| sub.submission_comments.any? || (sub.grader_id && sub.grader_id > GradesService::Account.account_admin.try(:id)) }
   end
 
+  def school_settings
+    @school_settings ||= SettingsService.get_settings(object: 'school', id: 1)
+  end
+
+  def identity_domain
+    @identity_domain ||= school_settings['identity_domain']
+  end
+
   def identity_client_credentials
-    @client_credentials ||= SettingsService.get_settings(object: 'school', id: 1)['identity_basic_auth']
+    @client_credentials ||= school_settings['identity_basic_auth']
   end
 
   def access_token
-    return unless identity_client_credentials
+    return unless identity_domain && identity_client_credentials
 
     @access_token ||= HTTParty.post(
-      'https://devlogin.strongmind.com/connect/token',
+      "https://#{identity_domain}/connect/token",
       :body => "grant_type=client_credentials&scope=identity_server_api.full_access",
       :headers => {
         'Content-Type' => 'application/x-www-form-urlencoded',
@@ -177,7 +185,7 @@ User.class_eval do
     return errors.add(:name, "Identity Server: Access Token Not Granted") unless access_token
 
     identity_create = HTTParty.post(
-      'https://devlogin.strongmind.com/api/accounts/withProfile',
+      "https://#{identity_domain}/api/accounts/withProfile",
       :body => {
         "Username" => "#{name.gsub(/\s/, "_")}_#{SecureRandom.hex(8)}",
         "FirstName" => first_name,
