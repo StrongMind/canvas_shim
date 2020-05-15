@@ -7,6 +7,7 @@ describe User do
 
   before do
     allow(subject).to receive(:identity_client_credentials).and_return("12345")
+    allow(subject).to receive(:identity_domain).and_return("example.com")
   end
   
   describe "#access_token" do
