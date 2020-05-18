@@ -1,6 +1,6 @@
 User.class_eval do
-  attr_accessor :run_identity_create_validations, :identity_email
-  validate :validate_identity_creation, if: :run_identity_create_validations
+  attr_accessor :run_identity_validations, :identity_email
+  validate :validate_identity_creation, if: -> { run_identity_validations == "create" }
   after_commit -> { PipelineService::V2.publish self }
 
   # Submissions must be excused upfront else once the first requirement check happens
@@ -150,7 +150,7 @@ User.class_eval do
 
   def save_with_identity_server_create(id_email, force: false)
     self.identity_email = id_email if EmailAddressValidator.valid?(id_email)
-    self.run_identity_create_validations = true
+    self.run_identity_validations = "create"
     force ? save! : save
   end
 

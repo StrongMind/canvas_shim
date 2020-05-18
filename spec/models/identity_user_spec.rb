@@ -1,6 +1,6 @@
 describe User do
   include_context 'stubbed_network'
-  let(:subject) { User.new(run_identity_create_validations: true, identity_email: "ryankshaw@example.com") }
+  let(:subject) { User.new(run_identity_validations: "create", identity_email: "ryankshaw@example.com") }
   let(:success_response) do 
     instance_double(HTTParty::Response, parsed_response: JSON.parse(success_response_body), success?: true)
   end
@@ -99,7 +99,7 @@ describe User do
     end
 
     context "Failed email validation" do
-      let(:fail_user) { User.new(run_identity_create_validations: true, identity_email: nil) }
+      let(:fail_user) { User.new(run_identity_validations: "create", identity_email: nil) }
 
       it "does not save" do
         expect(fail_user.save).to eq(false)
@@ -109,7 +109,7 @@ describe User do
   end
 
   describe "#save_with_identity_server_create!" do
-    let(:fail_user) { User.new(run_identity_create_validations: true) }
+    let(:fail_user) { User.new(run_identity_validations: "create") }
 
     it "fails validation" do
       expect { fail_user.save_with_identity_server_create!(nil) }.to raise_error
