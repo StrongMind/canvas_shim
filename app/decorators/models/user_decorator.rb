@@ -144,7 +144,7 @@ User.class_eval do
   end
 
   def save_with_or_without_identity_create(id_email = nil, force: false)
-    return save unless identity_enabled
+    return (force ? save! : save) unless identity_enabled
     save_with_identity_server_create(id_email, force: force)
   end
 
