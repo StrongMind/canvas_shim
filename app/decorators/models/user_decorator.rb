@@ -1,6 +1,6 @@
 User.class_eval do
   attr_accessor :run_identity_validations, :identity_email
-  validate :validate_identity, if: :run_identity_validations
+  validate :validate_identity_creation, if: -> { run_identity_validations == "create" }
   after_commit -> { PipelineService::V2.publish self }
 
   # Submissions must be excused upfront else once the first requirement check happens
@@ -143,10 +143,19 @@ User.class_eval do
     user_observees.active.where(user_id: observee.id).exists?
   end
 
-  def save_with_identity_server_create!(id_email)
+  def save_with_or_without_identity_create(id_email = nil, force: false)
+    return save unless identity_enabled
+    save_with_identity_server_create(id_email, force: force)
+  end
+
+  def save_with_identity_server_create(id_email, force: false)
     self.identity_email = id_email if EmailAddressValidator.valid?(id_email)
-    self.run_identity_validations = true
-    save!
+    self.run_identity_validations = "create"
+    force ? save! : save
+  end
+
+  def identity_enabled
+    @identity_enabled ||= school_settings['identity_server_enabled']
   end
 
   private
@@ -180,7 +189,7 @@ User.class_eval do
     ).parsed_response["access_token"]
   end
 
-  def validate_identity
+  def validate_identity_creation
     return errors.add(:email, "Identity Server: Email Invalid") unless identity_email.present?
     return errors.add(:name, "Identity Server: Access Token Not Granted") unless access_token
 

@@ -1,6 +1,6 @@
 describe User do
   include_context 'stubbed_network'
-  let(:subject) { User.new(run_identity_validations: true, identity_email: "ryankshaw@example.com") }
+  let(:subject) { User.new(run_identity_validations: "create", identity_email: "ryankshaw@example.com") }
   let(:success_response) do 
     instance_double(HTTParty::Response, parsed_response: JSON.parse(success_response_body), success?: true)
   end
@@ -44,6 +44,19 @@ describe User do
     end
   end
 
+  describe "#validate_identity_creation" do
+    it "runs create validations" do
+      expect(subject).to receive(:validate_identity_creation)
+      subject.save
+    end
+
+    it "does not run identity validations" do
+      subject.run_identity_validations = "nope"
+      expect(subject).not_to receive(:validate_identity_creation)
+      subject.save
+    end
+  end
+
   describe '#create' do
     let(:success_response_body) do
       {
@@ -61,7 +74,6 @@ describe User do
     before do
       allow(subject).to receive(:access_token).and_return("eiug2fgiuqefgiuqfe")
       allow(HTTParty).to receive(:post).and_return(success_response)
-      subject.pseudonyms << Pseudonym.new(unique_id: "hithere@example.com")
     end
 
     it "creates" do
@@ -99,7 +111,7 @@ describe User do
     end
 
     context "Failed email validation" do
-      let(:fail_user) { User.new(run_identity_validations: true, identity_email: nil) }
+      let(:fail_user) { User.new(run_identity_validations: "create", identity_email: nil) }
 
       it "does not save" do
         expect(fail_user.save).to eq(false)
@@ -108,11 +120,35 @@ describe User do
     end
   end
 
-  describe "#save_with_identity_server_create!" do
-    let(:fail_user) { User.new(run_identity_validations: true) }
+  describe "#save_with_identity_server_create" do
+    let(:fail_user) { User.new(run_identity_validations: "create") }
 
-    it "fails validation" do
-      expect { fail_user.save_with_identity_server_create!(nil) }.to raise_error
+    it "fails validation with bang" do
+      expect { fail_user.save_with_identity_server_create("bademail", force: true) }.to raise_error ActiveRecord::RecordInvalid
+    end
+
+    it "fails validation without bang" do
+      expect { fail_user.save_with_identity_server_create("bademail", force: false) }.not_to raise_error
+      expect(fail_user.errors["email"]).to eq ["Identity Server: Email Invalid"]
+    end
+  end
+
+  describe "#save_with_or_without_identity_create" do
+    before do
+      allow(subject).to receive(:save)
+    end
+
+    it "runs save without any args" do
+      allow(subject).to receive(:identity_enabled).and_return(false)
+      expect(subject).not_to receive(:save_with_identity_server_create)
+      expect(subject).to receive(:save)
+      subject.save_with_or_without_identity_create
+    end
+
+    it "runs save_with_identity_create with args" do
+      allow(subject).to receive(:identity_enabled).and_return(true)
+      expect(subject).to receive(:save_with_identity_server_create)
+      subject.save_with_or_without_identity_create("ryankshaw@example.com")
     end
   end
 end
