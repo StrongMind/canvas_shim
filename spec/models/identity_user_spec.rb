@@ -139,12 +139,14 @@ describe User do
     end
 
     it "runs save without any args" do
+      allow(subject).to receive(:identity_enabled).and_return(false)
       expect(subject).not_to receive(:save_with_identity_server_create)
       expect(subject).to receive(:save)
       subject.save_with_or_without_identity_create
     end
 
     it "runs save_with_identity_create with args" do
+      allow(subject).to receive(:identity_enabled).and_return(true)
       expect(subject).to receive(:save_with_identity_server_create)
       subject.save_with_or_without_identity_create("ryankshaw@example.com")
     end
