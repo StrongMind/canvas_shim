@@ -136,6 +136,7 @@ describe User do
   describe "#save_with_or_without_identity_create" do
     before do
       allow(subject).to receive(:save)
+      allow(subject).to receive(:save!)
     end
 
     it "runs save without any args" do
@@ -143,6 +144,13 @@ describe User do
       expect(subject).not_to receive(:save_with_identity_server_create)
       expect(subject).to receive(:save)
       subject.save_with_or_without_identity_create
+    end
+
+    it "runs save without any args" do
+      allow(subject).to receive(:identity_enabled).and_return(false)
+      expect(subject).not_to receive(:save_with_identity_server_create)
+      expect(subject).to receive(:save!)
+      subject.save_with_or_without_identity_create("email", force: true)
     end
 
     it "runs save_with_identity_create with args" do
