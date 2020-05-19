@@ -17,6 +17,10 @@ Rails.application.routes.draw do
     get 'observers', to: 'observers#index', as: :observed_enrollments
   end
 
+  resources :accounts do
+    get 'assign_observers', to: 'accounts#assign_observers'
+  end
+
   resources :courses do
     post 'conclude_users', to: 'courses#conclude_users', as: :conclude_user_enrollments
     get  'conclude_users', to: 'courses#show_course_enrollments', as: :show_course_enrollments

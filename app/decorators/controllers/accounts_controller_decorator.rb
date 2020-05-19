@@ -39,6 +39,10 @@ AccountsController.class_eval do
   alias_method :instructure_update, :update
   alias_method :update, :strongmind_update
 
+  def assign_observers
+    @active_tab = "assign_observers"
+  end
+
   private
   def holidays
     params[:holidays].blank? ? false : params[:holidays]
