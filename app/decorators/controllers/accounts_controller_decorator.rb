@@ -41,6 +41,7 @@ AccountsController.class_eval do
 
   def assign_observers
     @active_tab = "assign_observers"
+    js_env(BASE_URL: request.base_url)
   end
 
   private
