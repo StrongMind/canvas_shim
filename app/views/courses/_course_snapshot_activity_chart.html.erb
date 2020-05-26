@@ -31,8 +31,8 @@
       <div class="day course-snapshot-day">
         <div class="day-label"> <%= day[0].keys[0].strftime("%a") %> </div>
         <% day.each do |hour| %>
-            <div class="<%= "hour band-#{hour.values[0]} course-snapshot-hour" %>" role="graphics-symbol">
-              <label class="col-label"<%= hour.values[0] %> aria-label="<%= hour.keys[0].strftime("%A") %> <%= hour.keys[0].strftime("%l%P") %> <%= ((hour.values[0].to_int)*10).ordinalize %> percentile"></label>
+            <div class="<%= "hour band-#{hour.values[0]} course-snapshot-hour" %>" role="graphics-symbol" aria-label="<%= hour.keys[0].strftime("%A") %> <%= hour.keys[0].strftime("%l%P") %> <%= ((hour.values[0].to_int)*10).ordinalize %> percentile">
+              <label class="col-label"<%= hour.values[0] %>></label>
             </div>
         <% end %>
       </div>
