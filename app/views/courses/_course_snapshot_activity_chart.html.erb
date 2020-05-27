@@ -1,8 +1,8 @@
-<div class="activity-table" id="course-snapshot-student-activity-chart">
+<div class="activity-table" id="course-snapshot-student-activity-chart" role="graphics-document">
     <div class="course-snapshot-heading-with-info">
         <h3>Course Access Report</h3>
           <div id="activity-chart-info" aria-hidden="true">
-            <a class="icon-info course-snapshot-link-color" title="What is this?"></a>
+            <a class="icon-info course-snapshot-link-color" alt="What is this?"></a>
           </div>
           <div class="course-snapshot-activity-chart-popover">
             <div class="popover-content">
@@ -13,17 +13,15 @@
           </div>
     </div>
 
-  <div class="hour-labels">
+  <div class="hour-labels" role="graphics-object">
     <div class="day">
-      
-    <div class="hour"> </div>
+      <div class="hour" aria-hidden="true"> </div>
       <% (0..23).each do |day| %>
         <div class="hour"> 
             <label class="col-label">
               <%= @accesses_per_hour[day].keys[0].strftime("%l%P").strip.downcase[0...-1] %>
             </label>
         </div>
-
       <% end %>
     </div>
   </div>
@@ -32,28 +30,28 @@
     <div class="week course-snapshot-week">
       <div class="day course-snapshot-day">
         <div class="day-label"> <%= day[0].keys[0].strftime("%a") %> </div>
-          <% day.each do |hour| %>
-              <div class="<%= "hour band-#{hour.values[0]} course-snapshot-hour" %>">
-                <label class="col-label"<%= hour.values[0] %></label>
-              </div>
-          <% end %>
+        <% day.each do |hour| %>
+            <div class="<%= "hour band-#{hour.values[0]} course-snapshot-hour" %>" role="graphics-symbol" aria-label="<%= hour.keys[0].strftime("%A") %> <%= hour.keys[0].strftime("%l%P") %> <%= ((hour.values[0].to_int)*10).ordinalize %> percentile">
+              <label class="col-label"<%= hour.values[0] %>></label>
+            </div>
+        <% end %>
       </div>
     </div>
   <% end %>
 
-<div class="activity-table-legend" id="course-snapshot-activity-chart-legend">
-  <p>Less activity</p>
-  <div class="band-0"></div>
-  <div class="band-1"></div>
-  <div class="band-2"></div>
-  <div class="band-3"></div>
-  <div class="band-4"></div>
-  <div class="band-5"></div>
-  <div class="band-6"></div>
-  <div class="band-7"></div>
-  <div class="band-8"></div>
-  <div class="band-9"></div>
-  <div class="band-10"></div>
-  <p>More activity</p>
-</div>
+  <div class="activity-table-legend" id="course-snapshot-activity-chart-legend" aria-label="Chart legend">
+    <p>Less activity</p>
+    <div class="band-0" aria-label="0th percentile"></div>
+    <div class="band-1" aria-label="10th percentile"></div>
+    <div class="band-2" aria-label="20th percentile"></div>
+    <div class="band-3" aria-label="30th percentile"></div>
+    <div class="band-4" aria-label="40th percentile"></div>
+    <div class="band-5" aria-label="50th percentile"></div>
+    <div class="band-6" aria-label="60th percentile"></div>
+    <div class="band-7" aria-label="70th percentile"></div>
+    <div class="band-8" aria-label="80th percentile"></div>
+    <div class="band-9" aria-label="90th percentile"></div>
+    <div class="band-10" aria-label="100th percentile"></div>
+    <p>More activity</p>
+  </div>
 </div>
