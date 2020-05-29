@@ -6,7 +6,7 @@ User.class_eval do
 
   def self.find_for_identity_auth(user_global_id)
     if identity_enabled
-      actual_user_id = SettingsService.get_settings(object: 'login', id: user_global_id)
+      actual_user_id = SettingsService.get_settings(object: 'login', id: user_global_id)["canvas_id"]
       find(actual_user_id)
     else
       find(user_global_id)
