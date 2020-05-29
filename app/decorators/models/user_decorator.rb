@@ -227,7 +227,7 @@ User.class_eval do
       object: 'login',
       id: identity_uuid,
       setting: 'canvas_id',
-      value: id
+      value: id.to_s
     )
   end
 end
