@@ -4,6 +4,15 @@ User.class_eval do
   after_commit -> { PipelineService::V2.publish self }
   after_save :send_identity_credentials_to_settings_service, if: :identity_uuid
 
+  def self.find_for_identity_auth(user_global_id)
+    if identity_enabled
+      actual_user_id = SettingsService.get_settings(object: 'login', id: user_global_id)
+      find(actual_user_id)
+    else
+      find(user_global_id)
+    end
+  end
+
   # Submissions must be excused upfront else once the first requirement check happens
   # the all_met condition will fail on submissions not being excused yet
   #
