@@ -1,7 +1,8 @@
 User.class_eval do
-  attr_accessor :run_identity_validations, :identity_email
+  attr_accessor :run_identity_validations, :identity_email, :identity_uuid
   validate :validate_identity_creation, if: -> { run_identity_validations == "create" }
   after_commit -> { PipelineService::V2.publish self }
+  after_save :send_identity_credentials_to_settings_service, if: :identity_uuid
 
   # Submissions must be excused upfront else once the first requirement check happens
   # the all_met condition will fail on submissions not being excused yet
@@ -207,8 +208,19 @@ User.class_eval do
         'Authorization' => "Bearer #{access_token}"
       })
 
-    unless identity_create.success?
+    if identity_create.success?
+      self.identity_uuid = identity_create.parsed_response["id"]
+    else
       errors.add(:name, "Identity Server: User Not Created")
     end
+  end
+
+  def send_identity_credentials_to_settings_service
+    SettingsService.update_settings(
+      object: 'login',
+      id: identity_uuid,
+      setting: 'canvas_id',
+      value: id
+    )
   end
 end
