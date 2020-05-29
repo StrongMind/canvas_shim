@@ -5,11 +5,9 @@ User.class_eval do
   after_save :send_identity_credentials_to_settings_service, if: :identity_uuid
 
   def self.find_for_identity_auth(user_global_id)
-    if identity_enabled
+    return unless user_global_id && new.identity_enabled
       actual_user_id = SettingsService.get_settings(object: 'login', id: user_global_id)["canvas_id"]
       find(actual_user_id)
-    else
-      find(user_global_id)
     end
   end
 
