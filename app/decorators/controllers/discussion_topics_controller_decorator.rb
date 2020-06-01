@@ -55,7 +55,7 @@ DiscussionTopicsController.class_eval do
   end
 
   def set_announcement_expiration_date?
-    unless @errors.any?
+    unless @topic&.new_record? || @errors.any?
       send_announcement_expiration_date if @topic.is_announcement
     end
   end

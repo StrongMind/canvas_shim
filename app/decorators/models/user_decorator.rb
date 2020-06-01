@@ -1,8 +1,9 @@
 User.class_eval do
   attr_accessor :run_identity_validations, :identity_email, :identity_uuid
   validate :validate_identity_creation, if: -> { run_identity_validations == "create" }
-  after_commit -> { PipelineService::V2.publish self }
   after_save :send_identity_credentials_to_settings_service, if: :identity_uuid
+
+  after_commit -> { PipelineService::V2.publish self }
 
   def self.find_for_identity_auth(user_global_id)
     return unless user_global_id && new.identity_enabled
