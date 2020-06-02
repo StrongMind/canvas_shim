@@ -8,6 +8,7 @@ describe User do
   before do
     allow(subject).to receive(:identity_client_credentials).and_return("12345")
     allow(subject).to receive(:identity_domain).and_return("example.com")
+    allow(SettingsService).to receive(:update_settings)
   end
   
   describe "#access_token" do
@@ -70,7 +71,7 @@ describe User do
         "sendPasswordResetEmail": true
       }.to_json
     end
-  
+
     before do
       allow(subject).to receive(:access_token).and_return("eiug2fgiuqefgiuqfe")
       allow(HTTParty).to receive(:post).and_return(success_response)
@@ -78,6 +79,12 @@ describe User do
 
     it "creates" do
       expect(subject.save).to eq(true)
+    end
+
+    it "sends an id" do
+      expect(SettingsService).to receive(:update_settings)
+      subject.save
+      expect(subject.identity_uuid).to eq("273f2717-134a-4ff3-9a23-c00a6987510c")
     end
 
     context "no access token" do
@@ -157,6 +164,31 @@ describe User do
       allow(subject).to receive(:identity_enabled).and_return(true)
       expect(subject).to receive(:save_with_identity_server_create)
       subject.save_with_or_without_identity_create("ryankshaw@example.com")
+    end
+  end
+
+  describe "::find_for_identity_auth" do
+    subject { described_class }
+
+    before do
+      allow_any_instance_of(subject).to receive(:identity_enabled).and_return(true)
+    end
+
+    it "doesn't work without global id" do
+      expect(subject.find_for_identity_auth(nil)).to eq(nil)
+    end
+
+    it "returns nil if identity is disabled" do
+      allow_any_instance_of(subject).to receive(:identity_enabled).and_return(nil)
+      expect(subject.find_for_identity_auth("12345")).to eq(nil)
+    end
+
+    context "matches user id" do
+      it "finds the user" do
+        user = User.create
+        allow(SettingsService).to receive(:get_settings).and_return("canvas_id" => user.id)
+        expect(User.find_for_identity_auth("12345")).to eq(user)
+      end
     end
   end
 end

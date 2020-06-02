@@ -23,6 +23,8 @@ module SettingsService
           SettingsService::Assignment
         when 'user'
           SettingsService::User
+        when 'login'
+          SettingsService::Login
         when 'enrollment'
           SettingsService::Enrollment
         when 'student_assignment'
