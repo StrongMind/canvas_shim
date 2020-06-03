@@ -36,19 +36,13 @@ UsersController.class_eval do
     user = User.find(params[:id])
     return render_unauthorized_action unless user
 
-    begin
-      setting = (params["show_progress_grades"] == "1")
+    SettingsService.update_settings(
+      object: 'user',
+      id: user.id,
+      setting: "show_progress_grades",
+      value: params["show_progress_grades"]
+    )
 
-      SettingsService.update_settings(
-        object: 'user',
-        id: user.id,
-        setting: 'show_progress_grades',
-        value: setting
-      )
-
-      render :json => {show_progress_grades: setting}, :status => :ok
-    rescue
-      render :json => {}, :status => :unprocessable_entity
-    end
+    render :json => {show_progress_grades: params["show_progress_grades"]}, :status => :ok
   end
 end
