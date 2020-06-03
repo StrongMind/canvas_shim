@@ -41,7 +41,7 @@ Rails.application.routes.draw do
   ApiRouteSet::V1.draw(self) do
     scope(controller: :users) do
       get 'users/:id/observer_enrollments', action: :observer_enrollments
-      get 'users/:id/toggle_progress_grade', action: :toggle_progress_grade
+      post 'users/:id/toggle_progress_grade', action: :toggle_progress_grade
     end
 
     scope(controller: :user_observees) do
