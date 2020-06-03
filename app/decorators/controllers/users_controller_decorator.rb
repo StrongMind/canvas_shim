@@ -37,14 +37,16 @@ UsersController.class_eval do
     return render_unauthorized_action unless user
 
     begin
+      setting = (params["show_progress_grades"] == "1")
+
       SettingsService.update_settings(
         object: 'user',
         id: user.id,
         setting: 'show_progress_grades',
-        value: params["toggle_progress_grade"] == "1"
+        value: setting
       )
 
-      render :json => {}, :status => :ok
+      render :json => {show_progress_grades: setting}, :status => :ok
     rescue
       render :json => {}, :status => :unprocessable_entity
     end
