@@ -31,4 +31,18 @@ UsersController.class_eval do
     sis_id = student.pseudonyms.first&.sis_user_id
     call_to_strongmind_psp(sis_id) if sis_id
   end
+
+  def toggle_progress_grade
+    user = User.find(params[:id])
+    return render_unauthorized_action unless user
+
+    SettingsService.update_settings(
+      object: 'user',
+      id: user.id,
+      setting: "show_progress_grades",
+      value: params["show_progress_grades"]
+    )
+
+    render :json => {show_progress_grades: params["show_progress_grades"]}, :status => :ok
+  end
 end
