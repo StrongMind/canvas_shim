@@ -8,6 +8,14 @@ UserObserveesController.class_eval do
     render json: observer.observed_users.map {|observee| observee.as_json(include_root: false)}
   end
 
+  def bulk_destroy
+    observee_ids.each do |obsv_id|
+      user.user_observees.active.where("user_id IN (?)", observee_ids).destroy_all
+    end
+
+    render json: observer.observed_users.map {|observee| observee.as_json(include_root: false)}
+  end
+
   private
   def observee_ids
     @observee_ids ||= params.permit(observee_ids: []).fetch("observee_ids", [])
