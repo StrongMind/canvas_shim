@@ -5,7 +5,7 @@ UserObserveesController.class_eval do
       observer.add_observee(observee)
     end
 
-    render_observees
+    render_observees_json
   end
 
   def bulk_destroy
@@ -13,7 +13,7 @@ UserObserveesController.class_eval do
       user.user_observees.active.where("user_id IN (?)", observee_ids).destroy_all
     end
 
-    render_observees
+    render_observees_json
   end
 
   private
@@ -25,7 +25,7 @@ UserObserveesController.class_eval do
     @observer ||= api_find(User.active, params[:user_id])
   end
 
-  def render_observees
+  def render_observees_json
     render json: observer.observed_users.map {|observee| observee.as_json(include_root: false)}
   end
 end
