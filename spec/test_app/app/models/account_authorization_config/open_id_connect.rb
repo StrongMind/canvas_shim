@@ -1,0 +1,2 @@
+class AccountAuthorizationConfig::OpenIDConnect
+end
