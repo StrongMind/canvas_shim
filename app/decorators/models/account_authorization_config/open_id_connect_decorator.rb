@@ -1,5 +1,6 @@
 AccountAuthorizationConfig::OpenIDConnect.class_eval do
   def admin_role?(token)
+    return unless roles(token)
     setting = SettingsService.global_settings["admin_roles"] || ""
     setting.split(",").any? { |role| roles(token).include?(role) }
   end
