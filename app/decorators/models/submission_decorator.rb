@@ -36,4 +36,8 @@ Submission.class_eval do
     "Please complete the required work. " +
     "If you have questions, please contact your teacher."
   end
+
+  def user_is_observer?(user)
+    user && context.is_a?(course) && user.id == user.observer_enrollments.find_by(course: context)&.associated_user_id
+  end
 end
