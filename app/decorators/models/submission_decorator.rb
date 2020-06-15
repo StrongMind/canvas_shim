@@ -38,6 +38,7 @@ Submission.class_eval do
   end
 
   def user_is_observer?(user)
-    user && context.is_a?(course) && user.id == user.observer_enrollments.find_by(course: context)&.associated_user_id
+    user && context.is_a?(course) &&
+    user.id == user.observer_enrollments.concluded.find_by(course: context)&.associated_user_id
   end
 end
