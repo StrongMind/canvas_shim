@@ -37,8 +37,8 @@ Submission.class_eval do
     "If you have questions, please contact your teacher."
   end
 
-  def user_is_observer?(user)
-    user && context.is_a?(course) &&
-    user_id == user.observer_enrollments.concluded.find_by(course: context)&.associated_user_id
+  def user_is_observer?(other_user)
+    other_user && context.is_a?(Course) &&
+    user_id == other_user.observer_enrollments.concluded.find_by(course: context)&.associated_user_id
   end
 end
