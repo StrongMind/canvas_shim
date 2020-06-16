@@ -1,6 +1,9 @@
 class CsAlertsController < ApplicationController
   def index
-    @alerts = AlertsService::Client.teacher_alerts(@current_user.id).payload
+  end
+
+  def teacher_alerts
+    render :json => AlertsService::Client.teacher_alerts(@current_user.id).payload
   end
 
   def destroy

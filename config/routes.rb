@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :cs_alerts do
     collection do
       post 'bulk_delete'
+      get 'teacher_alerts'
     end
   end
 
