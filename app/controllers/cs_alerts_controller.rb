@@ -9,7 +9,7 @@ class CsAlertsController < ApplicationController
   end
 
   def destroy
-    AlertsService::Client.destroy(params[:alert_id])
+    AlertsService::Client.destroy(params[:id])
   end
 
   def bulk_delete
@@ -22,6 +22,7 @@ class CsAlertsController < ApplicationController
       assignment = alert.assignment
 
       alert.as_json(include_root: false).merge(
+        "alert_id" => alert.alert_id,
         "student_name" => alert.student.name,
         "assignment_name" => assignment.try(:name),
         "course_name" => assignment.try(:course).try(:name) || "-",
