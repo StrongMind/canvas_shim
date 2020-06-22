@@ -8,6 +8,7 @@ User.class_eval do
   def self.find_for_identity_auth(user_global_id)
     return unless user_global_id && new.identity_enabled
     actual_user_id = SettingsService.get_settings(object: 'login', id: user_global_id)["canvas_id"]
+    return unless actual_user_id
     find(actual_user_id)
   end
 

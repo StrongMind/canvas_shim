@@ -4,7 +4,7 @@ ApplicationController.class_eval do
 
   def custom_placement_enabled?
     @current_user && @context.is_a?(Course) &&
-    @context.grants_right?(@current_user, session, :read_as_admin) ||
+    @current_user.roles(Account.default).include?("admin") ||
     @current_user.teacher_enrollments.find_by(course: @context)&.has_permission_to?(:custom_placement) ||
     @current_user.ta_enrollments.find_by(course: @context)&.has_permission_to?(:custom_placement)
   end

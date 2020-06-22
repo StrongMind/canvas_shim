@@ -153,7 +153,7 @@ describe User do
       subject.save_with_or_without_identity_create
     end
 
-    it "runs save without any args" do
+    it "runs save! when forced" do
       allow(subject).to receive(:identity_enabled).and_return(false)
       expect(subject).not_to receive(:save_with_identity_server_create)
       expect(subject).to receive(:save!)
