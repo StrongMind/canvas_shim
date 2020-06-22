@@ -50,7 +50,7 @@ Rails.application.routes.draw do
 
     scope(controller: :user_observees) do
       post 'users/:user_id/bulk_create_observees', action: :bulk_create
-      delete 'users/:user_id/bulk_destroy_observees', action: :bulk_destroy
+      post 'users/:user_id/bulk_destroy_observees', action: :bulk_destroy
     end
   end
 end
