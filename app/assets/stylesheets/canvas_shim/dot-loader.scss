@@ -1,3 +1,14 @@
+.dot-overlay {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0%;
+  background: rgba(255,255,255, .5);
+  opacity: .75;
+}
+
 .dot-loader,
 .dot-loader:before,
 .dot-loader:after {
@@ -15,7 +26,15 @@
   position: relative;
   -webkit-animation-delay: -0.16s;
   animation-delay: -0.16s;
+  &.full-page {
+    color: #686868;
+    font-size: 45px;
+    left: 50%;
+    top: 10%;
+    transform: translateX(-50%) translateY(-50%);
+  }
 }
+
 .dot-loader:before,
 .dot-loader:after {
   content: '';
