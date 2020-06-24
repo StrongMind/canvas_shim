@@ -153,7 +153,7 @@ User.class_eval do
   end
 
   def update_observees(obs_ids)
-    obs_users = obs_ids.map { |id| User.find_by(id: id) }.compact
+    obs_users = obs_ids.map { |id| User.active.find_by(id: id) }.compact
     obs_users.each { |obs_user| add_observee(obs_user) }
     inactive_obs = user_observees.active.reject { |active_obs| obs_users.include?(active_obs) }
     inacive_obs.each(&:destroy)
