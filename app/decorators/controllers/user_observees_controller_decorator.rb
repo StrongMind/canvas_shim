@@ -8,6 +8,10 @@ UserObserveesController.class_eval do
     render json: observer.observed_users.map {|observee| observee.as_json(include_root: false)}
   end
 
+  def bulk_update
+    observer.update_observees(observee_ids)
+  end
+
   private
   def observee_ids
     @observee_ids ||= params.permit(observee_ids: []).fetch("observee_ids", [])
