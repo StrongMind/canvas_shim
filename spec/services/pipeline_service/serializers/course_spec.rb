@@ -28,13 +28,13 @@ describe PipelineService::Serializers::Course do
 
     it 'Includes the powerschool_course_id attribute' do
       expect(subject.call).to include({
-        'powerschool_course_id' => 254
+        :powerschool_course_id => 254
       })
     end
 
     it 'includes the powerschool_school_id attribute' do
       expect(subject.call).to include({
-        'powerschool_school_id' => 452
+        :powerschool_school_id => 452
       })
     end
 end
