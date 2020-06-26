@@ -2,39 +2,13 @@
   <link rel="stylesheet" type="text/css"
   href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
   <%= stylesheet_link_tag "canvas_shim/application", media: "all" %>
-  <script
-    src="https://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
-
-  <%= javascript_include_tag 'canvas_shim/application' %>
 <% end %>
 
-<div class="alerts-table-heading">
-    <h2>Alerts (<%= @alerts.count %>)</h2>
-    <div class="flex-row-reverse">
-        <button class="Button Button--small Button--primary" id="bulk-delete-btn">Delete Multiple Messages</button>
-        <button class="Button Button--small Button--danger hidden" id="bulk-delete-confirm"
-        data-url='<%= bulk_delete_cs_alerts_path %>'>Confirm Deletion</button>
-        <div class="dot-loader hidden"></div>
-    </div>
+<div class="dot-overlay">
+  <div class="dot-loader full-page"></div>
 </div>
 
-<table id="alertsTable">
-  <thead>
-    <tr>
-      <th>Student</th>
-      <th>Assignment</th>
-      <th>Course</th>
-      <th>Details</th>
-      <th>Time</th>
-      <th>Type</th>
-      <th id="delete-column-header" class="visibility-hidden">
-        <label for="bulk-delete-select">Select All</label>
-        <input id="bulk-delete-select" name="bulk-delete-select" type="checkbox" />
-      </th>
-    </tr>
-  </thead>
-  
-  <%= render partial: 'alerts_table_body', locals: { alert: alert } %>
-</table>
+<div id="cs-alerts-container">
+</div>
+
+<% js_bundle :cs_alerts %>
