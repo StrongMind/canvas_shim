@@ -8,6 +8,7 @@ module PipelineService
       def call
         @payload = Builders::CourseJSONBuilder.call(@course) || {}
         @payload.merge!(passing_thresholds)
+        @payload.merge!(powerschool_ids)
       end
 
       def passing_thresholds
