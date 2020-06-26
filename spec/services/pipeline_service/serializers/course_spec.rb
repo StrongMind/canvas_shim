@@ -11,6 +11,9 @@ describe PipelineService::Serializers::Course do
         'passing_threshold' => 50,
         'passing_exam_threshold' => 50
       })
+
+      allow(IdentityMapperService).to receive(:get_powerschool_course_id).and_return(254)
+      allow(IdentityMapperService).to receive(:get_powerschool_school_id).and_return(452)
     end
 
     it 'Return an attribute hash of the noun' do
@@ -22,4 +25,16 @@ describe PipelineService::Serializers::Course do
         }
       })
     end
-  end
+
+    it 'Includes the powerschool_course_id attribute' do
+      expect(subject.call).to include({
+        'powerschool_course_id' => 254
+      })
+    end
+
+    it 'includes the powerschool_school_id attribute' do
+      expect(subject.call).to include({
+        'powerschool_school_id' => 452
+      })
+    end
+end

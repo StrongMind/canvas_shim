@@ -18,6 +18,13 @@ module PipelineService
         }
       end
 
+      def powerschool_ids
+          {
+            'powerschool_school_id': IdentityMapperService.get_powerschool_school_id,
+            'powerschool_course_id': IdentityMapperService.get_powerschool_course_id(@course.id)
+          }
+      end
+
       def format_threshold(method)
         threshold = RequirementsService.send(method, @course)
         return nil if threshold.nil?
