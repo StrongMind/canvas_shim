@@ -69,12 +69,12 @@ can_delete = is_admin || @current_user.enrollments.active.any? { |e| e.has_permi
       </div>
 
       <div class="actions" id="conversation-actions">
-        <button class="btn"
+        <button class="btn btn-primary"
                 id="compose-btn"
                 title="<%= t(:compose_new_message, "Compose a new message") %>"
                 data-tooltip>
           <span class="screenreader-only"><%= t(:compose_new_message, "Compose a new message") %></span>
-          <i class="icon-compose icon-Line"></i>
+          <i class="icon-plus icon-Line"></i>
         </button>
 
         <div class="btn-group">
