@@ -38,7 +38,7 @@ module IdentifierMapperService
 
         def headers
           {
-            'Authorization' => SecretManager.get_secret['TOKEN'],
+            'Authorization' => IdentifierMapperService.SecretManager.get_secret['TOKEN'],
             'Content-Type' => 'application/json'
           }
         end

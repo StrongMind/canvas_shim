@@ -66,7 +66,7 @@ module AlertsService
 
     def headers
       {
-        'x-api-key' => SecretManager.get_secret['API_KEY'],
+        'x-api-key' => AlertsService.SecretManager.get_secret['API_KEY'],
         'Content-Type' => 'application/json'
       }
     end

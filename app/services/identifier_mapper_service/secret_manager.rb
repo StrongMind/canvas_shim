@@ -18,14 +18,6 @@ module AlertsService
         }
       ) if ENV['IDENTITY_MAPPER_SERVICE_TOKEN']
 
-      Aws.config.update(
-        region: ENV['AWS_REGION'],
-        credentials: Aws::Credentials.new(
-          ENV['S3_ACCESS_KEY_ID'],
-          ENV['S3_ACCESS_KEY']
-        )
-      )
-
       client = Aws::SecretsManager::Client.new(region: region_name)
 
       # In this sample we only handle the specific exceptions for the 'GetSecretValue' API.
