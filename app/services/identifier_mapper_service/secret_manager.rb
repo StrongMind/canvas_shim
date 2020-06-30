@@ -5,7 +5,7 @@
 require 'aws-sdk-secretsmanager'
 require 'base64'
 
-module AlertsService
+module IdentifierMapperService
   module SecretManager
     def self.get_secret
       secret_name = "#{ENV['DEPLOYMENT_STAGE']}/indentity_mapper_service/api"
