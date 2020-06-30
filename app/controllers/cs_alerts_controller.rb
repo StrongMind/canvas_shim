@@ -1,4 +1,4 @@
-class CsAlertsController < ApplicationController
+class CsAlertsController < ShimController
   include ERB::Util
 
   def index
