@@ -1,4 +1,4 @@
-module IdentityMapperService
+module IdentifierMapperService
     class Response 
       attr_reader :code, :payload
       def initialize(code, payload)
