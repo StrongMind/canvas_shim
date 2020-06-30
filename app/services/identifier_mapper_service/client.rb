@@ -14,7 +14,7 @@ module IdentifierMapperService
 
         def get_powerschool_course_id(course_id)
             response = get(endpoints(
-              :get_powerschool_id, 
+              :get_powerschool_course_id, 
               service: "com.instructure.canvas.courses", 
               identifier: course_id
             ))
