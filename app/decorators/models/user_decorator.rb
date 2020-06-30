@@ -229,6 +229,6 @@ User.class_eval do
       id: identity_uuid,
       setting: 'canvas_id',
       value: id.to_s
-    )
+    ) unless Pseudonym.exists?(integration_id: intentity_uuid)
   end
 end
