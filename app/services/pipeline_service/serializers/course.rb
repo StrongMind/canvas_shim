@@ -21,8 +21,8 @@ module PipelineService
 
       def powerschool_ids
           {
-            'powerschool_school_id': IdentifierMapperService.get_powerschool_school_id,
-            'powerschool_course_id': IdentifierMapperService.get_powerschool_course_id(@course.id)
+            'powerschool_school_id': IdentifierMapperService::Client.get_powerschool_school_id,
+            'powerschool_course_id': IdentifierMapperService::Client.get_powerschool_course_id(@course.id)
           }
       end
 

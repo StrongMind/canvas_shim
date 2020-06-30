@@ -17,6 +17,10 @@ module IdentifierMapperService
             end
         end
 
+        def self.fetch(name, service=nil, identifier=nil)
+            instance.fetch(name, service, identifier)
+        end
+
         private 
 
         def api_endpoint
