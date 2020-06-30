@@ -12,8 +12,8 @@ describe PipelineService::Serializers::Course do
         'passing_exam_threshold' => 50
       })
 
-      allow(IdentifierMapperService).to receive(:get_powerschool_course_id).and_return(254)
-      allow(IdentifierMapperService).to receive(:get_powerschool_school_id).and_return(452)
+      allow(IdentifierMapperService::Client).to receive(:get_powerschool_course_id).and_return(254)
+      allow(IdentifierMapperService::Client).to receive(:get_powerschool_school_id).and_return(452)
     end
 
     it 'Return an attribute hash of the noun' do
