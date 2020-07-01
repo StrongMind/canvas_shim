@@ -10,7 +10,15 @@ module IdentifierMapperService
     def self.get_secret
       secret_name = "#{ENV['DEPLOYMENT_STAGE']}/indentity_mapper_service/api"
       region_name = "us-west-2"
-      
+
+      Aws.config.update(
+        region: ENV['AWS_REGION'],
+        credentials: Aws::Credentials.new(
+          ENV['S3_ACCESS_KEY_ID'],
+          ENV['S3_ACCESS_KEY']
+        )
+      )
+
       return(
         {
           'TOKEN' => ENV['IDENTITY_MAPPER_SERVICE_TOKEN'],
