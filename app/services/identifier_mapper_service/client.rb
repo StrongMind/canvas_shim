@@ -31,14 +31,14 @@ module IdentifierMapperService
                   endpoint, headers: headers
                 ).tap do |response|
                   return Response.new(
-                    response.code, response.body
+                    response.code, response.parsed_response
                   )
             end
         end
 
         def headers
           {
-            'Authorization' => "Bearer #{SecretManager.get_secret['TOKEN']}",
+            'Authorization' => "Token #{SecretManager.get_secret['TOKEN']}",
             'Content-Type' => 'application/json'
           }
         end
