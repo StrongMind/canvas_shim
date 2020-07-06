@@ -11,6 +11,7 @@ module PipelineService
         if SettingsService.get_settings(object: :school, id: 1)['powerschool_integration']
           @payload.merge!(powerschool_ids)
         end
+        @payload
       end
 
       def passing_thresholds
