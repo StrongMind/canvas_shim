@@ -1,4 +1,4 @@
-class ObserversController < ApplicationController
+class ObserversController < ShimController
   def index
     non_observer_redirect unless observer_dashboard_enabled?
     js_env(
