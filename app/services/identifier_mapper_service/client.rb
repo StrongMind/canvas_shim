@@ -15,10 +15,9 @@ module IdentifierMapperService
         def get_powerschool_course_id(course_id)
             response = get(endpoints(
               :get_powerschool_course_id, 
-              service: "com.instructure.canvas.courses", 
-              identifier: course_id
+              service="com.instructure.canvas.courses",
+              identifier=course_id
             ))
-
             return nil if response.code != 200
 
             response.payload["com.powerschool.section.dcids"][ENV['CANVAS_DOMAIN'].split('.').first]
@@ -43,8 +42,8 @@ module IdentifierMapperService
           }
         end
 
-        def endpoints(name, ids=nil)
-          Endpoints.fetch(name, ids)
+        def endpoints(name, service=nil, identifier=nil)
+          Endpoints.fetch(name, service, identifier)
         end
     
         def http_client
