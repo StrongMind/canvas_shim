@@ -19,8 +19,7 @@ module IdentifierMapperService
               identifier=course_id
             ))
             return nil if response.code != 200
-
-            response.payload["com.powerschool.section.dcids"][ENV['CANVAS_DOMAIN'].split('.').first]
+            response.payload.first["com.powerschool.section.dcids"][ENV['CANVAS_DOMAIN'].split('.').first]
         end
 
         private 
