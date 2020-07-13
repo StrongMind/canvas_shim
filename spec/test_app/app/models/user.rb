@@ -14,6 +14,7 @@ class User < ActiveRecord::Base
 
   has_many :pseudonyms
   has_one :pseudonym, -> { where("pseudonyms.workflow_state<>'deleted'").order(:position) }
+  belongs_to :account
 
 
   def recent_feedback(opts={})
