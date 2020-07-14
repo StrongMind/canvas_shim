@@ -48,7 +48,7 @@ UsersController.class_eval do
 
   def soft_save_with_or_without_identity(user, email)
     begin
-      User.transaction { user.save_with_or_without_identity(email) }
+      User.transaction { user.save_with_or_without_identity_create(email) }
     rescue
       false
     end
