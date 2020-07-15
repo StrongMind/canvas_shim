@@ -11,6 +11,8 @@ describe PipelineService::V2::Nouns::Pseudonym do
   describe '#call' do
     it 'does not return sensitive data' do
       expect(subject.call).to eq({
+        "account_id" => nil,
+        "integration_id" => nil,
         "created_at" => active_record_object.created_at,
         "id" => active_record_object.id,
         "last_login_at" => active_record_object.last_login_at,

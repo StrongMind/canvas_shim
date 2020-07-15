@@ -1,6 +1,7 @@
 describe User do
   include_context 'stubbed_network'
-  let(:subject) { User.new(run_identity_validations: "create", identity_email: "ryankshaw@example.com") }
+  let(:subject) { User.new(run_identity_validations: "create", identity_email: "ryankshaw@example.com", account: account) }
+  let(:account) { Account.create }
   let(:success_response) do 
     instance_double(HTTParty::Response, parsed_response: JSON.parse(success_response_body), success?: true)
   end
@@ -81,10 +82,12 @@ describe User do
       expect(subject.save).to eq(true)
     end
 
-    it "sends an id" do
-      expect(SettingsService).to receive(:update_settings)
+    it "creates an identity pseudonym" do
       subject.save
-      expect(subject.identity_uuid).to eq("273f2717-134a-4ff3-9a23-c00a6987510c")
+      pseudo = subject.pseudonyms.reload.last
+      expect(pseudo.integration_id).to eq("273f2717-134a-4ff3-9a23-c00a6987510c")
+      expect(pseudo.unique_id).to eq(subject.identity_username)
+      expect(pseudo.new_record?).to be false
     end
 
     context "no access token" do

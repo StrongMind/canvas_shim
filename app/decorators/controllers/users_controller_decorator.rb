@@ -45,4 +45,12 @@ UsersController.class_eval do
 
     render :json => {show_progress_grades: params["show_progress_grades"]}, :status => :ok
   end
+
+  def soft_save_with_or_without_identity(user, email)
+    begin
+      User.transaction { user.save_with_or_without_identity_create(email) }
+    rescue
+      false
+    end
+  end
 end
