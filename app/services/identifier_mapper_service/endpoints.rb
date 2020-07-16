@@ -12,8 +12,8 @@ module IdentifierMapperService
       case name
       when :get_powerschool_course_id
         "/pairs/?#{service}=#{identifier}"
-      when :get_powerschool_school_id
-        "/partners/#{ENV['CANVAS_DOMAIN'].split('.').first}"
+      when :get_powerschool_info
+        "/partners?canvas_domain=#{ENV['CANVAS_DOMAIN']}"
       end
     end
 
