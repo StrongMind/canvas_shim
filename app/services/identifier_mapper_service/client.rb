@@ -33,7 +33,6 @@ module IdentifierMapperService
               service="com.instructure.canvas.courses",
               identifier=course_id
             ))
-            byebug
             return nil if response.code != 200
             response.payload.first[].first
         end
