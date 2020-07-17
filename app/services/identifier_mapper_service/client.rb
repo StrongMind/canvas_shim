@@ -28,14 +28,13 @@ module IdentifierMapperService
         end
 
         def get_powerschool_course_id(course_id)
-
             response = get(endpoints(
               :get_powerschool_course_id, 
               service="com.instructure.canvas.courses",
               identifier=course_id
             ))
             return nil if response.code != 200
-            response.payload.first.try(:first)
+            response.payload.map {|p| p.dig("com.powerschool.section.dcids", get_powerschool_info[:name])}.first
         end
 
         private 
