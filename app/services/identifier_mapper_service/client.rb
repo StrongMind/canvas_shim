@@ -11,7 +11,7 @@ module IdentifierMapperService
           response.payload.first["powerschool_school_number"]
         end
 
-        def get_powerschool_info()
+        def get_powerschool_info
           response = get(endpoints(:get_powerschool_info))
           return nil if response.code != 200
           {
@@ -28,13 +28,14 @@ module IdentifierMapperService
         end
 
         def get_powerschool_course_id(course_id)
+
             response = get(endpoints(
               :get_powerschool_course_id, 
               service="com.instructure.canvas.courses",
               identifier=course_id
             ))
             return nil if response.code != 200
-            response.payload.first[].first
+            response.payload.first.try(:first)
         end
 
         private 
