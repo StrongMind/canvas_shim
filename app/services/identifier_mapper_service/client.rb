@@ -4,22 +4,38 @@ module IdentifierMapperService
 
         def get_powerschool_school_id
           response = get(endpoints(
-            :get_powerschool_school_id
+            :get_powerschool_info
           ))
-
           return nil if response.code != 200
 
-          response.payload["powerschool_school_number"]
+          response.payload.first["powerschool_school_number"]
+        end
+
+        def get_powerschool_info
+          response = get(endpoints(:get_powerschool_info))
+          return nil if response.code != 200
+          {
+            "name": response.payload.first["name"],
+            "canvas_domain": response.payload.first["canvas_domain"],
+            "canvas_account": response.payload.first["canvas_account"],
+            "powerschool_domain": response.payload.first["powerschool_domain"],
+            "powerschool_dcid": response.payload.first["powerschool_dcid"],
+            "powerschool_school_number": response.payload.first["powerschool_school_number"],
+            "fuji_id": response.payload.first["fuji_id"],
+            "default_grade": response.payload.first["default_grade"]
+        }
+
         end
 
         def get_powerschool_course_id(course_id)
+
             response = get(endpoints(
               :get_powerschool_course_id, 
               service="com.instructure.canvas.courses",
               identifier=course_id
             ))
             return nil if response.code != 200
-            response.payload.first["com.powerschool.section.dcids"][ENV['CANVAS_DOMAIN'].split('.').first]
+            response.payload.first.try(:first)
         end
 
         private 
