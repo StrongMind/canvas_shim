@@ -10,8 +10,8 @@ module SettingsService
       school_settings = Rails.cache.read(self.table_name)
       unless school_settings
         school_settings = Repository.get(table_name: table_name, id: id)
+        Rails.cache.write(self.table_name, school_settings, expires_in: 5.minutes)
       end
-      Rails.cache.write(self.table_name, school_settings, expires_in: 5.minutes)
       school_settings
     end
 
