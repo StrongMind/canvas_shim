@@ -100,7 +100,7 @@
       <% end %>
       <tr>
         <td class="form-label"><%= f.blabel :name, :course_name, :en => "Name" %></td>
-        <td class="nobr">
+        <td>
           <% if can_rename_course %>
             <%= f.text_field :name, :class => "course_form", :maxlength => '255', :style => "width: 150px;" %>
           <% else %>
@@ -109,8 +109,8 @@
         </td>
       </tr>
       <tr>
-        <td class="form-label nobr"><%= f.blabel :course_code, :en => "Course Code" %></td>
-        <td class="nobr">
+        <td class="form-label"><%= f.blabel :course_code, :en => "Course Code" %></td>
+        <td>
           <% if can_rename_course %>
             <%= f.text_field :course_code, :maxlength => '255', :style => "width: 100px;" %>
           <% else %>
@@ -120,8 +120,8 @@
       </tr>
       <% if @context.root_account.feature_enabled?(:master_courses) %>
       <tr>
-        <td class="form-label nobr"><%= f.blabel :blueprint_course, :en => "Blueprint Course" %></td>
-        <td class="nobr">
+        <td class="form-label"><%= f.blabel :blueprint_course, :en => "Blueprint Course" %></td>
+        <td>
           <% if can_manage_master_courses %>
             <div id="blueprint_menu"></div>
           <% else %>
@@ -211,7 +211,7 @@
         </td>
       </tr><tr>
         <td class="form-label"><%= f.blabel :start_at, :en => "Starts" %></td>
-        <td class="nobr">
+        <td>
           <% if can_manage %>
             <%= f.text_field :start_at, :class => "date_entry", :value => datetime_string(@context.start_at, :verbose) %>
           <% else %>
@@ -220,7 +220,7 @@
         </td>
       </tr><tr>
         <td class="form-label"><%= f.blabel :conclude_at, :en => "Ends" %></td>
-        <td class="nobr tall-row">
+        <td class="tall-row">
           <% if can_manage %>
           <div>
             <%= f.text_field :conclude_at, :class => "date_entry", :value => datetime_string(@context.conclude_at, :verbose) %>
@@ -244,7 +244,7 @@
       <% unless can_manage %>
         </tr><tr>
         <td class="form-label"></td>
-        <td class="nobr">
+        <td>
           <%= f.check_box :restrict_enrollments_to_course_dates, :disabled => true %>
           <%= f.label :restrict_enrollments_to_course_dates, :en => "Users can only participate in the course between these dates" %>
         </td>
@@ -254,7 +254,7 @@
 
         </tr><tr>
           <td class="form-label"><label for="distribute_due_dates" id="distribute_due_dates_label"><%= t("Due Dates:") %></label></td>
-          <td class="nobr tall-row">
+          <td class="tall-row">
             <% if AssignmentsService.is_distributing?(@context) %>
               <div id="due-date-btns">
                 <button class="btn btn-primary" disabled>Distribute Due Dates</button>
@@ -279,7 +279,7 @@
       <% if @threshold_visible %>
         </tr><tr>
           <td class="form-label"><label for="passing_threshold" id="passing_threshold_label"><%= t("Passing Threshold (Assignments):") %></label></td>
-          <td class="nobr tall-row">
+          <td class="tall-row">
             <div>
               <input type="number" name="passing_threshold" id="passing_threshold" placeholder="Number b/w 0-100" value="<%= @course_threshold %>" min="0" max="100" step="0.1" style="width: 50px;" disabled />
               <a id="edit_threshold_btn" href="" class="Button Button--icon-action">
@@ -296,7 +296,7 @@
 
         </tr><tr>
           <td class="form-label"><label for="passing_unit_threshold" id="passing_unit_threshold_label"><%= t("Passing Threshold (Exams):") %></label></td>
-          <td class="nobr tall-row">
+          <td class="tall-row">
             <div>
               <input type="number" name="passing_unit_threshold" id="passing_unit_threshold" placeholder="Number b/w 0-100" value="<%= @course_exam_threshold %>" min="0" max="100" step="0.1" style="width: 50px;" disabled />
               <a id="edit_unit_threshold_btn" href="" class="Button Button--icon-action">
@@ -348,7 +348,7 @@
       <% if @context.turnitin_enabled? %>
       </tr><tr>
         <td class="form-label"><%= f.blabel :turnitin_comments, :en => "Turnitin Comments" %></td>
-        <td class="nobr">
+        <td>
           <span class="aside"><%= t('turnitin', %{these comments will be shown to students when submitting a Turnitin-enabled assignment}) %></span>
           <br/>
           <%= f.text_area :turnitin_comments, :style => "width: 90%; height: 50px;", :disabled => !can_manage %>
