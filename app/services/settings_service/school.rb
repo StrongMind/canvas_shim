@@ -23,7 +23,7 @@ module SettingsService
         value: value
       )
       school_settings = Repository.get(table_name: table_name, id: id)
-      Rails.cache.write(self.table_name, school_settings, expires_in: 5.minutes))
+      Rails.cache.write(self.table_name, school_settings, expires_in: 5.minutes)
       res
     end
 
