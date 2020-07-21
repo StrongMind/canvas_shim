@@ -168,6 +168,13 @@ describe User do
       expect(subject).to receive(:save_with_identity_server_create)
       subject.save_with_or_without_identity_create("ryankshaw@example.com")
     end
+
+    it "runs save when provisioned is true" do
+      allow(subject).to receive(:identity_enabled).and_return(true)
+      expect(subject).not_to receive(:save_with_identity_server_create)
+      expect(subject).to receive(:save)
+      subject.save_with_or_without_identity_create(nil, provisioned: true)
+    end
   end
 
   describe "::find_for_identity_auth" do
