@@ -40,9 +40,11 @@ module IdentifierMapperService
         def post_canvas_user_id(canvas_user_id, identity_uuid)
           return unless canvas_user_id && identity_uuid
           school_name = get_powerschool_info.try(:fetch, "name", nil)
+          return unless school_name
+
           params = {
             "com.strongmind.identity.user.id": identity_uuid,
-            "com.instructure.canvas.users": {"#{school_name}": canvas_user_id }
+            "com.instructure.canvas.users": { "#{school_name}": canvas_user_id }
           }
 
           response = post(
