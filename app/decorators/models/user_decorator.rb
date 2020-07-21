@@ -196,10 +196,6 @@ User.class_eval do
     @school_settings ||= SettingsService.get_settings(object: 'school', id: 1)
   end
 
-  def identity_domain
-    @identity_domain ||= school_settings['identity_domain']
-  end
-
   def identity_client_credentials
     @client_credentials ||= school_settings['identity_basic_auth']
   end
