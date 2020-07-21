@@ -167,8 +167,6 @@ User.class_eval do
     @identity_enabled ||= school_settings['identity_server_enabled']
   end
 
-  protected
-
   def identity_domain
     @identity_domain ||= school_settings['identity_domain']
   end
