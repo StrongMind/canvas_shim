@@ -14,6 +14,8 @@ module IdentifierMapperService
         "/pairs/?#{service}=#{identifier}"
       when :get_powerschool_info
         "/partners?canvas_domain=#{ENV['CANVAS_DOMAIN']}"
+      when :post_canvas_user_id
+        "/pairs/"
       end
     end
 

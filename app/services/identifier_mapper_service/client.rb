@@ -37,6 +37,20 @@ module IdentifierMapperService
             response.payload.map {|p| p.dig("com.powerschool.section.dcids", get_powerschool_info[:name])}.first
         end
 
+        def post_canvas_user_id(canvas_user_id, identity_uuid)
+          return unless canvas_user_id && identity_uuid
+          school_name = get_powerschool_info.try(:fetch, "name", nil)
+          params = {
+            "com.strongmind.identity.user.id": { identity_uuid },
+            "com.instructure.canvas.users": {"#{school_name}": canvas_user_id }
+          }
+
+          response = post(
+            endpoints(:post_canvas_user_id),
+            params.to_json
+          )
+        end
+
         private 
 
         def get(endpoint)
@@ -47,6 +61,16 @@ module IdentifierMapperService
                     response.code, response.parsed_response
                   )
             end
+        end
+
+        def post(endpoint, params)
+          http_client.post(
+              endpoint, headers: headers, body: params.to_json
+            ).tap do |response|
+              return Response.new(
+                response.code, response.parsed_response
+              )
+          end
         end
 
         def headers

@@ -167,6 +167,25 @@ User.class_eval do
     @identity_enabled ||= school_settings['identity_server_enabled']
   end
 
+  protected
+
+  def identity_domain
+    @identity_domain ||= school_settings['identity_domain']
+  end
+
+  def access_token
+    return unless identity_domain && identity_client_credentials
+
+    @access_token ||= HTTParty.post(
+      "https://#{identity_domain}/connect/token",
+      :body => "grant_type=client_credentials&scope=identity_server_api.full_access",
+      :headers => {
+        'Content-Type' => 'application/x-www-form-urlencoded',
+        'Authorization' => "Basic #{identity_client_credentials}"
+      }
+    ).parsed_response["access_token"]
+  end
+
   private
 
   def filter_feedback(submissions)
@@ -183,19 +202,6 @@ User.class_eval do
 
   def identity_client_credentials
     @client_credentials ||= school_settings['identity_basic_auth']
-  end
-
-  def access_token
-    return unless identity_domain && identity_client_credentials
-
-    @access_token ||= HTTParty.post(
-      "https://#{identity_domain}/connect/token",
-      :body => "grant_type=client_credentials&scope=identity_server_api.full_access",
-      :headers => {
-        'Content-Type' => 'application/x-www-form-urlencoded',
-        'Authorization' => "Basic #{identity_client_credentials}"
-      }
-    ).parsed_response["access_token"]
   end
 
   def validate_identity_creation
