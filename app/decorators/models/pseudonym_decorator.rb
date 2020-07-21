@@ -21,7 +21,7 @@ Pseudonym.class_eval do
     HTTParty.get(
       "https://#{user.identity_domain)}/api/accounts/#{integration_id}",
       :headers => {
-        'Authorization' => "Bearer #{user.access_token)}"
+        'Authorization' => "Bearer #{user.access_token}"
       }).success?
   end
 end
