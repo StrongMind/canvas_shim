@@ -9,7 +9,7 @@
       def self.get(id:)
         school_settings = Rails.cache.read(self.table_name)
         unless school_settings
-          school_settings = JSON.parse(Repository.get(table_name: table_name, id: id).to_json)
+          school_settings = Repository.get(table_name: table_name, id: id)
           Rails.cache.write(self.table_name, school_settings, expires_in: 5.minutes)
         end
         school_settings
@@ -22,7 +22,7 @@
           setting: setting,
           value: value
         )
-        school_settings = JSON.parse(Repository.get(table_name: table_name, id: id).to_json)
+        school_settings = Repository.get(table_name: table_name, id: id)
         Rails.cache.write(self.table_name, school_settings, expires_in: 5.minutes)
         res
       end
