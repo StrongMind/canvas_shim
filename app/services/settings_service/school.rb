@@ -1,6 +1,6 @@
 module SettingsService
   class School
-  OBJECT_NAME = 'school_settings'
+    OBJECT_NAME = 'school_settings'
 
     def self.create_table
       Repository.create_table(name: table_name)
