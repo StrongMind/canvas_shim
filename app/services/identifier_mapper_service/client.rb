@@ -13,7 +13,7 @@ module IdentifierMapperService
 
     def get_powerschool_info
       response = get(endpoints(:get_powerschool_info))
-      return nil if response.code != 200 || !response.payload.first
+      return nil if response.code != 200 || response.payload.empty?
       {
         "name": response.payload.first["name"],
         "canvas_domain": response.payload.first["canvas_domain"],
@@ -38,7 +38,7 @@ module IdentifierMapperService
 
     def post_canvas_user_id(canvas_user_id, identity_uuid)
       return unless canvas_user_id && identity_uuid
-      school_name = get_powerschool_info.try(:fetch, "name", nil)
+      school_name = get_powerschool_info.try(:fetch, :name, nil)
       return unless school_name
 
       params = {
@@ -46,10 +46,7 @@ module IdentifierMapperService
         "com.instructure.canvas.users": { "#{school_name}": canvas_user_id }
       }
 
-      response = post(
-        endpoints(:post_canvas_user_id),
-        params.to_json
-      )
+      post(endpoints(:post_canvas_user_id), params.to_json) == 201
     end
 
     private 
@@ -63,7 +60,7 @@ module IdentifierMapperService
     end
 
     def post(endpoint, params)
-      http_client.post(endpoint, headers: headers, body: params.to_json).tap do |response|
+      http_client.post(endpoint, headers: headers, body: params).tap do |response|
         return Response.new(
           response.code, response.parsed_response
         )
@@ -96,4 +93,3 @@ module IdentifierMapperService
     end
   end
 end
-          
