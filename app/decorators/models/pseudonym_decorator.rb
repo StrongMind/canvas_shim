@@ -1,6 +1,6 @@
 Pseudonym.class_eval do
   after_commit -> { PipelineService::V2.publish self }
-  after_create :update_identity_mapper?
+  after_save :update_identity_mapper?, if: :integration_id_changed?
 
   def update_identity_mapper?
     self.send_later_if_production(:update_identity_mapper)
