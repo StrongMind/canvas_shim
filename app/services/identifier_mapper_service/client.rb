@@ -8,7 +8,7 @@ module IdentifierMapperService
       ))
       return nil if response.code != 200
 
-      response.payload.first["powerschool_school_number"]
+      response.payload.try(:first).try(:fetch, "powerschool_school_number", nil)
     end
 
     def get_powerschool_info
