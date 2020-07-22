@@ -167,22 +167,8 @@ User.class_eval do
     @identity_enabled ||= school_settings['identity_server_enabled']
   end
 
-  private
-
-  def filter_feedback(submissions)
-    submissions.select { |sub| sub.submission_comments.any? || (sub.grader_id && sub.grader_id > GradesService::Account.account_admin.try(:id)) }
-  end
-
-  def school_settings
-    @school_settings ||= SettingsService.get_settings(object: 'school', id: 1)
-  end
-
   def identity_domain
     @identity_domain ||= school_settings['identity_domain']
-  end
-
-  def identity_client_credentials
-    @client_credentials ||= school_settings['identity_basic_auth']
   end
 
   def access_token
@@ -196,6 +182,20 @@ User.class_eval do
         'Authorization' => "Basic #{identity_client_credentials}"
       }
     ).parsed_response["access_token"]
+  end
+
+  private
+
+  def filter_feedback(submissions)
+    submissions.select { |sub| sub.submission_comments.any? || (sub.grader_id && sub.grader_id > GradesService::Account.account_admin.try(:id)) }
+  end
+
+  def school_settings
+    @school_settings ||= SettingsService.get_settings(object: 'school', id: 1)
+  end
+
+  def identity_client_credentials
+    @client_credentials ||= school_settings['identity_basic_auth']
   end
 
   def validate_identity_creation
