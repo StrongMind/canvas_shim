@@ -44,6 +44,13 @@ ApplicationController.class_eval do
   alias_method :instructure_badge_counts_for, :badge_counts_for
   alias_method :badge_counts_for, :strongmind_badge_counts_for
 
+  def identity_v2_applicable?
+    return false unless @aac&.id
+    @identity_v2_settings ||= SettingsService.get_settings(object: 'school', id: 1)
+    @identity_v2_settings['identity_server_enabled'] &&
+    @identity_v2_settings['identity_provider_id'] == @aac.id
+  end
+
   def observer_dashboard_enabled?
     SettingsService.get_settings(object: 'school', id: 1)['observer_dashboard'] &&
     @current_user && (

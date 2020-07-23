@@ -1,7 +1,7 @@
 User.class_eval do
-  attr_accessor :run_identity_validations, :identity_email, :identity_uuid
+  attr_accessor :run_identity_validations, :identity_email, :identity_username, :identity_uuid
   validate :validate_identity_creation, if: -> { run_identity_validations == "create" }
-  after_save :send_identity_credentials_to_settings_service, if: :identity_uuid
+  after_save :create_identity_pseudonym!, if: :identity_uuid
 
   after_commit -> { PipelineService::V2.publish self }
 
@@ -152,8 +152,8 @@ User.class_eval do
     user_observees.active.where(user_id: observee.id).exists?
   end
 
-  def save_with_or_without_identity_create(id_email = nil, force: false)
-    return (force ? save! : save) unless identity_enabled
+  def save_with_or_without_identity_create(id_email = nil, force: false, provisioned: false)
+    return (force ? save! : save) unless identity_enabled && !provisioned
     save_with_identity_server_create(id_email, force: force)
   end
 
@@ -167,22 +167,8 @@ User.class_eval do
     @identity_enabled ||= school_settings['identity_server_enabled']
   end
 
-  private
-
-  def filter_feedback(submissions)
-    submissions.select { |sub| sub.submission_comments.any? || (sub.grader_id && sub.grader_id > GradesService::Account.account_admin.try(:id)) }
-  end
-
-  def school_settings
-    @school_settings ||= SettingsService.get_settings(object: 'school', id: 1)
-  end
-
   def identity_domain
     @identity_domain ||= school_settings['identity_domain']
-  end
-
-  def identity_client_credentials
-    @client_credentials ||= school_settings['identity_basic_auth']
   end
 
   def access_token
@@ -198,14 +184,30 @@ User.class_eval do
     ).parsed_response["access_token"]
   end
 
+  private
+
+  def filter_feedback(submissions)
+    submissions.select { |sub| sub.submission_comments.any? || (sub.grader_id && sub.grader_id > GradesService::Account.account_admin.try(:id)) }
+  end
+
+  def school_settings
+    @school_settings ||= SettingsService.get_settings(object: 'school', id: 1)
+  end
+
+  def identity_client_credentials
+    @client_credentials ||= school_settings['identity_basic_auth']
+  end
+
   def validate_identity_creation
     return errors.add(:email, "Identity Server: Email Invalid") unless identity_email.present?
     return errors.add(:name, "Identity Server: Access Token Not Granted") unless access_token
 
+    self.identity_username = "#{name.gsub(/\s/, "_")}_#{SecureRandom.hex(8)}"
+
     identity_create = HTTParty.post(
       "https://#{identity_domain}/api/accounts/withProfile",
       :body => {
-        "Username" => "#{name.gsub(/\s/, "_")}_#{SecureRandom.hex(8)}",
+        "Username" => identity_username,
         "FirstName" => first_name,
         "LastName" => last_name,
         "Email" => identity_email,
@@ -223,12 +225,11 @@ User.class_eval do
     end
   end
 
-  def send_identity_credentials_to_settings_service
-    SettingsService.update_settings(
-      object: 'login',
-      id: identity_uuid,
-      setting: 'canvas_id',
-      value: id.to_s
+  def create_identity_pseudonym!
+    account.pseudonyms.create!(
+      user: self,
+      unique_id: identity_username,
+      integration_id: identity_uuid
     )
   end
 end

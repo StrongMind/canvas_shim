@@ -1,4 +1,7 @@
-class Account
+class Account < ActiveRecord::Base
+  has_many :users
+  has_many :pseudonyms
+
   def id
     1
   end

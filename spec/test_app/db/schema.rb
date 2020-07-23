@@ -15,6 +15,9 @@ ActiveRecord::Schema.define(version: 20200709194501) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "accounts", force: :cascade do |t|
+  end
+
   create_table "announcements", force: :cascade do |t|
     t.boolean "pinned"
     t.integer "position"
@@ -217,6 +220,8 @@ ActiveRecord::Schema.define(version: 20200709194501) do
     t.datetime "created_at"
     t.datetime "last_login_at"
     t.string   "unique_id"
+    t.integer  "account_id"
+    t.string   "integration_id"
   end
 
   create_table "scores", force: :cascade do |t|
@@ -267,6 +272,7 @@ ActiveRecord::Schema.define(version: 20200709194501) do
   create_table "users", force: :cascade do |t|
     t.integer  "course_id"
     t.datetime "updated_at"
+    t.integer  "account_id"
   end
 
 end
