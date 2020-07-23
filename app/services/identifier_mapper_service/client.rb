@@ -33,7 +33,7 @@ module IdentifierMapperService
         identifier=course_id
       ))
       return nil if response.code != 200
-      response.payload.map {|p| p.dig("com.powerschool.section.dcids", get_powerschool_info[:name])}.first
+      response.payload.map {|p| p.dig("com.powerschool.class.dcids", get_powerschool_info[:name])}.first
     end
 
     def post_canvas_user_id(canvas_user_id, identity_uuid)
