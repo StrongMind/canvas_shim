@@ -7,7 +7,7 @@ Pseudonym.class_eval do
   end
 
   def update_identity_mapper
-    return unless identity_integration_regex.match(integration_id) && confirm_user
+    return unless identity_integration_regex.match(integration_id) && user.identity_enabled && confirm_user
     IdentifierMapperService::Client.post_canvas_user_id(user_id, integration_id)
   end
 
