@@ -1,6 +1,10 @@
 describe Pseudonym do
   include_context "stubbed_network"
 
+  before do
+    allow(SettingsService).to receive(:get_settings).and_return("identity_server_enabled" => true)
+  end
+
   describe "#after_commit" do
     it 'does publish to the pipeline' do
       expect(PipelineService::V2).to receive(:publish)
@@ -26,6 +30,7 @@ describe Pseudonym do
     context "guard clauses" do
       before do
         allow(IdentifierMapperService::Client).to receive(:post_canvas_user_id).and_return true
+        pseudonym.user = User.create
       end
 
       context "match uuid" do
@@ -41,6 +46,17 @@ describe Pseudonym do
         it "returns nil when the integration id is not a uuid" do
           pseudonym.integration_id = SecureRandom.uuid
           expect(pseudonym.update_identity_mapper).to be_truthy
+        end
+
+        context "identity not enabled" do
+          before do
+            allow(SettingsService).to receive(:get_settings).and_return("identity_server_enabled" => false)
+            pseudonym.integration_id = SecureRandom.uuid
+          end
+
+          it "does not fire" do
+            expect(pseudonym.update_identity_mapper).to be_falsy
+          end
         end
       end
     end
