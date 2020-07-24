@@ -12,6 +12,12 @@ User.class_eval do
     find(actual_user_id)
   end
 
+  def self.find_by_sis_user_id(sis_user_id)
+    User.active.eager_load(:pseudonyms).find_by(
+      "pseudonyms.sis_user_id = ? AND pseudonyms.workflow_state = 'active'", sis_user_id
+    )
+  end
+
   # Submissions must be excused upfront else once the first requirement check happens
   # the all_met condition will fail on submissions not being excused yet
   #
