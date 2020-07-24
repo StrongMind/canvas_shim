@@ -57,6 +57,7 @@ UsersController.class_eval do
   def provision_identity_v2
     if (@current_user.try(:roles, Account.default) || []).include?("root_admin")
       @user = User.find_by_sis_user_id(params[:sis_user_id])
+
       if @user
         begin
           User.transaction do
@@ -71,6 +72,8 @@ UsersController.class_eval do
           }
           return render :json => errors, :status => :bad_request
         end
+
+        render :json => @user.pseudonyms.last.as_json, :status => :ok
       else
         render :json => {
           :message => t('no_active_user_found_by_sis_id', "No active user found by SIS ID")
