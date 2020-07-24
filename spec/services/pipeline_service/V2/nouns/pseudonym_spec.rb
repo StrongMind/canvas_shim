@@ -18,7 +18,8 @@ describe PipelineService::V2::Nouns::Pseudonym do
         "last_login_at" => active_record_object.last_login_at,
         "sis_user_id" => "1234",
         "user_id" => user.id,
-        "unique_id" => nil
+        "unique_id" => nil,
+        "workflow_state" => nil
       })
     end
   end
