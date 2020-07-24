@@ -66,14 +66,13 @@ UsersController.class_eval do
         rescue ActiveRecord::RecordInvalid => e
           errors = {
             :errors => {
-              :user => @user.errors.as_json[:errors],
-              :pseudonym => @user.pseudonyms.last.errors.as_json[:errors],
+              :user => @user.errors.as_json[:errors]
             }
           }
           return render :json => errors, :status => :bad_request
         end
 
-        render :json => @user.pseudonyms.last.as_json, :status => :ok
+        render :json => {}, :status => :ok
       else
         render :json => {
           :message => t('no_active_user_found_by_sis_id', "No active user found by SIS ID")
