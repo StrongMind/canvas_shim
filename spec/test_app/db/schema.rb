@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200709194501) do
+ActiveRecord::Schema.define(version: 20200724185507) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,6 +81,7 @@ ActiveRecord::Schema.define(version: 20200709194501) do
 
   create_table "context_external_tools", force: :cascade do |t|
     t.string  "domain"
+    t.integer "content_migration_id"
     t.integer "course_id"
   end
 
@@ -222,13 +223,13 @@ ActiveRecord::Schema.define(version: 20200709194501) do
     t.string   "unique_id"
     t.integer  "account_id"
     t.string   "integration_id"
+    t.string   "workflow_state"
   end
 
   create_table "scores", force: :cascade do |t|
-    t.string   "workflow_state"
-    t.integer  "enrollment_id"
-    t.integer  "current_score"
-    t.datetime "updated_at"
+    t.string  "workflow_state"
+    t.integer "enrollment_id"
+    t.integer "current_score"
   end
 
   create_table "students", force: :cascade do |t|

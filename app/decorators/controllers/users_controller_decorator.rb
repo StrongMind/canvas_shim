@@ -53,4 +53,27 @@ UsersController.class_eval do
       false
     end
   end
+
+  def provision_identity_v2
+    @user = User.find_by_sis_user_id(params[:sis_user_id])
+    if @user
+      begin
+        User.transaction do
+          @user.save_with_or_without_identity_create(@user.email, force: true)
+        end
+      rescue ActiveRecord::RecordInvalid => e
+        errors = {
+          :errors => {
+            :user => @user.errors.as_json[:errors],
+            :pseudonym => @user.pseudonyms.last.errors.as_json[:errors],
+          }
+        }
+        return render :json => errors, :status => :bad_request
+      end
+    else
+      render :json => {
+        :message => t('no_active_user_found_by_sis_id', "No active user found by SIS ID")
+      }, :status => :bad_request
+    end
+  end
 end

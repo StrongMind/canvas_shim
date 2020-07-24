@@ -201,4 +201,43 @@ describe User do
       end
     end
   end
+
+  describe "::find_by_sis_user_id" do
+    let(:user) { User.create }
+    let(:pseudonym) { Pseudonym.create(user: user) }
+
+    before do
+      allow(User).to receive(:active).and_return(User.all)
+    end
+    
+    context "with SIS ID" do
+      before do
+        pseudonym.update(sis_user_id: "12345")
+      end
+
+      context "with active workflow state" do
+        before do
+          pseudonym.update(workflow_state: "active")
+        end
+
+        it "finds the user if the workflow state is active" do
+          expect(User.find_by_sis_user_id("12345")).to be_truthy
+        end
+
+        it "finds the user if there are multiple pseudonyms" do
+          user.pseudonyms.create(workflow_state: "deleted")
+          expect(User.find_by_sis_user_id("12345")).to be_truthy
+        end
+
+        it "does not find the user if the id does not match" do
+          expect(User.find_by_sis_user_id("00000")).to be_falsy
+        end
+      end
+
+      it "does not find the user if the workflow state is not active" do
+        pseudonym.update(workflow_state: "deleted")
+        expect(User.find_by_sis_user_id("12345")).to be_falsy
+      end
+    end
+  end
 end

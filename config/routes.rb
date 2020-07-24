@@ -47,6 +47,7 @@ Rails.application.routes.draw do
     scope(controller: :users) do
       get 'users/:id/observer_enrollments', action: :observer_enrollments
       post 'users/:id/toggle_progress_grade', action: :toggle_progress_grade
+      put 'users/:sis_user_id/provision_identity_v2', action: :provision_identity_v2
     end
 
     scope(controller: :user_observees) do
