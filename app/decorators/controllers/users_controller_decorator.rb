@@ -55,7 +55,7 @@ UsersController.class_eval do
   end
 
   def provision_identity_v2
-    if @current_user.try(:roles, Account.default).include?("root_admin")
+    if (@current_user.try(:roles, Account.default) || []).include?("root_admin")
       @user = User.find_by_sis_user_id(params[:sis_user_id])
       if @user
         begin
