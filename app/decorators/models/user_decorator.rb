@@ -208,7 +208,7 @@ User.class_eval do
     return errors.add(:email, "Identity Server: Email Invalid") unless identity_email.present?
     return errors.add(:name, "Identity Server: Access Token Not Granted") unless access_token
 
-    self.identity_username = "#{name.gsub(/\s/, "_")}_#{SecureRandom.hex(8)}"
+    self.identity_username = "#{name.parameterize(separator: '_')}_#{SecureRandom.hex(4)}"
 
     identity_create = HTTParty.post(
       "https://#{identity_domain}/api/accounts/withProfile",
