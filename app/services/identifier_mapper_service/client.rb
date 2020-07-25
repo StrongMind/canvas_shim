@@ -77,8 +77,8 @@ module IdentifierMapperService
       }
     end
 
-    def endpoints(name, service=nil, identifier=nil)
-      Endpoints.fetch(name, service, identifier)
+    def endpoints(name, service=nil, identifier=nil, school_name=nil)
+      Endpoints.fetch(name, service, identifier, school_name)
     end
 
     def http_client
