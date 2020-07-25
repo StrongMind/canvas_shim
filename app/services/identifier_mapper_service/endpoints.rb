@@ -21,8 +21,8 @@ module IdentifierMapperService
       end
     end
 
-    def self.fetch(name, service=nil, identifier=nil)
-      instance.fetch(name, service, identifier)
+    def self.fetch(name, service=nil, identifier=nil, school_name=nil)
+      instance.fetch(name, service, identifier, school_name)
     end
 
     private
