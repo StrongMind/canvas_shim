@@ -7,13 +7,15 @@ module IdentifierMapperService
       @secret ||= SecretManager.get_secret
     end
 
-    def fetch(name, service=nil, identifier=nil)
+    def fetch(name, service=nil, identifier=nil, school_name=nil)
       api_endpoint +
       case name
       when :get_powerschool_course_id
         "/pairs/?#{service}=#{identifier}"
       when :get_powerschool_info
         "/partners?canvas_domain=#{ENV['CANVAS_DOMAIN']}"
+      when :get_by_sis_id
+        "/pairs/strongmind.guid://#{service}/#{school_name}/#{identifier}"
       when :post_canvas_user_id
         "/pairs/"
       end
