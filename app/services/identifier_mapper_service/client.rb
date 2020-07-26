@@ -97,7 +97,7 @@ module IdentifierMapperService
       found_sis_id = sis_ids.find do |sis_id|
         found_key = identifier_keys.find do |identifier_key|
           get(endpoints(:get_by_sis_id, identifier_key, sis_id, school_name))
-          .response.dig(identifier_key, school_name)
+          .payload.dig(identifier_key, school_name)
         end
       end
 
