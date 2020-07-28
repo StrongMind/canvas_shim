@@ -10,10 +10,10 @@ describe PipelineService::Serializers::Course do
       allow(SettingsService).to receive(:get_settings).and_return({
         'passing_threshold' => 50,
         'passing_exam_threshold' => 50,
-        'powerschool_integration' => true
+        'powerschool_integration' => true,
+        'powerschool_course_id' => 254
       })
 
-      allow(IdentifierMapperService::Client).to receive(:get_powerschool_course_id).and_return(254)
       allow(IdentifierMapperService::Client).to receive(:get_powerschool_school_id).and_return(452)
     end
 
