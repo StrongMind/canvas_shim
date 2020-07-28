@@ -7,8 +7,12 @@ Pseudonym.class_eval do
   end
 
   def update_identity_mapper
-    return unless identity_integration_regex.match(integration_id) && user.identity_enabled && confirm_user
+    return unless identity_integration_regex.match(integration_id) && user.identity_enabled && confirm_user.success?
     IdentifierMapperService::Client.post_canvas_user_id(user_id, integration_id)
+  end
+
+  def get_identity_username?
+    self.unique_id = confirm_user.try(:fetch, "username", nil)
   end
 
   private
@@ -22,6 +26,6 @@ Pseudonym.class_eval do
       "https://#{user.identity_domain}/api/accounts/#{integration_id}",
       :headers => {
         'Authorization' => "Bearer #{user.access_token}"
-      }).success?
+      })
   end
 end
