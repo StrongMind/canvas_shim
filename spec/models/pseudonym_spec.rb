@@ -34,8 +34,11 @@ describe Pseudonym do
       end
 
       context "match uuid" do
+        let(:success_response) { {"username" => true} }
+
         before do
-          allow(pseudonym).to receive(:confirm_user).and_return true
+          allow(success_response).to receive(:success?).and_return(true)
+          allow(pseudonym).to receive(:confirm_user).and_return(success_response)
         end
 
         it "returns nil when the integration id is not a uuid" do
@@ -58,6 +61,34 @@ describe Pseudonym do
             expect(pseudonym.update_identity_mapper).to be_falsy
           end
         end
+      end
+    end
+  end
+
+  describe "#get_identity_username?" do
+    let(:username) { "ryankshaw_8qj1" }
+    let(:pseudonym) { described_class.create }
+
+    context "Successful call" do
+      before do
+        allow(pseudonym).to receive(:confirm_user).and_return({"username" => username})
+      end
+
+      it "works correctly" do
+        pseudonym.get_identity_username?
+        expect(pseudonym.unique_id).to eq(username)
+      end
+    end
+
+    context "Unsuccessful call" do
+      before do
+        allow(pseudonym).to receive(:confirm_user).and_return("error": "bad request")
+        pseudonym.unique_id = "hereismyuniqueid"
+      end
+
+      it "works incorrectly" do
+        pseudonym.get_identity_username?
+        expect(pseudonym.unique_id).to eq("hereismyuniqueid")
       end
     end
   end

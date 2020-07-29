@@ -12,7 +12,7 @@ Pseudonym.class_eval do
   end
 
   def get_identity_username?
-    self.unique_id = confirm_user.try(:fetch, "username", nil)
+    self.unique_id = confirm_user.try(:fetch, "username", unique_id)
   end
 
   private
