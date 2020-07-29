@@ -88,7 +88,7 @@ describe Pseudonym do
 
       it "works incorrectly" do
         pseudonym.get_identity_username?
-        expect(pseudonym.unique_id).to eq("hereismyuniqueid")
+        expect(pseudonym.unique_id).to eq(nil)
       end
     end
   end
