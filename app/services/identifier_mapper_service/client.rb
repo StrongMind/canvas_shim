@@ -46,8 +46,9 @@ module IdentifierMapperService
         "com.instructure.canvas.users": { "#{school_name}": canvas_user_id }
       }
 
-      sis_mapping = find_sis_id_mapping(sis_ids, school_name) if sis_ids.any?
-      params.merge!(sis_mapping) if sis_mapping
+      params.merge!(
+        { "com.strongmind.canvas.sis.id": sis_ids.first }
+      ) if sis_ids.any?
 
       post(endpoints(:post_canvas_user_id), params.to_json) == 201
     end
@@ -83,27 +84,6 @@ module IdentifierMapperService
 
     def http_client
       HTTParty
-    end
-
-    def find_sis_id_mapping(sis_ids, school_name)
-      identifier_keys = [
-        "com.powerschool.user.numbers",
-        "com.powerschool.staff.numbers",
-        "com.powerschool.contact.ids"
-      ]
-
-      found_key = nil
-
-      found_sis_id = sis_ids.find do |sis_id|
-        found_key = identifier_keys.find do |identifier_key|
-          get(endpoints(:get_by_sis_id, identifier_key, sis_id, school_name))
-          .payload.dig(identifier_key, school_name)
-        end
-      end
-
-      return unless found_sis_id && found_key
-
-      { "#{found_key}": { "#{school_name}": "#{found_sis_id}" } }
     end
 
     class << self
