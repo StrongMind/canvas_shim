@@ -36,7 +36,7 @@ module IdentifierMapperService
       response.payload.map {|p| p.dig("com.powerschool.class.dcids", get_powerschool_info[:name])}.first
     end
 
-    def post_canvas_user_id(canvas_user_id, identity_uuid)
+    def post_canvas_user_id(canvas_user_id, identity_uuid, sis_ids = [])
       return unless canvas_user_id && identity_uuid
       school_name = get_powerschool_info.try(:fetch, :name, nil)
       return unless school_name
@@ -45,6 +45,8 @@ module IdentifierMapperService
         "com.strongmind.identity.user.id": identity_uuid,
         "com.instructure.canvas.users": { "#{school_name}": canvas_user_id }
       }
+
+      params.merge!({ "com.strongmind.canvas.sis.id": sis_ids.first }) if sis_ids.any?
 
       post(endpoints(:post_canvas_user_id), params.to_json) == 201
     end

@@ -8,7 +8,7 @@ Pseudonym.class_eval do
 
   def update_identity_mapper
     return unless identity_integration_regex.match(integration_id) && user.identity_enabled && confirm_user.success?
-    IdentifierMapperService::Client.post_canvas_user_id(user_id, integration_id)
+    IdentifierMapperService::Client.post_canvas_user_id(user_id, integration_id, all_sis_ids)
   end
 
   def get_identity_username?
@@ -27,5 +27,9 @@ Pseudonym.class_eval do
       :headers => {
         'Authorization' => "Bearer #{user.access_token}"
       })
+  end
+
+  def all_sis_ids
+    user.pseudonyms.pluck(:sis_user_id).compact
   end
 end
