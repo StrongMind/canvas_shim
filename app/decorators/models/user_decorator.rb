@@ -5,17 +5,14 @@ User.class_eval do
 
   after_commit -> { PipelineService::V2.publish self }
 
-  def self.find_for_identity_auth(user_global_id)
-    return unless user_global_id && new.identity_enabled
-    actual_user_id = SettingsService.get_settings(object: 'login', id: user_global_id)["canvas_id"]
-    return unless actual_user_id
-    find(actual_user_id)
-  end
-
   def self.find_by_sis_user_id(sis_user_id)
     User.active.eager_load(:pseudonyms).find_by(
       "pseudonyms.sis_user_id = ? AND pseudonyms.workflow_state = 'active'", sis_user_id
     )
+  end
+
+  def already_provisioned_in_identity?
+    pseudonyms.select(&:identity_pseudonym?).any?(&:confirmed_in_identity?)
   end
 
   # Submissions must be excused upfront else once the first requirement check happens

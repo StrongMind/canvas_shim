@@ -177,31 +177,6 @@ describe User do
     end
   end
 
-  describe "::find_for_identity_auth" do
-    subject { described_class }
-
-    before do
-      allow_any_instance_of(subject).to receive(:identity_enabled).and_return(true)
-    end
-
-    it "doesn't work without global id" do
-      expect(subject.find_for_identity_auth(nil)).to eq(nil)
-    end
-
-    it "returns nil if identity is disabled" do
-      allow_any_instance_of(subject).to receive(:identity_enabled).and_return(nil)
-      expect(subject.find_for_identity_auth("12345")).to eq(nil)
-    end
-
-    context "matches user id" do
-      it "finds the user" do
-        user = User.create
-        allow(SettingsService).to receive(:get_settings).and_return("canvas_id" => user.id)
-        expect(User.find_for_identity_auth("12345")).to eq(user)
-      end
-    end
-  end
-
   describe "::find_by_sis_user_id" do
     let(:user) { User.create }
     let(:pseudonym) { Pseudonym.create(user: user) }
@@ -237,6 +212,48 @@ describe User do
       it "does not find the user if the workflow state is not active" do
         pseudonym.update(workflow_state: "deleted")
         expect(User.find_by_sis_user_id("12345")).to be_falsy
+      end
+    end
+  end
+
+  describe "#already_provisioned_in_identity?" do
+    let(:user) { User.create }
+    let!(:pseudonym) { user.pseudonyms.create(integration_id: SecureRandom.uuid) }
+
+    let(:success_response) { {"username" => true} }
+
+    before do
+      allow(success_response).to receive(:success?).and_return(true)
+      allow_any_instance_of(Pseudonym).to receive(:confirm_user).and_return(success_response)
+    end
+
+    it "works with a provisioned identity" do
+      expect(user.reload.already_provisioned_in_identity?).to be(true)
+    end
+
+    it "works with multiple logins" do
+      user.pseudonyms.create!(integration_id: "12345")
+      expect(user.reload.already_provisioned_in_identity?).to be(true)
+    end
+
+    context "identity id but not provisioned" do
+      before do
+        allow(success_response).to receive(:success?).and_return(false)
+      end
+
+      it "does not work" do
+        expect(user.reload.already_provisioned_in_identity?).to be(false)
+      end
+    end
+
+    context "no identity integration ids" do
+      before do
+        user.pseudonyms.destroy_all
+        user.pseudonyms.create!(integration_id: "12345")
+      end
+
+      it "does not work" do
+        expect(user.reload.already_provisioned_in_identity?).to be(false)
       end
     end
   end
