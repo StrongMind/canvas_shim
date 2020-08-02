@@ -58,7 +58,7 @@ UsersController.class_eval do
     if (@current_user.try(:roles, Account.default) || []).include?("root_admin")
       @user = User.find_by_sis_user_id(params[:sis_user_id])
 
-      if @user && !@user.already_provisioned_in_identity?
+      if @user && !@user.reload.already_provisioned_in_identity?
         begin
           User.transaction do
             @user.save_with_or_without_identity_create(@user.email, force: true)
