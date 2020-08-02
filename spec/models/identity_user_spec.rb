@@ -177,31 +177,6 @@ describe User do
     end
   end
 
-  describe "::find_for_identity_auth" do
-    subject { described_class }
-
-    before do
-      allow_any_instance_of(subject).to receive(:identity_enabled).and_return(true)
-    end
-
-    it "doesn't work without global id" do
-      expect(subject.find_for_identity_auth(nil)).to eq(nil)
-    end
-
-    it "returns nil if identity is disabled" do
-      allow_any_instance_of(subject).to receive(:identity_enabled).and_return(nil)
-      expect(subject.find_for_identity_auth("12345")).to eq(nil)
-    end
-
-    context "matches user id" do
-      it "finds the user" do
-        user = User.create
-        allow(SettingsService).to receive(:get_settings).and_return("canvas_id" => user.id)
-        expect(User.find_for_identity_auth("12345")).to eq(user)
-      end
-    end
-  end
-
   describe "::find_by_sis_user_id" do
     let(:user) { User.create }
     let(:pseudonym) { Pseudonym.create(user: user) }
