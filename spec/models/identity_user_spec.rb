@@ -215,4 +215,46 @@ describe User do
       end
     end
   end
+
+  describe "#already_provisioned_in_identity?" do
+    let(:user) { User.create }
+    let!(:pseudonym) { user.pseudonyms.create(integration_id: SecureRandom.uuid) }
+
+    let(:success_response) { {"username" => true} }
+
+    before do
+      allow(success_response).to receive(:success?).and_return(true)
+      allow_any_instance_of(Pseudonym).to receive(:confirm_user).and_return(success_response)
+    end
+
+    it "works with a provisioned identity" do
+      expect(user.reload.already_provisioned_in_identity?).to be(true)
+    end
+
+    it "works with multiple logins" do
+      user.pseudonyms.create!(integration_id: "12345")
+      expect(user.reload.already_provisioned_in_identity?).to be(true)
+    end
+
+    context "identity id but not provisioned" do
+      before do
+        allow(success_response).to receive(:success?).and_return(false)
+      end
+
+      it "does not work" do
+        expect(user.reload.already_provisioned_in_identity?).to be(false)
+      end
+    end
+
+    context "no identity integration ids" do
+      before do
+        user.pseudonyms.destroy_all
+        user.pseudonyms.create!(integration_id: "12345")
+      end
+
+      it "does not work" do
+        expect(user.reload.already_provisioned_in_identity?).to be(false)
+      end
+    end
+  end
 end
