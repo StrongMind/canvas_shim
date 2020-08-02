@@ -58,7 +58,7 @@ UsersController.class_eval do
     if (@current_user.try(:roles, Account.default) || []).include?("root_admin")
       @user = User.find_by_sis_user_id(params[:sis_user_id])
 
-      if @user
+      if @user && !@user.already_provisioned_in_identity?
         begin
           User.transaction do
             @user.save_with_or_without_identity_create(@user.email, force: true)
@@ -73,6 +73,10 @@ UsersController.class_eval do
         end
 
         render :json => {}, :status => :ok
+      elsif @user
+        render :json => {
+          :message => t('user_has_already_been_provisioned_in_identity', "User already provisioned in Identity.")
+        }, :status => :bad_request
       else
         render :json => {
           :message => t('no_active_user_found_by_sis_id', "No active user found by SIS ID")

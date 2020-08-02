@@ -18,6 +18,10 @@ User.class_eval do
     )
   end
 
+  def already_provisioned_in_identity?
+    pseudonyms.select(&:identity_pseudonym?).any?(&:confirmed_in_identity?)
+  end
+
   # Submissions must be excused upfront else once the first requirement check happens
   # the all_met condition will fail on submissions not being excused yet
   #

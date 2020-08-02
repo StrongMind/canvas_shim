@@ -7,12 +7,20 @@ Pseudonym.class_eval do
   end
 
   def update_identity_mapper
-    return unless identity_integration_regex.match(integration_id) && user.identity_enabled && confirm_user.success?
+    return unless identity_pseudonym? && user.identity_enabled && confirmed_in_identity?
     IdentifierMapperService::Client.post_canvas_user_id(user_id, integration_id, all_sis_ids)
   end
 
   def get_identity_username?
     self.unique_id = confirm_user.try(:fetch, "username", nil)
+  end
+
+  def identity_pseudonym?
+    identity_integration_regex.match(integration_id)
+  end
+
+  def confirmed_in_identity?
+    confirm_user.success?
   end
 
   private
