@@ -98,7 +98,7 @@ UsersController.class_eval do
         response[:integration_id] = @user.pseudonyms.find(&:confirmed_in_identity?).integration_id
       end
 
-      render :json => respone.to_json, :status => :ok
+      render :json => response.to_json, :status => :ok
     else
       render :json => {
           :message => t('unauthorized_to_confirm_provisioning', "Unauthorized to Confirm Provisioning")
