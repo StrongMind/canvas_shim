@@ -88,4 +88,21 @@ UsersController.class_eval do
         }, :status => :unauthorized
     end
   end
+
+  def confirm_provisioning
+    if (@current_user.try(:roles, Account.default) || []).include?("root_admin")
+      @user = api_find(User, params[:id])
+      response = {}
+
+      if @user.already_provisioned_in_identity?
+        response[:integration_id] = @user.pseudonyms.find(&:confirmed_in_identity?).integration_id
+      end
+
+      render :json => response.to_json, :status => :ok
+    else
+      render :json => {
+          :message => t('unauthorized_to_confirm_provisioning', "Unauthorized to Confirm Provisioning")
+        }, :status => :unauthorized
+    end
+  end
 end
