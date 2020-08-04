@@ -91,7 +91,7 @@ UsersController.class_eval do
 
   def confirm_provisioning
     if (@current_user.try(:roles, Account.default) || []).include?("root_admin")
-      @user = api_find(User, params[:user_id])
+      @user = api_find(User, params[:id])
       response = {}
 
       if @user.already_provisioned_in_identity?
