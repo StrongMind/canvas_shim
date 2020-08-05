@@ -94,7 +94,7 @@ UsersController.class_eval do
       @user = api_find(User, params[:id])
       response = {}
 
-      identity_uuid = @user.pseudonyms.find(&:confirmed_in_identity?).integration_id
+      identity_uuid = @user.pseudonyms.find(&:confirmed_in_identity?).try(:integration_id)
       response.merge!(integration_id: identity_uuid) if identity_uuid
 
       render :json => response.to_json, :status => :ok
