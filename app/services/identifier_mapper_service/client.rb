@@ -2,6 +2,10 @@ module IdentifierMapperService
   class Client
     include Singleton
 
+    def user_settings_partner_name(user_id)
+      SettingsService.get_settings(object: 'user', id: user_id)['partner_name']
+    end
+
     def get_powerschool_school_id
       response = get(endpoints(
         :get_powerschool_info
@@ -38,7 +42,7 @@ module IdentifierMapperService
 
     def post_canvas_user_id(canvas_user_id, identity_uuid, sis_ids = [])
       return unless canvas_user_id && identity_uuid
-      school_name = get_powerschool_info.try(:fetch, :name, nil)
+      school_name = user_settings_partner_name(canvas_user_id) || get_powerschool_info.try(:fetch, :name, nil)
       return unless school_name
 
       params = {
