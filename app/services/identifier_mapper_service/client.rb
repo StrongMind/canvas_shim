@@ -46,7 +46,9 @@ module IdentifierMapperService
         "com.instructure.canvas.users": { "#{school_name}": canvas_user_id }
       }
 
-      params.merge!({ "com.strongmind.canvas.sis.id": sis_ids.first }) if sis_ids.any?
+      params.merge!({
+        "com.strongmind.more.canvas.sis.ids": { "#{school_name}": sis_ids.first }
+      }) if sis_ids.any?
 
       post(endpoints(:post_canvas_user_id), params.to_json) == 201
     end
