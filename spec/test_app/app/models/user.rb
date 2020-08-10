@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
   has_many :courses, through: :enrollments
   has_many :submissions
   has_many :discussion_entries
+  has_many :communication_channels
 
   has_many :pseudonyms
   has_one :pseudonym, -> { where("pseudonyms.workflow_state<>'deleted'").order(:position) }
