@@ -15,15 +15,15 @@ describe PipelineService::V2::Nouns::User do
     end
 
     context "with partner name" do
-      allow(SettingsService).to receive(:get_settings).and_return('partner_name' => 'testschool')
       it 'returns with a partner name' do
+        allow(SettingsService).to receive(:get_settings).and_return('partner_name' => 'testschool')
         expect(subject.call).to include({'partner_name' => 'testschool'})
       end
     end
     
     context "without partner name" do
-      allow(SettingsService).to receive(:get_settings).and_return({})
       it 'returns with a partner name' do
+        allow(SettingsService).to receive(:get_settings).and_return({})
         expect(subject.call).to include({'partner_name' => nil})
       end
     end
