@@ -143,6 +143,32 @@ describe User do
     end
   end
 
+  describe "#check_identity_duplicate" do
+    let(:user) { User.new(name: "dupe dude", run_identity_validations: "create") }
+
+    it "fails without identity on" do
+      allow(user).to receive(:identity_enabled).and_return(false)
+      expect(user).not_to receive(:check_identity_duplicate)
+      user.save_with_identity_server_create("hello@example.com")
+    end
+
+    it "fails without an identity email" do
+      allow(user).to receive(:identity_enabled).and_return(true)
+      expect(user).not_to receive(:check_identity_duplicate)
+      user.identity_email = nil
+      user.save_with_identity_server_create(nil)
+    end
+
+    it "fails if a user already exists" do
+      allow(user).to receive(:identity_enabled).and_return(true)
+      allow(user).to receive(:name).and_return("dupe dude")
+      dupe = User.create!(name: "dupe dude")
+      dupe.communication_channels.create!(path: "hello@example.com", path_type: "email")
+      user.save_with_identity_server_create("hello@example.com")
+      expect(user.errors["name"]).to include("Identity Server: User Already Exists")
+    end
+  end
+
   describe "#save_with_or_without_identity_create" do
     before do
       allow(subject).to receive(:save)
