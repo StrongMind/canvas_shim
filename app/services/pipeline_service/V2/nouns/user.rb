@@ -8,10 +8,8 @@ module PipelineService
 
         def call
           # Return the default, non-overrriden from #as_json
-          ret = super
-          ret.merge sis_user_id
-          ret.merge partner_name
-          ret
+          ret = super.merge! sis_user_id
+          ret.merge! partner_name
         end
 
         def sis_user_id
@@ -19,7 +17,7 @@ module PipelineService
         end
 
         def partner_name
-          { 'sis_user_id' => SettingsService.get_settings(object: :course, id: 1)['partner_name'] }
+          { 'partner_name' => SettingsService.get_settings(object: :course, id: 1)['partner_name'] }
         end
 
       end
