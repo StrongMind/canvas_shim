@@ -8,11 +8,16 @@ module PipelineService
 
         def call
           # Return the default, non-overrriden from #as_json
-          super.merge sis_user_id
+          ret = super.merge! sis_user_id
+          ret.merge! partner_name
         end
 
         def sis_user_id
           { 'sis_user_id' => @ar_object.pseudonyms.first.try(:sis_user_id) }
+        end
+
+        def partner_name
+          { 'partner_name' => SettingsService.get_settings(object: :user, id: @ar_object.id)['partner_name'] }
         end
 
       end
