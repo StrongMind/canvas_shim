@@ -8,8 +8,10 @@ module PipelineService
 
         def call
           # Return the default, non-overrriden from #as_json
-          super.merge sis_user_id
-          super.merge partner_name
+          ret = super
+          ret.merge sis_user_id
+          ret.merge partner_name
+          ret
         end
 
         def sis_user_id
