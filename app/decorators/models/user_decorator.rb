@@ -232,7 +232,7 @@ User.class_eval do
   def check_identity_duplicate
     existing_user = User.eager_load(:communication_channels).find_by(
       "users.name = ? AND communication_channels.path = ? " +
-      "AND communication_channels.path_type = 'email'", name, id_email
+      "AND communication_channels.path_type = 'email'", name, identity_email
     )
 
     errors.add(:name, "Identity Server: User Already Exists") if existing_user
