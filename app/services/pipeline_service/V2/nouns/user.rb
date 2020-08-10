@@ -17,7 +17,7 @@ module PipelineService
         end
 
         def partner_name
-          { 'partner_name' => SettingsService.get_settings(object: :course, id: 1)['partner_name'] }
+          { 'partner_name' => SettingsService.get_settings(object: :user, id: @ar_object.id)['partner_name'] }
         end
 
       end
