@@ -1,5 +1,6 @@
 User.class_eval do
   attr_accessor :run_identity_validations, :identity_email, :identity_username, :identity_uuid
+  before_validation :check_identity_duplicate, on: :create, if: -> { identity_enabled && identity_email }
   validate :validate_identity_creation, if: -> { run_identity_validations == "create" }
   after_save :create_identity_pseudonym!, if: :identity_uuid
 
@@ -225,6 +226,18 @@ User.class_eval do
       self.identity_uuid = identity_create.parsed_response["id"]
     else
       errors.add(:name, "Identity Server: User Not Created")
+    end
+  end
+
+  def check_identity_duplicate
+    existing_user = User.eager_load(:communication_channels).find_by(
+      "users.name = ? AND communication_channels.path = ? " +
+      "AND communication_channels.path_type = 'email'", name, identity_email
+    )
+
+    if existing_user
+      errors.add(:name, "Identity Server: User Already Exists")
+      throw(:abort)
     end
   end
 

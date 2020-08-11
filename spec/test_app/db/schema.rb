@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200724185507) do
+ActiveRecord::Schema.define(version: 20200810204548) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,12 @@ ActiveRecord::Schema.define(version: 20200724185507) do
   end
 
   create_table "big_blue_button_conferences", force: :cascade do |t|
+  end
+
+  create_table "communication_channels", force: :cascade do |t|
+    t.string  "path"
+    t.string  "path_type"
+    t.integer "user_id"
   end
 
   create_table "content_migrations", force: :cascade do |t|
@@ -274,6 +280,7 @@ ActiveRecord::Schema.define(version: 20200724185507) do
     t.integer  "course_id"
     t.datetime "updated_at"
     t.integer  "account_id"
+    t.string   "name"
   end
 
 end

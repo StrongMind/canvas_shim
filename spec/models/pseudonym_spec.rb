@@ -53,7 +53,7 @@ describe Pseudonym do
 
         context "identity not enabled" do
           before do
-            allow(SettingsService).to receive(:get_settings).and_return("identity_server_enabled" => false)
+            allow(pseudonym.user).to receive(:identity_enabled).and_return(false)
             pseudonym.integration_id = SecureRandom.uuid
           end
 
