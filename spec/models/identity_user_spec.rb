@@ -144,7 +144,7 @@ describe User do
   end
 
   describe "#check_identity_duplicate" do
-    let(:user) { account.users.new(name: "dupe dude", run_identity_validations: "create") }
+    let(:user) { User.new(name: "dupe dude", run_identity_validations: "create") }
 
     it "fails without identity on" do
       allow(user).to receive(:identity_enabled).and_return(false)
@@ -162,39 +162,10 @@ describe User do
     it "fails if a user already exists" do
       allow(user).to receive(:identity_enabled).and_return(true)
       allow(user).to receive(:name).and_return("dupe dude")
-      dupe = User.create!(name: "dupe dude", workflow_state: "pre_registered")
+      dupe = User.create!(name: "dupe dude")
       dupe.communication_channels.create!(path: "hello@example.com", path_type: "email")
       user.save_with_identity_server_create("hello@example.com")
       expect(user.errors["name"]).to include("Identity Server: User Already Exists")
-    end
-
-    context "successful create" do
-      let(:success_response_body) do
-        {
-          "id": "273f2717-134a-4ff3-9a23-c00a6987510c",
-          "username": "name namely",
-          "email": "email@example.com",
-          "firstName": nil,
-          "lastName": nil,
-          "dateOfBirth": nil,
-          "timeZone": nil,
-          "sendPasswordResetEmail": true
-        }.to_json
-      end
-  
-      before do
-        allow(user).to receive(:access_token).and_return("eiug2fgiuqefgiuqfe")
-        allow(HTTParty).to receive(:post).and_return(success_response)
-      end
-
-      it "passes if a user is soft-deleted" do
-        allow(user).to receive(:identity_enabled).and_return(true)
-        allow(user).to receive(:name).and_return("dupe dude")
-        dupe = account.users.create!(name: "dupe dude", workflow_state: "deleted")
-        dupe.communication_channels.create!(path: "hello@example.com", path_type: "email")
-        user.save_with_identity_server_create("hello@example.com")
-        expect(user.errors.empty?).to be true
-      end
     end
   end
 
