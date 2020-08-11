@@ -281,6 +281,7 @@ ActiveRecord::Schema.define(version: 20200810204548) do
     t.datetime "updated_at"
     t.integer  "account_id"
     t.string   "name"
+    t.string   "workflow_state"
   end
 
 end
