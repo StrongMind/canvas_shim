@@ -36,8 +36,7 @@ module AttendanceService
 
       def locked_out?(integration_id)
         HTTParty.post(
-          full_url(integration_id),
-          headers: { "CanvasAuth" => ENV['ATTENDANCE_API_KEY_V2'] }
+          full_url(integration_id), headers: { "CanvasAuth" => auth }
         ).parsed_response.try(:fetch, "isLockedOut", false)
       end
 
