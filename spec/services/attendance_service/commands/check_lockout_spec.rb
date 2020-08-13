@@ -1,4 +1,5 @@
 describe AttendanceService::Commands::CheckLockout do
+  include_context "stubbed_network"
   subject { described_class.new(pseudonym: identity_pseudonym) }
   let(:user) { User.create(name: "Ryan K Shaw") }
   let(:regular_pseudonym) { Pseudonym.create(user: user, unique_id: "JQUIZZLE", integration_id: "12345") }
