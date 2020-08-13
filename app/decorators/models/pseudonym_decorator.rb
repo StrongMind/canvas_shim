@@ -12,7 +12,11 @@ Pseudonym.class_eval do
   end
 
   def get_identity_username?
-    self.unique_id = confirm_user.try(:fetch, "username", nil)
+    identity_request = confirm_user
+    self.unique_id = identity_request.try(:fetch, "username", nil)
+    errors.add(
+      :unique_id, "Incorrect Identity. Identity Server Responded with #{identity_request.code}."
+    ) unless unique_id
   end
 
   def identity_pseudonym?
