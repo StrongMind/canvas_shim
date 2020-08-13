@@ -8,7 +8,7 @@ module AttendanceService
 
       def call
         return false unless checkable?
-        user.has_lockouts?
+        !!has_lockouts?
       end
 
       private
