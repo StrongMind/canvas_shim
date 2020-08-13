@@ -76,7 +76,7 @@ describe AttendanceService::Commands::CheckLockout do
 
         context "with identity pseudonym" do
           before do
-            allow(HTTParty).to receive(:post).and_return("isLockedOut" => true)
+            allow(HTTParty).to receive(:get).and_return("isLockedOut" => true)
           end
 
           it "returns truthy" do

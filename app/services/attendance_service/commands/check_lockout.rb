@@ -5,6 +5,7 @@ module AttendanceService
         @pseudonym = pseudonym
         @user = @pseudonym.try(:user)
         @auth = ENV['ATTENDANCE_API_KEY_V2']
+        @attendance_root = ENV['ATTENDANCE_API_ROOT_V2']
       end
 
       def call
@@ -13,7 +14,7 @@ module AttendanceService
       end
 
       private
-      attr_reader :pseudonym, :user, :auth
+      attr_reader :pseudonym, :user, :auth, :attendance_root
 
       def checkable?
         auth && pseudonym && user && attendance_root && partner_name
@@ -21,10 +22,6 @@ module AttendanceService
       
       def partner_name
         @partner_name ||= SettingsService.get_settings(object: 'user', id: user.id)["partner_name"]
-      end
-
-      def attendance_root
-        @attendance_root ||= SettingsService.get_settings(object: 'school', id: user.id)["attendance_root"]
       end
 
       def integration_id
@@ -36,7 +33,7 @@ module AttendanceService
       end
 
       def locked_out?
-        HTTParty.post(full_url, headers: { "CanvasAuth" => auth }).try(:fetch, "isLockedOut", false)
+        HTTParty.get(full_url, headers: { "CanvasAuth" => auth }).try(:fetch, "isLockedOut", false)
       end
     end
   end
