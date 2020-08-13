@@ -17,7 +17,7 @@ module AttendanceService
       attr_reader :pseudonym, :user, :auth, :attendance_root
 
       def checkable?
-        auth && pseudonym && user && attendance_root && partner_name
+        auth && attendance_root && pseudonym && user && partner_name
       end
       
       def partner_name
