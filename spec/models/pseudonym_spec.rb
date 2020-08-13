@@ -81,14 +81,18 @@ describe Pseudonym do
     end
 
     context "Unsuccessful call" do
+      let(:bad_response) { { "error": "bad request" } }
+
       before do
-        allow(pseudonym).to receive(:confirm_user).and_return("error": "bad request")
+        allow(bad_response).to receive(:code).and_return(400)
+        allow(pseudonym).to receive(:confirm_user).and_return(bad_response)
         pseudonym.unique_id = "hereismyuniqueid"
       end
 
       it "works incorrectly" do
         pseudonym.get_identity_username?
         expect(pseudonym.unique_id).to eq(nil)
+        expect(pseudonym.errors["unique_id"]).to include("Incorrect Identity. Identity Server Responded with 400.")
       end
     end
   end
