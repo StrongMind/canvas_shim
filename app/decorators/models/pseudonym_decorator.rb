@@ -14,8 +14,7 @@ Pseudonym.class_eval do
   def get_identity_username?
     identity_request = confirm_user
     self.unique_id = identity_request.try(:fetch, "username", nil)
-    errors.add(
-      :unique_id, "Incorrect Identity. Identity Server Responded with #{identity_request.code}."
+    errors.add(:unique_id, "Incorrect Identity. Identity Server Responded with #{identity_request.code}."
     ) unless unique_id
   end
 
