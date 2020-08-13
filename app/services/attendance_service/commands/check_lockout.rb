@@ -1,21 +1,22 @@
 module AttendanceService
   module Commands
     class CheckLockout
-      def initialize(user:)
-        @user = user
+      def initialize(pseudonym:)
+        @pseudonym = pseudonym
+        @user = @pseudonym.try(:user)
         @auth = ENV['ATTENDANCE_API_KEY_V2']
       end
 
       def call
         return false unless checkable?
-        !!has_lockouts?
+        !!locked_out?
       end
 
       private
-      attr_reader :user, :auth
+      attr_reader :pseudonym, :user, :auth
 
       def checkable?
-        auth && user && attendance_root && partner_name
+        auth && pseudonym && user && attendance_root && partner_name
       end
       
       def partner_name
@@ -26,22 +27,16 @@ module AttendanceService
         @attendance_root ||= SettingsService.get_settings(object: 'school', id: user.id)["attendance_root"]
       end
 
-      def integration_ids
-        user.pseudonyms.active.select(&:identity_pseudonym?).map(&:integration_id)
+      def integration_id
+        @integration_id ||= pseudonym.integration_id
       end
 
-      def full_url(integration_id)
+      def full_url
         "#{attendance_root}/#{partner_name}/Accounts/#{integration_id}/Attendance/Status"
       end
 
-      def locked_out?(integration_id)
-        HTTParty.post(
-          full_url(integration_id), headers: { "CanvasAuth" => auth }
-        ).parsed_response.try(:fetch, "isLockedOut", false)
-      end
-
-      def has_lockouts?
-        integration_ids.any? { |integration_id| locked_out?(integration_id) }
+      def locked_out?
+        HTTParty.post(full_url, headers: { "CanvasAuth" => auth }).try(:fetch, "isLockedOut", false)
       end
     end
   end

@@ -1,8 +1,8 @@
 describe AttendanceService::Commands::CheckLockout do
-  subject { described_class.new(user: user) }
+  subject { described_class.new(pseudonym: identity_pseudonym) }
   let(:user) { User.create(name: "Ryan K Shaw") }
-  let(:regular_pseudonym) { Pseudonym.create(unique_id: "JQUIZZLE", integration_id: "12345") }
-  let(:identity_pseudonym) { Pseudonym.create(unique_id: "JQUEEZY", integration_id: SecureRandom.uuid) }
+  let(:regular_pseudonym) { Pseudonym.create(user: user, unique_id: "JQUIZZLE", integration_id: "12345") }
+  let(:identity_pseudonym) { Pseudonym.create(user: user, unique_id: "JQUEEZY", integration_id: SecureRandom.uuid) }
   
   before do
     allow(SettingsService).to receive(:get_settings).and_return({
@@ -14,7 +14,7 @@ describe AttendanceService::Commands::CheckLockout do
   describe "#call" do
     context "no auth" do
       it "will not work" do
-        expect(subject).not_to receive(:has_lockouts?)
+        expect(subject).not_to receive(:locked_out?)
         expect(subject.call).to be false
       end
     end
@@ -25,9 +25,9 @@ describe AttendanceService::Commands::CheckLockout do
       end
 
       it "will not work without a user" do
-        no_user = described_class.new(user: nil)
-        expect(no_user).not_to receive(:has_lockouts?)
-        expect(subject.call).to be false
+        nobody = described_class.new(pseudonym: nil)
+        expect(nobody).not_to receive(:locked_out?)
+        expect(nobody.call).to be false
       end
 
       context "no partner name" do
@@ -36,7 +36,7 @@ describe AttendanceService::Commands::CheckLockout do
         end
 
         it "will not work without a partner name" do
-          expect(subject).not_to receive(:has_lockouts?)
+          expect(subject).not_to receive(:locked_out?)
           expect(subject.call).to be false
         end
       end
@@ -47,7 +47,7 @@ describe AttendanceService::Commands::CheckLockout do
         end
 
         it "will not work without a partner name" do
-          expect(subject).not_to receive(:has_lockouts?)
+          expect(subject).not_to receive(:locked_out?)
           expect(subject.call).to be false
         end
       end
@@ -58,25 +58,24 @@ describe AttendanceService::Commands::CheckLockout do
         end
 
         it "will not work without pseudonyms" do
-          expect(subject).to receive(:has_lockouts?)
+          expect(subject).to receive(:locked_out?)
           expect(subject.call).to be_falsy
         end
 
         context "with regular pseudonym" do
           before do
-            user.pseudonyms << regular_pseudonym
+            subject.instance_variable_set(:@pseudonym, regular_pseudonym)
           end
 
           it "Still returns falsy" do
-            expect(subject).to receive(:has_lockouts?)
+            expect(subject).to receive(:locked_out?)
             expect(subject.call).to be_falsy
           end
         end
 
         context "with identity pseudonym" do
           before do
-            user.pseudonyms << identity_pseudonym
-            allow(subject).to receive(:locked_out?).with(user.pseudonyms.pluck(:integration_id).last).and_return(true)
+            allow(HTTParty).to receive(:post).and_return("isLockedOut" => true)
           end
 
           it "returns truthy" do
