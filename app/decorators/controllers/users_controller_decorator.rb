@@ -28,8 +28,9 @@ UsersController.class_eval do
   end
 
   def locked_out(student)
-    sis_id = student.pseudonyms.first&.sis_user_id
-    call_to_strongmind_psp(sis_id) if sis_id
+    student.pseudonyms.active.any? do |pseudonym|
+      AttendanceService.check_lockout(pseudonym: pseudonym)
+    end
   end
 
   def toggle_progress_grade
