@@ -37,4 +37,8 @@ class User < ActiveRecord::Base
   def last_name
    "Young"
   end
+
+  def register!
+    self.workflow_state = "registered"
+  end
 end
