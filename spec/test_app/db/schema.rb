@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200810204548) do
+ActiveRecord::Schema.define(version: 20200818194941) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,7 +87,6 @@ ActiveRecord::Schema.define(version: 20200810204548) do
 
   create_table "context_external_tools", force: :cascade do |t|
     t.string  "domain"
-    t.integer "content_migration_id"
     t.integer "course_id"
   end
 
@@ -281,6 +280,7 @@ ActiveRecord::Schema.define(version: 20200810204548) do
     t.datetime "updated_at"
     t.integer  "account_id"
     t.string   "name"
+    t.string   "workflow_state"
   end
 
 end

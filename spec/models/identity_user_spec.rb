@@ -82,6 +82,11 @@ describe User do
       expect(subject.save).to eq(true)
     end
 
+    it "adds a workflow state of registered" do
+      subject.save
+      expect(subject.reload.workflow_state).to eq("registered")
+    end
+
     it "creates an identity pseudonym" do
       subject.save
       pseudo = subject.pseudonyms.reload.last
