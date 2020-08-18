@@ -2,7 +2,7 @@ User.class_eval do
   attr_accessor :run_identity_validations, :identity_email, :identity_username, :identity_uuid
   before_validation :check_identity_duplicate, on: :create, if: -> { identity_enabled && identity_email }
   validate :validate_identity_creation, if: -> { run_identity_validations == "create" }
-  before_create :register!, if: :identity_enabled
+  before_create -> { self.workflow_state = "registered" }, if: :identity_enabled
   after_save :create_identity_pseudonym!, if: :identity_uuid
 
   after_commit -> { PipelineService::V2.publish self }
