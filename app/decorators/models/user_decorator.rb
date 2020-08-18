@@ -224,6 +224,7 @@ User.class_eval do
 
     if identity_create.success?
       self.identity_uuid = identity_create.parsed_response["id"]
+      self.workflow_state = "registered"
     else
       errors.add(:name, "Identity Server: User Not Created")
     end
