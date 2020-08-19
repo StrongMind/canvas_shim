@@ -511,10 +511,12 @@ TEXT
                   <%= settings.label :canvadocs_prefer_office_online, :en => "Prefer Office 365 file viewer" %>
                 </div>
                 <% unless @account.site_admin? %>
-                  <div>
-                    <%= f.check_box :enable_user_notes, :checked => @account.enable_user_notes %>
-                    <%= f.label :enable_user_notes, :en => "Faculty Journal" %>
-                  </div>
+                  <% unless SettingsService.get_settings(object: 'school', id: 1)['powerschool_integration']
+                    <div>
+                      <%= f.check_box :enable_user_notes, :checked => @account.enable_user_notes %>
+                      <%= f.label :enable_user_notes, :en => "Faculty Journal" %>
+                    </div>
+                  <% end %>
                   <div>
                     <%= settings.check_box :enable_eportfolios, :checked => @account.settings[:enable_eportfolios] != false %>
                     <%= settings.label :enable_eportfolios, :en => "ePortfolios" %>
