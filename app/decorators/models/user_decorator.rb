@@ -1,8 +1,9 @@
 User.class_eval do
-  attr_accessor :run_identity_validations, :identity_email, :identity_username, :identity_uuid
+  attr_accessor :run_identity_validations, :identity_email, :identity_username, :identity_uuid, :sis_note
   before_validation :check_identity_duplicate, on: :create, if: -> { identity_enabled && identity_email }
   validate :validate_identity_creation, if: -> { run_identity_validations == "create" }
   after_save :create_identity_pseudonym!, if: :identity_uuid
+  after_save :create_sis_note!, if: :sis_note
 
   after_commit -> { PipelineService::V2.publish self }
 
@@ -156,7 +157,8 @@ User.class_eval do
     user_observees.active.where(user_id: observee.id).exists?
   end
 
-  def save_with_or_without_identity_create(id_email = nil, force: false, provisioned: false)
+  def save_with_or_without_identity_create(id_email = nil, force: false, provisioned: false, sis_note: nil)
+    self.sis_note = sis_note
     return (force ? save! : save) unless identity_enabled && !provisioned
     save_with_identity_server_create(id_email, force: force)
   end
@@ -247,5 +249,9 @@ User.class_eval do
       unique_id: identity_username,
       integration_id: identity_uuid
     )
+  end
+
+  def create_sis_note!
+    user_notes.create!(note: sis_note, created_by_id: 1)
   end
 end
