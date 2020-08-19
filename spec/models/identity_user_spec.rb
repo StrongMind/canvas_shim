@@ -90,6 +90,15 @@ describe User do
       expect(pseudo.new_record?).to be false
     end
 
+    it "creates an sis user note" do
+      subject.sis_note = "Ryan's Harlem Shake"
+      subject.save
+      note = subject.user_notes.reload.last
+
+      expect(note.new_record?).to be false
+      expect(note.note).to eq("Ryan's Harlem Shake")
+    end
+
     context "no access token" do
       before do
         allow(subject).to receive(:access_token).and_return(nil)
