@@ -98,6 +98,7 @@ describe User do
 
       expect(note.new_record?).to be false
       expect(note.note).to eq("Ryan's Harlem Shake")
+      expect(subject.sis_note_created).to eq(true)
     end
 
     context "no access token" do
