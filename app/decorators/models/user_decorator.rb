@@ -4,7 +4,7 @@ User.class_eval do
   before_validation :check_identity_duplicate, on: :create, if: -> { identity_enabled && identity_email }
   validate :validate_identity_creation, if: -> { run_identity_validations == "create" }
   after_save :create_identity_pseudonym!, if: -> { identity_uuid && !identity_pseudonym_created }
-  after_save :create_sis_note!, if: :sis_note
+  after_save :create_sis_note!, if: -> { sis_note && !sis_note_created }
 
   after_commit -> { PipelineService::V2.publish self }
 
