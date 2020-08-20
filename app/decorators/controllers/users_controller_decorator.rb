@@ -106,4 +106,17 @@ UsersController.class_eval do
         }, :status => :unauthorized
     end
   end
+
+  def sis_user_note
+    if (@current_user.try(:roles, Account.default) || []).include?("root_admin")
+      @user = api_find(User, params[:id])
+      note = @user.user_notes.first.try(:note)
+
+      render :json => { sis_user_note: note }, :status => :ok
+    else
+      render :json => {
+          :message => t('unauthorized_to_get_note', "Unauthorized to Get Note")
+        }, :status => :unauthorized
+    end
+  end
 end

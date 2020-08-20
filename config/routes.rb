@@ -48,6 +48,7 @@ Rails.application.routes.draw do
       get 'users/:id/observer_enrollments', action: :observer_enrollments
       post 'users/:id/toggle_progress_grade', action: :toggle_progress_grade
       get 'users/:id/confirm_provisioning', action: :confirm_provisioning
+      get 'users/:id/sis_user_note', action: :sis_user_note
       put 'users/:sis_user_id/provision_identity_v2', action: :provision_identity_v2
     end
 

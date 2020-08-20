@@ -247,5 +247,12 @@ User.class_eval do
       unique_id: identity_username,
       integration_id: identity_uuid
     )
+
+    remove_identity_accessors
+  end
+
+  def remove_identity_accessors
+    ["run_identity_validations", "identity_email", "identity_uuid"]
+    .each { |id_acc| self.send("#{id_acc}=", nil) }
   end
 end
