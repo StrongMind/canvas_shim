@@ -91,16 +91,6 @@ describe User do
       expect(subject.identity_pseudonym_created).to eq(true)
     end
 
-    it "creates an sis user note" do
-      subject.sis_note = "Ryan's Harlem Shake"
-      subject.save
-      note = subject.user_notes.reload.last
-
-      expect(note.new_record?).to be false
-      expect(note.note).to eq("Ryan's Harlem Shake")
-      expect(subject.sis_note_created).to eq(true)
-    end
-
     context "no access token" do
       before do
         allow(subject).to receive(:access_token).and_return(nil)

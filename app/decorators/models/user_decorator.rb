@@ -157,8 +157,7 @@ User.class_eval do
     user_observees.active.where(user_id: observee.id).exists?
   end
 
-  def save_with_or_without_identity_create(id_email = nil, force: false, provisioned: false, sis_note: nil)
-    self.sis_note = sis_note
+  def save_with_or_without_identity_create(id_email = nil, force: false, provisioned: false)
     return (force ? save! : save) unless identity_enabled && !provisioned
     save_with_identity_server_create(id_email, force: force)
   end
