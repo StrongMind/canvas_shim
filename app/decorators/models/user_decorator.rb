@@ -1,10 +1,9 @@
 User.class_eval do
-  attr_accessor :run_identity_validations, :identity_email, :sis_note, :sis_note_created,
-    :identity_username, :identity_uuid, :identity_pseudonym_created
+  attr_accessor :run_identity_validations, :identity_email, :identity_username,
+    :identity_uuid, :identity_pseudonym_created
   before_validation :check_identity_duplicate, on: :create, if: -> { identity_enabled && identity_email }
   validate :validate_identity_creation, if: -> { run_identity_validations == "create" }
   after_save :create_identity_pseudonym!, if: -> { identity_uuid && !identity_pseudonym_created }
-  after_save :create_sis_note!, if: -> { sis_note && !sis_note_created }
 
   after_commit -> { PipelineService::V2.publish self }
 
@@ -252,10 +251,5 @@ User.class_eval do
     )
 
     self.identity_pseudonym_created = true
-  end
-
-  def create_sis_note!
-    user_notes.create!(note: sis_note, created_by_id: 1)
-    self.sis_note_created = true
   end
 end
