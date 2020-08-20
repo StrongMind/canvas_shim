@@ -88,7 +88,6 @@ describe User do
       expect(pseudo.integration_id).to eq("273f2717-134a-4ff3-9a23-c00a6987510c")
       expect(pseudo.unique_id).to eq(subject.identity_username)
       expect(pseudo.new_record?).to be false
-      expect(subject.identity_pseudonym_created).to eq(true)
     end
 
     context "no access token" do

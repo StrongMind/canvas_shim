@@ -1,9 +1,8 @@
 User.class_eval do
-  attr_accessor :run_identity_validations, :identity_email, :identity_username,
-    :identity_uuid, :identity_pseudonym_created
+  attr_accessor :run_identity_validations, :identity_email, :identity_username, :identity_uuid
   before_validation :check_identity_duplicate, on: :create, if: -> { identity_enabled && identity_email }
   validate :validate_identity_creation, if: -> { run_identity_validations == "create" }
-  after_save :create_identity_pseudonym!, if: -> { identity_uuid && !identity_pseudonym_created }
+  after_save :create_identity_pseudonym!, if: :identity_uuid
 
   after_commit -> { PipelineService::V2.publish self }
 
@@ -249,6 +248,11 @@ User.class_eval do
       integration_id: identity_uuid
     )
 
-    self.identity_pseudonym_created = true
+    remove_identity_accessors
+  end
+
+  def remove_identity_accessors
+    ["run_identity_validations", "identity_email", "identity_uuid"]
+    .each { |id_acc| self.send("#{id_acc}=", nil) }
   end
 end
