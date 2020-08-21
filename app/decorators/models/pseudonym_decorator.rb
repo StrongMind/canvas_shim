@@ -2,6 +2,8 @@ Pseudonym.class_eval do
   after_commit -> { PipelineService::V2.publish self }
   after_save :update_identity_mapper?, if: :integration_id_changed?
 
+  scope :alive, -> { where("pseudonyms.workflow_state <> 'deleted'") }
+
   def update_identity_mapper?
     self.send_later_if_production(:update_identity_mapper)
   end
