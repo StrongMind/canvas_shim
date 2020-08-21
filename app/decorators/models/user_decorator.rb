@@ -230,7 +230,7 @@ User.class_eval do
   end
 
   def check_identity_duplicate
-    existing_user = User.eager_load(:communication_channels).find_by(
+    existing_user = User.active.eager_load(:communication_channels).find_by(
       "users.name = ? AND communication_channels.path = ? " +
       "AND communication_channels.path_type = 'email'", name, identity_email
     )
