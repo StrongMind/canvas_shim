@@ -1,6 +1,6 @@
 User.class_eval do
   attr_accessor :run_identity_validations, :identity_email, :identity_username, :identity_uuid
-  before_validation :check_identity_duplicate, on: :create, if: :identity_enabled
+  before_validation :check_identity_duplicate, on: :create, if: -> { identity_enabled && powerschool_integration }
   validate :validate_identity_creation, if: -> { run_identity_validations == "create" }
   after_save :create_identity_pseudonym!, if: :identity_uuid
 
@@ -173,6 +173,10 @@ User.class_eval do
 
   def identity_domain
     @identity_domain ||= school_settings['identity_domain']
+  end
+
+  def powerschool_integration
+    @powerschool_integration ||= school_settings['powerschool_integration']
   end
 
   def access_token

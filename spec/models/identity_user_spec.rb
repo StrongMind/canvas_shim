@@ -161,6 +161,7 @@ describe User do
 
     it "fails if a user already exists" do
       allow(user).to receive(:identity_enabled).and_return(true)
+      allow(user).to receive(:powerschool_integration).and_return(true)
       allow(user).to receive(:name).and_return("dupe dude")
       dupe = User.create!(name: "dupe dude")
       dupe.communication_channels.create!(path: "hello@example.com", path_type: "email")
