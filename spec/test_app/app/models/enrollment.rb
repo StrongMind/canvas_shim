@@ -1,6 +1,7 @@
 class Enrollment < ActiveRecord::Base
   belongs_to :user
   belongs_to :course
+  belongs_to :associated_user, :class_name => 'User'
   has_many :scores
 
   after_create :distribute_due_dates
