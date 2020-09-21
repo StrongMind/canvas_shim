@@ -11,6 +11,7 @@ UserObserveesController.class_eval do
   def bulk_destroy
     observee_ids.each do |obsv_id|
       user.user_observees.active.where("user_id IN (?)", observee_ids).destroy_all
+      user.observer_enrollments.where("associated_user_id IN (?)", observee_ids).destroy_all
     end
 
     render_observees_json

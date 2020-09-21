@@ -4,7 +4,6 @@ UsersController.class_eval do
     return render_unauthorized_action unless user
     contexts = user.observer_enrollments.map(&:course)
     observed_enrollments = ObserverEnrollment.observed_enrollments_for_courses(contexts, user)
-    .reject(&:deleted?)
     .group_by(&:user_id)
     .map do |k, v|
       user = User.find(k)
