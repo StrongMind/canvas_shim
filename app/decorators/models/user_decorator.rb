@@ -156,6 +156,13 @@ User.class_eval do
     user_observees.active.where(user_id: observee.id).exists?
   end
 
+  def destroy_all_observations(observee_ids)
+    User.transaction do
+      user_observees.active.where("user_id IN (?)", observee_ids).destroy_all
+      observer_enrollments.where("associated_user_id IN (?)", observee_ids).destroy_all
+    end
+  end
+
   def save_with_or_without_identity_create(id_email = nil, force: false, provisioned: false)
     return (force ? save! : save) unless identity_enabled && !provisioned
     save_with_identity_server_create(id_email, force: force)

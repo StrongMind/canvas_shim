@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
            inverse_of: :observer
   has_many :observed_users, :through => :user_observees, :source => :user
   has_many :enrollments
+  has_many :observer_enrollments
   has_many :courses, through: :enrollments
   has_many :submissions
   has_many :discussion_entries

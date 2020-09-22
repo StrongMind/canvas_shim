@@ -9,8 +9,11 @@ UserObserveesController.class_eval do
   end
 
   def bulk_destroy
-    observee_ids.each do |obsv_id|
-      user.user_observees.active.where("user_id IN (?)", observee_ids).destroy_all
+    begin
+      user.destroy_all_observations(observee_ids)
+    rescue StandardError => exception
+      Raven.capture_exception(exception)
+      render :json => {}, :status => :bad_request
     end
 
     render_observees_json

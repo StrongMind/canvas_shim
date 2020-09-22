@@ -2,6 +2,8 @@ class UserObserver < ActiveRecord::Base
   belongs_to :user, inverse_of: :user_observees
   belongs_to :observer, :class_name => 'User', inverse_of: :user_observers
 
+  scope :active, -> { where("workflow_state IS NULL OR workflow_state <> 'deleted'") }
+  
   def self.create_or_restore(attributes)
     if (user_observer = where(attributes).take)
       if user_observer.workflow_state == 'deleted'
@@ -15,5 +17,10 @@ class UserObserver < ActiveRecord::Base
     end
     user_observer.user.touch
     user_observer
+  end
+
+  def destroy
+    self.workflow_state = 'deleted'
+    self.save!
   end
 end
