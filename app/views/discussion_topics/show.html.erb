@@ -21,7 +21,7 @@
   @presenter = DiscussionTopicPresenter.new(@topic, @current_user)
 %>
 
-<% if @context&.user_is_student?(@current_user) && @topic&.is_excused?(@current_user) %>
+<% if @context.try(:user_is_student?, @current_user) && @topic.try(:is_excused?, @current_user) %>
   <div class='ic-notification' style='background: rgba(255, 0, 0, .05);'>
     <h1 style='padding:1rem;'>You are excused from this discussion.</h1>
   </div>
