@@ -50,6 +50,34 @@ describe StudentEnrollment do
     context "deleted assignment" do
       let!(:assignment) { Assignment.create(course: course, workflow_state: "deleted") }
 
+      let!(:submission) do
+        Submission.create(
+          assignment: assignment,
+          user: user,
+          context_code: "course_#{course.id}",
+          cached_due_date: 1.day.ago,
+          workflow_state: "unsubmitted"
+        )
+      end
+
+      it "counts as 0" do
+        expect(subject.missing_assignments_count).to eq(0)
+      end
+    end
+
+    context "unpublished assignment" do
+      let!(:assignment) { Assignment.create(course: course, workflow_state: "unpublished") }
+
+      let!(:submission) do
+        Submission.create(
+          assignment: assignment,
+          user: user,
+          context_code: "course_#{course.id}",
+          cached_due_date: 1.day.ago,
+          workflow_state: "unsubmitted"
+        )
+      end
+
       it "counts as 0" do
         expect(subject.missing_assignments_count).to eq(0)
       end
