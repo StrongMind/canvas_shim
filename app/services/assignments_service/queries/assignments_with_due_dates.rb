@@ -16,7 +16,7 @@ module AssignmentsService
 
         @modules.each do |context_module|
           context_module.content_tags
-            .where(:content_type => ['Assignment', 'DiscussionTopic'])
+            .where(:content_type => ['Assignment', 'DiscussionTopic', 'Quizzes::Quiz'])
             .order(:position)
             .map { |tag| assignment_list.push(tag.assignment) }
         end
