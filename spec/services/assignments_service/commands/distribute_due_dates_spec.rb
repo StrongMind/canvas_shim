@@ -41,16 +41,16 @@ describe AssignmentsService::Commands::DistributeDueDates do
 
   let(:ordered_content_tags) do
     [
-      double(:content_tag, assignment: assignment),
-      double(:content_tag, assignment: assignment2),
-      double(:content_tag, assignment: assignment3),
-      double(:content_tag, assignment: assignment4),
-      double(:content_tag, assignment: assignment5),
-      double(:content_tag, assignment: assignment6),
-      double(:content_tag, assignment: assignment7),
-      double(:content_tag, assignment: assignment8),
-      double(:content_tag, assignment: assignment9),
-      double(:content_tag, assignment: assignment10)
+      double(:content_tag, content_type: nil, assignment: assignment),
+      double(:content_tag, content_type: nil, assignment: assignment2),
+      double(:content_tag, content_type: nil, assignment: assignment3),
+      double(:content_tag, content_type: nil, assignment: assignment4),
+      double(:content_tag, content_type: nil, assignment: assignment5),
+      double(:content_tag, content_type: nil, assignment: assignment6),
+      double(:content_tag, content_type: nil, assignment: assignment7),
+      double(:content_tag, content_type: nil, assignment: assignment8),
+      double(:content_tag, content_type: nil, assignment: assignment9),
+      double(:content_tag, content_type: nil, assignment: assignment10)
     ]
   end
 
@@ -147,7 +147,7 @@ describe AssignmentsService::Commands::DistributeDueDates do
 
     context 'Process a discussion topic without an assignment' do
       let(:assignment) { double('assignment', nil?: true) }
-      let(:content_tags) { double(:content_tags, order: [double('DisscussionTopic', assignment: assignment)]) }
+      let(:content_tags) { double(:content_tags, order: [double('DisscussionTopic', assignment: assignment, content_type: nil)]) }
 
       it 'wont break' do
         expect(assignment).not_to(receive(:update))
