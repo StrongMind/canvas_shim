@@ -28,7 +28,7 @@ module AssignmentsService
       end
 
       def add_to_list(tag)
-        tag.content.is_a?(Quizzes::Quiz) ? tag.content : tag.assignment
+        tag.content_type == 'Quizzes::Quiz' ? tag.content : tag.assignment
       end
     end
   end
