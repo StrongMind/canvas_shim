@@ -7,8 +7,4 @@ class ContentTag < ActiveRecord::Base
   def course
     return context if context_type == 'Course'
   end
-
-  def content
-    assignment
-  end
 end

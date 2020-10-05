@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200922172934) do
+ActiveRecord::Schema.define(version: 20201005170936) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -229,6 +229,9 @@ ActiveRecord::Schema.define(version: 20200922172934) do
     t.integer  "account_id"
     t.string   "integration_id"
     t.string   "workflow_state"
+  end
+
+  create_table "quizzes", force: :cascade do |t|
   end
 
   create_table "scores", force: :cascade do |t|
