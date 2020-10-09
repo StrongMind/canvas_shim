@@ -6,6 +6,7 @@
   <thead>
     <tr>
       <th>Student Name</th>
+      <th>SIS ID</th>
       <th>Days Since Active</th>
       <th>Days Since Last Submission</th>
       <th>Missing Assignments</th>
@@ -31,6 +32,7 @@
   <thead>
     <tr>
       <th>Student Name</th>
+      <th>SIS ID</th>
       <th>Days Since Active</th>
       <th>Days Since Last Submission</th>
       <th>Missing Assignments</th>
@@ -45,7 +47,8 @@
   <tbody>
     <% @active_students.each do |id_name| %>
       <tr class="course-snapshot-detail-row" data-course-id=<%= @context.id %> data-enr-id=<%= id_name.first %>>
-        <td><%= link_to id_name.last, course_user_path(@context.id, id_name.second), class: "course-snapshot-link-color" %></td>
+        <td><%= link_to id_name.third, course_user_path(@context.id, id_name.second), class: "course-snapshot-link-color" %></td>
+        <td><%= id_name.last %></td>
         <td class="enr-last-active">
           Waiting...
         </td>
