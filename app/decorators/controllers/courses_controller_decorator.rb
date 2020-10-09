@@ -227,7 +227,7 @@ CoursesController.class_eval do
     @avg_grade = @context.average_score.round(1)
     @assignments_need_grading = @context.needs_grading_count
     @alerts_need_attention = @context.get_relevant_alerts_count(@current_user)
-    @active_students ||= @context.active_students.joins(:user).joins("JOIN pseudonyms on pseudonyms.user_id = users.id").where.not('pseudonyms.sis_user_id': nil).pluck(:id, :user_id, 'users.name', 'pseudonyms.sis_user_id')
+    @active_students ||= @context.active_students.joins(:user).joins("JOIN pseudonyms on pseudonyms.user_id = users.id").order('pseudonyms.sis_user_id').pluck(:id, :user_id, 'users.name', 'pseudonyms.sis_user_id')
     @student_count ||= @active_students.count
     @accesses_per_hour = @context.get_accesses_by_hour
   end
