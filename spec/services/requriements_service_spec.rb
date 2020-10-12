@@ -63,4 +63,25 @@ describe RequirementsService do
       subject.add_unit_item_with_min_score(context_module: context_module, content_tag: content_tag)
     end
   end
+
+  describe '#apply_minimum_scores' do
+    let(:command_class) { RequirementsService::Commands::DefaultThirdPartyRequirements }
+    let(:course) { Course.create }
+
+    before do
+      5.times { course.context_modules << ContextModule.create }
+    end
+
+    it 'Calls the command object' do
+      allow_any_instance_of(ContextModule).to receive(:completion_requirements).and_return([])
+      expect(command_instance).to receive(:call)
+      subject.set_third_party_requirements(course: course)
+    end
+
+    it "does not work when the context modules have completion requirements" do
+      allow_any_instance_of(ContextModule).to receive(:completion_requirements).and_return([1])
+      expect(command_instance).not_to receive(:call)
+      subject.set_third_party_requirements(course: course)
+    end
+  end
 end

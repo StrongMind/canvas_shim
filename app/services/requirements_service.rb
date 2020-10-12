@@ -107,7 +107,7 @@ module RequirementsService
   end
 
   def self.set_third_party_requirements(course:)
-    if course
+    if course && course.has_no_requirements?
       course.context_modules.each do |context_module|
         Commands::DefaultThirdPartyRequirements.new(context_module: context_module).call
       end
