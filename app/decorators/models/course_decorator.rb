@@ -116,6 +116,10 @@ Course.class_eval do
     filtered_announcements(non_expired_announcements_array)
   end
 
+  def has_no_requirements?
+    context_modules.none? {|m| m.completion_requirements.any? }
+  end
+
   private
   def filtered_announcements(filter)
     active_announcements.where("discussion_topics.id IN (?)", filter.map(&:id))
