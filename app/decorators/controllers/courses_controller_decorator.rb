@@ -227,7 +227,7 @@ CoursesController.class_eval do
     @avg_grade = @context.average_score.round(1)
     @assignments_need_grading = @context.needs_grading_count
     @alerts_need_attention = @context.get_relevant_alerts_count(@current_user)
-    @active_students ||= @context.active_students.eager_load(:user).map{|as| [as.id, as.user_id, as.user.name, as.user.pseudonyms.where.not(sis_user_id:nil)&.first&.sis_user_id]}
+    @active_students ||= @context.snapshot_students
     @student_count ||= @active_students.count
     @accesses_per_hour = @context.get_accesses_by_hour
   end
