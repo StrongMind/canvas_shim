@@ -117,7 +117,7 @@ Course.class_eval do
   end
 
   def has_no_requirements?
-    context_modules.none? {|m| m.completion_requirements.any? }
+    context_modules.none? { |cm| cm.completion_requirements.any? }
   end
 
   private
