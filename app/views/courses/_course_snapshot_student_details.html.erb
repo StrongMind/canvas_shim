@@ -6,6 +6,7 @@
   <thead>
     <tr>
       <th>Student Name</th>
+      <th>SIS ID</th>
       <th>Days Since Active</th>
       <th>Days Since Last Submission</th>
       <th>Missing Assignments</th>
@@ -18,7 +19,7 @@
 
   <tbody>
     <tr>
-      <td></td><td></td><td></td>
+      <td></td><td></td><td></td><td></td>
       <td id="loading-cell">
         Loading...
       </td>
@@ -31,6 +32,7 @@
   <thead>
     <tr>
       <th>Student Name</th>
+      <th>SIS ID</th>
       <th>Days Since Active</th>
       <th>Days Since Last Submission</th>
       <th>Missing Assignments</th>
@@ -43,9 +45,10 @@
   </thead>
 
   <tbody>
-    <% @active_students.each do |id_name| %>
-      <tr class="course-snapshot-detail-row" data-course-id=<%= @context.id %> data-enr-id=<%= id_name.first %>>
-        <td><%= link_to id_name.last, course_user_path(@context.id, id_name.second), class: "course-snapshot-link-color" %></td>
+    <% @active_students.each do |stu_enr| %>
+      <tr class="course-snapshot-detail-row" data-course-id=<%= @context.id %> data-enr-id=<%= stu_enr.first %>>
+        <td><%= link_to stu_enr.third, course_user_path(@context.id, stu_enr.second), class: "course-snapshot-link-color" %></td>
+        <td><%= present_sis_ids(stu_enr) %></td>
         <td class="enr-last-active">
           Waiting...
         </td>

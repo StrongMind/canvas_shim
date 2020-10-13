@@ -122,7 +122,7 @@ function replaceDataTable() {
     {
       "columnDefs": [
         {
-          "targets": [6],
+          "targets": [7],
           "orderable": false,
           "visible": false,
         }
@@ -148,7 +148,7 @@ function updateAverageCourseProgress() {
 
 
   var table = $('#studentDetails').DataTable()
-  var average = table.column( 6 ).data().course_progress_average()
+  var average = table.column( 7 ).data().course_progress_average()
   $('#course-progress-average-card .dot-loader').toggle()
   $('#course-progress-average').append(average.toFixed(1))
   $('#course-progress-average-card .card-text').toggle()

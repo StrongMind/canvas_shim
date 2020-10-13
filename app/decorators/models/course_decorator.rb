@@ -115,6 +115,11 @@ Course.class_eval do
   def non_expired_announcements
     filtered_announcements(non_expired_announcements_array)
   end
+  
+  def snapshot_students
+    active_students.eager_load(:user, :pseudonyms)
+    .pluck(:id, :user_id, 'users.name', 'pseudonyms.sis_user_id')
+  end
 
   def has_no_requirements?
     context_modules.none? { |cm| cm.completion_requirements.any? }
