@@ -24,7 +24,7 @@ module PipelineService
 
       def powerschool_ids
           {
-            'powerschool_school_id': IdentifierMapperService::Client.get_powerschool_school_id,
+            'powerschool_school_id': SettingsService.get_settings(object: :course, id: @course.id)['powerschool_course_id_school_id'] || IdentifierMapperService::Client.get_powerschool_school_id,
             'powerschool_course_id': SettingsService.get_settings(object: :course, id: @course.id)['powerschool_course_id']
           }
       end
