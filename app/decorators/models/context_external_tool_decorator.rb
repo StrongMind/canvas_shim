@@ -2,7 +2,7 @@ ContextExternalTool.class_eval do
   before_create :copy_account_config?
 
   def copy_account_config?
-    if context_type == "Course" && [consumer_key, shared_secret].all? &"fake".method(:==)
+    if context_type == "Course" && [consumer_key, shared_secret].all?(&"fake".method(:==))
       account_tool = Account.default.context_external_tools.find_by(domain: domain)
       if account_tool
         assign_attributes(
