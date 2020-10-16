@@ -1,6 +1,7 @@
 class Account < ActiveRecord::Base
   has_many :users
   has_many :pseudonyms
+  has_many :context_external_tools, foreign_key: :context_id
 
   def id
     1

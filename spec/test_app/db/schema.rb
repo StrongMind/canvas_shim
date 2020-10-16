@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20201005170936) do
+ActiveRecord::Schema.define(version: 20201016202432) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -88,6 +88,10 @@ ActiveRecord::Schema.define(version: 20201005170936) do
   create_table "context_external_tools", force: :cascade do |t|
     t.string  "domain"
     t.integer "course_id"
+    t.integer "context_id"
+    t.string  "context_type"
+    t.string  "consumer_key"
+    t.string  "shared_secret"
   end
 
   create_table "context_module_progressions", force: :cascade do |t|
