@@ -12,6 +12,7 @@ DiscussionTopicsController.class_eval do
 
   def strongmind_update
     get_discussion_assignment
+    ExcusedService.bulk_excuse(assignment: @assignment, exclusions: params['excluded_students'])
     instructure_update
     set_announcement_expiration_date?
   end
