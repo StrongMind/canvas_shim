@@ -17,6 +17,8 @@ module PipelineService
           PipelineService::V2::Nouns::User
         when /Pseudonym/
           PipelineService::V2::Nouns::Pseudonym
+        when /CourseProgress/
+          PipelineService::Serializers::CourseProgress
         else
           PipelineService::V2::Nouns::Base
         end
