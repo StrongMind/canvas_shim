@@ -18,7 +18,7 @@ module PipelineService
         when /Pseudonym/
           PipelineService::V2::Nouns::Pseudonym
         when /CourseProgress/
-          PipelineService::Serializers::CourseProgress
+          PipelineService::V2::Nouns::CourseProgress
         else
           PipelineService::V2::Nouns::Base
         end

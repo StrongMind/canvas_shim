@@ -10,12 +10,12 @@ module PipelineService
         end
 
         
-        def self.additional_identifier_fields
-          [
-            Models::Identifier.new(:course_id), 
-            Models::Identifier.new(:user_id)
-          ]
-        end
+        # def self.additional_identifier_fields
+        #   [
+        #     Models::Identifier.new(:course_id), 
+        #     Models::Identifier.new(:user_id)
+        #   ]
+        # end
         
       end
     end
