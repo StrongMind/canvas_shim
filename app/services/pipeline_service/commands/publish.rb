@@ -31,7 +31,11 @@ module PipelineService
       end
 
       def post_to_pipeline
-        client.new(@args.merge(object: object)).call
+        if client == PipelineService::V2::Client
+          client.publish(@args.merge(object: object))
+        else
+          client.new(@args.merge(object: object)).call
+        end
       end
     end
   end

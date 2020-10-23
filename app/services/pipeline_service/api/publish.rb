@@ -21,7 +21,7 @@ module PipelineService
 
       def call
         return if SettingsService.get_settings(object: :school, id: 1)['disable_pipeline']
-        if v2_client?
+        if client == PipelineService::V2::Client
           perform
         else
           queue.enqueue(self, priority: 1000000)
@@ -46,17 +46,11 @@ module PipelineService
       end
 
       def command
-        initializer = v2_client? ? :instance : :new
-        command_class.send(
-          initializer,
+        command_class.new(
           object: object,
           changes: changes,
           client: client
         )
-      end
-
-      def v2_client?
-        client.is_a? PipelineService::V2::Client
       end
     end
   end
