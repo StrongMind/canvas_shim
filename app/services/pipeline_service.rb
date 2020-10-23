@@ -10,7 +10,7 @@ module PipelineService
   end
 
   def self.publish_as_v2(object, options={})
-    options.store(:client, PipelineService::V2::Client)
+    options.store(:client, V2::Client)
     publish(object, options)
   end
 
