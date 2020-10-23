@@ -16,11 +16,16 @@ module PipelineService
         @changes = object.try(:changes)
         @command_class = args[:command_class] || Commands::Publish
         @queue         = args[:queue] || Delayed::Job
+        @client = args[:client] || PipelineClient
       end
 
       def call
         return if SettingsService.get_settings(object: :school, id: 1)['disable_pipeline']
-        queue.enqueue(self, priority: 1000000)
+        if client.is_a?(PipelineService::V2::Client)
+          queue.enqueue(self, priority: 1000000)
+        else
+          perform
+        end
       end
 
       def perform
@@ -30,7 +35,7 @@ module PipelineService
 
       private
 
-      attr_reader :jobs, :command_class, :queue, :changes
+      attr_reader :jobs, :command_class, :queue, :changes, :client
 
       # If an object makes it here that is not valid, fetch it again and see if it is valid now.
       # Otherwise, raise an error to renqueue the command

@@ -24,7 +24,8 @@ ContextModuleProgression.class_eval do
     ).type == "StudentEnrollment"
 
     PipelineService.publish(
-      PipelineService::Nouns::CourseProgress.new(self)
+      PipelineService::Nouns::CourseProgress.new(self),
+      client: PipelineService::V2::Client
     )
   end
 
