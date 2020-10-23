@@ -22,9 +22,9 @@ module PipelineService
       def call
         return if SettingsService.get_settings(object: :school, id: 1)['disable_pipeline']
         if client.is_a?(PipelineService::V2::Client)
-          queue.enqueue(self, priority: 1000000)
-        else
           perform
+        else
+          queue.enqueue(self, priority: 1000000)
         end
       end
 
