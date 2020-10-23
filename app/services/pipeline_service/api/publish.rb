@@ -48,7 +48,8 @@ module PipelineService
       def command
         command_class.new(
           object: object,
-          changes: changes
+          changes: changes,
+          client: client
         )
       end
     end
