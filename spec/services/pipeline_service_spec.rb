@@ -15,6 +15,13 @@ describe PipelineService do
   let(:api_instance) { double('api_instance', call: nil) }
   let(:api) { double('api', new: api_instance) }
 
+  describe "#publish_as_v2" do 
+    it "receives publish with v2 client" do
+      expect(subject).to receive(:publish).with(enrollment, client: PipelineService::V2::Client)
+      subject.publish_as_v2(enrollment)
+    end
+  end
+  
   describe '#publish' do
     it 'Calls the API instance' do
       expect(api_instance).to receive(:call)

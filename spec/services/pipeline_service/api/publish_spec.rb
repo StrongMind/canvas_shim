@@ -43,6 +43,18 @@ describe PipelineService::API::Publish do
     end
   end
 
+  context "alternate client" do
+    it 'doesnt wrap the noun in a noun' do
+      publish = PipelineService::API::Publish.new(
+        submission,
+        client: PipelineService::V2::Client
+      )
+
+      expect(publish).to receive(:perform)
+      publish.call
+    end
+  end
+
 
   context 'publish non-deletes' do
 

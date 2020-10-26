@@ -9,6 +9,11 @@ module PipelineService
     self
   end
 
+  def self.publish_as_v2(object, options={})
+    options.store(:client, V2::Client)
+    publish(object, options)
+  end
+
   def self.republish(options)
     API::Republish.new(options).call
     self
