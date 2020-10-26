@@ -51,6 +51,16 @@ describe PipelineService::Commands::Publish do
       subject.call
     end
 
+    describe "#post_to_pipeline" do
+      include_context "stubbed_network"
+
+      it "will send as v2 if client is specified" do
+        subject.instance_variable_set(:@client, PipelineService::V2::Client)
+        expect(PipelineService::V2::Client).to receive(:publish)
+        subject.send :post_to_pipeline
+      end
+    end
+
     it 'can be turned off' do
       allow(SettingsService).to receive(:get_settings).and_return({'disable_pipeline' => true})
       expect(client_instance).to_not receive(:call)
