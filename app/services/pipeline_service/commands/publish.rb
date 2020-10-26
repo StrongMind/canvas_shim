@@ -39,7 +39,11 @@ module PipelineService
       end
 
       def v1_message_payload
-        Endpoints::Pipeline::MessageBuilder.new(publisher_arguments).call
+        {
+          "source" => "pipeline",
+          "message" => Endpoints::Pipeline::MessageBuilder
+                       .new(publisher_arguments).call
+        }
       end
 
       def publisher_arguments
