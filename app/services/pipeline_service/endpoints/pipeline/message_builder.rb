@@ -33,6 +33,7 @@ module PipelineService
         end
 
         def log
+          return unless logger == Logger
           Logger.new(source: 'pipeline', message: payload).call
         end
 
