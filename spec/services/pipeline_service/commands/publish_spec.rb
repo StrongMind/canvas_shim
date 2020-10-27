@@ -54,10 +54,31 @@ describe PipelineService::Commands::Publish do
     describe "#post_to_pipeline" do
       include_context "stubbed_network"
 
-      it "will send as v2 if client is specified" do
-        subject.instance_variable_set(:@client, PipelineService::V2::Client)
-        expect(PipelineService::V2::Client).to receive(:publish)
-        subject.send :post_to_pipeline
+      context "v2" do
+        before do
+          subject.instance_variable_set(:@client, PipelineService::V2::Client)
+        end
+
+        it "will send as v2 if client is specified" do
+          expect(PipelineService::V2::Client).to receive(:publish)
+          subject.send :post_to_pipeline
+        end
+      end
+    end
+
+    describe "#publisher_arguments" do
+      context "v2" do
+        before do
+          subject.instance_variable_set(:@client, PipelineService::V2::Client)
+        end
+
+        it "has a fake logger" do
+          expect(subject.send(:publisher_arguments)[:logger]).to eq("FakeLogger")
+        end
+      end
+
+      it "Has normal logger otherwise" do
+        expect(subject.send(:publisher_arguments)[:logger]).to eq(nil)
       end
     end
 

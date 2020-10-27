@@ -25,6 +25,26 @@ describe PipelineService::Endpoints::Pipeline::MessageBuilder do
 
   let(:message) { subject.call }
 
+  describe "#log" do
+    let(:logger) { instance_double(PipelineService::Logger) }
+
+    before do
+      allow(PipelineService::Logger).to receive(:new).and_return(logger)
+      allow(logger).to receive(:call)
+    end
+
+    it "initializes a Logger object by default" do
+      expect(PipelineService::Logger).to receive(:new)
+      subject.send(:log)
+    end
+
+    it "does not work with a fake logger" do
+      subject.instance_variable_set(:@logger, "FakeLogger")
+      expect(PipelineService::Logger).not_to receive(:new)
+      subject.send(:log)
+    end
+  end
+
   describe "#message" do
     context 'Conversation Participant' do
       before do

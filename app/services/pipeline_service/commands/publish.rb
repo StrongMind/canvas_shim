@@ -31,7 +31,7 @@ module PipelineService
       end
 
       def post_to_pipeline
-        if client == PipelineService::V2::Client
+        if publishing_as_v2?
           client.publish(v1_message_payload)
         else
           client.new(publisher_arguments).call
@@ -43,7 +43,16 @@ module PipelineService
       end
 
       def publisher_arguments
-        @args.merge(object: object)
+        additional_args = { object: object }
+        if publishing_as_v2?
+          additional_args[:logger] = "FakeLogger"
+        end
+
+        @args.merge(additional_args)
+      end
+
+      def publishing_as_v2?
+        client == PipelineService::V2::Client
       end
     end
   end
