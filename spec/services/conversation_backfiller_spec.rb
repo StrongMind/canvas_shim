@@ -12,7 +12,7 @@ describe ConversationBackfiller do
       conversation.conversation_participants.create
 
       expect(PipelineService).to receive(:publish_as_v2).with(an_instance_of(Conversation))
-      expect(PipelineService).to receive(:publish).with(an_instance_of(ConversationMessage)).once
+      expect(PipelineService).to receive(:publish_as_v2).with(an_instance_of(ConversationMessage)).once
       expect(PipelineService).to receive(:publish).with(an_instance_of(ConversationParticipant)).twice
 
       ConversationBackfiller.call
