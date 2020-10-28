@@ -117,9 +117,12 @@ Course.class_eval do
   end
   
   def snapshot_students
-    active_students.map do |student|
-      [student.id, student.user_id, student.user.name,
-      ].concat(student.user.pseudonyms.pluck(:sis_user_id))
+    active_students.eager_load(:user)
+    .pluck(:id, :user_id, 'users.name').map do |stu_arr|
+      stu_arr.concat(
+        Pseudonym.select(:user_id, :sis_user_id)
+        .where(user_id: stu_arr.second).pluck(:sis_user_id)
+      )
     end
   end
 
