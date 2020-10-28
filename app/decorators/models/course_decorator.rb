@@ -117,7 +117,7 @@ Course.class_eval do
   end
   
   def snapshot_students
-    active_students.eager_load(:user, :pseudonyms)
+    active_students.eager_load(:user, :pseudonyms).where('pseudonyms.sis_user_id IS NOT NULL')
     .pluck(:id, :user_id, 'users.name', 'pseudonyms.sis_user_id')
   end
 
