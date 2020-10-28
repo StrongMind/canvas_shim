@@ -117,8 +117,10 @@ Course.class_eval do
   end
   
   def snapshot_students
-    active_students.eager_load(:user, :pseudonyms).where('pseudonyms.sis_user_id IS NOT NULL')
-    .pluck(:id, :user_id, 'users.name', 'pseudonyms.sis_user_id')
+    active_students.map do |student|
+      [student.id, student.user_id, student.user.name,
+      ].concat(student.user.pseudonyms.pluck(:sis_user_id))
+    end
   end
 
   def has_no_requirements?
