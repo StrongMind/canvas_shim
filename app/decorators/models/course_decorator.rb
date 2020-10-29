@@ -117,8 +117,10 @@ Course.class_eval do
   end
   
   def snapshot_students
-    active_students.eager_load(:user, :pseudonyms)
-    .pluck(:id, :user_id, 'users.name', 'pseudonyms.sis_user_id')
+    active_students.eager_load(:user)
+    .pluck(:id, :user_id, 'users.name').map do |stu_arr|
+      stu_arr.concat(get_snapshot_sis_ids(stu_arr))
+    end
   end
 
   def has_no_requirements?
@@ -151,5 +153,10 @@ Course.class_eval do
     enrs = active_students.size
     return 10 if count >= enrs * 10
     count.divmod(enrs).first
+  end
+
+  def get_snapshot_sis_ids(stu_arr)
+    Pseudonym.select(:user_id, :sis_user_id)
+    .where(user_id: stu_arr.second).pluck(:sis_user_id)
   end
 end
