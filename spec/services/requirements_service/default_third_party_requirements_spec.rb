@@ -37,14 +37,14 @@ describe RequirementsService::Commands::DefaultThirdPartyRequirements do
       expect(discussion_topic[:type]).to eq("must_contribute")
     end
 
-    it "Sets an WikiPage to must_mark_done" do
+    it "Sets an WikiPage to must_view" do
       wiki_page = subject.send(:completion_requirements).find {|req| req[:id] == 3 }
-      expect(wiki_page[:type]).to eq("must_mark_done")
+      expect(wiki_page[:type]).to eq("must_view")
     end
 
-    it "Sets an Attachment to must_mark_done" do
+    it "Sets an Attachment to must_view" do
       attachment = subject.send(:completion_requirements).find {|req| req[:id] == 5 }
-      expect(attachment[:type]).to eq("must_mark_done")
+      expect(attachment[:type]).to eq("must_view")
     end
 
     it "Sets an Quizzes::Quiz to must_submit" do
