@@ -100,4 +100,59 @@ describe Course do
       expect(Course.create.needs_grading_count).to eq(0)
     end
   end
+
+  describe "#snapshot_students" do
+    let(:course) { Course.create }
+    let(:user) { User.create(name: "Chris Young") }
+    let!(:enrollment) { StudentEnrollment.create(user: user, course: course, workflow_state: "active") }
+    let(:stu_arr) { [enrollment.id, user.id, user.name] }
+
+    before do
+      Pseudonym.create!(user: user, unique_id: "12345", sis_user_id: "12345")
+      Pseudonym.create!(user: user, unique_id: "123456")
+    end
+
+    describe "#get_snapshot_sis_ids" do
+      it "returns the plucked sis ids" do
+        expect(course.send(:get_snapshot_sis_ids, stu_arr)).to eq(
+          ["12345", nil]
+        )
+      end
+    end
+
+    it "concatenates sis_ids with plucked enrollment values" do
+      expect(course.snapshot_students).to eq(
+        [[enrollment.id, user.id, user.name, "12345", nil]]
+      )
+    end
+
+    it "concatenates sis_ids with plucked enrollment values" do
+      user.pseudonyms.last.update(sis_user_id: "23456")
+      expect(course.snapshot_students).to eq(
+        [[enrollment.id, user.id, user.name, "12345", "23456"]]
+      )
+    end
+
+    it "concatenates sis_ids with plucked enrollment values" do
+      user.update(pseudonyms: [])
+      expect(course.snapshot_students).to eq(
+        [[enrollment.id, user.id, user.name]]
+      )
+    end
+
+    context "two users" do
+      let(:user_2) { User.create(name: "Not Chris Young") }
+      let!(:enrollment_2) { StudentEnrollment.create(user: user_2, course: course, workflow_state: "active") }
+
+      before do
+        Pseudonym.create!(user: user_2, unique_id: "12345", sis_user_id: "12345")
+        Pseudonym.create!(user: user_2, sis_user_id: "23456")
+        allow(user_2).to receive(:name).and_return("Not Chris Young")
+      end
+
+      it "creates a single row per user" do
+        expect(course.snapshot_students.size).to eq(2)
+      end
+    end
+  end
 end
