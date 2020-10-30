@@ -44,8 +44,6 @@ module RequirementsService
           "must_contribute"
         when "Assignment", "Quizzes::Quiz"
           "must_submit"
-        when "WikiPage", "Attachment"
-          "must_mark_done"
         else
           "must_view"
         end
