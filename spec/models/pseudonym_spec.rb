@@ -80,6 +80,17 @@ describe Pseudonym do
       end
     end
 
+    context "non unicode" do
+      before do
+        allow(pseudonym).to receive(:confirm_user).and_return({"username" => username + "\xa0" + "valid"})
+      end
+
+      it "parameterizes the unicode" do
+        pseudonym.get_identity_username?
+        expect(pseudonym.unique_id).to eq("#{username} valid")
+      end
+    end
+
     context "Unsuccessful call" do
       let(:bad_response) { { "error": "bad request" } }
 
