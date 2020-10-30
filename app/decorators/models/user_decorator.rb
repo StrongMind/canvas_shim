@@ -226,7 +226,8 @@ User.class_eval do
         "FirstName" => first_name,
         "LastName" => last_name,
         "Email" => identity_email,
-        "SendPasswordResetEmail": true
+        "SendPasswordResetEmail": true,
+        "PasswordResetReturnUrl": "http://#{ENV['CANVAS_DOMAIN']}"
       }.to_json,
       :headers => {
         'Content-Type' => 'application/json',
