@@ -7,7 +7,6 @@ module PipelineService
         end
 
         def call
-          @payload[:published_at] = Time.now.to_f
           Client.publish(@payload)
         end
       end

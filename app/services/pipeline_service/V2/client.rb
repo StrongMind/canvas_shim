@@ -24,6 +24,7 @@ module PipelineService
       end
 
       def publish(payload)
+        payload.merge!(published_at: Time.now.to_f)
         @sqs.send_message(queue_url: @url, message_body: payload.to_json)
       end
     end

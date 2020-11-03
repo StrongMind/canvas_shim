@@ -1,5 +1,8 @@
 describe PipelineService::V2::Client do
   include_context 'stubbed_network'
+
+  before { Timecop.freeze }
+
   describe '#publish' do
     let(:sqs_instance) { double('sqs_instance') }
 
@@ -15,7 +18,8 @@ describe PipelineService::V2::Client do
         :noun => "page_view",
         :meta => { :source=>"canvas", :domain_name=>"localhost", :api_version=>1, :status=>nil },
         :identifiers => { :id=>"f52127ea-261a-407c-8f2c-e97ce8fc6ebb" },
-        :data => {}
+        :data => {},
+        :published_at => Time.now.to_f
       }
     end
 
