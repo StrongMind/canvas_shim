@@ -11,5 +11,8 @@ describe PipelineService::V2::Nouns::ContentTag do
     it 'returns with resource_link_id' do
       expect(subject.call).to include({'resource_link_id' => '123456789123456789'})
     end
+    it 'includes published_at' do
+      expect(subject.call).to eq({})
+    end
   end
 end
