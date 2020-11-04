@@ -3,7 +3,7 @@ describe ConversationMessage do
     describe '#delete' do
         it 'should publish the delete to the pipeline' do
             ConversationMessage.create
-            expect(PipelineService).to receive(:publish)
+            expect(subject).to receive(:publish_as_v2_if_conversation_id)
             subject.destroy
         end
     end
