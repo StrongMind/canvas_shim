@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20201016202432) do
+ActiveRecord::Schema.define(version: 20201104230006) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,6 +108,11 @@ ActiveRecord::Schema.define(version: 20201016202432) do
     t.integer "context_module_progression_id"
     t.text    "completion_requirements"
     t.string  "workflow_state"
+  end
+
+  create_table "conversation_batches", force: :cascade do |t|
+    t.string "conversation_message_ids"
+    t.string "workflow_state"
   end
 
   create_table "conversation_messages", force: :cascade do |t|
