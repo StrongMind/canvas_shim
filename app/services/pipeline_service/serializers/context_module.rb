@@ -1,6 +1,10 @@
 module PipelineService
   module Serializers
     class ContextModule
+      include Api
+      include Api::V1::ContextModule
+      include Rails.application.routes.url_helpers
+
       def initialize(object:)
         @object = object
         @context_module = ::ContextModule.find(@object.id)
@@ -8,7 +12,7 @@ module PipelineService
       end
 
       def call
-        fetch
+        module_json(object)
       end
 
       def self.additional_identifier_fields
