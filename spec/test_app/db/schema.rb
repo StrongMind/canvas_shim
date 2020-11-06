@@ -112,6 +112,7 @@ ActiveRecord::Schema.define(version: 20201104230006) do
 
   create_table "conversation_batches", force: :cascade do |t|
     t.string "conversation_message_ids"
+    t.string "workflow_state"
   end
 
   create_table "conversation_messages", force: :cascade do |t|

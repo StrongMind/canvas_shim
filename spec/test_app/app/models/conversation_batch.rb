@@ -8,4 +8,8 @@ class ConversationBatch < ActiveRecord::Base
   def serialize_conversation_message_ids
     write_attribute :conversation_message_ids, conversation_message_ids.join(',')
   end
+
+  def sent?
+    workflow_state == "sent"
+  end
 end
