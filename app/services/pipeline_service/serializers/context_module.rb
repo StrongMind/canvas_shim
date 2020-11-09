@@ -1,11 +1,8 @@
 module PipelineService
   module Serializers
     class ContextModule
-      include Api
+      include FakeApi
       include Api::V1::ContextModule
-      include Rails.application.routes.url_helpers
-
-      Rails.application.routes.default_url_options[:host] = ENV['CANVAS_DOMAIN']
 
       def initialize(object:)
         @object = object
@@ -14,7 +11,7 @@ module PipelineService
       end
 
       def call
-        module_json(@context_module, GradesService::Account.account_admin, nil)
+        module_json(@context_module, admin, nil)
       end
 
       def self.additional_identifier_fields
