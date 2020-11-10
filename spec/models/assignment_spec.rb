@@ -36,4 +36,11 @@ describe Assignment do
       expect(assignment.is_excused?(user)).to be false
     end
   end
+
+  describe "when saved" do
+    it "publishes to pipeline" do
+      expect(PipelineService).to receive(:publish_as_v2)
+      Assignment.create
+    end
+  end
 end

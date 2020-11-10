@@ -1,14 +1,13 @@
-module PipelineService
-    describe Serializers::Assignment do
-        let(:assignment) { Assignment.new(course: Course.new) }
-        subject { described_class.new(object: Models::Noun.new(assignment)) }
+describe PipelineService::Serializers::Assignment do
+    include_context "stubbed_network"
 
-        before do
-            allow(::Assignment).to receive(:find).and_return(assignment)
-        end
+    subject { described_class.new(object: noun) }
 
-        it '#additional_identifier_fields' do
-            expect(described_class.additional_identifier_fields.map(&:to_h)).to eq [{:context_id=>:course_id}]
-        end
+    let(:course) { Course.create!() }
+    let(:active_record_object) { Assignment.create!(course: course) }
+    let(:noun) { PipelineService::Models::Noun.new(active_record_object)}
+
+    it 'Returns json from api modules' do
+      expect(subject.call['assignment']).to include( { 'id' => active_record_object.id } )
     end
-end
+  end
