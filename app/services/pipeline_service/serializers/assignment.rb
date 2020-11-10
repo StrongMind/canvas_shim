@@ -9,7 +9,7 @@ module PipelineService
 
       def initialize(object:)
         @object = ::Assignment.find(object.id)
-        @course_id = @object.course_id
+        @course_id = @object.context_id
       end
 
       def self.additional_identifier_fields
