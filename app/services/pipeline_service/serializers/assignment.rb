@@ -9,7 +9,7 @@ module PipelineService
 
       def initialize(object:)
         @object = ::Assignment.find(object.id)
-        @course_id = @object.course.id
+        @course_id = @object.course_id
       end
 
       def self.additional_identifier_fields
@@ -17,7 +17,7 @@ module PipelineService
       end
 
       def call
-        assignment_json(@object, @object.user_id)
+        assignment_json(@object, GradesService::Account.account_admin, nil)
       end
     end
   end
