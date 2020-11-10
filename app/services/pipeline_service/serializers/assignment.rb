@@ -17,7 +17,7 @@ module PipelineService
       end
 
       def call
-        assignment_json(@object)
+        assignment_json(@object, @object.user_id)
       end
     end
   end
