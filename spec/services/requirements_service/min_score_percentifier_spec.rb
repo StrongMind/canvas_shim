@@ -1,4 +1,5 @@
 describe RequirementsService::Commands::MinScorePercentifier do
+  include_context 'stubbed_network'
   subject { described_class.new(content_tag: content_tag, passing_threshold: 50) }
 
   let(:context_module) do 
