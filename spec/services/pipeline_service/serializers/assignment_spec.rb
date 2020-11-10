@@ -8,6 +8,6 @@ describe PipelineService::Serializers::Assignment do
     let(:noun) { PipelineService::Models::Noun.new(active_record_object)}
 
     it 'Returns json from api modules' do
-      expect(subject.call).to include( { 'id' => active_record_object.id } )
+      expect(subject.call['assignment']).to include( { 'id' => active_record_object.id } )
     end
   end
