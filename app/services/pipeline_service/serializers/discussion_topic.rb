@@ -33,6 +33,23 @@ module PipelineService
       def course_id
         ::DiscussionTopic.find(object.id).context_id
       end
+
+      def named_context_url(context, name, *opts)
+        if context.is_a?(UserProfile)
+          name = name.to_s.sub(/context/, "profile")
+        else
+          klass = context.class.base_class
+          name = name.to_s.sub(/context/, klass.name.underscore)
+          opts.unshift(context)
+        end
+        opts.push({}) unless opts[-1].is_a?(Hash)
+        include_host = opts[-1].delete(:include_host)
+        if !include_host
+          opts[-1][:host] = context.host_name rescue nil
+          opts[-1][:only_path] = true unless name.end_with?("_path")
+        end
+        self.send name, *opts
+      end
     end
   end
 end
