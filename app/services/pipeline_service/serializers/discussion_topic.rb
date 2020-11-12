@@ -1,6 +1,12 @@
 module PipelineService
   module Serializers
     class DiscussionTopic
+      include Api
+      include Api::V1::DiscussionTopics
+      include Rails.application.routes.url_helpers
+
+      Rails.application.routes.default_url_options[:host] = ENV['CANVAS_DOMAIN']
+
       def initialize(object:)
         @object = object
         @discussion_topic = ::DiscussionTopic.find(object.id)
@@ -8,7 +14,12 @@ module PipelineService
 
       def call
         return unless @discussion_topic.context_type == "Course"
-        fetch
+        discussion_topics_api_json(
+          [@discussion_topic],
+          @discussion_topic.context,
+          GradesService::Account.account_admin,
+          nil
+        ).first
       end
 
       def self.additional_identifier_fields
@@ -19,42 +30,25 @@ module PipelineService
 
       attr_reader :object
 
-      def domain
-        ENV['CANVAS_DOMAIN']
-      end
-
-      def endpoint
-        [
-          protocol, domain, ':', port,
-          '/api/v1/courses/',course_id,'/discussion_topics/',object.id
-        ].join('')
-      end
-
-      def use_ssl?
-        ENV['CANVAS_SSL'] == 'true'
-      end
-
-      def port
-        return '3000' if Rails.env == 'development'
-        return '443' if use_ssl?
-        '80'
-      end
-
-      def headers
-        { Authorization: "Bearer #{ENV['STRONGMIND_INTEGRATION_KEY']}" }
-      end
-
-      def fetch
-        PipelineService::HTTPClient.get(endpoint, headers: headers).parsed_response
-      end
-
       def course_id
         ::DiscussionTopic.find(object.id).context_id
       end
 
-      def protocol
-        return 'https://' if use_ssl?
-        'http://'
+      def named_context_url(context, name, *opts)
+        if context.is_a?(UserProfile)
+          name = name.to_s.sub(/context/, "profile")
+        else
+          klass = context.class.base_class
+          name = name.to_s.sub(/context/, klass.name.underscore)
+          opts.unshift(context)
+        end
+        opts.push({}) unless opts[-1].is_a?(Hash)
+        include_host = opts[-1].delete(:include_host)
+        if !include_host
+          opts[-1][:host] = context.host_name rescue nil
+          opts[-1][:only_path] = true unless name.end_with?("_path")
+        end
+        self.send name, *opts
       end
     end
   end
