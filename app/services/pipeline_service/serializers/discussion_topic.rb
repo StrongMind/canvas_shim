@@ -50,10 +50,6 @@ module PipelineService
         end
         self.send name, *opts
       end
-
-      def params
-        {}
-      end
     end
   end
 end
