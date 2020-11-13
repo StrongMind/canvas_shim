@@ -31,4 +31,9 @@ describe Enrollment do
       expect(Score.first).not_to receive(:update)
     end
   end
+
+  it "publishes as v2 on create" do
+    expect(PipelineService).to receive(:publish_as_v2)
+    Enrollment.create
+  end
 end
