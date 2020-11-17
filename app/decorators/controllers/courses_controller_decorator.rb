@@ -60,6 +60,9 @@ CoursesController.class_eval do
     end
   end
 
+  def due_date_wizard
+  end
+
   def distribute_due_dates
     get_context
     if authorized_action(@context, @current_user, :manage_assignments) && dates_distributable?
