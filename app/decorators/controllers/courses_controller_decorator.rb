@@ -158,7 +158,11 @@ CoursesController.class_eval do
     if authorized_action(@context, @current_user, :manage_grades)
       set_snapshot_variables
     end
- end
+  end
+
+  def distribute_due_dates
+    get_context
+  end
 
   private
 
