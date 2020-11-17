@@ -61,6 +61,7 @@ CoursesController.class_eval do
   end
 
   def due_date_wizard
+    get_context
   end
 
   def distribute_due_dates
