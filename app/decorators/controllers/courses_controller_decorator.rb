@@ -165,10 +165,6 @@ CoursesController.class_eval do
     end
   end
 
-  def distribute_due_dates
-    get_context
-  end
-
   private
 
   def grade_out_users_params
