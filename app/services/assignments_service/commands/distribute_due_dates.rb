@@ -6,6 +6,7 @@ module AssignmentsService
         @course = args[:course]
         @assignment_query = Queries::AssignmentsWithDueDates.new(course: @course)
         @course_assignments = assignments
+        @progress = create_progress!
       end
 
       def call
@@ -15,14 +16,28 @@ module AssignmentsService
       end
 
       def perform
+        return unless course.start_at && course.end_at
         distribute
       end
 
       private
-      attr_reader :course, :course_assignments, :assignments_per_day
+      attr_reader :course, :course_assignments, :assignments_per_day, :progress
+
+      def create_progress!
+        @course.progresses.create!(tag: "distribute_due_dates", workflow_state: "running")
+      end
+
+      def distribute_with_progress
+        begin
+          distribute
+        rescue
+          progress.update(workflow_state: "failed")
+        end
+      end
 
       def distribute
         offset = 0
+        initial_slice = course_assignments_size_to_f
         scheduler.course_dates.each do |date, count|
 
           if count.zero?
@@ -33,7 +48,19 @@ module AssignmentsService
           end
 
           update_assignments(course_assignments.slice!(offset..count - 1), date)
+          progress.update_completion!(completion_percentage(initial_slice))
         end
+
+        progress.update_completion!(100)
+        progress.update(workflow_state: "complete")
+      end
+
+      def course_assignments_size_to_f
+        course_assignments.size.to_f
+      end
+
+      def completion_percentage(initial_slice)
+        (initial_slice / course_assignments_size_to_f) * 100
       end
 
       def scheduler
