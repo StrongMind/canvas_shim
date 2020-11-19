@@ -62,7 +62,10 @@ CoursesController.class_eval do
 
   def due_date_wizard
     @course = Course.find_by(id: params[:id])
-    js_env(course: @course.try(:as_json, include_root: false))
+    js_env(
+      course: @course.try(:as_json, include_root: false),
+      dates_distributing: AssignmentsService.is_distributing?(@course)
+    )
   end
 
   def distribute_due_dates
