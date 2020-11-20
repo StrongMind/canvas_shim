@@ -3,8 +3,15 @@ User.class_eval do
   before_validation :check_identity_duplicate, on: :create, if: -> { identity_enabled && powerschool_integration }
   validate :validate_identity_creation, if: -> { run_identity_validations == "create" }
   after_save :create_identity_pseudonym!, if: :identity_uuid
+  after_save :update_id_mapper
 
   after_commit -> { PipelineService::V2.publish self }
+
+  def update_id_mapper
+    self.pseudonyms.each do |pse|
+      pse.update_identity_mapper?
+    end
+  end
 
   def self.find_by_sis_user_id(sis_user_id)
     User.active.eager_load(:pseudonyms).find_by(
