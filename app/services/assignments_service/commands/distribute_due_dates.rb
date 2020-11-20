@@ -60,9 +60,7 @@ module AssignmentsService
       end
 
       def reverse_calculate_completion!(current_value, total)
-        progress.update_completion!(
-          (100 - (100.0 * current_value / total)).round(2)
-        )
+        progress.update_completion!(100 - (100.0 * current_value / total))
       end
 
       def scheduler
