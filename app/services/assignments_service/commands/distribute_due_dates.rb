@@ -48,7 +48,7 @@ module AssignmentsService
           end
 
           update_assignments(course_assignments.slice!(offset..count - 1), date)
-          progress.update_completion!(completion_percentage(initial_slice))
+          reverse_calculate_completion!(course_assignments_size_to_f, initial_slice)
         end
 
         progress.update_completion!(100)
@@ -59,8 +59,10 @@ module AssignmentsService
         course_assignments.size.to_f
       end
 
-      def completion_percentage(initial_slice)
-        (initial_slice / course_assignments_size_to_f) * 100
+      def reverse_calculate_completion!(current_value, total)
+        progress.update_completion!(
+          (100 - (100.0 * current_value / total)).round(2)
+        )
       end
 
       def scheduler
