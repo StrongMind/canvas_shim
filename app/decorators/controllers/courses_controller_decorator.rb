@@ -81,10 +81,6 @@ CoursesController.class_eval do
     else
       render :json => {}, :status => :unauthorized
     end
-
-  # rescue StandardError => exception
-  #   Raven.capture_exception(exception)
-  #   render :json => {}, :status => :bad_request
   end
 
   def clear_due_dates
@@ -97,10 +93,6 @@ CoursesController.class_eval do
     else
       render :json => {}, :status => :unauthorized
     end
-
-  # rescue StandardError => exception
-  #   Raven.capture_exception(exception)
-  #   render :json => {}, :status => :bad_request
   end
 
   def user_can_conclude_enrollments?
