@@ -62,10 +62,13 @@ CoursesController.class_eval do
 
   def due_date_wizard
     @course = Course.find_by(id: params[:id])
-    js_env(
-      course: @course.try(:as_json, include_root: false),
-      dates_distributing: AssignmentsService.is_distributing?(@course)
-    )
+    if authorized_action(@course, @current_user, :manage_assignments)
+      js_env(
+        course: @course.as_json(include_root: false),
+        dates_distributing: AssignmentsService.is_distributing?(@course),
+        currently_importing: @course.content_migrations.find_by(workflow_state: "importing")
+      )
+    end
   end
 
   def distribute_due_dates
