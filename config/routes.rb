@@ -29,7 +29,7 @@ Rails.application.routes.draw do
     post 'distribute_due_dates', to: 'courses#distribute_due_dates', as: :distribute_due_dates
     post 'clear_due_dates', to: 'courses#clear_due_dates', as: :clear_due_dates
     member do
-      get 'due_date_wizard'
+      get 'due_date_wizard', as: :due_date_wizard
     end
   end
 
