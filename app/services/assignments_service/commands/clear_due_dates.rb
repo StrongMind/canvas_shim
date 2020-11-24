@@ -25,7 +25,7 @@ module AssignmentsService
           progress.calculate_completion!(idx + 1, total_size)
         end
 
-        progress.update(workflow_state: "completed")
+        progress.update(completion: 100, workflow_state: "completed")
       end
 
       private

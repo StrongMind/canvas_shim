@@ -51,8 +51,7 @@ module AssignmentsService
           reverse_calculate_completion!(course_assignments_size_to_f, initial_slice)
         end
 
-        progress.update_completion!(100)
-        progress.update(workflow_state: "complete")
+        progress.update(completion: 100, workflow_state: "complete")
       end
 
       def course_assignments_size_to_f
