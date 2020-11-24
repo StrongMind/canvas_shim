@@ -61,6 +61,12 @@ ApplicationController.class_eval do
 
   helper_method :observer_dashboard_enabled?
 
+  def due_date_wizard_enabled?
+    SettingsService.get_settings(object: 'school', id: 1)['due_date_wizard']
+  end
+
+  helper_method :due_date_wizard_enabled?
+
   private
   def destructive_options_hidden?
     get_context

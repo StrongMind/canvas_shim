@@ -82,7 +82,7 @@
     <% end %>
   <% end %>
 
-  <% if can_do(@context, @current_user, :manage_content) %>
+  <% if due_date_wizard_enabled? && can_do(@context, @current_user, :manage_content) %>
     <%= link_to due_date_wizard_course_url(@context), :class => 'Button Button--link Button--link--has-divider Button--course-settings import_content' do %>
       <i class="icon-collection"></i><%= t('links.distribute_due_dates', 'Distribute Due Dates') %>
     <% end %>
