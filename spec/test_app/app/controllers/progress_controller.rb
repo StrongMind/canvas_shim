@@ -1,0 +1,2 @@
+class ProgressController < ApplicationController
+end
