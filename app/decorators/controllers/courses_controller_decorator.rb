@@ -60,32 +60,39 @@ CoursesController.class_eval do
     end
   end
 
+  def due_date_wizard
+    @course = Course.find_by(id: params[:id])
+    if authorized_action(@course, @current_user, :manage_assignments)
+      js_env(
+        course: @course.as_json(include_root: false),
+        dates_distributing: AssignmentsService.is_distributing?(@course),
+        currently_importing: currently_importing?(@course)
+      )
+    end
+  end
+
   def distribute_due_dates
     get_context
     if authorized_action(@context, @current_user, :manage_assignments) && dates_distributable?
       AssignmentsService.distribute_dates_job(course: @context)
       render :json => {}, :status => :ok
+    elsif currently_importing?(@context)
+      render :json => {errors: "Currently Importing Content."}, :status => :unprocessable_entity
     else
       render :json => {}, :status => :unauthorized
     end
-
-  rescue StandardError => exception
-    Raven.capture_exception(exception)
-    render :json => {}, :status => :bad_request
   end
 
   def clear_due_dates
     get_context
-    if authorized_action(@context, @current_user, :change_course_state)
+    if currently_importing?(@context)
+      render :json => {errors: "Currently Importing Content."}, :status => :unprocessable_entity
+    elsif authorized_action(@context, @current_user, :change_course_state)
       AssignmentsService.clear_due_dates(course: @context)
       render :json => {}, :status => :ok
     else
       render :json => {}, :status => :unauthorized
     end
-
-  rescue StandardError => exception
-    Raven.capture_exception(exception)
-    render :json => {}, :status => :bad_request
   end
 
   def user_can_conclude_enrollments?
@@ -158,7 +165,7 @@ CoursesController.class_eval do
     if authorized_action(@context, @current_user, :manage_grades)
       set_snapshot_variables
     end
- end
+  end
 
   private
 
@@ -280,6 +287,11 @@ CoursesController.class_eval do
   end
 
   def dates_distributable?
-    @context.is_a?(Course) && @context.start_at && @context.end_at
+    @context.is_a?(Course) && @context.start_at && @context.end_at && !currently_importing?(@context)
+  end
+
+  def currently_importing?(context)
+    return @currently_importing unless @currently_importing.nil?
+    @currently_importing = context.content_migrations.exists?(workflow_state: "importing")
   end
 end

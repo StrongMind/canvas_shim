@@ -12,7 +12,12 @@ describe AssignmentsService::Commands::DistributeDueDates do
     )
   }
 
+  let(:progresses) {
+    []
+  }
+
   before do
+    allow(progresses).to receive(:create!).and_return(Progress.create)
     allow(SettingsService).to receive(:update_settings).and_return({})
     allow(SettingsService).to receive(:get_settings).and_return('auto_due_dates' => 'on')
     allow(Account).to receive(:default).and_return(account_instance)
@@ -35,7 +40,8 @@ describe AssignmentsService::Commands::DistributeDueDates do
       end_at: end_at,
       id: 1,
       time_zone: Time.zone,
-      content_migrations: content_migrations
+      content_migrations: content_migrations,
+      progresses: progresses
     )
   end
 
@@ -99,7 +105,8 @@ describe AssignmentsService::Commands::DistributeDueDates do
           start_at: nil,
           end_at: start_at + 5.days,
           id: 1,
-          content_migrations: content_migrations
+          content_migrations: content_migrations,
+          progresses: progresses
         )
       end
 
@@ -116,7 +123,8 @@ describe AssignmentsService::Commands::DistributeDueDates do
           start_at: start_at,
           end_at: nil,
           id: 1,
-          content_migrations: content_migrations
+          content_migrations: content_migrations,
+          progresses: progresses
         )
       end
 
@@ -163,7 +171,8 @@ describe AssignmentsService::Commands::DistributeDueDates do
           end_at: end_at + 1.year,
           id: 1,
           time_zone: Time.zone,
-          content_migrations: content_migrations
+          content_migrations: content_migrations,
+          progresses: progresses
         )
       end
 
@@ -173,6 +182,30 @@ describe AssignmentsService::Commands::DistributeDueDates do
         dates = subject.instance_variable_get(:@scheduler).course_dates
         expect(dates.values.last).to eq 1
       end
+    end
+  end
+
+  describe "#distribute_with_progress" do
+    it "changes progress workflow state to fail on error" do
+      allow(subject).to receive(:distribute).and_raise("Boom")
+      subject.send(:distribute_with_progress)
+      expect(subject.send(:progress).workflow_state).to eq("failed")
+    end
+
+    it "updates progress completion" do
+      subject.send(:distribute_with_progress)
+      expect(subject.send(:progress).completion).to eq(100)
+    end
+
+    it "updates progress workflow state to complete on success" do
+      subject.send(:distribute_with_progress)
+      expect(subject.send(:progress).workflow_state).to eq("complete")
+    end
+
+    it "updates progress completion" do
+      expect(subject).to receive(
+        :reverse_calculate_completion!).exactly(4).times
+      subject.send(:distribute_with_progress)
     end
   end
 end

@@ -28,6 +28,9 @@ Rails.application.routes.draw do
     get 'snapshot', to: 'courses#snapshot', as: :snapshot
     post 'distribute_due_dates', to: 'courses#distribute_due_dates', as: :distribute_due_dates
     post 'clear_due_dates', to: 'courses#clear_due_dates', as: :clear_due_dates
+    member do
+      get 'due_date_wizard', as: :due_date_wizard
+    end
   end
 
   get 'todos', to: 'todos#index', as: :user_todo
@@ -41,6 +44,10 @@ Rails.application.routes.draw do
   scope(controller: :announcements_api) do
     post '/api/v1/courses/:course_id/announcements/bulk_pin', action: :bulk_pin, as: 'bulk_pin'
     post '/api/v1/courses/:course_id/announcements/reorder_pinned', action: :reorder_pinned, as: 'reorder_pinned'
+  end
+
+  scope(controller: :progress) do
+    get 'courses/:course_id/progress/show_distribution_progress', action: :show_distribution_progress
   end
 
   ApiRouteSet::V1.draw(self) do

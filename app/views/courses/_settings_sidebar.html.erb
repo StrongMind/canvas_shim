@@ -82,6 +82,12 @@
     <% end %>
   <% end %>
 
+  <% if due_date_wizard_enabled? && can_do(@context, @current_user, :manage_content) %>
+    <%= link_to due_date_wizard_course_url(@context), :class => 'Button Button--link Button--link--has-divider Button--course-settings import_content' do %>
+      <i class="icon-collection"></i><%= t('links.distribute_due_dates', 'Distribute Due Dates') %>
+    <% end %>
+  <% end %>
+
 <% unless @hide_destructive_course_options %>
   <% if can_do(@context, @current_user, :reset_content) %>
     <%= link_to context_url(@context, :course_reset_url), :class => ' Button Button--link Button--link--has-divider Button--course-settings reset_course_content_button' do %>
