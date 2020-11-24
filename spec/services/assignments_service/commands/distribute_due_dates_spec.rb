@@ -184,4 +184,28 @@ describe AssignmentsService::Commands::DistributeDueDates do
       end
     end
   end
+
+  describe "#distribute_with_progress" do
+    it "changes progress workflow state to fail on error" do
+      allow(subject).to receive(:distribute).and_raise("Boom")
+      subject.send(:distribute_with_progress)
+      expect(subject.send(:progress).workflow_state).to eq("failed")
+    end
+
+    it "updates progress completion" do
+      subject.send(:distribute_with_progress)
+      expect(subject.send(:progress).completion).to eq(100)
+    end
+
+    it "updates progress workflow state to complete on success" do
+      subject.send(:distribute_with_progress)
+      expect(subject.send(:progress).workflow_state).to eq("complete")
+    end
+
+    it "updates progress completion" do
+      expect(subject).to receive(
+        :reverse_calculate_completion!).exactly(4).times
+      subject.send(:distribute_with_progress)
+    end
+  end
 end
