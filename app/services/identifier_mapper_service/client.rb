@@ -43,6 +43,16 @@ module IdentifierMapperService
     def post_canvas_user_id(canvas_user_id, identity_uuid, sis_ids = [])
       return unless canvas_user_id && identity_uuid
       school_name = user_settings_partner_name(canvas_user_id) || get_powerschool_info.try(:fetch, :name, nil)
+      SettingsService.update_settings(
+        object: 'school',
+        id: 1,
+        setting: 'what_are_we_sending',
+        value: {
+              "com.strongmind.identity.user.id": identity_uuid,
+              "com.instructure.canvas.users": { "#{school_name}": canvas_user_id }
+            }.to_json
+      )
+
       return unless school_name
 
       params = {
