@@ -71,6 +71,12 @@ module IdentifierMapperService
 
     def get(endpoint)
       http_client.get(endpoint, headers: headers).tap do |response|
+        SettingsService.update_settings(
+          object: 'school',
+          id: 1,
+          setting: 'what_are_we_getting_back',
+          value: response.parsed_response.to_json
+        )
         return Response.new(
           response.code, response.parsed_response
         )
