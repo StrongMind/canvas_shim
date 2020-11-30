@@ -64,19 +64,15 @@ module IdentifierMapperService
         "com.strongmind.more.canvas.sis.ids": { "#{school_name}": sis_ids.first }
       }) if sis_ids.any?
 
-      post(endpoints(:post_canvas_user_id), params.to_json) == 201
+      2.times do
+        post(endpoints(:post_canvas_user_id), params.to_json)
+      end
     end
 
     private 
 
     def get(endpoint)
       http_client.get(endpoint, headers: headers).tap do |response|
-        SettingsService.update_settings(
-          object: 'school',
-          id: 1,
-          setting: 'what_are_we_getting_back',
-          value: response.parsed_response.to_json
-        )
         return Response.new(
           response.code, response.parsed_response
         )
