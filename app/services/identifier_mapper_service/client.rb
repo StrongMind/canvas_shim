@@ -43,7 +43,6 @@ module IdentifierMapperService
     def post_canvas_user_id(canvas_user_id, identity_uuid, sis_ids = [])
       return unless canvas_user_id && identity_uuid
       school_name = user_settings_partner_name(canvas_user_id) || get_powerschool_info.try(:fetch, :name, nil)
-
       return unless school_name
 
       params = {
