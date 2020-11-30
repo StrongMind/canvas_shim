@@ -54,7 +54,9 @@ module IdentifierMapperService
         "com.strongmind.more.canvas.sis.ids": { "#{school_name}": sis_ids.first }
       }) if sis_ids.any?
 
-      post(endpoints(:post_canvas_user_id), params.to_json) == 201
+      2.times do
+        post(endpoints(:post_canvas_user_id), params.to_json)
+      end
     end
 
     private 
