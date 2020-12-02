@@ -21,7 +21,6 @@ module AssignmentsService
         total_size = assignments.size
         assignments.each_with_index do |assignment, idx|
           assignment.update(due_at: nil)
-          AssignmentsService.handle_overrides(assignment: assignment, due_at: nil)
           progress.calculate_completion!(idx + 1, total_size)
         end
 
