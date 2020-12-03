@@ -70,7 +70,6 @@ module AssignmentsService
         assignments_for_day.each do |assignment|
           next if assignment.nil?
           assignment.update(due_at: date)
-          AssignmentsService.handle_overrides(assignment: assignment, due_at: date)
         end
       end
 
