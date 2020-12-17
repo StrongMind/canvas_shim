@@ -23,6 +23,6 @@ Enrollment.class_eval do
   end
 
   def guarded_for_deleted_publish?
-    deleted? && previous_changes.keys.sort == ["last_activity_at", "updated_at"]
+    deleted? && !previous_changes.keys.include?("workflow_state")
   end
 end
