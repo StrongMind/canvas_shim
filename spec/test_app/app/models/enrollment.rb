@@ -27,6 +27,10 @@ class Enrollment < ActiveRecord::Base
     self.workflow_state == "completed"
   end
 
+  def deleted?
+    self.workflow_state == "deleted"
+  end
+
   private
 
   def distribute_due_dates

@@ -1,6 +1,6 @@
 Enrollment.class_eval do
   after_commit :ensure_active_scores
-  after_commit -> { PipelineService.publish_as_v2(self) }
+  after_commit :publish_as_v2
 
   def all_scores
     Score.where(enrollment: self)
@@ -13,5 +13,16 @@ Enrollment.class_eval do
 
   def active_scores?
     all_scores.find_by(workflow_state: "active")
+  end
+
+  private
+  def publish_as_v2
+    unless guarded_for_deleted_publish?
+      PipelineService.publish_as_v2(self)
+    end
+  end
+
+  def guarded_for_deleted_publish?
+    deleted? && previous_changes.keys.sort == ["last_activity_at", "updated_at"]
   end
 end

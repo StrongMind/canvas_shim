@@ -36,4 +36,25 @@ describe Enrollment do
     expect(PipelineService).to receive(:publish_as_v2)
     Enrollment.create
   end
+
+  context "deleted publish guard" do
+    let!(:enrollment) { Enrollment.create(workflow_state: "active") }
+
+    it "will publish on delete" do
+      expect(PipelineService).to receive(:publish_as_v2)
+      enrollment.update(workflow_state: "deleted")
+    end
+
+    it "will publish after delete with other fields changed" do
+      enrollment.update(workflow_state: "deleted")
+      expect(PipelineService).to receive(:publish_as_v2)
+      enrollment.update(start_at: Time.now, last_activity_at: Time.now)
+    end
+
+    it "will not publish after delete with last_activity_at update" do
+      enrollment.update(workflow_state: "deleted")
+      expect(PipelineService).not_to receive(:publish_as_v2)
+      enrollment.update(last_activity_at: Time.now)
+    end
+  end
 end
