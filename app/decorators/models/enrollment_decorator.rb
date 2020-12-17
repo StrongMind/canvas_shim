@@ -23,6 +23,6 @@ Enrollment.class_eval do
   end
 
   def guarded_for_deleted_publish?
-    deleted? && previous_changes.one? && last_activity_at_changed?
+    deleted? && previous_changes.keys.sort == ["last_activity_at", "updated_at"]
   end
 end
