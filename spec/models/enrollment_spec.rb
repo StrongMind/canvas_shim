@@ -38,7 +38,7 @@ describe Enrollment do
   end
 
   context "deleted publish guard" do
-    let!(:enrollment) { Enrollment.create(workflow_state: "active") }
+    let!(:enrollment) { Enrollment.create(user: user, course: course, workflow_state: "active") }
 
     it "will publish on delete" do
       expect(PipelineService).to receive(:publish_as_v2)
