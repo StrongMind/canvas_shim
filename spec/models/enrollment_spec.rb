@@ -53,8 +53,8 @@ describe Enrollment do
   end
 
   context "a user with an active and deleted enrollment in a course" do
-    let!(:user) { User.create(name: "test user")}
-    let!(:course) { Course.create(name: "test course")}
+    let!(:user) { User.create()}
+    let!(:course) { Course.create()}
 
     let!(:active_enrollment) { Enrollment.create(user: user, course: course, workflow_state: "active") }
     let!(:deleted_enrollment) { Enrollment.create(user: user, course: course, workflow_state: "deleted") }
