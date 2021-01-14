@@ -56,8 +56,8 @@ describe Enrollment do
     let!(:user) { User.create(name: "test user")}
     let!(:course) { Course.create(name: "test course")}
 
-    let!(:active_enrollment) { Enrollment.create(user:, user, course, course, workflow_state: "active") }
-    let!(:deleted_enrollment) { Enrollment.create(user:, user, course, course, workflow_state: "deleted") }
+    let!(:active_enrollment) { Enrollment.create(user: user, course: course, workflow_state: "active") }
+    let!(:deleted_enrollment) { Enrollment.create(user: user, course: course, workflow_state: "deleted") }
 
     it "will not publish deleted enrollment" do
       expect(PipelineService).to_not receive(:publish_as_v2)
