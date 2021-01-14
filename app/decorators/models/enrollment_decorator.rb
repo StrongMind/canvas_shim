@@ -17,7 +17,7 @@ Enrollment.class_eval do
 
   private
   def publish_as_v2
-    unless guarded_for_deleted_publish?
+    unless guarded_for_deleted_publish? or guarded_for_deleted_while_active?
       PipelineService.publish_as_v2(self)
     end
   end
@@ -25,4 +25,9 @@ Enrollment.class_eval do
   def guarded_for_deleted_publish?
     deleted? && !previous_changes.keys.include?("workflow_state")
   end
+
+  def guarded_for_deleted_while_active?
+    deleted? && Enrollment.find_by(course: self.course, user: self.user, workflow_state: 'active').any?
+  end
+
 end
