@@ -51,4 +51,23 @@ describe Enrollment do
       enrollment.update(start_at: Time.now, last_activity_at: Time.now)
     end
   end
+
+  context "a user with an active and deleted enrollment in a course" do
+    let!(:user) { User.create(name: "test user")}
+    let!(:course) { Course.create(name: "test course")}
+
+    let!(:active_enrollment) { Enrollment.create(user:, user, course, course, workflow_state: "active") }
+    let!(:deleted_enrollment) { Enrollment.create(user:, user, course, course, workflow_state: "deleted") }
+
+    it "will not publish deleted enrollment" do
+      expect(PipelineService).to_not receive(:publish_as_v2)
+      deleted_enrollment.touch
+    end
+
+    it "will publish the active enrollment" do
+      expect(PipelineService).to receive(:publish_as_v2)
+      active_enrollment.touch
+    end
+  end
+
 end
