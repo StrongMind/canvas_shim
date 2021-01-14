@@ -27,7 +27,7 @@ Enrollment.class_eval do
   end
 
   def guarded_for_deleted_while_active?
-    deleted? && Enrollment.find_by(course: self.course, user: self.user, workflow_state: 'active').any?
+    deleted? && Enrollment.find_by(course: self.course, user: self.user, workflow_state: 'active')
   end
 
 end
