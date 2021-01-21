@@ -14,6 +14,11 @@ describe ContextModuleProgression do
     it 'returns true when sequence control is off' do
       expect(context_module_progression.prerequisites_satisfied?).to be(true)
     end
+
+    it "returns false for deleted" do
+      enrollment.update(workflow_state: "deleted")
+      expect(context_module_progression.prerequisites_satisfied?).to be(false)
+    end
   end
 
   describe "#locked?" do
