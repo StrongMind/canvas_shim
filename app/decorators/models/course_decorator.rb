@@ -149,8 +149,9 @@ Course.class_eval do
   end
 
   def scale_count(count)
-    return count if SettingsService.get_settings(id: 1, object: 'school')['unweighted_course_access_report']
     return 0 if no_active_students?
+    return count if SettingsService.get_settings(id: 1, object: 'school')['unweighted_course_access_report']
+
     enrs = active_students.size
     return 10 if count >= enrs * 10
     count.divmod(enrs).first
