@@ -14,7 +14,7 @@ module PipelineService
       end
 
       def call
-        module_json(@context_module, GradesService::Account.account_admin, nil)
+        module_json(@context_module, GradesService::Account.account_admin, nil, nil, ['items'])
       end
 
       def self.additional_identifier_fields
