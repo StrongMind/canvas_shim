@@ -10,17 +10,6 @@ describe ContextModuleProgression do
     allow(SettingsService).to receive(:get_enrollment_settings).and_return({"sequence_control"=>false})
   end
 
-  describe "#prerequisites_satisfied?" do
-    it 'returns true when sequence control is off' do
-      expect(context_module_progression.prerequisites_satisfied?).to be(true)
-    end
-
-    it "returns false for deleted" do
-      enrollment.update(workflow_state: "deleted")
-      expect(context_module_progression.prerequisites_satisfied?).to be(false)
-    end
-  end
-
   describe "#locked?" do
     it 'returns false when sequence control is off' do
       expect(context_module_progression.locked?).to be(false)
