@@ -1,19 +1,11 @@
 ContextModuleProgression.class_eval do
   after_commit :publish_course_progress
   after_commit -> { PipelineService::V2.publish self }
-  def strongmind_prerequisites_satisfied?
-    sequence_control_on? ? instructure_prerequisites_satisfied? : true
+
+  def locked?
+    return false unless sequence_control_on?
+    workflow_state == "locked"
   end
-
-  alias_method :instructure_prerequisites_satisfied?, :prerequisites_satisfied?
-  alias_method :prerequisites_satisfied?, :strongmind_prerequisites_satisfied?
-
-  def strongmind_locked?
-    sequence_control_on? ? instructure_locked? : false
-  end
-
-  alias_method :instructure_locked?, :locked?
-  alias_method :locked?, :strongmind_locked?
 
   private
 
