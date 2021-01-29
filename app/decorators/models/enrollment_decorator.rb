@@ -15,7 +15,6 @@ Enrollment.class_eval do
     all_scores.find_by(workflow_state: "active")
   end
 
-  private
   def publish_as_v2
     unless deleted? && (guarded_for_deleted_publish? || guarded_for_deleted_while_active?)
       PipelineService.publish_as_v2(self)
