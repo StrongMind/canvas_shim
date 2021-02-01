@@ -1,4 +1,5 @@
 StudentEnrollment.class_eval do
+  before_save :strongmind_final_score_recalculation, if: -> { scores.empty? }
   after_save :strongmind_final_score_recalculation, if: -> { workflow_state_changed? && completed? }
 
   def strongmind_final_score_recalculation
