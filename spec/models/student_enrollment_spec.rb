@@ -12,7 +12,7 @@ describe StudentEnrollment do
   end
 
   subject do 
-    described_class.create(course: course, user: user)
+    described_class.create(course: course, user: user, scores: [Score.create])
   end
 
   before do
@@ -132,6 +132,23 @@ describe StudentEnrollment do
         :recompute_final_score, user.id, course.id
       )
       subject.update(workflow_state: "completed")
+    end
+
+    context "scores-related callback" do
+      it "will not update if score is present" do
+        expect(StudentEnrollment).not_to receive(:send_later).with(
+          :recompute_final_score, user.id, course.id
+        )
+        subject.save
+      end
+
+      it "will not update if score is present" do
+        subject.update(scores: [])
+        expect(StudentEnrollment).to receive(:send_later).with(
+          :recompute_final_score, user.id, course.id
+        )
+        subject.save
+      end
     end
   end
 end
