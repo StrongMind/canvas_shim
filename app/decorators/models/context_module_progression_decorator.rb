@@ -12,8 +12,9 @@ ContextModuleProgression.class_eval do
   def publish_course_progress
     en =  Enrollment.find_by(
       user_id: user.id,
+      type: 'StudentEnrollment',
       course_id: context_module.context.id
-    ).type == "StudentEnrollment"
+    )
     return unless en
 
     #ensure score object exists as student moves along in course
