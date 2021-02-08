@@ -17,7 +17,7 @@ ContextModuleProgression.class_eval do
     return unless en
 
     #ensure score object exists as student moves along in course
-    en.save if en.scores.empty?
+    en.touch if en.scores.empty?
 
     PipelineService.publish_as_v2(
       PipelineService::Nouns::CourseProgress.new(self)
