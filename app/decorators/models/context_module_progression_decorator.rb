@@ -10,10 +10,14 @@ ContextModuleProgression.class_eval do
   private
 
   def publish_course_progress
-    return unless Enrollment.find_by(
+    en =  Enrollment.find_by(
       user_id: user.id,
       course_id: context_module.context.id
     ).type == "StudentEnrollment"
+    return unless en
+
+    #ensure score object exists as student moves along in course
+    en.save if en.scores.empty?
 
     PipelineService.publish_as_v2(
       PipelineService::Nouns::CourseProgress.new(self)
