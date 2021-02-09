@@ -39,7 +39,11 @@ module PipelineService
       end
 
       def call
-        get_json
+        if @enrollment.is_a?(StudentEnrollment) && @enrollment.scores.empty?
+          @enrollment.touch
+          @enrollment.reload
+        end
+          get_json
         if @enrollment.is_a?(StudentEnrollment)
           get_grades
           set_nil_grades_to_zero
