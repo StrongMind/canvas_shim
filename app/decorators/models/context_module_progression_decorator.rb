@@ -10,10 +10,11 @@ ContextModuleProgression.class_eval do
   private
 
   def publish_course_progress
-    return unless Enrollment.find_by(
+    return unless Enrollment.exists?(
       user_id: user.id,
+      type: 'StudentEnrollment',
       course_id: context_module.context.id
-    ).type == "StudentEnrollment"
+    )
 
     PipelineService.publish_as_v2(
       PipelineService::Nouns::CourseProgress.new(self)
