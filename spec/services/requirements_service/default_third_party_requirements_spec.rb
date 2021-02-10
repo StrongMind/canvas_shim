@@ -68,6 +68,26 @@ describe RequirementsService::Commands::DefaultThirdPartyRequirements do
         expect(wiki_page[:type]).to eq("must_submit")
       end
     end
+
+    context "Has Subheader" do
+      let!(:content_tags) do
+        [
+          double(:content_tag, content_type: "ContextModuleSubHeader", id: 1),
+          double(:content_tag, content_type: "Assignment", id: 2),
+          double(:content_tag, content_type: "DiscussionTopic", id: 3),
+          double(:content_tag, content_type: "WikiPage", id: 4),
+          double(:content_tag, content_type: "ContextExternalTool", id: 5),
+          double(:content_tag, content_type: "Attachment", id: 6),
+          double(:content_tag, content_type: "Quizzes::Quiz", id: 7),
+        ]
+      end
+
+      it "Sets an WikiPage to must_view" do
+        subject.send(:set_requirements)
+        subheader = subject.send(:completion_requirements).find {|req| req[:id] == 1 }
+        expect(subheader).to eq(nil)
+      end
+    end
   end
 
   describe "#add_prerequisites" do
