@@ -18,11 +18,13 @@ module RequirementsService
 
       def set_requirements
         context_module.content_tags.each do |tag|
-          existing_req = requirement_exists?(tag)
-          if existing_req
-            completion_requirements << existing_req
-          else
-            completion_requirements << create_requirement(tag)
+          unless tag.content_type == "ContextModuleSubHeader"
+            existing_req = requirement_exists?(tag)
+            if existing_req
+              completion_requirements << existing_req
+            else
+              completion_requirements << create_requirement(tag)
+            end
           end
         end
       end
