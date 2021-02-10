@@ -1,7 +1,7 @@
 describe PipelineService::Serializers::Enrollment do
   let(:noun) {double('noun', id: 1)}
 
-  let(:enrollment) { double('enrollment', is_a?: true, scores: [], touch: true, reload: true) }
+  let(:enrollment) { double('enrollment', is_a?: true, scores: [], touch: true, reload: true, strongmind_final_score_recalculation: true) }
 
   let(:subject) {
     described_class.new(object: noun)
