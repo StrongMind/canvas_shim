@@ -1,5 +1,9 @@
 describe StudentEnrollment do
   include_context "stubbed_network"
+  subject do 
+    described_class.create(course: course, user: user)
+  end
+
   let!(:course) { Course.create }
   let!(:user) { User.create }
   let!(:assignment) { Assignment.create(course: course) }
@@ -11,11 +15,8 @@ describe StudentEnrollment do
     )
   end
 
-  subject do 
-    described_class.create(course: course, user: user, scores: [Score.create])
-  end
-
   before do
+    subject.scores.create
     allow(Time).to receive(:now).and_return(Time.now.utc)
   end
 

@@ -31,6 +31,10 @@ class Enrollment < ActiveRecord::Base
     self.workflow_state == "deleted"
   end
 
+  def type
+    "StudentEnrollment"
+  end
+
   private
 
   def distribute_due_dates
