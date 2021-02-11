@@ -141,14 +141,6 @@ describe StudentEnrollment do
         )
         subject.save
       end
-
-      it "will not update if score is present" do
-        subject.update(scores: [])
-        expect(StudentEnrollment).to receive(:send_later).with(
-          :recompute_final_score, user.id, course.id
-        )
-        subject.save
-      end
     end
   end
 end

@@ -40,7 +40,7 @@ module PipelineService
 
       def call
         if @enrollment.is_a?(StudentEnrollment) && @enrollment.scores.empty?
-          @enrollment.touch
+          @enrollment.strongmind_final_score_recalculation
           @enrollment.reload
         end
           get_json
