@@ -10,6 +10,7 @@ describe Score do
     it "Publishes enrollment noun" do
       expect(PipelineService).to receive(:publish_as_v2)
       score.touch
+    end
   end
 
 end
