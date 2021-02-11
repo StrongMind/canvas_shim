@@ -2,7 +2,7 @@ describe Score do
   include_context "stubbed_network"
   let!(:course) { Course.create }
   let!(:user) { User.create }
-  let!(:enrollment) { StudentEnrollment.create(type: 'StudentEnrollment', course: course, user: user, scores: scores: [score])}
+  let!(:enrollment) { StudentEnrollment.create(type: 'StudentEnrollment', course: course, user: user, scores: [score])}
   let!(:score) { Score.create(enrollment: enrollment)}
 
 
