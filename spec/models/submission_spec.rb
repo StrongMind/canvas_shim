@@ -6,6 +6,8 @@ describe Submission do
     end
 
     context "V2 Submissions" do
+      let(:assignment) { Assignment.create }
+
       describe '#send_submission_to_pipeline' do
         before do
           allow(SettingsService).to receive(:get_settings).and_return({
@@ -16,17 +18,27 @@ describe Submission do
 
         it 'publishes on create' do
           expect(PipelineService::V2).to receive(:publish).with an_instance_of(Submission)
-          Submission.create
+          Submission.create(assignment: assignment)
         end
 
+        it 'also publishes its assignment create' do
+          expect(PipelineService::V2).to receive(:publish).with an_instance_of(Assignment)
+          Submission.create(assignment: assignment)
+
         it 'publishes on save' do
-          s = Submission.create
+          s = Submission.create(assignment: assignment)
           expect(PipelineService::V2).to receive(:publish).with an_instance_of(Submission)
           s.save
         end
 
+        it 'also publishes its assignment on save' do
+          s = Submission.create(assignment: assignment)
+          expect(PipelineService::V2).to receive(:publish).with an_instance_of(Assignment)
+          s.save
+        end
+
         it 'doesnt post to the v1 client' do
-          s = Submission.create
+          s = Submission.create(assignment: assignment)
           expect(PipelineService::HTTPClient).not_to receive(:post)
           s.save
         end
