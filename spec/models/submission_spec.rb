@@ -24,6 +24,7 @@ describe Submission do
         it 'also publishes its assignment create' do
           expect(PipelineService::V2).to receive(:publish).with an_instance_of(Assignment)
           Submission.create(assignment: assignment)
+        end
 
         it 'publishes on save' do
           s = Submission.create(assignment: assignment)
