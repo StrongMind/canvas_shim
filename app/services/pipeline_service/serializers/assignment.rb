@@ -11,7 +11,7 @@ module PipelineService
       end
 
       def call
-        @object.as_json(:permissions => {:user => GradesService::Account.account_admin, :session => nil})
+        @object.as_json(include_root: false, :permissions => {:user => GradesService::Account.account_admin, :session => nil})
       end
     end
   end
