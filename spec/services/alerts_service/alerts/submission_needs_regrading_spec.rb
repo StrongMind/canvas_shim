@@ -14,6 +14,10 @@ describe AlertsService::Alerts::SubmissionNeedsRegrading do
     let(:datetime) { '2019-06-13 20:53:14.153693+00:00' }
     let(:updated_datetime) { '2019-06-13 20:58:14.153693+00:00' }
     let(:json_response) { subject.as_json }
+
+    before do
+        ENV['ALERT_SERVICE_SCHOOL_NAME'] = 'test.strongmind.com'
+    end
   
     describe '#created_at' do
       it 'is in the right format' do
