@@ -62,7 +62,7 @@ describe Submission do
 context "Submission Needs Regrading" do
     let!(:submission) { Submission.create(score: 30, assignment: assignment, excused: false) }
     let!(:course) { Course.create() }
-    let!(:teacher_enrollment) { TeacherEnollment.create(course: course) }
+    let!(:teacher_enrollment) { Enrollment.create(course: course, user: teacher, type: 'teacher_enrollment') }
     let!(:assignment) { Assignment.new(course: course) }
     let!(:teacher) { User.create() }
 
