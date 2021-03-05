@@ -47,11 +47,11 @@ describe AlertsService::Alerts::SubmissionNeedsRegrading do
       end
   
       it 'type' do
-        expect(json_response[:type]).to eq 'max_attempts_reached_min_score'
+        expect(json_response[:type]).to eq 'submission_needs_regrading'
       end
   
       it 'description' do
-        expect(json_response[:description]).to eq 'Max Attempts & Minimum Score Not Reached'
+        expect(json_response[:description]).to eq 'Submission Needs Regrading'
       end
   
       it 'score' do
