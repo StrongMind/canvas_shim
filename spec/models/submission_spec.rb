@@ -64,7 +64,7 @@ context "Submission Needs Regrading" do
     let!(:course { Course.create() })
     let!(:teacher_enrollment) { TeacherEnollment.create(course: course) }
     let!(:assignment) { Assignment.new(course: course) }
-    let!(:teacher) { User.create }
+    let!(:teacher) { User.create() }
 
     it "sends an alert when a submission needs regrading" do
       allow(submission).to receive(:needs_regrading?).and_return(true)
