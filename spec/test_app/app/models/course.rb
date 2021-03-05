@@ -1,5 +1,6 @@
 class Course < ActiveRecord::Base
   has_many :enrollments
+  has_many :teacher_enrollments
   has_many :users, through: :enrollments
   has_many :context_modules
   has_many :context_module_progressions, through: :context_modules
