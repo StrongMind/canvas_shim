@@ -25,7 +25,8 @@ Submission.class_eval do
           assignment_id: assignment.id,
           course_id: assignment.course.id,
         )
-      end
+        end
+    end
   end
 
   def bust_context_module_cache
