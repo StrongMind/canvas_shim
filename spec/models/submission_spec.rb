@@ -59,7 +59,6 @@ describe Submission do
   end
 
 context "Submission Needs Regrading" do
-    include_context 'stubbed_network'
     let!(:submission) { Submission.create(score: 30, assignment: assignment, excused: false) }
     let!(:course) { Course.create() }
     let!(:teacher_enrollment) { TeacherEnollment.create(course: course) }
