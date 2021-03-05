@@ -60,7 +60,7 @@ describe Submission do
 
 context "Submission Needs Regrading" do
     include_context 'stubbed_network'
-    let!(:submission) { Submission.create(score: 30, assignment: assignment, excused: true) }
+    let!(:submission) { Submission.create(score: 30, assignment: assignment, excused: false) }
 
     let(:assignment) { Assignment.new }
     let(:teacher) { User.create }
@@ -70,5 +70,5 @@ context "Submission Needs Regrading" do
       submission.touch
       expect(AlertsService::Client).to receive(:create)
     end
-  end
+  end 
 end
