@@ -21,7 +21,7 @@ Submission.class_eval do
         AlertsService::Client.create(
           :submission_needs_regrading,
           teacher_id: teacher_id,
-          student_id: user_id,
+          student_id: user.id,
           assignment_id: assignment.id,
           course_id: assignment.course.id,
         )
