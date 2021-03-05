@@ -7,22 +7,22 @@ module AlertsService
         super
       end
 
-      # def assignment
-      #   Assignment.find(assignment_id)
-      # end
+      def assignment
+        Assignment.find(assignment_id)
+      end
 
-      # def student
-      #   User.find(student_id)
-      # end
+      def student
+        User.find(student_id)
+      end
 
-      # def detail
-      #   return unless @score.present?
-      #   "Last Score: %g" % ("%.2f" % score)
-      # end
+      def detail
+        return unless @score.present?
+        "Last Score: %g" % ("%.2f" % score)
+      end
 
-      # def description
-      #   'Submission Needs Regrading'
-      # end
+      def description
+        'Submission Needs Regrading'
+      end
     end
   end
 end
