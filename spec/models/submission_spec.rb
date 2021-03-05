@@ -61,9 +61,10 @@ describe Submission do
 context "Submission Needs Regrading" do
     include_context 'stubbed_network'
     let!(:submission) { Submission.create(score: 30, assignment: assignment, excused: false) }
-
-    let(:assignment) { Assignment.new }
-    let(:teacher) { User.create }
+    let!(:course { Course.create() })
+    let!(:teacher_enrollment) { TeacherEnollment.create(course: course) }
+    let!(:assignment) { Assignment.new(course: course) }
+    let!(:teacher) { User.create }
 
     it "sends an alert when a submission needs regrading" do
       allow(submission).to receive(:needs_regrading?).and_return(true)
