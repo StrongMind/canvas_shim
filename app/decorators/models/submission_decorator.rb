@@ -2,6 +2,7 @@ Submission.class_eval do
   after_commit :bust_context_module_cache
   after_commit -> { PipelineService::V2.publish(self) }
   after_commit -> { PipelineService::V2.publish(self.assignment) }
+  after_comment :send_needs_regrading_alert_if_needed
 
   after_update :record_excused_removed
   after_save :send_unit_grades_to_pipeline
@@ -11,6 +12,20 @@ Submission.class_eval do
     PipelineService.publish_as_v2(
       PipelineService::Nouns::UnitGrades.new(self)
     )
+  end
+
+  def send_needs_regrading_alert_if_needed
+    if needs_regrading?
+      teacher_ids = assignment.course.teacher_enrollments.active.pluck(:user_id)
+      teacher_ids.each do |teacher_id|
+        AlertsService::Client.create(
+          :submission_needs_regrading,
+          teacher_id: teacher_id,
+          student_id: user_id,
+          assignment_id: assignment.id,
+          course_id: assignment.course.id,
+        )
+      end
   end
 
   def bust_context_module_cache
