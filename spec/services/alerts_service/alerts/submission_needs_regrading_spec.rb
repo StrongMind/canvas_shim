@@ -21,11 +21,11 @@ describe AlertsService::Alerts::SubmissionNeedsRegrading do
       end
     end
   
-    # describe '#type' do
-    #   it do
-    #     expect(subject.type).to eq("max_attempts_reached_min_score")
-    #   end
-    # end
+    describe '#type' do
+      it do
+        expect(subject.type).to eq("submission_needs_regrading")
+      end
+    end
   
     # describe '#updated_at' do
     #   it 'is in the right format' do
