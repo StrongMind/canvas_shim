@@ -36,4 +36,8 @@ class Submission < ActiveRecord::Base
   def grader
     User.find(grader_id)
   end
+
+  def needs_regrading?
+    false
+  end
 end
