@@ -57,4 +57,18 @@ describe Submission do
       expect(submission2.submission_comments).to eq([])
     end
   end
+
+context "Submission Needs Regrading" do
+    include_context 'stubbed_network'
+    let!(:submission) { Submission.create(score: 30, assignment: assignment, excused: true) }
+
+    let(:assignment) { Assignment.new }
+    let(:teacher) { User.create }
+
+    it "sends an alert when a submission needs regrading" do
+      allow(submission).to receive(:needs_regrading?).and_return(true)
+      submission.touch
+      expect(AlertsService::Client).to receive(:create)
+    end
+  end
 end
