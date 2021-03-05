@@ -68,7 +68,7 @@ context "Submission Needs Regrading" do
     let!(:teacher) { User.create() }
 
     it "sends an alert when a submission needs regrading" do
-      allow_any_instance_of((AlertsService::Client).to receive(:create).and return(true)
+      allow_any_instance_of(AlertsService::Client).to receive(:create).and return(true)
       allow(submission).to receive(:needs_regrading?).and_return(true)
       submission.touch
       expect(AlertsService::Client).to receive(:create)
