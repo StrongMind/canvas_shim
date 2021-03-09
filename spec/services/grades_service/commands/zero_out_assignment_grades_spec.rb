@@ -48,7 +48,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
     allow(GradesService::Account).to receive(:account_admin).and_return(grader)
     allow(SettingsService).to receive(:update_settings)
     allow(SettingsService).to receive('get_settings').and_return({'zero_out_past_due' => 'on'})
-    allow(Course).to receive('admin_visible_student_enrollments').and_return([enrollment])
+    allow(course).to receive('admin_visible_student_enrollments').and_return([enrollment])
   end
 
   context '#call' do
