@@ -24,7 +24,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
 
   let!(:user) { User.create() }
   let(:grader) { double("grader") }
-  let!(:enrollment) { Enrollment.create(type: 'StudentEnrollment'), course: course, user: user}
+  let!(:enrollment) { Enrollment.create(type: 'StudentEnrollment', course: course, user: user)}
   let!(:course) { Course.create}
 
   let(:submission) do
