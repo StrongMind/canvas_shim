@@ -22,16 +22,10 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
     )
   end
 
-  let(:user) { User.create() }
+  let!(:user) { User.create() }
   let(:grader) { double("grader") }
-  let(:enrollment) {double("enrollment")}
-  let(:course) {
-    double(
-      'course',
-      includes_user?: true,
-      admin_visible_student_enrollments: [enrollment]
-    )
-  }
+  let!(:enrollment) { Enrollment.create(type: 'StudentEnrollment'), course: course, user: user}
+  let!(:course) { Course.create}
 
   let(:submission) do
     double(
