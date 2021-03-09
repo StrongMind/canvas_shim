@@ -1,4 +1,6 @@
 describe GradesService::Commands::ZeroOutAssignmentGrades do
+  include_context "stubbed_network"
+
   subject {described_class.new(submission)}
 
   let(:external_tool_tag) do
@@ -22,16 +24,10 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
     )
   end
 
-  let(:user) { double("user") }
+  let!(:user) { User.create() }
   let(:grader) { double("grader") }
-  let(:enrollment) {double("enrollment")}
-  let(:course) {
-    double(
-      'course',
-      includes_user?: true,
-      admin_visible_student_enrollments: [enrollment]
-    )
-  }
+  let!(:enrollment) { Enrollment.create(type: 'StudentEnrollment', course: course, user: user)}
+  let!(:course) { Course.create}
 
   let(:submission) do
     double(
@@ -52,6 +48,9 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
     allow(GradesService::Account).to receive(:account_admin).and_return(grader)
     allow(SettingsService).to receive(:update_settings)
     allow(SettingsService).to receive('get_settings').and_return({'zero_out_past_due' => 'on'})
+    allow(course).to receive('admin_visible_student_enrollments').and_return([enrollment])
+    allow(course).to receive('includes_user?').and_return(true)
+
   end
 
   context '#call' do
