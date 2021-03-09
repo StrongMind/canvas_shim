@@ -22,7 +22,7 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
     )
   end
 
-  let(:user) { double("user") }
+  let(:user) { User.create() }
   let(:grader) { double("grader") }
   let(:enrollment) {double("enrollment")}
   let(:course) {
