@@ -1,4 +1,6 @@
 describe GradesService::Commands::ZeroOutAssignmentGrades do
+  include_context "stubbed_network"
+
   subject {described_class.new(submission)}
 
   let(:external_tool_tag) do
