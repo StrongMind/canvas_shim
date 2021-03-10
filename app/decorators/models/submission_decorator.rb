@@ -15,7 +15,7 @@ Submission.class_eval do
   end
 
   def send_needs_regrading_alert_if_needed
-    if self.submitted_at_changed and self.grader_id == 1 and self.score == 0 and ["discussion_topic", "basic_lti_launch", "online_upload"].include?(self.submission_type)
+    if self.submitted_at_changed? and self.grader_id == 1 and self.score == 0 and ["discussion_topic", "basic_lti_launch", "online_upload"].include?(self.submission_type)
       teacher_ids = assignment.course.teacher_enrollments.active.pluck(:user_id)
       teacher_ids.each do |teacher_id|
         AlertsService::Client.create(
