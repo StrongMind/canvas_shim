@@ -61,7 +61,7 @@ describe Submission do
 
 context "Submission Needs Regrading" do
     let!(:student) { User.create() }
-    let!(:submission) { Submission.create(score: 30, assignment: assignment, user: student, excused: false) }
+    let!(:submission) { Submission.create(score: 0, grader_id: 1, submitted_at: 1.hour.ago, assignment: assignment, user: student, excused: false) }
     let!(:course) { Course.create() }
     let!(:teacher_enrollment) { TeacherEnrollment.create(course: course, user: teacher) }
     let!(:assignment) { Assignment.new(course: course) }
@@ -70,9 +70,8 @@ context "Submission Needs Regrading" do
     it "sends an alert when a submission needs regrading" do
       allow(AlertsService::SecretManager).to receive(:get_secret).and_return({'API_ENDPOINT' => '12345'})
       allow(HTTParty).to receive(:post).and_return(AlertsService::Response.new(200, nil))
-      allow(submission).to receive(:needs_regrading?).and_return(true)
       expect(AlertsService::Client).to receive(:create)
-      submission.touch
+      submission.update(submited_at: Time.now)
     end
   end 
 end

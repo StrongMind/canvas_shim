@@ -15,7 +15,7 @@ Submission.class_eval do
   end
 
   def send_needs_regrading_alert_if_needed
-    if needs_regrading?
+    if self.previous_changes.include?(:submitted_at) and self.grader_id == 1 and self.score == 0
       teacher_ids = assignment.course.teacher_enrollments.active.pluck(:user_id)
       teacher_ids.each do |teacher_id|
         AlertsService::Client.create(
