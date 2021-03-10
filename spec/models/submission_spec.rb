@@ -68,10 +68,11 @@ context "Submission Needs Regrading" do
     let!(:teacher) { User.create() }
 
     it "sends an alert when a submission needs regrading" do
-      allow_any_instance_of(AlertsService::Client).to receive(:create).and_return(true)
+      allow(AlertsService::SecretManager).to receive(:get_secret).and_return({'API_ENDPOINT' => '12345'})
+      allow(HTTParty).to receive(:post).and_return(AlertsService::Response.new(200, nil))
       allow(submission).to receive(:needs_regrading?).and_return(true)
-      submission.touch
       expect(AlertsService::Client).to receive(:create)
+      submission.touch
     end
   end 
 end
