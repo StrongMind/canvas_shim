@@ -73,5 +73,13 @@ context "Submission Needs Regrading" do
       expect(AlertsService::Client).to receive(:create)
       submission.update(submitted_at: Time.now)
     end
+
+    it "does not send an alert when a submission needs regrading if grader changes" do
+      allow(AlertsService::SecretManager).to receive(:get_secret).and_return({'API_ENDPOINT' => '12345'})
+      allow(HTTParty).to receive(:post).and_return(AlertsService::Response.new(200, nil))
+      expect(AlertsService::Client).to_not receive(:create)
+      submission.update(submitted_at: Time.now, grader_id: -5)
+    end
+
   end 
 end
