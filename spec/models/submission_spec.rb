@@ -87,7 +87,7 @@ context "Submission Needs Regrading" do
     it "doesn't send an alert when an enable_regrading_alert is false" do
       allow(SettingsService).to receive(:get_settings).and_return('enable_regrading_alert' => false)
       expect(AlertsService::Client).not_to receive(:create)
-      submission.update(bmitted_at: Time.now)
+      submission.update(submitted_at: Time.now)
     end
   end 
 end
