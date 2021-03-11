@@ -2,7 +2,7 @@ Submission.class_eval do
   after_commit :bust_context_module_cache
   after_commit -> { PipelineService::V2.publish(self) }
   after_commit -> { PipelineService::V2.publish(self.assignment) }
-  after_save :send_delayed_regrading_alert?, if: -> { submitted_at_changed? && grader_id == 1 }
+  after_save :send_delayed_regrading_alert?, if: -> { SettingsService.get_settings(object: :school, id: 1)['enable_regrading_alert'] && submitted_at_changed? && grader_id == 1 }
 
   after_update :record_excused_removed
   after_save :send_unit_grades_to_pipeline
