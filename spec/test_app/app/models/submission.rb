@@ -36,4 +36,15 @@ class Submission < ActiveRecord::Base
   def grader
     User.find(grader_id)
   end
+
+  def submission_type
+  end
+
+  def needs_regrading?
+    false
+  end
+
+  def send_later_enqueue_args(method, *args)
+    send(method)
+  end
 end
