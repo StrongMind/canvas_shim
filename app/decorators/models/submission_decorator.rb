@@ -2,7 +2,7 @@ Submission.class_eval do
   after_commit :bust_context_module_cache
   after_commit -> { PipelineService::V2.publish(self) }
   after_commit -> { PipelineService::V2.publish(self.assignment) }
-  after_save :send_needs_regrading_alert_if_needed
+  after_save :send_delayed_regrading_alert?, if: :submitted_at_changed?
 
   after_update :record_excused_removed
   after_save :send_unit_grades_to_pipeline
@@ -14,8 +14,12 @@ Submission.class_eval do
     )
   end
 
+  def send_delayed_regrading_alert?
+    send_later_enqueue_args(:send_needs_regrading_alert_if_needed, run_at: 5.minutes.from_now)
+  end
+
   def send_needs_regrading_alert_if_needed
-    if self.submitted_at_changed? and self.grader_id == 1 and self.score == 0 and ["discussion_topic", "basic_lti_launch", "online_upload"].include?(self.submission_type)
+    if grader_id == 1
       teacher_ids = assignment.course.teacher_enrollments.active.pluck(:user_id)
       teacher_ids.each do |teacher_id|
         AlertsService::Client.create(
@@ -25,7 +29,7 @@ Submission.class_eval do
           assignment_id: assignment.id,
           course_id: assignment.course.id,
         )
-        end
+      end
     end
   end
 

@@ -43,4 +43,8 @@ class Submission < ActiveRecord::Base
   def needs_regrading?
     false
   end
+
+  def send_later_enqueue_args(method, *args)
+    send(method)
+  end
 end
