@@ -24,7 +24,8 @@ module SpecialProgramsService
 
       def program_applicable?(program)
         begin_date, end_date = program["beginDate"], program["endDate"]
-        parsed_begin_date, parsed_end_date = DateTime.parse(begin_date), DateTime.parse(end_date)
+        begin_date = DateTime.parse(begin_date) if begin_date
+        end_date = DateTime.parse(end_date) if end_date
         now = DateTime.current
       
         if !begin_date && !end_date
