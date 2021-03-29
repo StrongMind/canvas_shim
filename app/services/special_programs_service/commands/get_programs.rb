@@ -45,11 +45,9 @@ module SpecialProgramsService
       end
 
       def id_mapper_url
-        %w(
-          "#{IdentifierMapperService::SecretManager.get_secret['API_ENDPOINT']}"
-          "/api/v1/pairs/strongmind.guid://com.instructure.canvas.users"
-          "/#{partner_name}/#{user.id}"
-        ).join
+        "#{IdentifierMapperService::SecretManager.get_secret['API_ENDPOINT']}" \
+        "/api/v1/pairs/strongmind.guid://com.instructure.canvas.users" \
+        "/#{partner_name}/#{user.id}"
       end
 
       def user_uuid
