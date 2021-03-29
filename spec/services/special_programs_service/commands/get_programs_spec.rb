@@ -66,4 +66,20 @@ describe SpecialProgramsService::Commands::GetPrograms do
       end
     end
   end
+
+  context "program has no end date and has start date" do
+    let(:program) { create_program("#{Date.yesterday}", nil) }
+
+    it "is applicable" do
+      expect(subject.send(:program_applicable?, program)).to be true
+    end
+
+    context "end date before now" do
+      let(:program) { create_program("#{Date.tomorrow}", nil) }
+
+      it "is not applicable" do
+        expect(subject.send(:program_applicable?, program)).to be false
+      end
+    end
+  end
 end
