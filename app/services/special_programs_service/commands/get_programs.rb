@@ -53,7 +53,7 @@ module SpecialProgramsService
 
       def user_uuid
         @user_uuid ||= IdentifierMapperService::Client.instance.send(
-          :get, full_url).payload.dig("com.strongmind.user.id", partner_name)
+          :get, id_mapper_url).payload.dig("com.strongmind.user.id", partner_name)
       end
 
       def programs_url
