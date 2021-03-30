@@ -35,6 +35,10 @@ Rails.application.routes.draw do
 
   get 'todos', to: 'todos#index', as: :user_todo
 
+  resources :users do
+    member :special_programs
+  end
+
   scope(controller: :enrollments_api) do
     post '/api/v1/courses/:course_id/enrollments/:id/custom_placement', action: :custom_placement, as: :custom_placement
     get '/api/v1/courses/:course_id/enrollments/:id/snapshot', action: :snapshot, as: :snapshot
@@ -52,7 +56,6 @@ Rails.application.routes.draw do
 
   ApiRouteSet::V1.draw(self) do
     scope(controller: :users) do
-      get 'users/:id/special_programs', action: :special_programs
       get 'users/:id/observer_enrollments', action: :observer_enrollments
       post 'users/:id/toggle_progress_grade', action: :toggle_progress_grade
       get 'users/:id/confirm_provisioning', action: :confirm_provisioning
