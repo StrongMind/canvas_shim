@@ -57,7 +57,7 @@ module SpecialProgramsService
       end
 
       def programs_url
-        "https://#{programs_domain}/ed-fi/studentProgramAssociations?studentUniqueId=#{user_uuid}"
+        "https://#{programs_domain}/ed-fi/v5.1.0/api/data/v3/ed-fi/studentProgramAssociations?studentUniqueId=#{user_uuid}"
       end
 
       def programs_domain
