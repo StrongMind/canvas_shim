@@ -35,8 +35,8 @@ Rails.application.routes.draw do
 
   get 'todos', to: 'todos#index', as: :user_todo
 
-  resources :users do
-    member { :special_programs }
+  scope(controller: :users) do
+    get '/users/:id/special_programs', action: :special_programs
   end
 
   scope(controller: :enrollments_api) do
