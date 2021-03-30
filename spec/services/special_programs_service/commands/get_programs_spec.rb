@@ -122,5 +122,27 @@ describe SpecialProgramsService::Commands::GetPrograms do
       expect(HTTParty).to receive(:get)
       subject.call
     end
+
+    context "has applicable programs" do
+      before do
+        allow(subject).to receive(:program_applicable?).and_return(true)
+      end
+
+      it "fills the special_programs array" do
+        subject.call
+        expect(subject.send(:special_programs)).to eq ["IEP"]
+      end
+    end
+
+    context "has no applicable programs" do
+      before do
+        allow(subject).to receive(:program_applicable?).and_return(false)
+      end
+
+      it "fills the special_programs array" do
+        subject.call
+        expect(subject.send(:special_programs).size).to eq 0
+      end
+    end
   end
 end
