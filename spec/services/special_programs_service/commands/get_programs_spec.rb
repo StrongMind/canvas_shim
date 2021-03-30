@@ -15,6 +15,12 @@ def create_program(start_date, end_date)
   }
 end
 
+class FakeResponse
+  def parsed_response
+    [create_program("#{Date.yesterday}", "#{Date.tomorrow}")]
+  end
+end
+
 
 describe SpecialProgramsService::Commands::GetPrograms do
   include_context "stubbed_network"
@@ -41,45 +47,80 @@ describe SpecialProgramsService::Commands::GetPrograms do
         expect(subject.send(:program_applicable?, program)).to be false
       end
     end
-  end
 
-  context "program has no start or end date" do
-    let(:program) { create_program(nil, nil) }
+    context "program has no start or end date" do
+      let(:program) { create_program(nil, nil) }
 
-    it "is applicable" do
-      expect(subject.send(:program_applicable?, program)).to be true
-    end
-  end
-
-  context "program has no start date and has end date" do
-    let(:program) { create_program(nil, "#{Date.tomorrow}") }
-
-    it "is applicable" do
-      expect(subject.send(:program_applicable?, program)).to be true
+      it "is applicable" do
+        expect(subject.send(:program_applicable?, program)).to be true
+      end
     end
 
-    context "end date before now" do
-      let(:program) { create_program(nil, "#{Date.yesterday}") }
+    context "program has no start date and has end date" do
+      let(:program) { create_program(nil, "#{Date.tomorrow}") }
 
-      it "is not applicable" do
-        expect(subject.send(:program_applicable?, program)).to be false
+      it "is applicable" do
+        expect(subject.send(:program_applicable?, program)).to be true
+      end
+
+      context "end date before now" do
+        let(:program) { create_program(nil, "#{Date.yesterday}") }
+
+        it "is not applicable" do
+          expect(subject.send(:program_applicable?, program)).to be false
+        end
+      end
+    end
+
+    context "program has no end date and has start date" do
+      let(:program) { create_program("#{Date.yesterday}", nil) }
+
+      it "is applicable" do
+        expect(subject.send(:program_applicable?, program)).to be true
+      end
+
+      context "end date before now" do
+        let(:program) { create_program("#{Date.tomorrow}", nil) }
+
+        it "is not applicable" do
+          expect(subject.send(:program_applicable?, program)).to be false
+        end
       end
     end
   end
 
-  context "program has no end date and has start date" do
-    let(:program) { create_program("#{Date.yesterday}", nil) }
-
-    it "is applicable" do
-      expect(subject.send(:program_applicable?, program)).to be true
+  describe "#call" do
+    before do
+      allow(subject).to receive(:partner_name).and_return "RKSinstitute.org"
+      allow(subject).to receive(:user_uuid).and_return "12345"
+      allow(HTTParty).to receive(:get).and_return(FakeResponse.new)
     end
 
-    context "end date before now" do
-      let(:program) { create_program("#{Date.tomorrow}", nil) }
-
-      it "is not applicable" do
-        expect(subject.send(:program_applicable?, program)).to be false
+    context "no parther name" do
+      before do
+        allow(subject).to receive(:partner_name).and_return nil
       end
+
+      it "does not call programs endpoint" do
+        expect(HTTParty).not_to receive(:get)
+        subject.call
+      end
+    end
+
+    context "no user uuid" do
+      before do
+        allow(subject).to receive(:partner_name).and_return nil
+      end
+
+      it "does not call programs endpoint" do
+        expect(HTTParty).not_to receive(:get)
+        subject.call
+      end
+    end
+
+    it "call programs endpoint" do
+      expect(HTTParty).to receive(:get)
+      subject.call
     end
   end
 end
