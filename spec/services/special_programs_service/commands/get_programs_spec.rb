@@ -93,6 +93,7 @@ describe SpecialProgramsService::Commands::GetPrograms do
     before do
       allow(subject).to receive(:partner_name).and_return "RKSinstitute.org"
       allow(subject).to receive(:user_uuid).and_return "12345"
+      allow(subject).to receive(:programs_domain).and_return("andyish.com")
       allow(HTTParty).to receive(:get).and_return(FakeResponse.new)
     end
 
@@ -110,6 +111,17 @@ describe SpecialProgramsService::Commands::GetPrograms do
     context "no user uuid" do
       before do
         allow(subject).to receive(:partner_name).and_return nil
+      end
+
+      it "does not call programs endpoint" do
+        expect(HTTParty).not_to receive(:get)
+        subject.call
+      end
+    end
+
+    context "no programs domain" do
+      before do
+        allow(subject).to receive(:programs_domain).and_return nil
       end
 
       it "does not call programs endpoint" do

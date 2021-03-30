@@ -7,7 +7,7 @@ module SpecialProgramsService
       end
 
       def call
-        return special_programs unless user && partner_name && user_uuid
+        return special_programs unless user && partner_name && user_uuid && programs_domain
         response = HTTParty.get(programs_url, { 'Authorization': "Bearer #{user.access_token}" })
 
         response.parsed_response.each do |special_program|
@@ -57,7 +57,11 @@ module SpecialProgramsService
       end
 
       def programs_url
-        "https://api.platform.strongmind.com/ed-fi/studentProgramAssociations?studentUniqueId=#{user_uuid}"
+        "https://#{programs_domain}/ed-fi/studentProgramAssociations?studentUniqueId=#{user_uuid}"
+      end
+
+      def programs_domain
+        SettingsService.get_settings(object: :user, id: user.id)["programs_domain"]
       end
     end
   end
