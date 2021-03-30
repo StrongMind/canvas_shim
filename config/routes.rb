@@ -52,6 +52,7 @@ Rails.application.routes.draw do
 
   ApiRouteSet::V1.draw(self) do
     scope(controller: :users) do
+      get 'users/:id/special_programs', action: :special_programs
       get 'users/:id/observer_enrollments', action: :observer_enrollments
       post 'users/:id/toggle_progress_grade', action: :toggle_progress_grade
       get 'users/:id/confirm_provisioning', action: :confirm_provisioning

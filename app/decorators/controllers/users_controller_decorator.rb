@@ -1,4 +1,9 @@
 UsersController.class_eval do
+  def special_programs
+    user = User.find(params[:id])
+    render :json => SpecialProgramsService.get_programs(user), :status => :ok
+  end
+
   def observer_enrollments
     user = User.find(params[:id])
     return render_unauthorized_action unless user
