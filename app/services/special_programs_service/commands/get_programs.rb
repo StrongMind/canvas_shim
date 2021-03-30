@@ -61,7 +61,7 @@ module SpecialProgramsService
       end
 
       def programs_domain
-        SettingsService.get_settings(object: :user, id: user.id)["programs_domain"]
+        SettingsService.get_settings(object: :school, id: 1)["programs_domain"]
       end
     end
   end
