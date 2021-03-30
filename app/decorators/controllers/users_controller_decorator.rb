@@ -1,7 +1,7 @@
 UsersController.class_eval do
   def special_programs
     user = User.find(params[:id])
-    render :json => SpecialProgramsService.get_programs(user), :status => :ok
+    render :json => SpecialProgramsService.get_programs(user: user), :status => :ok
   end
 
   def observer_enrollments
