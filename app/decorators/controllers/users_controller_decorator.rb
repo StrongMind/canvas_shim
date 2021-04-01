@@ -1,4 +1,14 @@
 UsersController.class_eval do
+  def special_programs
+    accommodations = Rails.cache.read("accommodations_#{params[:id]}")
+    unless accommodations
+      user = User.find(params[:id])
+      accommodations = SpecialProgramsService.get_programs(user: user)
+      Rails.cache.write("accommodations_#{params[:id]}", accommodations, expires_in: 1.day)
+    end
+    render :json => { accommodations: accommodations }, :status => :ok
+  end
+
   def observer_enrollments
     user = User.find(params[:id])
     return render_unauthorized_action unless user

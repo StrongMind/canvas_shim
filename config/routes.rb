@@ -35,6 +35,10 @@ Rails.application.routes.draw do
 
   get 'todos', to: 'todos#index', as: :user_todo
 
+  scope(controller: :users) do
+    get '/users/:id/special_programs', action: :special_programs
+  end
+
   scope(controller: :enrollments_api) do
     post '/api/v1/courses/:course_id/enrollments/:id/custom_placement', action: :custom_placement, as: :custom_placement
     get '/api/v1/courses/:course_id/enrollments/:id/snapshot', action: :snapshot, as: :snapshot
