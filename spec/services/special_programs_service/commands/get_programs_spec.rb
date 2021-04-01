@@ -19,6 +19,10 @@ class FakeResponse
   def parsed_response
     [create_program("#{Date.yesterday}", "#{Date.tomorrow}")]
   end
+
+  def code
+    200
+  end
 end
 
 

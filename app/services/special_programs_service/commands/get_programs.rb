@@ -10,9 +10,11 @@ module SpecialProgramsService
         return special_programs unless user && partner_name && user_uuid && programs_domain
         response = HTTParty.get(programs_url, { 'Authorization': "Bearer #{user.access_token}" })
 
-        response.parsed_response.each do |special_program|
-          if program_applicable?(special_program)
-            special_programs << special_program.dig("programReference", "programName")
+        if response.code == 200
+          response.parsed_response.each do |special_program|
+            if program_applicable?(special_program)
+              special_programs << special_program.dig("programReference", "programName")
+            end
           end
         end
 
