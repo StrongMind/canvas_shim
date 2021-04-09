@@ -4,7 +4,7 @@ Submission.class_eval do
   after_commit -> { PipelineService::V2.publish(self.assignment) }
   after_save :set_cached_regrade_alert_applicable
   after_save :send_delayed_regrading_alert, if: :get_cached_regrade_alert_applicable
-  
+
   after_update :record_excused_removed
   after_save :send_unit_grades_to_pipeline
 
@@ -39,6 +39,7 @@ Submission.class_eval do
 
   def send_needs_regrading_alert
     if get_cached_regrade_alert_applicable
+      cache_key = "submission/#{id}/regrading_alert_applicable"
       teacher_ids = assignment.course.teacher_enrollments.active.pluck(:user_id)
       teacher_ids.each do |teacher_id|
         AlertsService::Client.create(
@@ -49,6 +50,7 @@ Submission.class_eval do
           course_id: assignment.course.id,
         )
       end
+      Rails.cache.delete(cache_key)
     end
   end
 
