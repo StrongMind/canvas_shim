@@ -23,6 +23,7 @@ Submission.class_eval do
   end
 
   def send_needs_regrading_alert
+    return unless regrade_alert_applicable?
     teacher_ids = assignment.course.teacher_enrollments.active.pluck(:user_id)
     teacher_ids.each do |teacher_id|
       AlertsService::Client.create(
