@@ -97,5 +97,5 @@ context "Submission Needs Regrading" do
       allow(HTTParty).to receive(:post).and_return(AlertsService::Response.new(200, nil))
       expect(AlertsService::Client).to receive(:create)
       discussion_topic.update(submitted_at: Time.now)
-  end 
+    end 
 end
