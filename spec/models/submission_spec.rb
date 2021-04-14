@@ -62,6 +62,7 @@ describe Submission do
 context "Submission Needs Regrading" do
     let!(:student) { User.create() }
     let!(:submission) { Submission.create(score: 0, grader_id: 1, submitted_at: 1.hour.ago, assignment: assignment, user: student, excused: false )}
+    let!(:discussion_topic) { Submission.create(score: 0, grader_id: 1, submitted_at: 1.hour.ago, assignment: assignment, user: student, excused: false, type: discussion_topic)}
 
     let!(:course) { Course.create() }
     let!(:teacher_enrollment) { TeacherEnrollment.create(course: course, user: teacher) }
@@ -89,5 +90,12 @@ context "Submission Needs Regrading" do
       expect(AlertsService::Client).not_to receive(:create)
       submission.update(submitted_at: Time.now)
     end
+
+    it "doesn't send an alert for a discussion topic"
+      allow(SettingsService).to receive(:get_settings).and_return('enable_regrading_alert' => true)
+      allow(AlertsService::SecretManager).to receive(:get_secret).and_return({'API_ENDPOINT' => '12345'})
+      allow(HTTParty).to receive(:post).and_return(AlertsService::Response.new(200, nil))
+      expect(AlertsService::Client).to receive(:create)
+      discussion_topic.update(submitted_at: Time.now)
   end 
 end
