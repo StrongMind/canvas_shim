@@ -30,7 +30,7 @@ Submission.class_eval do
   end
 
   def regrade_alert_applicable?
-    !submssion_type == 'discussion_topic' && submitted_at_changed? && grader_id == 1 && SettingsService.get_settings(object: :school, id: 1)['enable_regrading_alert']
+    !submission_type == 'discussion_topic' && submitted_at_changed? && grader_id == 1 && SettingsService.get_settings(object: :school, id: 1)['enable_regrading_alert']
   end
 
   def send_delayed_regrading_alert
