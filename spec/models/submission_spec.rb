@@ -94,8 +94,8 @@ context "Submission Needs Regrading" do
       allow(SettingsService).to receive(:get_settings).and_return('enable_regrading_alert' => true)
       allow(AlertsService::SecretManager).to receive(:get_secret).and_return({'API_ENDPOINT' => '12345'})
       allow(HTTParty).to receive(:post).and_return(AlertsService::Response.new(200, nil))
-      allow(submission).to receive(:type).and_return('discussion_topic')
-      expect(AlertsService::Client).to receive(:create)
+      allow(ubmission).to receive(:type).and_return('discussion_topic')
+      expect(AlertsService::Client).to_not receive(:create)
       submission.update(submitted_at: Time.now)
     end 
   end
