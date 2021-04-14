@@ -98,4 +98,5 @@ context "Submission Needs Regrading" do
       expect(AlertsService::Client).to receive(:create)
       discussion_topic.update(submitted_at: Time.now)
     end 
+  end
 end
