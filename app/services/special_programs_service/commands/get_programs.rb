@@ -8,7 +8,9 @@ module SpecialProgramsService
 
       def call
         return special_programs unless user && partner_name && user_uuid && programs_domain
-        response = HTTParty.get(programs_url, { 'Authorization': "Bearer #{user.access_token}" })
+        response = HTTParty.get(programs_url, headers: {
+          'Authorization': "Bearer #{user.access_token}"
+        })
 
         if response.code == 200
           response.parsed_response.each do |special_program|
