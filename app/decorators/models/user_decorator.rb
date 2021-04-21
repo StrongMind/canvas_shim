@@ -191,7 +191,7 @@ User.class_eval do
 
     @access_token ||= HTTParty.post(
       "https://#{identity_domain}/connect/token",
-      :body => "grant_type=client_credentials&scope=identity_server_api.full_access",
+      :body => "grant_type=client_credentials",
       :headers => {
         'Content-Type' => 'application/x-www-form-urlencoded',
         'Authorization' => "Basic #{identity_client_credentials}"
