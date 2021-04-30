@@ -9,6 +9,28 @@ UsersController.class_eval do
     render :json => { accommodations: accommodations }, :status => :ok
   end
 
+  def check_if_migratable
+    if (@current_user.try(:roles, Account.default) || []).include?("root_admin")
+      user = User.find(params[:id])
+      pseudonym = user.pseudonyms.select(&:identity_pseudonym?)
+                    .order("pseudonyms.current_login_at DESC").first
+      if pseudonym && pseudonym.confirmed_in_identity?
+        render :json => {
+          integration_id: pseudonym.integration_id
+        }, :status => :ok
+      else
+        render :json => {}, :status => :ok
+      end
+    else
+      render :json => {
+          :message => t(
+            'unauthorized_to_get_migratable_users',
+            "Unauthorized to get migratable users."
+          )
+        }, :status => :unauthorized
+    end
+  end
+
   def observer_enrollments
     user = User.find(params[:id])
     return render_unauthorized_action unless user

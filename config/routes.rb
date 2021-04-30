@@ -37,6 +37,7 @@ Rails.application.routes.draw do
 
   scope(controller: :users) do
     get '/users/:id/special_programs', action: :special_programs
+    get '/users/:id/check_if_migratable', action: :check_if_migratable
   end
 
   scope(controller: :enrollments_api) do
