@@ -37,7 +37,6 @@ Rails.application.routes.draw do
 
   scope(controller: :users) do
     get '/users/:id/special_programs', action: :special_programs
-    get '/users/:id/check_if_migratable', action: :check_if_migratable
   end
 
   scope(controller: :enrollments_api) do
@@ -62,6 +61,7 @@ Rails.application.routes.draw do
       get 'users/:id/confirm_provisioning', action: :confirm_provisioning
       get 'users/:id/sis_user_note', action: :sis_user_note
       put 'users/:sis_user_id/provision_identity_v2', action: :provision_identity_v2
+      get '/users/:id/check_if_migratable', action: :check_if_migratable
     end
 
     scope(controller: :user_observees) do

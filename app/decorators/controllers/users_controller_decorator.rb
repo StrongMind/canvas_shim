@@ -12,8 +12,7 @@ UsersController.class_eval do
   def check_if_migratable
     if (@current_user.try(:roles, Account.default) || []).include?("root_admin")
       user = User.find(params[:id])
-      pseudonym = user.pseudonyms.select(&:identity_pseudonym?)
-                    .order("pseudonyms.current_login_at DESC").first
+      pseudonym = user.pseudonyms.order("pseudonyms.current_login_at DESC").find(&:identity_pseudonym?)
       if pseudonym && pseudonym.confirmed_in_identity?
         render :json => {
           integration_id: pseudonym.integration_id
