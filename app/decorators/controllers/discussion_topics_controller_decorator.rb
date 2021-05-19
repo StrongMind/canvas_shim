@@ -41,7 +41,7 @@ DiscussionTopicsController.class_eval do
   end
 
   def get_discussion_assignment
-    @assignment = @context.discussion_topics.find(params[:id])&.assignment
+    @assignment = @context.discussion_topics.find(params[:id] || params[:topic_id])&.assignment
   end
 
   def merge_unassign_params
