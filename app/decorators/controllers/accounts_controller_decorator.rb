@@ -1,4 +1,9 @@
 AccountsController.class_eval do
+  def show_account_by_uuid
+    @account = Account.find_by(uuid: params[:account_uuid].split(":").last)
+    show
+  end
+  
   def strongmind_settings
     grab_holidays
     get_allowed_filetypes
