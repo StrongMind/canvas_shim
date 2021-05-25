@@ -1,8 +1,9 @@
 describe AlertsService::Client do
+  include_context "stubbed_network"
   subject { described_class }
 
   let(:alert) { double('alert', as_json: {teacher_id: 1, student_id: 1, assignment_id: 1, type: 'max_attempts_reached'}) }
-  let(:http_client) { double('http_client', post: nil) }
+  let(:http_client) { double('http_client', post: OpenStruct.new(code: 200)) }
   let(:alert_fields) do 
     { 
       teacher_id: 1, 
@@ -13,6 +14,10 @@ describe AlertsService::Client do
   end
   
   before do
+    allow(AlertsService::SecretManager).to receive(:get_secret).and_return({
+      "API_ENDPOINT" => "https://kom06r8apf.execute-api.us-west-2.amazonaws.com/dev"
+    })
+    allow(HTTParty).to receive(:post).and_return(OpenStruct.new(code: 201))
     allow(AlertsService::Endpoints).to receive(:school).and_return(AlertsService::School.new('myschool'))
   end
 
@@ -103,6 +108,9 @@ describe AlertsService::Client do
   end
 
   describe '#bulk_delete' do
+    before do
+      allow(HTTParty).to receive(:post).and_return(OpenStruct.new(code: 200))
+    end
     it 'can bulk delete' do
       VCR.use_cassette 'alerts_service/client/bulk_delete' do
         expect(subject.bulk_delete([2]).code).to eq 200
