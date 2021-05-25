@@ -1,6 +1,11 @@
 AccountsController.class_eval do
   def show_account_by_uuid
     @account = Account.find_by(uuid: params[:account_uuid].split(":").last)
+
+    return render :json => {
+        message: "No account for this uuid"
+      }, :status => :not_found unless @account
+
     show
   end
   
