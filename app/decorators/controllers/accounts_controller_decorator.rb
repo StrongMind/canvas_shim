@@ -1,4 +1,14 @@
 AccountsController.class_eval do
+  def show_account_by_uuid
+    @account = Account.find_by(uuid: params[:account_uuid].split(":").last)
+
+    return render :json => {
+        message: "No account found with this uuid."
+      }, :status => :not_found unless @account
+
+    show
+  end
+  
   def strongmind_settings
     grab_holidays
     get_allowed_filetypes
