@@ -5,8 +5,7 @@ describe PipelineService::Builders::CourseProgressJSONBuilder do
   let(:course) {Course.create}
   let(:user) {User.create}
   let(:context_module) { double('course_module', context: course) }
-
-  let(:ar_object) { double('context_module_progression', context_module: context_module, user: user, class: double(primary_key: 'id'), id: 1) }
+  let(:ar_object) { ContextModuleProgression.create(context_module: context_module, user: user) }
   let(:noun) { PipelineService::Nouns::CourseProgress.new(ar_object) }
 
   it "Returns course progress" do
