@@ -15,8 +15,7 @@ describe ContextModule do
         allow(SettingsService).to receive(:get_settings).and_return('passing_threshold' => 70)
         allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentMinScores).to receive(:score_threshold).and_return(60.0)
         allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentMinScores).to receive(:has_threshold_override?).and_return(false)
-        mod = ContextModule.create(completion_requirements: completion_requirements)
-        RequirementsService.apply_minimum_scores(context_module: mod)
+        ContextModule.create(completion_requirements: completion_requirements)
       end
 
       it "modifies submittable types" do
@@ -39,8 +38,7 @@ describe ContextModule do
         before do
           allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentMinScores).to receive(:score_threshold).and_return(0.0)
           allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentMinScores).to receive(:has_threshold_override?).and_return(false)
-          mod = ContextModule.create(completion_requirements: completion_requirements)
-          RequirementsService.apply_minimum_scores(context_module: mod)
+          ContextModule.create(completion_requirements: completion_requirements)
         end
 
         it "does not modify the completion requirements" do
@@ -52,8 +50,7 @@ describe ContextModule do
       context "has threshold overrides" do
         before do
           allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentMinScores).to receive(:has_threshold_override?).with({:id=>56, :type=>"must_submit"}).and_return(true)
-          mod = ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
-          RequirementsService.apply_minimum_scores(context_module: mod)
+          ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
         end
 
         it "ignores the overridden requirement" do
@@ -76,8 +73,7 @@ describe ContextModule do
 
         before do
           allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentMinScores).to receive(:score_threshold).and_return(60.0)
-          mod = ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
-          RequirementsService.apply_minimum_scores(context_module: mod)
+          ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
         end
 
         it "overrides with actual threshold" do
@@ -91,8 +87,7 @@ describe ContextModule do
       before do
         allow(SettingsService).to receive(:get_settings).and_return('passing_threshold' => 70)
         allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentMinScores).to receive(:score_threshold).and_return(70.0)
-        mod = ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
-        RequirementsService.apply_minimum_scores(context_module: mod)
+        ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
       end
 
       it "uses the course score threshold" do
