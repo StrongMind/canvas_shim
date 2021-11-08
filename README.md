@@ -58,6 +58,15 @@ Or install it yourself as:
 $ gem install canvas_shim
 ```
 
+## Unit Testing
+
+```bash
+brew install postgres
+createdb shim_test
+bin/rails db:migrate RAILS_ENV=test
+rake app:spec
+```
+
 ## Contributing
 Contribution directions go here.
 
