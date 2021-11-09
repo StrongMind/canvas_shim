@@ -54,15 +54,15 @@ CourseProgress.class_eval do
   def cache_and_return_count(completed: false)
     reqs = completed ? requirements_completed : requirements
     count = filter_out_excused_requirements(reqs).size
-    Rails.cache.write(cache_key(completed: completed), count)
+    Rails.cache.write(cache_key(completed: completed), count, expires_in: 1.minutes)
     count
   end
 
   def to_json
     if allow_course_progress?
       {
-        requirement_count: requirement_count,
-        requirement_completed_count: requirement_completed_count,
+        requirement_count: requirement_count(cached: true),
+        requirement_completed_count: requirement_completed_count(cached: true),
         next_requirement_url: current_requirement_url,
         completed_at: completed_at
       }

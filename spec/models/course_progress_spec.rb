@@ -54,7 +54,7 @@ describe CourseProgress do
       let(:content_tag_2) { ContentTag.create(content_id: assn.id, content_type: 'Assignment') }
       let(:content_tag_3) { ContentTag.create(content_id: assn_2.id, content_type: 'Assignment') }
 
-        
+
       let(:fake_requirements) do
         [
           {:id=>content_tag_1.id, :type=>"must_view"},
@@ -80,23 +80,48 @@ describe CourseProgress do
     end
 
     context "cached calculation" do
+      let(:requirement_count) { rand(1..100) }
+      let(:requirement_completed_count) { rand(1..100) }
       before do
         allow(Rails.cache).to receive(:read).with(
           course_progress_student.cache_key
-        ).and_return(2)
+        ).and_return(requirement_count)
 
         allow(Rails.cache).to receive(:read).with(
           course_progress_student.cache_key(completed: true)
-        ).and_return(4)
+        ).and_return(requirement_completed_count)
       end
 
       it "returns cached results (reqirement count)" do
-        expect(course_progress_student.requirement_count(cached: true)).to eq(2)
+        expect(course_progress_student.requirement_count(cached: true)).to eq(requirement_count)
       end
 
       it "returns cached results (reqirement completed count)" do
-        expect(course_progress_student.requirement_completed_count(cached: true)).to eq(4)
+        expect(course_progress_student.requirement_completed_count(cached: true)).to eq(requirement_completed_count)
       end
+    end
+
+    context "#to_json" do
+      let(:requirement_count) { rand(1..100) }
+      let(:requirement_completed_count) { rand(1..100) }
+      before do
+        allow(Rails.cache).to receive(:read).with(
+          course_progress_student.cache_key
+        ).and_return(requirement_count)
+
+        allow(Rails.cache).to receive(:read).with(
+          course_progress_student.cache_key(completed: true)
+        ).and_return(requirement_completed_count)
+      end
+
+      it "returns cached results (requirement count)" do
+        expect(course_progress_student.to_json[:requirement_count]).to eq(requirement_count)
+      end
+
+      it "returns cached results (requirement completed count)" do
+        expect(course_progress_student.to_json[:requirement_completed_count]).to eq(requirement_completed_count)
+      end
+
     end
   end
 end
