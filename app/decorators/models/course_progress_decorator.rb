@@ -108,9 +108,14 @@ CourseProgress.class_eval do
   end
 
   def get_submissions_from_content_tag(ct)
-    ct.content.try(:submissions).try(:find_by, { user: course_progress_user }) ||
-    ct.content.try(:assignment).try(:submissions).try(:find_by, { user: course_progress_user }) ||
-    quiz_submissions(ct)
+    if ct.content_type == "Assignment"
+      ct.content.submissions.find_by(user: course_progress_user)
+    elsif ct.content_type == "Submission"
+      ct.content.assignment.submissions.find_by(user: course_progress_user)
+    else
+      quiz_submissions(ct)
+    end
+
   end
 
   def quiz_submissions(item)
