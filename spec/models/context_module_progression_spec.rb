@@ -16,27 +16,10 @@ describe ContextModuleProgression do
     end
   end
 
-  context "Pipeline" do
-
-    context "User is not enrolled as a student" do
-      let!(:enrollment) { Enrollment.create(user: user, course: course, type: 'TeacherEnrollment') }
-      it 'does not publish course progress to the pipeline' do
-        
-        expect(PipelineService::Nouns::CourseProgress).to_not receive(:new)
-        ContextModuleProgression.create(user: user, context_module: context_module)
-        
-      end
-    end
-
-    it 'publishes course progress to the pipeline' do
-      expect(PipelineService).to receive(:publish)
-      ContextModuleProgression.create(user: user, context_module: context_module)
-    end
-
-    it 'builds a course progress noun' do
-      cmp = ContextModuleProgression.create(user: user, context_module: context_module)
-      expect(PipelineService::Nouns::CourseProgress).to receive(:new).with(cmp)
-      cmp.update(user: user)
-    end
+  it 'publishes to the pipeline' do
+    cmp = ContextModuleProgression.new(user: user, context_module: context_module)
+    expect(PipelineService::V2).to receive(:publish).with (cmp)
+    cmp.save
   end
+
 end
