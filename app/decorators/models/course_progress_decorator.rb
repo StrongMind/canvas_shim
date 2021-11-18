@@ -54,15 +54,15 @@ CourseProgress.class_eval do
   def cache_and_return_count(completed: false)
     reqs = completed ? requirements_completed : requirements
     count = filter_out_excused_requirements(reqs).size
-    Rails.cache.write(cache_key(completed: completed), count)
+    Rails.cache.write(cache_key(completed: completed), count, expires_in: 1.minutes)
     count
   end
 
   def to_json
     if allow_course_progress?
       {
-        requirement_count: requirement_count,
-        requirement_completed_count: requirement_completed_count,
+        requirement_count: requirement_count(cached: true),
+        requirement_completed_count: requirement_completed_count(cached: true),
         next_requirement_url: current_requirement_url,
         completed_at: completed_at
       }
@@ -108,9 +108,14 @@ CourseProgress.class_eval do
   end
 
   def get_submissions_from_content_tag(ct)
-    ct.content.try(:submissions).try(:find_by, { user: course_progress_user }) ||
-    ct.content.try(:assignment).try(:submissions).try(:find_by, { user: course_progress_user }) ||
-    quiz_submissions(ct)
+    if ct.content_type == "Assignment"
+      ct.content.submissions.find_by(user: course_progress_user)
+    elsif ct.content_type == "Submission"
+      ct.content.assignment.submissions.find_by(user: course_progress_user)
+    else
+      quiz_submissions(ct)
+    end
+
   end
 
   def quiz_submissions(item)
