@@ -22,4 +22,10 @@ describe ContextModuleProgression do
     cmp.save
   end
 
+  it 'publishes course_progress to the pipeline' do
+    cmp = ContextModuleProgression.new(user: user, context_module: context_module)
+    expect(PipelineService).to receive(:publish_as_v2).with instance_of(PipelineService::Nouns::CourseProgress)
+    cmp.save
+  end
+
 end
