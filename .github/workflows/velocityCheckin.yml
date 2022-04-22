@@ -17,4 +17,4 @@ jobs:
       # run the curl command, taking inputs.
       - run: curl -d "token=$VELOCITY_DEPLOYMENT_TOKEN" -d "revision=${{ github.sha }}" -d "repository_url=${{ github.server_url }}/${{ github.repository }}" -d "branch=${{ github.ref_name }}" -d "version=${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}" -d "environment=prod"  https://velocity.codeclimate.com/deploys
         env:
-          VELOCITY_DEPLOYMENT_TOKEN: ${{ secrets.VELOCITY_DEPLOYMENT_TOKEN }
+          VELOCITY_DEPLOYMENT_TOKEN: ${{ secrets.VELOCITY_DEPLOYMENT_TOKEN }}
