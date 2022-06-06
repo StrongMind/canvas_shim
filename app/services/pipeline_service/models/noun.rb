@@ -53,15 +53,9 @@ module PipelineService
       end
 
       def valid?
-        begin
-          puts "####################"
-          puts "Additional Identifiers = #{additional_identifiers.inspect}"
-          puts "Additional Identifier Values: #{additional_identifiers.values.inspect}"
-          puts "####################"
-        rescue
-          puts "print failed"
-        end
+        # returns true if additional_identifiers are nil
         return true if additional_identifiers.nil?
+        # returns false if any of the values in the additional_identifiers values are nil
         !additional_identifiers.values.any?(&:nil?)
       end
 
