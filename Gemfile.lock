@@ -158,7 +158,7 @@ GEM
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     inflecto (0.0.2)
-    jmespath (1.4.0)
+    jmespath (1.6.1)
     json (2.2.0)
     link_header (0.0.8)
     loofah (2.2.3)
