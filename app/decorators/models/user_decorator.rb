@@ -148,7 +148,7 @@ User.class_eval do
   alias_method :recent_feedback, :recent_feedback_with_wrap
 
 
-  def add_observee(observee)  
+  def add_observee(observee)
     user_observees.create_or_restore(user_id: observee.id) unless has_observee?(observee)
   end
 
@@ -214,8 +214,8 @@ User.class_eval do
   end
 
   def validate_identity_creation
-    return errors.add(:email, "Identity Server: Email Invalid") unless identity_email.present?
-    return errors.add(:name, "Identity Server: Access Token Not Granted") unless access_token
+    return errors.add(:email, "Identity Server: Email Invalid. Pseudonym[unique_id] must be valid email.") unless identity_email.present?
+    return errors.add(:name, "Identity Server: Failed to get auth token from identity. PLease check your school settings for an identity basic auth token.") unless access_token
 
     self.identity_username = "#{name.parameterize(separator: '_')}_#{SecureRandom.hex(4)}"
 
