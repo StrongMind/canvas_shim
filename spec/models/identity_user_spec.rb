@@ -97,19 +97,19 @@ describe User do
 
       it "does not create" do
         expect(subject.save).to eq(false)
-        expect(subject.errors["name"]).to eq ["Identity Server: Access Token Not Granted"]
+        expect(subject.errors["name"]).to eq ["Identity Server: Failed to get auth token from identity. PLease check your school settings for an identity basic auth token."]
       end
     end
 
     context "Failed response" do
-      let(:fail_response) do 
+      let(:fail_response) do
         instance_double(HTTParty::Response, parsed_response: JSON.parse(success_response_body), success?: false)
       end
 
       let(:fail_response_body) do
         { "error" => { "message" => "Bad Request" } }
       end
-      
+
       before do
         allow(HTTParty).to receive(:post).and_return(fail_response)
       end
@@ -125,7 +125,7 @@ describe User do
 
       it "does not save" do
         expect(fail_user.save).to eq(false)
-        expect(fail_user.errors["email"]).to eq ["Identity Server: Email Invalid"]
+        expect(fail_user.errors["email"]).to eq ["Identity Server: Email Invalid. Pseudonym[unique_id] must be valid email."]
       end
     end
   end
@@ -139,7 +139,7 @@ describe User do
 
     it "fails validation without bang" do
       expect { fail_user.save_with_identity_server_create("bademail", force: false) }.not_to raise_error
-      expect(fail_user.errors["email"]).to eq ["Identity Server: Email Invalid"]
+      expect(fail_user.errors["email"]).to eq ["Identity Server: Email Invalid. Pseudonym[unique_id] must be valid email."]
     end
   end
 
