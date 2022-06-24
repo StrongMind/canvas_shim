@@ -12,7 +12,7 @@ UserObserveesController.class_eval do
     begin
       user.destroy_all_observations(observee_ids)
     rescue StandardError => exception
-      Raven.capture_exception(exception)
+      Sentry.capture_exception(exception)
       render :json => {}, :status => :bad_request
     end
 

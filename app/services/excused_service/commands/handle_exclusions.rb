@@ -23,7 +23,7 @@ module ExcusedService
               unexcuse_assignments
             end
           rescue StandardError => exception
-            Raven.capture_exception(exception)
+            Sentry.capture_exception(exception)
           end
         end
       end
