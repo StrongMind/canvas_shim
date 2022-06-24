@@ -21,7 +21,7 @@ EnrollmentsApiController.class_eval do
     end
 
   rescue StandardError => exception
-    Raven.capture_exception(exception)
+    Sentry.capture_exception(exception)
     render :json => {}, :status => :bad_request
   end
 
@@ -42,7 +42,7 @@ EnrollmentsApiController.class_eval do
     }, status => :ok
 
   rescue StandardError => exception
-    Raven.capture_exception(exception)
+    Sentry.capture_exception(exception)
     render :json => {}, :status => :bad_request
   end
 

@@ -2,12 +2,12 @@ describe PipelineService::V2 do
   let(:ar_object) { double('ar object')}
   let(:command) { double('command', call: nil) }
   let(:command_class) { PipelineService::V2::API::Publish }
-  
+
   describe '#publish' do
     before do
-      class_double("Raven").as_stubbed_const
+      class_double("Sentry").as_stubbed_const
     end
-    
+
     it 'calls the api' do
       expect(command_class).to receive(:new)
         .with(ar_object)
@@ -16,12 +16,12 @@ describe PipelineService::V2 do
     end
 
     context 'error publishing' do
-      before do    
+      before do
         allow(command_class).to receive(:new).and_raise('boom')
-      end 
+      end
 
       it 'supresses the error andreports to sentry' do
-        expect(Raven).to receive(:captureException)
+        expect(Sentry).to receive(:capture_exception)
         described_class.publish(ar_object)
       end
     end

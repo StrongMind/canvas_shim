@@ -24,7 +24,7 @@ CoursesController.class_eval do
         end
         flash.now[:notice] = t("The selected students have been graded out successfully.")
       rescue StandardError => exception
-        Raven.capture_exception(exception)
+        Sentry.capture_exception(exception)
         flash.now[:error] = t("Something went wrong. Please try again.")
       ensure
         @student_enrollments = @context.student_enrollments.where(type: "StudentEnrollment")
