@@ -114,7 +114,8 @@ gem 'uglifier', '~> 4'
 gem 'virtus', '~> 1'
 gem 'websocket-driver', '~> 0'
 gem 'websocket-extensions', '~> 0'
-
+gem 'sentry-rails', '5.3.1'
+gem 'sentry-ruby', '5.3.1'
 
 
 group :test do
@@ -131,6 +132,5 @@ group :development, :test do
   gem 'awesome_print'
   gem 'timecop'
   gem 'vcr'
-  gem 'sentry-raven'
   gem 'sanitize', '2.1.0', require: false
 end

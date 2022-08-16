@@ -28,7 +28,7 @@ module PipelineService
       begin
         V2::API::Publish.new(model).call
       rescue StandardError => exception
-        Sentry.capture_exception(exception) if Rails.env.production?
+        Sentry.capture_exception(exception)
       end
     end
   end

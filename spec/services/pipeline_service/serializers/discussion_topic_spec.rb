@@ -15,7 +15,7 @@ describe PipelineService::Serializers::DiscussionTopic do
 
   it 'calls our api with course and discussion_topic ids' do
     expect(PipelineService::HTTPClient).to receive(:get)
-      .with("http://#{ENV['CANVAS_DOMAIN']}:80/api/v1/courses/#{course.id}/discussion_topics/#{discussion_topic.id}", any_args)
+      .with("http://#{ENV['CANVAS_DOMAIN']}:3000/api/v1/courses/#{course.id}/discussion_topics/#{discussion_topic.id}", any_args)
       .and_return(double('response', parsed_response: {}))
 
     subject.call
