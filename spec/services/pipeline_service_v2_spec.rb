@@ -1,4 +1,4 @@
-  describe PipelineService::V2 do
+describe PipelineService::V2 do
   let(:ar_object) { double('ar object')}
   let(:command) { double('command', call: nil) }
   let(:command_class) { PipelineService::V2::API::Publish }
