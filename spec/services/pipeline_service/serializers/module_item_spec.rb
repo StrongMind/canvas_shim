@@ -8,7 +8,7 @@ describe PipelineService::Serializers::ModuleItem do
 
   it do
     expect(PipelineService::HTTPClient).to receive(:get).with(
-      "http://#{ENV['CANVAS_DOMAIN']}:80/api/v1/courses/#{course.id}/modules/#{context_module.id}/items/#{content_tag.id}",
+      "http://#{ENV['CANVAS_DOMAIN']}:3000/api/v1/courses/#{course.id}/modules/#{context_module.id}/items/#{content_tag.id}",
       any_args
     )
     subject.call
