@@ -63,7 +63,7 @@ gem 'globalid', '~> 0'
 gem 'groupdate', '~> 4'
 gem 'hashdiff', '~> 0'
 gem 'httparty', '~> 0'
-gem 'i18n', '~> 1'
+gem 'i18n', '0.8.6'
 gem 'ice_nine', '~> 0'
 gem 'inflecto', '~> 0'
 gem 'jmespath', '~> 1'
@@ -124,7 +124,7 @@ end
 group :development, :test do
   gem 'byebug', groups: ['development', 'test']
   gem 'dotenv-rails'
-  gem 'faker'
+  gem 'faker', '~> 1'
   gem 'pry-byebug'
   gem 'rspec-rails', '~> 3'
   gem 'spring'
