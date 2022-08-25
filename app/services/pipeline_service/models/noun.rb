@@ -10,10 +10,10 @@ module PipelineService
         @changes = object.changes if object.respond_to?(:changes)
         @workflow_state = object.try(:workflow_state)
         @object_is_destroyed = object.try(:destroyed?)
-        
-        @additional_identifiers = 
+
+        @additional_identifiers =
         if self.class == PipelineService::Models::Noun
-          # Synthetic nouns dont wrap active record objects and have their own serializers 
+          # Synthetic nouns dont wrap active record objects and have their own serializers
           # with additional identifiers
           get_additional_identifiers(object)
         else
@@ -32,7 +32,7 @@ module PipelineService
       end
 
       def name
-        send(:alias) || short_class_name.underscore 
+        send(:alias) || short_class_name.underscore
       end
 
       def serializer
@@ -54,6 +54,10 @@ module PipelineService
 
       def valid?
         return true if additional_identifiers.nil?
+        puts "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+        puts self.inspect
+        puts self.class
+        puts "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
         !additional_identifiers.values.any?(&:nil?)
       end
 
