@@ -53,11 +53,12 @@ module PipelineService
       end
 
       def valid?
+        puts "checking validity: #{self.inspect}"
         return true if additional_identifiers.nil?
-        puts "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+        puts "***************************************"
         puts self.inspect
         puts self.class
-        puts "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+        puts "***************************************"
         !additional_identifiers.values.any?(&:nil?)
       end
 
