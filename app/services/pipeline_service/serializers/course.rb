@@ -10,6 +10,11 @@ module PipelineService
         @payload.merge!(passing_thresholds)
         if SettingsService.get_settings(object: :school, id: 1)['powerschool_integration']
           @payload.merge!(powerschool_ids)
+
+
+          if powerschool_ids.values.any?(&:nil?)
+            Sentry.capture_message("powerschool ids has at least one null value in Noun for course #{@course}")
+          end
         end
         @payload
       end
