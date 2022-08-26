@@ -40,7 +40,7 @@ module AlertsService
           if alert == nil
             return {}
           end
-          return alert_class(alert).from_payload(alert)
+          return alert_class(alert).from_payload(alert) if alert_class(alert)
         end
       end
     end
