@@ -201,7 +201,7 @@ CoursesController.class_eval do
 
   def threshold_ui_allowed?
     RequirementsService.course_threshold_setting_enabled? &&
-    (!!@current_user.enrollments.find_by(type: 'TeacherEnrollment') || @current_user.roles(Account.site_admin).include?('admin')) &&
+    (!!@current_user&.enrollments&.find_by(type: 'TeacherEnrollment') || @current_user&.roles(Account.site_admin)&.include?('admin')) &&
     no_active_students_or_post_thresh?
   end
 
