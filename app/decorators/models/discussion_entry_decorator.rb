@@ -48,7 +48,7 @@ DiscussionEntry.class_eval do
 
   private
   def is_discussion_reply_from_student?
-    reply_alerts_on? && is_from_student? && parent_id
+    reply_alerts_on? && is_from_student?
   end
 
   def is_from_student?
