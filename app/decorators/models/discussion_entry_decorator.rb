@@ -48,7 +48,7 @@ DiscussionEntry.class_eval do
 
   private
   def is_discussion_reply_from_student?
-    reply_alerts_on? && is_from_student? && !is_first_post?
+    reply_alerts_on? && is_from_student? && (parent_id || !is_first_post?)
   end
 
   def is_from_student?
@@ -64,6 +64,7 @@ DiscussionEntry.class_eval do
   end
 
   def is_first_post?
-    DiscussionEntry.where(user_id: user_id, discussion_topic_id: discussion_topic.id, parent_id: nil).count == 1
+    self.discussion_topic.discussion_entries.where(user_id: user_id, parent_id: nil).count == 1
   end
+
 end
