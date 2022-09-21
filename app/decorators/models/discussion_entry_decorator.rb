@@ -64,6 +64,6 @@ DiscussionEntry.class_eval do
   end
 
   def is_first_post?
-    self.where(user_id: user_id, discussion_topic_id: discussion_topic.id, parent_id: nil).count == 1
+    DiscussionEntry.where(user_id: user_id, discussion_topic_id: discussion_topic.id, parent_id: nil).count == 1
   end
 end
