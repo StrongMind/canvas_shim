@@ -45,7 +45,7 @@ jobs:
           RAILS_ENV: test
         run: |
           ps -ef | grep postgres
-          sudo find /tmp/ -name .s.PGSQL.5432
+          find /tmp/ -name .s.PGSQL.5432
 
         #bin/rails db:create db:migrate --trace
         #bundle exec rspec
