@@ -44,8 +44,5 @@ jobs:
           POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
           RAILS_ENV: test
         run: |
-          ps -ef | grep postgres
-          find /tmp/ -name .s.PGSQL.5432
-
-        #bin/rails db:create db:migrate --trace
-        #bundle exec rspec
+          bin/rails db:create db:migrate
+          bundle exec rspec
