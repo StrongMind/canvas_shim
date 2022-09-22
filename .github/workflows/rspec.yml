@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-18.04
     services:
       postgres:
-        image: postgres:14-alpine
+        image: postgres:9-alpine
         env:
           POSTGRES_DATABASE: shim_test
           POSTGRES_USER: postgres
