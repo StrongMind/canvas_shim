@@ -313,7 +313,7 @@ DEPENDENCIES
   arel (~> 7)
   awesome_print
   aws-eventstream (~> 1)
-  aws-partitions (~> 1.586.0)
+  aws-partitions (~> 1)
   aws-sdk-core (~> 3)
   aws-sdk-dynamodb (~> 1)
   aws-sdk-kms (~> 1)
@@ -421,4 +421,4 @@ DEPENDENCIES
   websocket-extensions (~> 0)
 
 BUNDLED WITH
-   2.3.16
+   2.3.21
