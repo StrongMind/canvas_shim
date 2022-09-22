@@ -19,3 +19,5 @@ development:
 test:
   <<: *default
   database: shim_test
+  username: <%= ENV['POSTGRES_USER'] %>
+  password: <%= ENV['POSTGRES_PASSWORD'] %>
