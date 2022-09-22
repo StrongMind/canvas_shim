@@ -108,6 +108,22 @@ describe DiscussionEntry do
         end
       end
 
+      context "Second root Entry" do
+        it "returns true if second root entry" do
+          # Arrange
+          student = User.create
+          DiscussionEntry.create(discussion_topic: discussion_topic, unread: false, user_id: student.id, parent_id: nil)
+          Enrollment.create(course_id: course.id, user_id: student.id, type: "StudentEnrollment")
+          allow(student).to receive(:student_enrollments).and_return(student.enrollments)
+          second_entry = DiscussionEntry.create(discussion_topic: discussion_topic, unread: false, user_id: student.id, parent_id: nil)
+          allow(SettingsService).to receive(:get_settings).and_return('reply_alerts' => true)
+          # Act
+          result = second_entry.send(:is_discussion_reply_from_student?)
+          # Assert
+          expect(result).to be_truthy
+        end
+      end
+
       context "Non-root Entry" do
         before do
           allow(subject).to receive(:parent_id).and_return(subject.id)
