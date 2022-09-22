@@ -18,11 +18,11 @@ jobs:
       postgres:
         image: postgres:9-alpine
         env:
-          PG_DATABASE: postgres
-          PG_HOST: localhost
-          PG_PORT: 5432
-          PG_USER: postgres
-          PG_PASSWORD: postgres
+          POSTGRES_DATABASE: postgres
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
           RAILS_ENV: test
         # needed because the postgres container does not provide a healthcheck
         # tmpfs makes DB faster by using RAM
@@ -38,10 +38,10 @@ jobs:
         run: bundle install --path vendor/bundle
       - name: Setup DB, Run tests
         env:
-          PG_HOST: localhost
-          PG_USER: postgres
-          PG_PASSWORD: postgres
-          PG_PORT: ${{ job.services.postgres.ports[5432] }}
+          POSTGRES_HOST: localhost
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
           RAILS_ENV: test
         run: |
           sudo apt-get -yqq install libpq-dev
