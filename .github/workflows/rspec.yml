@@ -43,6 +43,6 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_PORT: 5432 #${{ job.services.postgres.ports[5432] }}
           RAILS_ENV: test
-        run --trace: |
-          bin/rails db:create db:migrate
+        run: |
+          bin/rails db:create db:migrate --trace
           bundle exec rspec
