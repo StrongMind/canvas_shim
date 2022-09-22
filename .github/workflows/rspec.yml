@@ -47,3 +47,5 @@ jobs:
           sudo apt-get -yqq install libpq-dev
           bin/rails db:create db:migrate
           bundle exec rspec
+          |
+          --trace
