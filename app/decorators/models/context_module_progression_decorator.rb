@@ -26,4 +26,15 @@ ContextModuleProgression.class_eval do
     settings = enrollment ? SettingsService.get_enrollment_settings(id: enrollment.id) : {}
     settings.fetch('sequence_control', true)
   end
+
+  def uncollapse!
+    return unless self.collapsed?
+    begin
+      self.reload!
+      self.collapsed = false
+      self.save
+    rescue ActiveRecord::StaleObjectError
+      retry
+    end
+  end
 end
