@@ -18,6 +18,11 @@ jobs:
       postgres:
         image: postgres:9-alpine
         ports: ['5432:5432']
+        env:
+          POSTGRES_DATABASE: postgres
+          POSTGRES_HOST: localhost
+          POSTGRES_USER: postgres
+          RAILS_ENV: test
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
