@@ -3,7 +3,7 @@ User.class_eval do
   before_validation :check_identity_duplicate, on: :create, if: -> { identity_enabled && powerschool_integration }
   validate :validate_identity_creation, if: -> { run_identity_validations == "create" }
   after_save :create_identity_pseudonym!, if: :identity_uuid
-  before_save :raise_exception_for_dead_name, if: Proc.new { |user| user.id == 185222 || user.email == "alejandra.torres@strongmind.com" }
+  before_save :raise_exception_for_dead_name, if: Proc.new { |user| user.id == 185222 }
 
   after_commit -> { PipelineService::V2.publish self }
 
