@@ -22,7 +22,7 @@ jobs:
           POSTGRES_DATABASE: postgres
           POSTGRES_HOST: localhost
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgrez
+          POSTGRES_PASSWORD: postgres
           RAILS_ENV: test
         options: >-
           --health-cmd pg_isready
