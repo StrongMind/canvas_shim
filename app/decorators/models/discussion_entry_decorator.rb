@@ -48,7 +48,7 @@ DiscussionEntry.class_eval do
 
   private
   def is_discussion_reply_from_student?
-    reply_alerts_on? && is_from_student? && parent_id
+    reply_alerts_on? && is_from_student? && (parent_id || !is_first_post?)
   end
 
   def is_from_student?
@@ -62,4 +62,9 @@ DiscussionEntry.class_eval do
   def teacher_ids_to_alert
     discussion_topic.course.teacher_enrollments.pluck(:user_id)
   end
+
+  def is_first_post?
+    self.discussion_topic.discussion_entries.where(user_id: user_id, parent_id: nil).count == 1
+  end
+
 end

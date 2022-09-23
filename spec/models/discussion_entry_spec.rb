@@ -90,31 +90,47 @@ describe DiscussionEntry do
     end
 
     context 'Student Discussion Entry' do
-      subject do
-        DiscussionEntry.create(discussion_topic: discussion_topic, unread: false, user_id: student.id)
-      end
-
-      before do
-        allow(subject.user).to receive(:student_enrollments).and_return(student.enrollments)
-      end
-
       context "Root Entry" do
-        before do
-          allow(subject).to receive(:parent_id).and_return(nil)
-        end
-
         it "returns false if root entry" do
-          expect(subject.send(:is_discussion_reply_from_student?)).to be_falsy
+          # Arrange
+          first_entry = DiscussionEntry.create(discussion_topic: discussion_topic, unread: false, user_id: student.id, parent_id: nil)
+          Enrollment.create(course_id: course.id, user_id: student.id, type: "StudentEnrollment")
+          allow(student).to receive(:student_enrollments).and_return(student.enrollments)
+          allow(SettingsService).to receive(:get_settings).and_return('reply_alerts' => true)
+          # Act
+          result = first_entry.send(:is_discussion_reply_from_student?)
+          # Assert
+          expect(result).to be_falsy
+        end
+      end
+
+      context "Second root Entry" do
+        it "returns true if second root entry" do
+          # Arrange
+          student = User.create
+          DiscussionEntry.create(discussion_topic: discussion_topic, unread: false, user_id: student.id, parent_id: nil)
+          Enrollment.create(course_id: course.id, user_id: student.id, type: "StudentEnrollment")
+          allow(student).to receive(:student_enrollments).and_return(student.enrollments)
+          second_entry = DiscussionEntry.create(discussion_topic: discussion_topic, unread: false, user_id: student.id, parent_id: nil)
+          allow(SettingsService).to receive(:get_settings).and_return('reply_alerts' => true)
+          # Act
+          result = second_entry.send(:is_discussion_reply_from_student?)
+          # Assert
+          expect(result).to be_truthy
         end
       end
 
       context "Non-root Entry" do
-        before do
-          allow(subject).to receive(:parent_id).and_return(subject.id)
-        end
-
         it "returns true if reply" do
-          expect(subject.send(:is_discussion_reply_from_student?)).to be_truthy
+          # Arrange
+          non_root_entry = DiscussionEntry.create(discussion_topic: discussion_topic, unread: false, user_id: student.id, parent_id: 123)
+          Enrollment.create(course_id: course.id, user_id: student.id, type: "StudentEnrollment")
+          allow(student).to receive(:student_enrollments).and_return(student.enrollments)
+          allow(SettingsService).to receive(:get_settings).and_return('reply_alerts' => true)
+          # Act
+          result = non_root_entry.send(:is_discussion_reply_from_student?)
+          # Assert
+          expect(result).to be_truthy
         end
       end
     end
