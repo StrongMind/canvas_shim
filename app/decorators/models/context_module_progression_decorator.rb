@@ -7,6 +7,17 @@ ContextModuleProgression.class_eval do
     workflow_state == "locked"
   end
 
+  def uncollapse!
+    return unless self.collapsed?
+    begin
+      self.reload!
+      self.collapsed = false
+      self.save
+    rescue ActiveRecord::StaleObjectError
+      retry
+    end
+  end
+
   private
 
   def publish_course_progress
@@ -27,14 +38,4 @@ ContextModuleProgression.class_eval do
     settings.fetch('sequence_control', true)
   end
 
-  def uncollapse!
-    return unless self.collapsed?
-    begin
-      self.reload!
-      self.collapsed = false
-      self.save
-    rescue ActiveRecord::StaleObjectError
-      retry
-    end
-  end
 end
