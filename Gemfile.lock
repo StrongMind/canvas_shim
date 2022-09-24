@@ -137,6 +137,11 @@ GEM
     ethon (0.15.0)
       ffi (>= 1.15.0)
     execjs (2.8.1)
+    factory_bot (4.11.1)
+      activesupport (>= 3.0.0)
+    factory_bot_rails (4.11.0)
+      factory_bot (~> 4.11.0)
+      railties (>= 3.0.0)
     faker (1.9.6)
       i18n (>= 0.7)
     faraday (0.17.5)
@@ -351,6 +356,7 @@ DEPENDENCIES
   erubis (~> 2)
   ethon (~> 0)
   execjs (~> 2)
+  factory_bot_rails (= 4.11.0)
   faker (~> 1)
   faraday (~> 0)
   ffi (~> 1)
@@ -421,4 +427,4 @@ DEPENDENCIES
   websocket-extensions (~> 0)
 
 BUNDLED WITH
-   2.3.16
+   2.3.21
