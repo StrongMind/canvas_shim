@@ -19,7 +19,7 @@ describe "ContextModuleProgression" do
       cmp1 = ContextModuleProgression.find(cmp0.id)
       allow(cmp1).to receive(:publish_course_progress).and_return(nil)
       cmp2 = ContextModuleProgression.find(cmp0.id)
-      allow(cmp2).to receive(:publish_course_progress).and_return(nilgit)
+      allow(cmp2).to receive(:publish_course_progress).and_return(nil)
 
       cmp1.collapsed = false
       cmp1.save!
