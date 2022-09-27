@@ -83,6 +83,7 @@ ActiveRecord::Schema.define(version: 20220927180211) do
     t.string  "context_type"
     t.string  "tag_type"
     t.string  "workflow_state"
+    t.integer "parent_id"
   end
 
   create_table "context_external_tools", force: :cascade do |t|
@@ -175,6 +176,7 @@ ActiveRecord::Schema.define(version: 20220927180211) do
     t.integer "discussion_topic_id"
     t.boolean "unread"
     t.integer "user_id"
+    t.integer "parent_id"
   end
 
   create_table "discussion_topics", force: :cascade do |t|
