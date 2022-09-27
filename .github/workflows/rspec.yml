@@ -1,0 +1,54 @@
+# This workflow uses actions that are not certified by GitHub.  They are
+# provided by a third-party and are governed by separate terms of service,
+# privacy policy, and support documentation.
+#
+# This workflow will install a prebuilt Ruby version, install dependencies, and
+# run tests and linters.
+name: "rspec"
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    services:
+      postgres:
+        image: postgres:9-alpine
+        ports: ['5432:5432']
+        env:
+          POSTGRES_DATABASE: postgres
+          POSTGRES_HOST: localhost
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          RAILS_ENV: test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        # needed because the postgres container does not provide a healthcheck
+        # tmpfs makes DB faster by using RAM
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.4.10
+          bundler-cache: true
+      - name: Setup DB, Run tests
+        env:
+          DATABASE_URL: postgres://postgres:@localhost:5432/test
+          POSTGRES_HOST: localhost
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
+          RAILS_ENV: test
+        run: |
+          sudo apt-get -yqq install libpq-dev
+          gem install bundler
+          bundle install --jobs 4 --retry 3
+          bundle exec rails db:setup
+          bundle exec rspec
