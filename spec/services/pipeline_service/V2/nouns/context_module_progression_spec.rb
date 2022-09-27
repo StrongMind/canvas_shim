@@ -16,7 +16,8 @@ describe PipelineService::V2::Nouns::ContextModuleProgression do
         "id" => active_record_object.id,
         "user_id" => user.id,
         "context_module_id" => cm.id,
-        "collapsed" => nil
+        "collapsed" => nil,
+        "lock_version" => 0
       })
     end
   end
