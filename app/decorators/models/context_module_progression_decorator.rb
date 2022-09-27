@@ -9,13 +9,13 @@ ContextModuleProgression.class_eval do
 
   def uncollapse!
     return unless self.collapsed?
-    # begin
+    begin
       self.reload
       self.collapsed = false
       self.save
-    # rescue ActiveRecord::StaleObjectError
-    #   retry
-    # end
+    rescue ActiveRecord::StaleObjectError
+      retry
+    end
   end
 
   private
