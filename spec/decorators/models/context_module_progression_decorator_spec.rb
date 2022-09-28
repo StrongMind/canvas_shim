@@ -7,7 +7,7 @@ describe "ContextModuleProgression" do
       allow(cmp).to receive(:publish_course_progress).and_return(nil)
       cmp.save
       # act / #assert
-      expect { cmp.uncollapse! }.to_not raise_error(ActiveRecord::StaleObjectError)
+      expect { cmp.uncollapse! }.not_to raise_error
     end
 
     it 'does not raise an exception when one record is being updated by two different variables' do
@@ -24,7 +24,7 @@ describe "ContextModuleProgression" do
       cmp1.collapsed = false
       cmp1.save!
 
-      expect{ cmp2.uncollapse! }.to_not raise_exception(ActiveRecord::StaleObjectError)
+      expect{ cmp2.uncollapse! }.not_to raise_error
     end
   end
 end
