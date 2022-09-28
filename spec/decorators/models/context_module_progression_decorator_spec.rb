@@ -1,8 +1,13 @@
 describe "ContextModuleProgression" do
-
+  include_context 'stubbed_network'
   context "#uncollapse!" do
     it 'does not raise an exception when one record is being updated by one variable' do
       # arrange
+      sqs_instance = double('sqs_instance')
+      allow(SettingsService).to receive(:get_settings).and_return(
+        'pipeline_sqs_url' => 'sqs_url'
+      )
+      allow(Aws::SQS::Client).to receive(:new).and_return(sqs_instance)
       cmp = FactoryBot.build(:context_module_progression)
       allow(cmp).to receive(:publish_course_progress).and_return(nil)
       cmp.save
@@ -11,6 +16,12 @@ describe "ContextModuleProgression" do
     end
 
     it 'does not raise an exception when one record is being updated by two different variables' do
+      sqs_instance = double('sqs_instance')
+      allow(SettingsService).to receive(:get_settings).and_return(
+          'pipeline_sqs_url' => 'sqs_url'
+      )
+      allow(Aws::SQS::Client).to receive(:new).and_return(sqs_instance)
+
       cmp0 = FactoryBot.build(:context_module_progression)
       allow(cmp0).to receive(:publish_course_progress).and_return(nil)
       cmp0.collapsed = true
