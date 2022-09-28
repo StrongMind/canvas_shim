@@ -46,6 +46,7 @@ jobs:
           POSTGRES_PASSWORD: postgres
           POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
           RAILS_ENV: test
+          SETTINGS_TABLE_PREFIX: settings
         run: |
           sudo apt-get -yqq install libpq-dev
           gem install bundler

@@ -9,12 +9,18 @@ ContextModuleProgression.class_eval do
 
   def uncollapse!
     return unless self.collapsed?
+    retry_count = 0
     begin
       self.reload
       self.collapsed = false
       self.save
     rescue ActiveRecord::StaleObjectError
-      retry
+      if retry_count < 5
+        retry_count += 1
+        retry
+      else
+        raise
+      end
     end
   end
 
