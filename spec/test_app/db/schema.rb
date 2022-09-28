@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20220922222043) do
+ActiveRecord::Schema.define(version: 20220927180211) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -98,6 +98,8 @@ ActiveRecord::Schema.define(version: 20220922222043) do
   create_table "context_module_progressions", force: :cascade do |t|
     t.integer "user_id"
     t.integer "context_module_id"
+    t.boolean "collapsed"
+    t.integer "lock_version",      default: 0
   end
 
   create_table "context_modules", force: :cascade do |t|

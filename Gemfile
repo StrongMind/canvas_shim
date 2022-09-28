@@ -133,4 +133,5 @@ group :development, :test do
   gem 'timecop'
   gem 'vcr'
   gem 'sanitize', '2.1.0', require: false
+  gem 'factory_bot_rails', '4.11.0'
 end

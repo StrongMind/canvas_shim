@@ -15,7 +15,9 @@ describe PipelineService::V2::Nouns::ContextModuleProgression do
       expect(subject.call).to eq({
         "id" => active_record_object.id,
         "user_id" => user.id,
-        "context_module_id" => cm.id
+        "context_module_id" => cm.id,
+        "collapsed" => nil,
+        "lock_version" => 0
       })
     end
   end
