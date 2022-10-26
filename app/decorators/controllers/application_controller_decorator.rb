@@ -67,6 +67,17 @@ ApplicationController.class_eval do
 
   helper_method :due_date_wizard_enabled?
 
+  def launch_darkly_user(domain, user_id, user_name)
+    {
+      key: "#{domain.split('.')[0]}-#{user_id}",
+      name: user_name,
+      custom: {
+        canvas_id: user_id,
+        canvas_domain: domain,
+    }
+    }
+  end
+
   private
   def destructive_options_hidden?
     get_context
