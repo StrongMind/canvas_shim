@@ -30,7 +30,7 @@ module SettingsService
     end
 
     def dynamodb
-      if ENV['ENVIRONMENT'] == 'development'
+      if ENV['RAILS_ENV'] == 'development'
         @dynamodb || Aws::DynamoDB::Client.new(:endpoint => "http://dynamodb:8000/")
       else
         @dynamodb || Aws::DynamoDB::Client.new
