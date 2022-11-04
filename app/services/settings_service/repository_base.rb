@@ -30,7 +30,7 @@ module SettingsService
     end
 
     def dynamodb
-      @dynamodb || Aws::DynamoDB::Client.new
+      @dynamodb ||= Rails.env.development? ? Aws::DynamoDB::Client.new(:endpoint => "http://dynamodb:8000/") : Aws::DynamoDB::Client.new
     end
   end
 end
