@@ -16,13 +16,13 @@ module RequirementsService
     Commands::ForceMinScores.new(course: course).call
   end
 
-  def self.set_passing_threshold(type:, threshold:, edited:, id: 1, exam: false)
+  def self.set_passing_threshold(type:, threshold:, edited:, id: 1, threshold_type: nil)
     Commands::SetPassingThreshold.new(
       type: type,
       threshold: threshold,
       edited: edited,
       id: id,
-      exam: exam,
+      threshold_type: threshold_type
     ).call
   end
 
@@ -52,12 +52,12 @@ module RequirementsService
     Commands::SetSchoolThresholdsOnCourse.new(course: course).call
   end
 
-  def self.get_raw_passing_threshold(type:, id: 1, exam: false)
-    Queries::GetPassingThreshold.new(type: type, id: id, exam: exam).call
+  def self.get_raw_passing_threshold(type:, id: 1, threshold_type: nil)
+    Queries::GetPassingThreshold.new(type: type, id: id, threshold_type: threshold_type).call
   end
 
-  def self.get_passing_threshold(type:, id: 1, exam: false)
-    get_raw_passing_threshold(type: type, id: id, exam: exam).to_f
+  def self.get_passing_threshold(type:, id: 1, threshold_type: nil)
+    get_raw_passing_threshold(type: type, id: id, threshold_type: threshold_type).to_f
   end
 
   def self.get_course_assignment_passing_threshold?(context)
@@ -65,12 +65,17 @@ module RequirementsService
   end
 
   def self.get_course_exam_passing_threshold?(context)
-    get_raw_passing_threshold(type: :course, id: context.try(:id), exam: true)
+    get_raw_passing_threshold(type: :course, id: context.try(:id), threshold_type: "exam")
+  end
+
+  def self.get_course_discussion_passing_threshold?(context)
+    get_raw_passing_threshold(type: :course, id: context.try(:id), threshold_type: "discussion")
   end
 
   def self.course_has_set_threshold?(context)
     get_course_assignment_passing_threshold?(context) ||
-    get_course_exam_passing_threshold?(context)
+    get_course_exam_passing_threshold?(context) ||
+    get_course_discussion_passing_threshold?(context)
   end
 
   def self.is_unit_exam?(content_tag:)

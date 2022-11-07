@@ -427,7 +427,7 @@ TEXT
                 <td><%= settings.blabel :unit_score_threshold, :en => "Passing Threshold (Discussions)" %></td>
                 <td>
                   <%= settings.number_field :unit_score_threshold,
-                                            :value => 0.0,
+                                            :value => @school_discussion_threshold,
                                             :class => 'same-width-as-select',
                                             :min => "0",
                                             :max => "100",
