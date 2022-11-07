@@ -16,6 +16,7 @@ AccountsController.class_eval do
     @school_threshold         = RequirementsService.get_passing_threshold(type: :school)
     @school_exam_threshold    = RequirementsService.get_passing_threshold(type: :school, exam: true)
     @course_thresh_enabled    = RequirementsService.course_threshold_setting_enabled?
+    # @first_assignment_due     = RequirementsService.get_first_assignment_due
 
     if @course_thresh_enabled
       @post_enrollment_thresh_enabled = RequirementsService.post_enrollment_thresholds_enabled?
