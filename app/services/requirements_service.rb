@@ -107,6 +107,7 @@ module RequirementsService
     )
   end
 
+  # TODO
   def self.reset_requirements(context_module:, exam: false)
     Commands::ResetRequirements.new(context_module: context_module, exam: exam).call
   end

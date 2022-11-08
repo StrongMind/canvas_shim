@@ -424,9 +424,9 @@ TEXT
               </tr>
 
               <tr>
-                <td><%= settings.blabel :unit_score_threshold, :en => "Passing Threshold (Discussions)" %></td>
+                <td><%= settings.blabel :discussion_score_threshold, :en => "Passing Threshold (Discussions)" %></td>
                 <td>
-                  <%= settings.number_field :unit_score_threshold,
+                  <%= settings.number_field :discussion_score_threshold,
                                             :value => @school_discussion_threshold,
                                             :class => 'same-width-as-select',
                                             :min => "0",
@@ -434,7 +434,7 @@ TEXT
                                             :step => "0.1",
                                             :placeholder => "Choose a number between 0-100",
                                             :disabled => true %>
-                  <a id="edit_school_unit_threshold_btn" href="" class="Button Button--icon-action">
+                  <a id="edit_school_discussion_threshold_btn" class="Button Button--icon-action">
                     <i class="icon-edit"></i>
                   </a>
                   <p style="font-size: 0.9em;"><%= t("Set a school-wide minimum percentage for all discussions. Each of these discussions will have an adjusted minimum score based on this percentage.") %></p>
