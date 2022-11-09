@@ -26,6 +26,7 @@ AccountsController.class_eval do
     @module_editing_disabled = RequirementsService.disable_module_editing_on?
 
     @expose_first_and_last_assignment_due_date_field = Rails.configuration.launch_darkly_client.variation("expose-first-and-last-assignment-due-date-field", launch_darkly_user, false)
+    @expose_discussion_and_project_threshold_field = Rails.configuration.launch_darkly_client.variation("expose-discussion-and-project-threshold-field", launch_darkly_user, false)
 
     js_env({
       HOLIDAYS: @holidays,
@@ -72,7 +73,7 @@ AccountsController.class_eval do
   def first_assignment_due
     account_settings_params[:first_assignment_due].present? ? account_settings_params[:first_assignment_due] : false
   end
-  
+
   def last_assignment_due
     account_settings_params[:last_assignment_due].present? ? account_settings_params[:last_assignment_due] : false
   end
