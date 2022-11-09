@@ -8,6 +8,7 @@ module RequirementsService
       def call
         set_default_course_threshold if account_threshold_set?
         set_default_course_exam_threshold if account_exam_threshold_set?
+        set_default_course_discussion_threshold if account_discussion_threshold_set?
       end
 
       private
@@ -30,7 +31,16 @@ module RequirementsService
           value: account_exam_threshold
         )
       end
-    
+
+      def set_default_course_discussion_threshold
+        SettingsService.update_settings(
+          object: 'course',
+          id: course.id,
+          setting: 'passing_discussion_threshold',
+          value: account_discussion_threshold
+        )
+      end
+
       def account_threshold
         RequirementsService.get_passing_threshold(type: :school)
       end
@@ -40,11 +50,19 @@ module RequirementsService
       end
 
       def account_exam_threshold
-        RequirementsService.get_passing_threshold(type: :school, exam: true)
+        RequirementsService.get_passing_threshold(type: :school, threshold_type: "exam")
+      end
+
+      def account_discussion_threshold
+        RequirementsService.get_passing_threshold(type: :school, threshold_type: "discussion")
       end
 
       def account_exam_threshold_set?
         account_exam_threshold.positive?
+      end
+
+      def account_discussion_threshold_set?
+        account_discussion_threshold.positive?
       end
     end
   end

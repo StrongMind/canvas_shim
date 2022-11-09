@@ -9,7 +9,8 @@
 //
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
-<%= (ENV['RAILS_ENV'] == 'development') ? '//= require jquery' : '//= require jquery/dist/jquery' %>
+//
+//= require jquery/dist/jquery
 //
 // Add some Shim asset require directives here
 // i.e.
