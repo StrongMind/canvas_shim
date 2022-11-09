@@ -8,6 +8,7 @@ module RequirementsService
       def call
         set_default_course_threshold if account_threshold_set?
         set_default_course_exam_threshold if account_exam_threshold_set?
+        set_default_course_discussion_threshold if account_discussion_threshold_set?
       end
 
       private
@@ -58,6 +59,10 @@ module RequirementsService
 
       def account_exam_threshold_set?
         account_exam_threshold.positive?
+      end
+
+      def account_discussion_threshold_set?
+        account_discussion_threshold.positive?
       end
     end
   end

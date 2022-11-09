@@ -107,9 +107,8 @@ module RequirementsService
     )
   end
 
-  # TODO
-  def self.reset_requirements(context_module:, exam: false)
-    Commands::ResetRequirements.new(context_module: context_module, exam: exam).call
+  def self.reset_requirements(context_module:, threshold_type: nil)
+    Commands::ResetRequirements.new(context_module: context_module, threshold_type: threshold_type).call
   end
 
   def self.set_third_party_requirements(course:)

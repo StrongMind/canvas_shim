@@ -42,7 +42,6 @@ $(window).on("load", function(event) {
 
   var initialDiscussionVal = $('#account_settings_discussion_score_threshold').val();
   $('#edit_school_discussion_threshold_btn').click(function(e) {
-    console.log("It is working");
     e.preventDefault();
     e.stopPropagation();
     var discussionPassThreshDisabled = $('#account_settings_discussion_score_threshold').prop('disabled');
