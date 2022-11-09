@@ -11,7 +11,7 @@ describe RequirementsService do
     allow(command_class).to receive(:new).and_return(command_instance)
     allow(command_instance).to receive(:call)
   end
-  
+
   describe '#apply_minimum_scores' do
     let(:command_class) { RequirementsService::Commands::ApplyAssignmentMinScores }
 
@@ -34,6 +34,28 @@ describe RequirementsService do
     it 'Calls the command object' do
       expect(command_instance).to receive(:call)
       subject.set_passing_threshold(type: 'school', threshold: 70, edited: 'true')
+    end
+  end
+
+  describe '#get_passing_threshold' do
+    let(:command_class) { RequirementsService::Queries::GetPassingThreshold }
+
+    it 'Gets the assignment threshold' do
+      allow(command_instance).to receive(:call) { 10 }
+      threshold = subject.get_passing_threshold(type: 'school')
+      expect(threshold).to eq(10)
+    end
+
+    it 'Gets the exam threshold' do
+      allow(command_instance).to receive(:call) { 20 }
+      threshold = subject.get_passing_threshold(type: 'school', threshold_type: "exam")
+      expect(threshold).to eq(20)
+    end
+
+    it 'Gets the discussion threshold' do
+      allow(command_instance).to receive(:call) { 30 }
+      threshold = subject.get_passing_threshold(type: 'school', threshold_type: "discussion")
+      expect(threshold).to eq(30)
     end
   end
 
