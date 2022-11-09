@@ -442,25 +442,27 @@ TEXT
           </table>
         </fieldset>
 
-        <fieldset>
-        <legend><%= t(:distribute_due_dates_settings, 'Distribute Due Dates') %></legend>
-        <table class="formtable">
-          <%= f.fields_for :settings do |settings| %>
-            <tr>
-              <td><%= settings.blabel :first_assignment_due, :en => "First Assignment Due" %></td>
-              <td>
-                <%= settings.number_field :first_assignment_due,
-                                        :value => @first_assignment_due,
-                                        :min => "0",
-                                        :max => "31",
-                                        :style => "width: 40px;",
-                                        :disabled => false %>
-                Day(s) after first day
-              </td>
-            </tr>
-          <% end %>
-        </table>
-      </fieldset>
+        <% if @expose_first_and_last_assignment_due_date_field %>
+          <fieldset>
+          <legend><%= t(:distribute_due_dates_settings, 'Distribute Due Dates') %></legend>
+          <table class="formtable">
+            <%= f.fields_for :settings do |settings| %>
+              <tr>
+                <td><%= settings.blabel :first_assignment_due, :en => "First Assignment Due" %></td>
+                <td>
+                  <%= settings.number_field :first_assignment_due,
+                                          :value => @first_assignment_due || 1,
+                                          :min => "0",
+                                          :max => "31",
+                                          :style => "width: 40px;", 
+                                          :disabled => false %>
+                  Day(s) after first day
+                </td>
+              </tr>
+            <% end %>
+          </table>
+        </fieldset>
+      <% end %>
 
         <%= render partial: 'additional_settings', locals: { f: f } %>
 

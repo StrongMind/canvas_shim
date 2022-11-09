@@ -12,17 +12,19 @@ AccountsController.class_eval do
   def strongmind_settings
     grab_holidays
     get_allowed_filetypes
+    get_first_assignment_due
 
     @school_threshold         = RequirementsService.get_passing_threshold(type: :school)
     @school_exam_threshold    = RequirementsService.get_passing_threshold(type: :school, exam: true)
     @course_thresh_enabled    = RequirementsService.course_threshold_setting_enabled?
-    # @first_assignment_due     = RequirementsService.get_first_assignment_due
 
     if @course_thresh_enabled
       @post_enrollment_thresh_enabled = RequirementsService.post_enrollment_thresholds_enabled?
     end
 
     @module_editing_disabled = RequirementsService.disable_module_editing_on?
+
+    @expose_first_and_last_assignment_due_date_field = Rails.configuration.launch_darkly_client.variation("expose-first-and-last-assignment-due-date-field", launch_darkly_user, false)
 
     js_env({
       HOLIDAYS: @holidays,
@@ -35,13 +37,14 @@ AccountsController.class_eval do
   alias_method :settings, :strongmind_settings
 
   def strongmind_update
-    if params[:account][:settings]
+    if account_settings_params
       set_school_passing_threshold
       set_school_unit_exam_passing_threshold
       set_threshold_permissions
 
       set_allowed_filetypes if params[:allowed_filetypes]
       set_holidays if params[:holidays]
+      set_first_assignment_due if account_settings_params[:first_assignment_due]
     end
 
     instructure_update
@@ -62,6 +65,10 @@ AccountsController.class_eval do
 
   def allowed_filetypes
     params[:allowed_filetypes].blank? ? false : params[:allowed_filetypes]
+  end
+
+  def first_assignment_due
+    account_settings_params[:first_assignment_due].present? ? account_settings_params[:first_assignment_due] : false
   end
 
   def grab_holidays
@@ -129,5 +136,24 @@ AccountsController.class_eval do
       post_enrollment: enable_post_enrollment_threshold_params,
       module_editing: disable_module_editing_params,
     )
+  end
+
+  def get_first_assignment_due
+    @first_assignment_due = SettingsService.get_settings(object: 'school', id: 1)['first_assignment_due']
+  end
+
+  def set_first_assignment_due
+    SettingsService.update_settings(
+      object: 'school',
+      id: 1,
+      setting: 'first_assignment_due',
+      value: first_assignment_due
+    )
+  end
+
+  private
+
+  def account_settings_params
+    params[:account][:settings]
   end
 end

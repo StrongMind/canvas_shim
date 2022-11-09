@@ -31,10 +31,10 @@ module AssignmentsService
     attr_reader :assignment_count, :startdate, :enddate, :days
 
     def first_due_date
-      if @args[:start_date]
-        @args[:start_date].in_time_zone(@args[:course].time_zone).at_end_of_day + 1.day
+      if @args[:start_date] 
+        @args[:start_date].in_time_zone(@args[:course].time_zone).at_end_of_day + first_assignment_due_offset.to_i.days 
       else
-        @args[:course].start_at.in_time_zone(@args[:course].time_zone).at_end_of_day + 1.day
+        @args[:course].start_at.in_time_zone(@args[:course].time_zone).at_end_of_day + first_assignment_due_offset.to_i.days
       end
     end
 
@@ -86,6 +86,10 @@ module AssignmentsService
 
     def settings_service_holidays
       SettingsService.get_settings(object: :school, id: 1)['holidays']
+    end
+
+    def first_assignment_due_offset
+      SettingsService.get_settings(object: 'school', id: 1)['first_assignment_due'] || 1
     end
   end
 end
