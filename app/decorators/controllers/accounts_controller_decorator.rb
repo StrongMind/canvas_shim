@@ -13,6 +13,7 @@ AccountsController.class_eval do
     grab_holidays
     get_allowed_filetypes
     get_first_assignment_due
+    get_last_assignment_due
 
     @school_threshold         = RequirementsService.get_passing_threshold(type: :school)
     @school_exam_threshold    = RequirementsService.get_passing_threshold(type: :school, exam: true)
@@ -45,6 +46,7 @@ AccountsController.class_eval do
       set_allowed_filetypes if params[:allowed_filetypes]
       set_holidays if params[:holidays]
       set_first_assignment_due if account_settings_params[:first_assignment_due]
+      set_last_assignment_due if account_settings_params[:last_assignment_due]
     end
 
     instructure_update
@@ -69,6 +71,10 @@ AccountsController.class_eval do
 
   def first_assignment_due
     account_settings_params[:first_assignment_due].present? ? account_settings_params[:first_assignment_due] : false
+  end
+  
+  def last_assignment_due
+    account_settings_params[:last_assignment_due].present? ? account_settings_params[:last_assignment_due] : false
   end
 
   def grab_holidays
@@ -142,12 +148,25 @@ AccountsController.class_eval do
     @first_assignment_due = SettingsService.get_settings(object: 'school', id: 1)['first_assignment_due']
   end
 
+  def get_last_assignment_due
+    @last_assignment_due = SettingsService.get_settings(object: 'school', id: 1)['last_assignment_due']
+  end
+
   def set_first_assignment_due
     SettingsService.update_settings(
       object: 'school',
       id: 1,
       setting: 'first_assignment_due',
       value: first_assignment_due
+    )
+  end
+
+  def set_last_assignment_due
+    SettingsService.update_settings(
+      object: 'school',
+      id: 1,
+      setting: 'last_assignment_due',
+      value: last_assignment_due
     )
   end
 

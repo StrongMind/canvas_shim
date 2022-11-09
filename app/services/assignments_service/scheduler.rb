@@ -39,7 +39,7 @@ module AssignmentsService
     end
 
     def last_due_date
-      @args[:course].end_at.in_time_zone(@args[:course].time_zone).at_end_of_day - 1.day
+      @args[:course].end_at.in_time_zone(@args[:course].time_zone).at_end_of_day - last_assignment_due_offset.to_i.days
     end
 
     def calendar
@@ -90,6 +90,10 @@ module AssignmentsService
 
     def first_assignment_due_offset
       SettingsService.get_settings(object: 'school', id: 1)['first_assignment_due'] || 1
+    end
+
+    def last_assignment_due_offset
+      SettingsService.get_settings(object: 'school', id: 1)['last_assignment_due'] || 2
     end
   end
 end
