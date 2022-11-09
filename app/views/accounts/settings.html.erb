@@ -459,6 +459,18 @@ TEXT
                   Day(s) after first day
                 </td>
               </tr>
+              <tr>
+                <td><%= settings.blabel :last_assignment_due, :en => "Last Assignment Due" %></td>
+                <td>
+                  <%= settings.number_field :last_assignment_due,
+                                          :value => @last_assignment_due || 2,
+                                          :min => "0",
+                                          :max => "31",
+                                          :style => "width: 40px;", 
+                                          :disabled => false %>
+                  Day(s) before last day
+                </td>
+              </tr>
             <% end %>
           </table>
         </fieldset>
