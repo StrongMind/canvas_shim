@@ -40,18 +40,33 @@ $(window).on("load", function(event) {
     flipIcon($(this), unitPassThreshDisabled);
   });
 
-  var initialDiscussionVal = $('#account_settings_discussion_score_threshold').val();
-  $('#edit_school_discussion_threshold_btn').click(function(e) {
+  var initialDiscussionVal = $('#account_settings_project_score_threshold').val();
+  $('#edit_school_project_threshold_btn').click(function(e) {
     e.preventDefault();
     e.stopPropagation();
-    var discussionPassThreshDisabled = $('#account_settings_discussion_score_threshold').prop('disabled');
-    $('#account_settings_discussion_score_threshold').prop('disabled', !discussionPassThreshDisabled);
-    $("#discussion_threshold_edited").remove();
-    $(this).append("<input type='hidden' id='discussion_threshold_edited' name='discussion_threshold_edited' value=" + discussionPassThreshDisabled + " />")
-    if ($('#account_settings_discussion_score_threshold').prop('disabled')) {
-      $('#account_settings_discussion_score_threshold').val(initialDiscussionVal);
+    var projectPassThreshDisabled = $('#account_settings_project_score_threshold').prop('disabled');
+    $('#account_settings_project_score_threshold').prop('disabled', !projectPassThreshDisabled);
+    $("#project_threshold_edited").remove();
+    $(this).append("<input type='hidden' id='project_threshold_edited' name='project_threshold_edited' value=" + projectPassThreshDisabled + " />")
+    if ($('#account_settings_project_score_threshold').prop('disabled')) {
+      $('#account_settings_project_score_threshold').val(initialDiscussionVal);
     }
 
-    flipIcon($(this), discussionPassThreshDisabled);
+    flipIcon($(this), projectPassThreshDisabled);
+  });
+
+  var initialProjectVal = $('#account_settings_project_score_threshold').val();
+  $('#edit_school_project_threshold_btn').click(function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var projectPassThreshDisabled = $('#account_settings_project_score_threshold').prop('disabled');
+    $('#account_settings_project_score_threshold').prop('disabled', !projectPassThreshDisabled);
+    $("#project_threshold_edited").remove();
+    $(this).append("<input type='hidden' id='project_threshold_edited' name='project_threshold_edited' value=" + projectPassThreshDisabled + " />")
+    if ($('#account_settings_project_score_threshold').prop('disabled')) {
+      $('#account_settings_project_score_threshold').val(initialProjectVal);
+    }
+
+    flipIcon($(this), projectPassThreshDisabled);
   });
 });
