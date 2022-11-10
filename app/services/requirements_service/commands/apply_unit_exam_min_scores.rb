@@ -10,7 +10,7 @@ module RequirementsService
       def reset_requirements
         RequirementsService.reset_requirements(
             context_module: context_module,
-            threshold_type: "exam"
+            exam: true
           )
       end
 

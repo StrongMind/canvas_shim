@@ -1,10 +1,10 @@
 module RequirementsService
   module Commands
     class ResetRequirements
-      def initialize(context_module:, threshold_type: nil)
+      def initialize(context_module:, exam: false)
         @context_module = context_module
         @completion_requirements = context_module.completion_requirements
-        @threshold_type = threshold_type
+        @exam = exam
       end
 
       def call
@@ -13,7 +13,7 @@ module RequirementsService
       end
 
       private
-      attr_reader :context_module, :completion_requirements, :threshold_type
+      attr_reader :context_module, :completion_requirements, :exam
 
       def update_completion_requirements
         context_module.update_column(:completion_requirements, completion_requirements)
@@ -45,7 +45,7 @@ module RequirementsService
 
       def skippable_requirement?(req)
         return true unless req[:min_score]
-        @threshold_type == "exam" ? !unit_exam?(req) : unit_exam?(req)
+        exam ? !unit_exam?(req) : unit_exam?(req)
       end
 
       def unit_exam?(requirement)

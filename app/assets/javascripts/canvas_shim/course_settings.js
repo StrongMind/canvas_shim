@@ -57,21 +57,6 @@ $(window).on("load", function(event) {
     flipIcon($(this), unitPassThreshDisabled);
   });
 
-  var initialDiscussionVal = $('#passing_discussion_threshold').val();
-  $('#edit_discussion_threshold_btn').click(function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    var discussionPassThreshDisabled = $('#passing_discussion_threshold').prop('disabled');
-    $('#passing_discussion_threshold').prop('disabled', !discussionPassThreshDisabled);
-    $("#discussion_threshold_edited").remove();
-    $(this).append("<input type='hidden' id='discussion_threshold_edited' name='discussion_threshold_edited' value=" + discussionPassThreshDisabled + " />")
-    if ($('#passing_discussion_threshold').prop('disabled')) {
-      $('#passing_discussion_threshold').val(initialDiscussionVal);
-    }
-
-    flipIcon($(this), discussionPassThreshDisabled);
-  });
-
   $(".endpoint-btn").click(function(e) {
     e.preventDefault();
     e.stopPropagation();
