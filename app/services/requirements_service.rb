@@ -16,13 +16,13 @@ module RequirementsService
     Commands::ForceMinScores.new(course: course).call
   end
 
-  def self.set_passing_threshold(type:, threshold:, edited:, id: 1, exam: false)
+  def self.set_passing_threshold(type:, threshold:, edited:, id: 1, threshold_type: 'assignment')
     Commands::SetPassingThreshold.new(
       type: type,
       threshold: threshold,
       edited: edited,
       id: id,
-      exam: exam,
+      threshold_type: threshold_type
     ).call
   end
 
@@ -52,25 +52,30 @@ module RequirementsService
     Commands::SetSchoolThresholdsOnCourse.new(course: course).call
   end
 
-  def self.get_raw_passing_threshold(type:, id: 1, exam: false)
-    Queries::GetPassingThreshold.new(type: type, id: id, exam: exam).call
+  def self.get_raw_passing_threshold(type:, id: 1, threshold_type: 'assignment')
+    Queries::GetPassingThreshold.new(type: type, id: id, threshold_type: threshold_type).call
   end
 
-  def self.get_passing_threshold(type:, id: 1, exam: false)
-    get_raw_passing_threshold(type: type, id: id, exam: exam).to_f
+  def self.get_passing_threshold(type:, id: 1, threshold_type: 'assignment')
+    get_raw_passing_threshold(type: type, id: id, threshold_type: threshold_type).to_f
   end
 
   def self.get_course_assignment_passing_threshold?(context)
-    get_raw_passing_threshold(type: :course, id: context.try(:id))
+    get_raw_passing_threshold(type: :course, id: context.try(:id), threshold_type: 'assignment')
   end
 
   def self.get_course_exam_passing_threshold?(context)
-    get_raw_passing_threshold(type: :course, id: context.try(:id), exam: true)
+    get_raw_passing_threshold(type: :course, id: context.try(:id), threshold_type: 'exam')
+  end
+
+  def self.get_course_discussion_passing_threshold?(context)
+    get_raw_passing_threshold(type: :course, id: context.try(:id), threshold_type: 'discussion')
   end
 
   def self.course_has_set_threshold?(context)
     get_course_assignment_passing_threshold?(context) ||
-    get_course_exam_passing_threshold?(context)
+    get_course_exam_passing_threshold?(context) ||
+      get_course_discussion_passing_threshold?
   end
 
   def self.is_unit_exam?(content_tag:)
@@ -102,8 +107,8 @@ module RequirementsService
     )
   end
 
-  def self.reset_requirements(context_module:, exam: false)
-    Commands::ResetRequirements.new(context_module: context_module, exam: exam).call
+  def self.reset_requirements(context_module:, threshold_type: 'assignment')
+    Commands::ResetRequirements.new(context_module: context_module, threshold_type: threshold_type).call
   end
 
   def self.set_third_party_requirements(course:)

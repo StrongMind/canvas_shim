@@ -1,19 +1,19 @@
 describe RequirementsService::Commands::ResetRequirements do
   include_context 'stubbed_network'
   subject { described_class.new(context_module: context_module) }
-  
-  let(:subject_2) { described_class.new(context_module: context_module, exam: true) }
-  
+
+  let(:subject_2) { described_class.new(context_module: context_module, threshold_type: 'exam') }
+
   let(:course) { double('course', id: 1) }
-  
-  let(:context_module) do 
+
+  let(:context_module) do
     double(
-      'context module', 
+      'context module',
       completion_requirements: completion_requirements,
       course: course,
       update_column: nil,
       touch: nil,
-    ) 
+    )
   end
 
   let(:completion_requirements) do
@@ -47,7 +47,7 @@ describe RequirementsService::Commands::ResetRequirements do
       expect(context_module.completion_requirements[1][:type]).to eq("must_submit")
     end
 
-    
+
     context "DiscussionTopic" do
       before do
         ContentTag.find(56).update(content_type: "DiscussionTopic")

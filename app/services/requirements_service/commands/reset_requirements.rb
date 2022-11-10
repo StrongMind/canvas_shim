@@ -1,10 +1,10 @@
 module RequirementsService
   module Commands
     class ResetRequirements
-      def initialize(context_module:, exam: false)
+      def initialize(context_module:, threshold_type: 'assignment')
         @context_module = context_module
         @completion_requirements = context_module.completion_requirements
-        @exam = exam
+        @threshold_type = threshold_type
       end
 
       def call
@@ -13,7 +13,7 @@ module RequirementsService
       end
 
       private
-      attr_reader :context_module, :completion_requirements, :exam
+      attr_reader :context_module, :completion_requirements, :threshold_type
 
       def update_completion_requirements
         context_module.update_column(:completion_requirements, completion_requirements)
@@ -24,16 +24,16 @@ module RequirementsService
         completion_requirements.each do |requirement|
           next if skippable_requirement?(requirement)
           reset_individual_requirement(requirement)
-        end  
+        end
       end
-        
+
       def reset_individual_requirement(requirement)
         content_tag = get_content_tag(requirement)
         return unless content_tag
         requirement.delete(:min_score)
         requirement.merge!(type: requirement_type(content_tag))
       end
- 
+
       def requirement_type(content_tag)
         case content_tag.content_type
         when "DiscussionTopic"
@@ -45,7 +45,7 @@ module RequirementsService
 
       def skippable_requirement?(req)
         return true unless req[:min_score]
-        exam ? !unit_exam?(req) : unit_exam?(req)
+        @threshold_type == 'exam' ? !unit_exam?(req) : unit_exam?(req)
       end
 
       def unit_exam?(requirement)
