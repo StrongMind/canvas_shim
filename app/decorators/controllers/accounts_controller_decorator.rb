@@ -8,7 +8,7 @@ AccountsController.class_eval do
 
     show
   end
-
+  
   def strongmind_settings
     grab_holidays
     get_allowed_filetypes
@@ -16,8 +16,7 @@ AccountsController.class_eval do
     get_last_assignment_due
 
     @school_threshold         = RequirementsService.get_passing_threshold(type: :school)
-    @school_exam_threshold    = RequirementsService.get_passing_threshold(type: :school, threshold_type: "exam")
-    @school_discussion_threshold = RequirementsService.get_passing_threshold(type: :school, threshold_type: "discussion")
+    @school_exam_threshold    = RequirementsService.get_passing_threshold(type: :school, exam: true)
     @course_thresh_enabled    = RequirementsService.course_threshold_setting_enabled?
 
     if @course_thresh_enabled
@@ -31,7 +30,7 @@ AccountsController.class_eval do
     js_env({
       HOLIDAYS: @holidays,
       FILETYPES: @allowed_filetypes
-    })
+    }) 
     instructure_settings
   end
 
@@ -42,7 +41,6 @@ AccountsController.class_eval do
     if account_settings_params
       set_school_passing_threshold
       set_school_unit_exam_passing_threshold
-      set_school_discussion_passing_threshold
       set_threshold_permissions
 
       set_allowed_filetypes if params[:allowed_filetypes]
@@ -84,7 +82,7 @@ AccountsController.class_eval do
     @holidays = @holidays.split(",") if @holidays
     @holidays ||= (ENV["HOLIDAYS"] && @holidays != false) ? ENV["HOLIDAYS"].split(",") : []
   end
-
+  
   def get_allowed_filetypes
     @allowed_filetypes = SettingsService.get_settings(object: 'school', id: 1)['allowed_filetypes']
     @allowed_filetypes = @allowed_filetypes.split(',') if @allowed_filetypes
@@ -122,16 +120,7 @@ AccountsController.class_eval do
       type: "school",
       threshold: params[:account][:settings][:unit_score_threshold].to_f,
       edited: params[:unit_threshold_edited],
-      threshold_type: "exam"
-    )
-  end
-
-  def set_school_discussion_passing_threshold
-    RequirementsService.set_passing_threshold(
-      type: "school",
-      threshold: params[:account][:settings][:discussion_score_threshold].to_f,
-      edited: params[:discussion_threshold_edited],
-      threshold_type: "discussion"
+      exam: true
     )
   end
 

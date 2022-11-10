@@ -39,19 +39,4 @@ $(window).on("load", function(event) {
 
     flipIcon($(this), unitPassThreshDisabled);
   });
-
-  var initialDiscussionVal = $('#account_settings_discussion_score_threshold').val();
-  $('#edit_school_discussion_threshold_btn').click(function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    var discussionPassThreshDisabled = $('#account_settings_discussion_score_threshold').prop('disabled');
-    $('#account_settings_discussion_score_threshold').prop('disabled', !discussionPassThreshDisabled);
-    $("#discussion_threshold_edited").remove();
-    $(this).append("<input type='hidden' id='discussion_threshold_edited' name='discussion_threshold_edited' value=" + discussionPassThreshDisabled + " />")
-    if ($('#account_settings_discussion_score_threshold').prop('disabled')) {
-      $('#account_settings_discussion_score_threshold').val(initialDiscussionVal);
-    }
-
-    flipIcon($(this), discussionPassThreshDisabled);
-  });
 });
