@@ -31,15 +31,15 @@ module AssignmentsService
     attr_reader :assignment_count, :startdate, :enddate, :days
 
     def first_due_date
-      if @args[:start_date] 
-        @args[:start_date].in_time_zone(@args[:course].time_zone).at_end_of_day + first_assignment_due_offset.to_i.days 
+      if @args[:start_date]
+        @args[:start_date].in_time_zone(@args[:course].time_zone).at_end_of_day + first_assignment_due_offset.to_i.days
       else
         @args[:course].start_at.in_time_zone(@args[:course].time_zone).at_end_of_day + first_assignment_due_offset.to_i.days
       end
     end
 
     def last_due_date
-      @args[:course].end_at.in_time_zone(@args[:course].time_zone).at_end_of_day - last_assignment_due_offset.to_i.days
+      @args[:course].end_at.in_time_zone(@args[:course].time_zone).at_end_of_day - (last_assignment_due_offset.to_i.days + 1)
     end
 
     def calendar
@@ -89,11 +89,11 @@ module AssignmentsService
     end
 
     def first_assignment_due_offset
-      SettingsService.get_settings(object: 'school', id: 1)['first_assignment_due'] || 1
+      SettingsService.get_settings(object: 'school', id: 1)['first_assignment_due'] || 0
     end
 
     def last_assignment_due_offset
-      SettingsService.get_settings(object: 'school', id: 1)['last_assignment_due'] || 2
+      SettingsService.get_settings(object: 'school', id: 1)['last_assignment_due'] || 0
     end
   end
 end
