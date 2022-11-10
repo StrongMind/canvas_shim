@@ -424,25 +424,6 @@ TEXT
               </tr>
 
               <tr>
-                <td><%= settings.blabel :discussion_score_threshold, :en => "Passing Threshold (Discussions)" %></td>
-                <td>
-                  <%= settings.number_field :discussion_score_threshold,
-                                            :value => @school_discussion_threshold,
-                                            :class => 'same-width-as-select',
-                                            :min => "0",
-                                            :max => "100",
-                                            :step => "0.1",
-                                            :placeholder => "Choose a number between 0-100",
-                                            :disabled => true %>
-                  <a id="edit_school_discussion_threshold_btn" class="Button Button--icon-action">
-                    <i class="icon-edit"></i>
-                  </a>
-                  <p style="font-size: 0.9em;"><%= t("Set a school-wide minimum percentage for all discussions. Each of these discussions will have an adjusted minimum score based on this percentage.") %></p>
-                  <p style="font-size: 0.9em;"><%= t("This setting is off by default, and/or when the threshold is set to 0.0.") %></p>
-                </td>
-              </tr>
-
-              <tr>
                 <td colspan="2"><%= settings.check_box :enable_thresholds_in_courses, :checked => @course_thresh_enabled, :title => "Allow teachers to add custom passing thresholds to courses" %>
                 <%= settings.label :enable_thresholds_in_courses, :en => "Enable teachers to set minimum score thresholds" %>
                 </td>
