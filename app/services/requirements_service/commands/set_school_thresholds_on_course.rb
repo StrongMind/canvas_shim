@@ -9,7 +9,6 @@ module RequirementsService
         set_default_course_threshold if account_threshold_set?
         set_default_course_exam_threshold if account_exam_threshold_set?
         set_default_course_discussion_threshold if account_discussion_threshold_set?
-        set_default_course_project_threshold if account_project_threshold_set?
       end
 
       private

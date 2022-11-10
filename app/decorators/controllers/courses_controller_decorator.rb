@@ -112,8 +112,6 @@ CoursesController.class_eval do
 
 
   def strongmind_settings
-    @expose_discussion_and_project_threshold_field = Rails.configuration.launch_darkly_client.variation("expose-discussion-and-project-threshold-field", launch_darkly_user, false)
-
     get_course_threshold
     get_course_dates
     hide_destructive_course_options?
