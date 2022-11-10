@@ -18,7 +18,6 @@ AccountsController.class_eval do
     @school_threshold         = RequirementsService.get_passing_threshold(type: :school)
     @school_exam_threshold    = RequirementsService.get_passing_threshold(type: :school, threshold_type: "exam")
     @school_discussion_threshold = RequirementsService.get_passing_threshold(type: :school, threshold_type: "discussion")
-    @school_project_threshold = RequirementsService.get_passing_threshold(type: :school, threshold_type: "project")
     @course_thresh_enabled    = RequirementsService.course_threshold_setting_enabled?
 
     if @course_thresh_enabled
@@ -28,7 +27,6 @@ AccountsController.class_eval do
     @module_editing_disabled = RequirementsService.disable_module_editing_on?
 
     @expose_first_and_last_assignment_due_date_field = Rails.configuration.launch_darkly_client.variation("expose-first-and-last-assignment-due-date-field", launch_darkly_user, false)
-    @expose_discussion_and_project_threshold_field = Rails.configuration.launch_darkly_client.variation("expose-discussion-and-project-threshold-field", launch_darkly_user, false)
 
     js_env({
       HOLIDAYS: @holidays,
@@ -45,7 +43,6 @@ AccountsController.class_eval do
       set_school_passing_threshold
       set_school_unit_exam_passing_threshold
       set_school_discussion_passing_threshold
-      set_school_project_passing_threshold
       set_threshold_permissions
 
       set_allowed_filetypes if params[:allowed_filetypes]
@@ -77,7 +74,7 @@ AccountsController.class_eval do
   def first_assignment_due
     account_settings_params[:first_assignment_due].present? ? account_settings_params[:first_assignment_due] : false
   end
-
+  
   def last_assignment_due
     account_settings_params[:last_assignment_due].present? ? account_settings_params[:last_assignment_due] : false
   end
@@ -135,15 +132,6 @@ AccountsController.class_eval do
       threshold: params[:account][:settings][:discussion_score_threshold].to_f,
       edited: params[:discussion_threshold_edited],
       threshold_type: "discussion"
-    )
-    end
-
-  def set_school_project_passing_threshold
-    RequirementsService.set_passing_threshold(
-      type: "school",
-      threshold: params[:account][:settings][:project_score_threshold].to_f,
-      edited: params[:project_threshold_edited],
-      threshold_type: "project"
     )
   end
 
