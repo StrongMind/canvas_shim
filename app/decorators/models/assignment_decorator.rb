@@ -1,5 +1,5 @@
 Assignment.class_eval do
-  # after_commit -> { PipelineService.publish_as_v2(self) }
+  after_commit -> { PipelineService.publish_as_v2(self) }
   def toggle_exclusion(student_id, bool)
     subs = submissions.where(user_id: student_id)
     if subs.any?

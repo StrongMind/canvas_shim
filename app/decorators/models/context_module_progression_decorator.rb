@@ -33,9 +33,9 @@ ContextModuleProgression.class_eval do
       course_id: context_module.context.id
     )
 
-    # PipelineService.publish_as_v2(
-    #   PipelineService::Nouns::CourseProgress.new(self)
-    # )
+    PipelineService.publish_as_v2(
+      PipelineService::Nouns::CourseProgress.new(self)
+    )
   end
 
   def sequence_control_on?

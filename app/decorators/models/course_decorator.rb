@@ -6,7 +6,7 @@ Course.class_eval do
       where("enrollments.workflow_state NOT IN ('rejected', 'deleted', 'inactive') AND enrollments.type = 'StudentEnrollment'").preload(:user)
     }, class_name: 'Enrollment'
 
-  # after_commit -> { PipelineService.publish_as_v2(self) }
+  after_commit -> { PipelineService.publish_as_v2(self) }
   after_create -> { RequirementsService.set_school_thresholds_on_course(course: self) }
 
   TAB_SNAPSHOT = 18
@@ -115,7 +115,7 @@ Course.class_eval do
   def non_expired_announcements
     filtered_announcements(non_expired_announcements_array)
   end
-
+  
   def snapshot_students
     active_students.eager_load(:user)
     .pluck(:id, :user_id, 'users.name').map do |stu_arr|

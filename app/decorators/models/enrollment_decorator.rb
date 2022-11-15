@@ -5,7 +5,7 @@ Enrollment.class_eval do
   def all_scores
     Score.where(enrollment: self)
   end
-
+  
   def ensure_active_scores
     return if !active_student? || active_scores? || !all_scores.one?
     all_scores.first.update(workflow_state: "active")
@@ -17,7 +17,7 @@ Enrollment.class_eval do
 
   def publish_as_v2
     unless deleted? && (guarded_for_deleted_publish? || guarded_for_deleted_while_active?)
-      # PipelineService.publish_as_v2(self)
+      PipelineService.publish_as_v2(self)
     end
   end
 

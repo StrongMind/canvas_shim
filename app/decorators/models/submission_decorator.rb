@@ -10,9 +10,9 @@ Submission.class_eval do
 
   def send_unit_grades_to_pipeline
     return unless enable_unit_grade_calculations?
-    # PipelineService.publish_as_v2(
-    #   PipelineService::Nouns::UnitGrades.new(self)
-    # )
+    PipelineService.publish_as_v2(
+      PipelineService::Nouns::UnitGrades.new(self)
+    )
   end
 
   def set_cached_regrade_alert_applicable

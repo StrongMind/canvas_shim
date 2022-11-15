@@ -4,7 +4,7 @@ ConversationBatch.class_eval do
   def publish_messages_as_v2
     conversation_message_ids.each do |cm_id|
       message = ConversationMessage.find_by(id: cm_id)
-      # PipelineService.publish_as_v2(message) if message
+      PipelineService.publish_as_v2(message) if message
     end
   end
 end

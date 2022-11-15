@@ -6,6 +6,7 @@ module PipelineService
       include Singleton
 
       def initialize
+
         Aws.config.update(
           region: REGION,
           credentials: Aws::Credentials.new(
@@ -19,12 +20,10 @@ module PipelineService
       end
 
       def self.publish(payload)
-        return
         instance.publish(payload)
       end
 
       def publish(payload)
-        return
         @sqs.send_message(queue_url: @url, message_body: payload.to_json)
       end
     end
