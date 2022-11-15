@@ -89,8 +89,9 @@ module RequirementsService
 
   def self.course_has_set_threshold?(context)
     get_course_assignment_passing_threshold?(context) ||
-    get_course_exam_passing_threshold?(context) ||
-      get_course_discussion_passing_threshold?
+      get_course_exam_passing_threshold?(context) ||
+      get_course_discussion_passing_threshold? ||
+      get_course_project_passing_threshold?
   end
 
   def self.is_unit_exam?(content_tag:)
