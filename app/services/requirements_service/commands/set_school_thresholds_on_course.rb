@@ -9,6 +9,7 @@ module RequirementsService
         set_default_course_threshold if account_threshold_set?
         set_default_course_exam_threshold if account_exam_threshold_set?
         set_default_course_discussion_threshold if account_discussion_threshold_set?
+        set_default_course_project_threshold if account_project_threshold_set?
       end
 
       private
@@ -41,6 +42,15 @@ module RequirementsService
         )
       end
 
+      def set_default_course_project_threshold
+        SettingsService.update_settings(
+          object: 'course',
+          id: course.id,
+          setting: 'passing_project_threshold',
+          value: account_project_threshold
+        )
+      end
+
       def account_threshold
         RequirementsService.get_passing_threshold(type: :school, threshold_type: 'assignment')
       end
@@ -61,9 +71,18 @@ module RequirementsService
         account_exam_threshold.positive?
       end
 
+      def account_project_threshold
+        RequirementsService.get_passing_threshold(type: :school, threshold_type: "project")
+      end
+
       def account_discussion_threshold_set?
         account_discussion_threshold.positive?
       end
+
+      def account_project_threshold_set?
+        account_project_threshold.positive?
+      end
+
     end
   end
 end

@@ -54,4 +54,19 @@ $(window).on("load", function(event) {
 
     flipIcon($(this), discussionPassThreshDisabled);
   });
+
+  var initialProjectVal = $('#account_settings_project_score_threshold').val();
+  $('#edit_school_project_threshold_btn').click(function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var projectPassThreshDisabled = $('#account_settings_project_score_threshold').prop('disabled');
+    $('#account_settings_project_score_threshold').prop('disabled', !projectPassThreshDisabled);
+    $("#project_threshold_edited").remove();
+    $(this).append("<input type='hidden' id='project_threshold_edited' name='project_threshold_edited' value=" + projectPassThreshDisabled + " />")
+    if ($('#account_settings_project_score_threshold').prop('disabled')) {
+      $('#account_settings_project_score_threshold').val(initialProjectVal);
+    }
+
+    flipIcon($(this), projectPassThreshDisabled);
+  });
 });

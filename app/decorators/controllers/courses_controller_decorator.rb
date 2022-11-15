@@ -129,6 +129,8 @@ CoursesController.class_eval do
     set_course_passing_threshold
     set_course_exam_passing_threshold
     set_course_discussion_passing_threshold
+    set_course_project_passing_threshold
+
     if params[:threshold_edited] && RequirementsService.course_has_set_threshold?(@course)
       RequirementsService.force_min_scores(course: @course)
     end
@@ -206,10 +208,21 @@ CoursesController.class_eval do
     )
   end
 
+  def set_course_project_passing_threshold
+    RequirementsService.set_passing_threshold(
+      type: "course",
+      threshold: params[:passing_project_threshold].to_f,
+      edited: params[:project_threshold_edited],
+      id: @course.try(:id),
+      threshold_type: "project"
+    )
+  end
+
   def get_course_threshold
     @threshold_visible = threshold_ui_allowed?
     return unless @threshold_visible
     @course_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id], threshold_type: 'assignment')
+    @course_project_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id], threshold_type: "project")
     @course_exam_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id], threshold_type: 'exam')
     @course_discussion_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id], threshold_type: 'discussion')
   end

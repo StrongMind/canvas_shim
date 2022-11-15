@@ -12,6 +12,8 @@ module RequirementsService
           setting_name += '_exam_threshold'
         when 'discussion'
           setting_name += '_discussion_threshold'
+        when "project"
+          setting_name += "_project"
         end
 
         @setting = setting_name

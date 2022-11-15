@@ -72,6 +72,21 @@ $(window).on("load", function(event) {
     flipIcon($(this), discussionPassThreshDisabled);
   });
 
+  var initialProjectVal = $('#passing_project_threshold').val();
+  $('#edit_project_threshold_btn').click(function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var projectPassThreshDisabled = $('#passing_project_threshold').prop('disabled');
+    $('#passing_project_threshold').prop('disabled', !projectPassThreshDisabled);
+    $("#project_threshold_edited").remove();
+    $(this).append("<input type='hidden' id='project_threshold_edited' name='project_threshold_edited' value=" + projectPassThreshDisabled + " />")
+    if ($('#passing_project_threshold').prop('disabled')) {
+      $('#passing_project_threshold').val(initialProjectVal);
+    }
+
+    flipIcon($(this), projectPassThreshDisabled);
+  });
+
   $(".endpoint-btn").click(function(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -83,7 +98,7 @@ $(window).on("load", function(event) {
     } else if (id === "distribute_due_dates" && !confirmDistribute() || id === "clear_due_dates" && !confirmClear()) {
       return;
     }
-    
+
     var target = $(this).data("target");
     var id = $(this).attr("id");
 

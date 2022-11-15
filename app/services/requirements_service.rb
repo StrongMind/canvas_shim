@@ -3,6 +3,8 @@ module RequirementsService
     apply_assignment_min_scores(context_module: context_module, force: force)
     apply_unit_exam_min_scores(context_module: context_module, force: force)
     apply_discussion_min_scores(context_module: context_module, force: force)
+    apply_project_min_scores(context_module: context_module, force: force)
+
   end
 
   def self.apply_assignment_min_scores(context_module:, force: false)
@@ -15,6 +17,10 @@ module RequirementsService
 
   def self.apply_discussion_min_scores(context_module:, force: false)
     Commands::ApplyDiscussionMinScores.new(context_module: context_module, force: force).call
+  end
+
+  def self.apply_project_min_scores(context_module:, force: false)
+    Commands::ApplyProjectMinScores.new(context_module: context_module, force: force).call
   end
 
   def self.force_min_scores(course:)
@@ -71,6 +77,10 @@ module RequirementsService
 
   def self.get_course_exam_passing_threshold?(context)
     get_raw_passing_threshold(type: :course, id: context.try(:id), threshold_type: 'exam')
+  end
+
+  def self.get_course_project_passing_threshold?(context)
+    get_raw_passing_threshold(type: :course, id: context.try(:id), threshold_type: "project")
   end
 
   def self.get_course_discussion_passing_threshold?(context)
