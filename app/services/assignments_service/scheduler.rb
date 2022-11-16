@@ -2,6 +2,8 @@ module AssignmentsService
   class Scheduler
     WORKING_DAYS = %w( mon tue wed thu fri )
 
+    attr_accessor :startdate, :enddate
+
     def initialize(args = {})
       @args = args
       @startdate = first_due_date
@@ -23,23 +25,23 @@ module AssignmentsService
     end
 
     def course_days_count
-      enddate.to_date.mjd - startdate.to_date.mjd
+      enddate.to_date.mjd - startdate.to_date.mjd + 1 # add 1 to have inclusive last day of course
     end
 
     private
 
-    attr_reader :assignment_count, :startdate, :enddate, :days
-
+    attr_reader :assignment_count, :days
+    
     def first_due_date
       if @args[:start_date]
-        @args[:start_date].in_time_zone(@args[:course].time_zone).at_end_of_day + first_assignment_due_offset.to_i.days
+        calendar.add_business_days(@args[:start_date].in_time_zone(@args[:course].time_zone).at_end_of_day, first_assignment_due_offset.to_i)
       else
-        @args[:course].start_at.in_time_zone(@args[:course].time_zone).at_end_of_day + first_assignment_due_offset.to_i.days
+        calendar.add_business_days(@args[:course].start_at.in_time_zone(@args[:course].time_zone).at_end_of_day, first_assignment_due_offset.to_i)
       end
     end
 
     def last_due_date
-      @args[:course].end_at.in_time_zone(@args[:course].time_zone).at_end_of_day - (last_assignment_due_offset.to_i.days + 1)
+      calendar.subtract_business_days(@args[:course].end_at.in_time_zone(@args[:course].time_zone).at_end_of_day, last_assignment_due_offset.to_i)
     end
 
     def calendar
@@ -89,11 +91,11 @@ module AssignmentsService
     end
 
     def first_assignment_due_offset
-      SettingsService.get_settings(object: 'school', id: 1)['first_assignment_due'] || 0
+      SettingsService.get_settings(object: 'school', id: 1)['first_assignment_due'] || 1
     end
 
     def last_assignment_due_offset
-      SettingsService.get_settings(object: 'school', id: 1)['last_assignment_due'] || 0
+      SettingsService.get_settings(object: 'school', id: 1)['last_assignment_due'] || 2
     end
   end
 end
