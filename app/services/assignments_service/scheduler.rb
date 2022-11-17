@@ -21,7 +21,7 @@ module AssignmentsService
     end
 
     def business_days_count
-      calendar.business_days_between(startdate, enddate)
+      calendar.business_days_between(startdate, enddate) + 1 # add 1 due to start/end date offsets
     end
 
     def course_days_count

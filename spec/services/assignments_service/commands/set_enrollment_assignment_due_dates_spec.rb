@@ -14,7 +14,7 @@ describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
   let(:course) do
     Course.create(
       start_at: course_start_date,
-      end_at: course_start_date + 4.days,
+      end_at: course_start_date + 7.days,
       assignments: [assignment, assignment2]
     )
   end

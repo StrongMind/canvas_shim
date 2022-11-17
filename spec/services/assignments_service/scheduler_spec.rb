@@ -576,7 +576,7 @@ describe AssignmentsService::Scheduler do
 
     describe '#assignments_per_day' do
       it 'does assignment count / course_days_count' do
-        expect(scheduler.assignments_per_day).to eq 3
+        expect(scheduler.assignments_per_day).to eq 2
       end
   
       context 'assignments dont divide evenly into course days' do
