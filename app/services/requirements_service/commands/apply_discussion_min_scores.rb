@@ -15,7 +15,7 @@ module RequirementsService
       end
 
       def threshold_changes_needed?
-        if score_threshold.positive?
+        if score_threshold.positive? && context_module.content_type == 'DiscussionTopic'
           true
         else
           false

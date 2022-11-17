@@ -60,7 +60,7 @@ module RequirementsService
       def min_score_different_than_threshold?(req)
         (req[:min_score] && req[:min_score] != score_threshold)
       end
-    
+
       def has_threshold_override?(requirement)
         threshold_overrides.split(",").map(&:to_i).include?(requirement[:id]) if threshold_overrides
       end
@@ -70,14 +70,14 @@ module RequirementsService
         ["must_submit", "must_contribute", "min_score"].none? { |type| type == requirement[:type] } ||
         unit_exam?(requirement)
       end
-    
+
       def add_min_score_to_requirements
         completion_requirements.each do |requirement|
           next if skippable_requirement?(requirement)
           update_score(requirement)
         end
       end
-    
+
       def update_score(requirement)
         content_tag = ContentTag.find_by(id: requirement[:id])
         min_score = RequirementsService.percentify_min_score(

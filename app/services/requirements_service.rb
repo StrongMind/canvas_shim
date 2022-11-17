@@ -3,8 +3,7 @@ module RequirementsService
     apply_assignment_min_scores(context_module: context_module, force: force)
     apply_unit_exam_min_scores(context_module: context_module, force: force)
     apply_discussion_min_scores(context_module: context_module, force: force)
-    apply_project_min_scores(context_module: context_module, force: force)
-
+    # apply_project_min_scores(context_module: context_module, force: force)
   end
 
   def self.apply_assignment_min_scores(context_module:, force: false)

@@ -214,7 +214,7 @@ CoursesController.class_eval do
       threshold: params[:passing_project_threshold].to_f,
       edited: params[:project_threshold_edited],
       id: @course.try(:id),
-      threshold_type: "project"
+      threshold_type: 'project'
     )
   end
 

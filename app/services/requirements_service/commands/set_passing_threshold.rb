@@ -14,7 +14,7 @@ module RequirementsService
         when 'discussion'
           setting_name += '_discussion_threshold'
         when "project"
-          setting_name += "_project"
+          setting_name += "_project_threshold"
         end
 
         @setting = setting_name
