@@ -148,7 +148,7 @@ describe AssignmentsService::Commands::DistributeDueDates do
       )
 
       expect(assignment4).to(
-        receive(:update).with(due_at: Time.parse('2018-11-28 23:59:59.999999999 +0000'))
+        receive(:update).with(due_at: Time.parse('2018-11-27 23:59:59.999999999 +0000'))
       )
       subject.call
     end
@@ -204,7 +204,7 @@ describe AssignmentsService::Commands::DistributeDueDates do
 
     it "updates progress completion" do
       expect(subject).to receive(
-        :reverse_calculate_completion!).exactly(4).times
+        :reverse_calculate_completion!).exactly(subject.send(:scheduler).business_days_count).times
       subject.send(:distribute_with_progress)
     end
   end
