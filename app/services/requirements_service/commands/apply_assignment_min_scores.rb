@@ -67,8 +67,8 @@ module RequirementsService
 
       def skippable_requirement?(requirement)
         has_threshold_override?(requirement) ||
-        ["must_submit", "must_contribute", "min_score"].none? { |type| type == requirement[:type] } ||
-        unit_exam?(requirement)
+          ["must_submit", "must_contribute", "min_score"].none? { |type| type == requirement[:type] } ||
+          !assignment?(requirement)
       end
 
       def add_min_score_to_requirements
@@ -85,6 +85,11 @@ module RequirementsService
                       passing_threshold: score_threshold
                     )
         requirement.merge!(type: 'min_score', min_score: min_score)
+      end
+
+      def assignment?(requirement)
+        content_tag = ContentTag.find_by(id: requirement[:id])
+        content_tag && content_tag.content_type == 'Assignment'
       end
 
       def unit_exam?(requirement)

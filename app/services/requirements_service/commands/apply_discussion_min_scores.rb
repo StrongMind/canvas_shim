@@ -23,7 +23,12 @@ module RequirementsService
       end
 
       def skippable_requirement?(requirement)
-        has_threshold_override?(requirement)
+        has_threshold_override?(requirement) || !discussion?(requirement)
+      end
+
+      def discussion?(requirement)
+        content_tag = ContentTag.find_by(id: requirement[:id])
+        content_tag && content_tag.content_type == 'DiscussionTopic'
       end
     end
   end
