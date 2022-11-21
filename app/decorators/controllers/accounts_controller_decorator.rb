@@ -9,6 +9,10 @@ AccountsController.class_eval do
     show
   end
 
+  def school_threshold(assignment_group)
+
+  end
+
   def strongmind_settings
     grab_holidays
     get_allowed_filetypes
@@ -31,6 +35,7 @@ AccountsController.class_eval do
 
     @expose_discussion_and_project_threshold_field = Rails.configuration.launch_darkly_client.variation("expose-discussion-and-project-threshold-field", launch_darkly_user, false)
 
+    @assignment_groups = ['Assignment', 'Exams', 'Projects']
     js_env({
       HOLIDAYS: @holidays,
       FILETYPES: @allowed_filetypes
