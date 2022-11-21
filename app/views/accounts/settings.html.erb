@@ -385,12 +385,12 @@ TEXT
           <legend><%= t(:passing_threshold_settings, 'Passing Threshold Settings') %></legend>
           <table class="formtable">
             <%= f.fields_for :settings do |settings| %>
-              <% @assignment_groups.each do |assignment_group| %>
+              <% @assignment_group_thresholds.each_key do |assignment_group| %>
                 <tr>
-                  <td><%= settings.blabel "assignment_#{assignment_group}_score_threshold".to_sym, :en => "Passing Threshold (#{assignment_group})" %></td>
+                  <td><%= settings.blabel "assignment_#{assignment_group}_score_threshold".to_sym, :en => "Passing Threshold (Assignment Group: #{assignment_group})" %></td>
                   <td>
                     <%= settings.number_field "assignment_#{assignment_group}_score_threshold".to_sym,
-                                            :value => @school_threshold,
+                                            :value => @assignment_group_thresholds[assignment_group] || 0.0,
                                             :class => 'same-width-as-select',
                                             :min => "0",
                                             :max => "100",

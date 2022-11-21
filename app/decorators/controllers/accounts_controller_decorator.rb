@@ -9,8 +9,12 @@ AccountsController.class_eval do
     show
   end
 
-  def school_threshold(assignment_group)
-
+  def populate_assignment_thresholds
+    assignment_group_records = AssignmentGroup.select(:name).distinct
+    assignment_group_records.each do |record|
+      threshold = RequirementsService.get_passing_threshold(type: :school, threshold_type: 'assignment', assignment_group: record.name)
+      @assignment_group_thresholds[record.name] = threshold
+    end
   end
 
   def strongmind_settings
@@ -19,8 +23,8 @@ AccountsController.class_eval do
     get_first_assignment_due
     get_last_assignment_due
 
-    @school_threshold         = RequirementsService.get_passing_threshold(type: :school, threshold_type: 'assignment')
-    @school_exam_threshold    = RequirementsService.get_passing_threshold(type: :school, threshold_type: 'exam')
+    @assignment_group_thresholds = Hash.new # { AssignmentGroup Name: Passing Threshold}
+    populate_assignment_thresholds
     @school_discussion_threshold    = RequirementsService.get_passing_threshold(type: :school, threshold_type: 'discussion')
     @course_thresh_enabled    = RequirementsService.course_threshold_setting_enabled?
     @school_project_threshold = RequirementsService.get_passing_threshold(type: :school, threshold_type: "project")
@@ -35,7 +39,6 @@ AccountsController.class_eval do
 
     @expose_discussion_and_project_threshold_field = Rails.configuration.launch_darkly_client.variation("expose-discussion-and-project-threshold-field", launch_darkly_user, false)
 
-    @assignment_groups = ['Assignment', 'Exams', 'Projects']
     js_env({
       HOLIDAYS: @holidays,
       FILETYPES: @allowed_filetypes

@@ -6,21 +6,31 @@ module RequirementsService
       end
 
       def call
-        set_default_course_threshold if account_threshold_set?
-        set_default_course_exam_threshold if account_exam_threshold_set?
+        set_default_course_assignment_threshold if account_threshold_set?
+        # set_default_course_exam_threshold if account_exam_threshold_set?
         set_default_course_discussion_threshold if account_discussion_threshold_set?
       end
 
       private
       attr_reader :course
 
-      def set_default_course_threshold
+      def set_default_course_assignment_threshold
         SettingsService.update_settings(
           object: 'course',
           id: course.id,
-          setting: 'passing_threshold',
+          setting: "passing_threshold",
           value: account_threshold
         )
+
+        assignment_group_records = AssignmentGroup.select(:name).distinct
+        assignment_group_records.each do |record|
+          SettingsService.update_settings(
+            object: 'course',
+            id: course.id,
+            setting: "passing_assignment_#{record.name}_threshold",
+            value: account_threshold
+          )
+        end
       end
 
       def set_default_course_exam_threshold
@@ -50,12 +60,12 @@ module RequirementsService
         )
       end
 
-      def account_threshold
-        RequirementsService.get_passing_threshold(type: :school, threshold_type: 'assignment')
+      def account_threshold(assignment_group: '')
+        RequirementsService.get_passing_threshold(type: :school, threshold_type: 'assignment', assignment_group: assignment_group)
       end
 
-      def account_threshold_set?
-        account_threshold.positive?
+      def account_threshold_set?(assignment_group: '')
+        account_threshold(assignment_group).positive?
       end
 
       def account_exam_threshold
