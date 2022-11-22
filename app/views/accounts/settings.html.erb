@@ -382,7 +382,12 @@ TEXT
         </fieldset>
 
         <fieldset>
-          <legend><%= t(:passing_threshold_settings, 'Passing Threshold Settings') %></legend>
+          <legend><%= t(:passing_threshold_settings, 'Passing Threshold Settings') %>
+            <a id="edit_passing_thresholds_btn" class="Button Button--icon-action">
+              <i class="icon-edit"></i>
+            </a>
+          </legend>
+
           <table class="formtable">
             <%= f.fields_for :settings do |settings| %>
               <% unless @expose_discussion_and_project_threshold_field %>
@@ -391,7 +396,7 @@ TEXT
                   <td>
                     <%= settings.number_field :score_threshold,
                                             :value => @school_threshold,
-                                            :class => 'same-width-as-select',
+                                            :class => 'same-width-as-select, passing-threshold-number-field',
                                             :min => "0",
                                             :max => "100",
                                             :step => "0.1",

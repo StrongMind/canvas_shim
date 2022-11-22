@@ -1,10 +1,10 @@
 <% @assignment_groups.each do |group| %>
   <tr>
-    <td><%= settings.blabel "#{group}_score_threshold".to_sym, :en => "#{group.name.humanize}", :style => "float: right;" %></td>
+    <td><%= settings.blabel "#{group.name.downcase}_score_threshold".to_sym, :en => "#{group.name.humanize}", :style => "float: right;" %></td>
     <td>
-      <%= settings.number_field "#{group}_score_threshold".to_sym,
+      <%= settings.number_field "#{group.name.downcase}_score_threshold".to_sym,
                                 :value => @school_project_threshold,
-                                :class => 'same-width-as-select',
+                                :class => 'same-width-as-select, passing-threshold-number-field',
                                 :min => "0",
                                 :max => "100",
                                 :step => "0.1",
