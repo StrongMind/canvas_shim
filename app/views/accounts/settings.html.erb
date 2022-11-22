@@ -385,24 +385,25 @@ TEXT
           <legend><%= t(:passing_threshold_settings, 'Passing Threshold Settings') %></legend>
           <table class="formtable">
             <%= f.fields_for :settings do |settings| %>
-              <tr>
-                <td><%= settings.blabel :score_threshold, :en => "Passing Threshold (Assignments)" %></td>
-                <td>
-                  <%= settings.number_field :score_threshold,
-                                          :value => @school_threshold,
-                                          :class => 'same-width-as-select',
-                                          :min => "0",
-                                          :max => "100",
-                                          :step => "0.1",
-                                          :placeholder => "Choose a number between 0-100",
-                                          :disabled => true %>
-                  <a id="edit_school_threshold_btn" href="" class="Button Button--icon-action">
-                    <i class="icon-edit"></i>
-                  </a>
-                  <p style="font-size: 0.9em;"><%= t("Set a school-wide minimum percentage for all graded assignments. Each assignment will have an adjusted minimum score based on this percentage.") %></p>
-                  <p style="font-size: 0.9em;"><%= t("This setting is off by default, and/or when the threshold is set to 0.0.") %></p>
-                </td>
-              </tr>
+              <% unless @expose_discussion_and_project_threshold_field %>
+                <tr>
+                  <td><%= settings.blabel :score_threshold, :en => "Passing Threshold (Assignments)" %></td>
+                  <td>
+                    <%= settings.number_field :score_threshold,
+                                            :value => @school_threshold,
+                                            :class => 'same-width-as-select',
+                                            :min => "0",
+                                            :max => "100",
+                                            :step => "0.1",
+                                            :placeholder => "Choose a number between 0-100",
+                                            :disabled => true %>
+                    <a id="edit_school_threshold_btn" href="" class="Button Button--icon-action">
+                      <i class="icon-edit"></i>
+                    </a>
+                    <p style="font-size: 0.9em;"><%= t("Set a school-wide minimum percentage for all graded assignments. Each assignment will have an adjusted minimum score based on this percentage.") %></p>
+                    <p style="font-size: 0.9em;"><%= t("This setting is off by default, and/or when the threshold is set to 0.0.") %></p>
+                  </td>
+                </tr>
 
               <tr>
                 <td><%= settings.blabel :unit_score_threshold, :en => "Passing Threshold (Exams)" %></td>
