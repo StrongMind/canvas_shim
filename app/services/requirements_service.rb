@@ -1,8 +1,8 @@
 module RequirementsService
   def self.apply_minimum_scores(context_module:, force: false)
     apply_assignment_min_scores(context_module: context_module, force: force)
-    apply_unit_exam_min_scores(context_module: context_module, force: force)
     apply_discussion_min_scores(context_module: context_module, force: force)
+    # apply_unit_exam_min_scores(context_module: context_module, force: force)
     # apply_project_min_scores(context_module: context_module, force: force)
   end
 
@@ -26,13 +26,14 @@ module RequirementsService
     Commands::ForceMinScores.new(course: course).call
   end
 
-  def self.set_passing_threshold(type:, threshold:, edited:, id: 1, threshold_type: 'assignment')
+  def self.set_passing_threshold(type:, threshold:, edited:, id: 1, threshold_type: 'assignment', assignment_group: '')
     Commands::SetPassingThreshold.new(
       type: type,
       threshold: threshold,
       edited: edited,
       id: id,
-      threshold_type: threshold_type
+      threshold_type: threshold_type,
+      assignment_group: assignment_group
     ).call
   end
 
@@ -58,20 +59,20 @@ module RequirementsService
     ).call
   end
 
-  def self.set_school_thresholds_on_course(course:)
+  def self.set_school_thresholds_on_course(course:) # TODO finish this
     Commands::SetSchoolThresholdsOnCourse.new(course: course).call
   end
 
-  def self.get_raw_passing_threshold(type:, id: 1, threshold_type: 'assignment')
-    Queries::GetPassingThreshold.new(type: type, id: id, threshold_type: threshold_type).call
+  def self.get_raw_passing_threshold(type:, id: 1, threshold_type: 'assignment', assignment_group: '')
+    Queries::GetPassingThreshold.new(type: type, id: id, threshold_type: threshold_type, assignment_group: assignment_group).call
   end
 
-  def self.get_passing_threshold(type:, id: 1, threshold_type: 'assignment')
-    get_raw_passing_threshold(type: type, id: id, threshold_type: threshold_type).to_f
+  def self.get_passing_threshold(type:, id: 1, threshold_type: 'assignment', assignment_group: '')
+    get_raw_passing_threshold(type: type, id: id, threshold_type: threshold_type, assignment_group: assignment_group).to_f
   end
 
-  def self.get_course_assignment_passing_threshold?(context)
-    get_raw_passing_threshold(type: :course, id: context.try(:id), threshold_type: 'assignment')
+  def self.get_course_assignment_passing_threshold?(context, assignment_group: '')
+    get_raw_passing_threshold(type: :course, id: context.try(:id), threshold_type: 'assignment', assignment_group: assignment_group)
   end
 
   def self.get_course_exam_passing_threshold?(context)
