@@ -2,7 +2,7 @@
   <tr>
     <td><%= settings.blabel "#{group.name.downcase}_score_threshold".to_sym, :en => "Passing Threshold (#{group.name.humanize})" %></td>
     <td>
-      <%= settings.number_field "#{group.name.downcase}_score_threshold".to_sym,
+      <%= settings.number_field "#{group.name.downcase.gsub(/\s/, "_")}_score_threshold".to_sym,
                                 :value => @school_project_threshold,
                                 :class => 'same-width-as-select, passing-threshold-number-field',
                                 :min => "0",

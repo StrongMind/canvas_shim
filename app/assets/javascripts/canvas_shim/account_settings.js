@@ -39,4 +39,44 @@ $(window).on("load", function(event) {
 
     flipIcon($(this), unitPassThreshDisabled);
   });
+
+  var initialDiscussionVal = $('#account_settings_discussion_score_threshold').val();
+  $('#edit_school_discussion_threshold_btn').click(function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var discussionPassThreshDisabled = $('#account_settings_discussion_score_threshold').prop('disabled');
+    $('#account_settings_discussion_score_threshold').prop('disabled', !discussionPassThreshDisabled);
+    $("#discussion_threshold_edited").remove();
+    $(this).append("<input type='hidden' id='discussion_threshold_edited' name='discussion_threshold_edited' value=" + discussionPassThreshDisabled + " />")
+    if ($('#account_settings_discussion_score_threshold').prop('disabled')) {
+      $('#account_settings_discussion_score_threshold').val(initialDiscussionVal);
+    }
+
+    flipIcon($(this), discussionPassThreshDisabled);
+  });
+
+  $('#edit_passing_thresholds_btn').click(function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var thresholdFields = getThresholdFields();
+    console.log(thresholdFields);
+
+    var thresholdFieldsDisabled = thresholdFields[0].disabled;
+    thresholdFields.forEach(function(el, i) {
+      var initialFieldValue = $(el).val();
+      $(el).attr('disabled', !thresholdFieldsDisabled);
+      var id_string = $(el).attr('id').split('_').slice(2).join('_');
+      var edited_id_string = id_string + "_edited";
+      $("#" + edited_id_string).val(thresholdFieldsDisabled);
+      if($("#" + id_string).prop('disabled')) {
+        $("#" + id_string).val(initialFieldValue);
+      }
+    });
+
+    flipIcon($(this), thresholdFieldsDisabled);
+  });
+
+  function getThresholdFields() {
+    return Array.from($('.passing-threshold-number-field'));
+  }
 });
