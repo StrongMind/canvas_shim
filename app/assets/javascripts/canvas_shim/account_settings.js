@@ -10,73 +10,33 @@ function flipIcon(element, threshDisabled) {
 }
 
 $(window).on("load", function(event) {
-  var initialVal = $('#account_settings_score_threshold').val();
-  $('#edit_school_threshold_btn').click(function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    var passThreshDisabled = $('#account_settings_score_threshold').prop('disabled');
-    $('#account_settings_score_threshold').prop('disabled', !passThreshDisabled);
-    $("#threshold_edited").remove();
-    $(this).append("<input type='hidden' id='threshold_edited' name='threshold_edited' value=" + passThreshDisabled + " />")
-    if ($('#account_settings_score_threshold').prop('disabled')) {
-      $('#account_settings_score_threshold').val(initialVal);
-    }
-
-    flipIcon($(this), passThreshDisabled);
-  });
-
-  var initialUnitVal = $('#account_settings_unit_score_threshold').val();
-  $('#edit_school_unit_threshold_btn').click(function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    var unitPassThreshDisabled = $('#account_settings_unit_score_threshold').prop('disabled');
-    $('#account_settings_unit_score_threshold').prop('disabled', !unitPassThreshDisabled);
-    $("#unit_threshold_edited").remove();
-    $(this).append("<input type='hidden' id='unit_threshold_edited' name='unit_threshold_edited' value=" + unitPassThreshDisabled + " />")
-    if ($('#account_settings_unit_score_threshold').prop('disabled')) {
-      $('#account_settings_unit_score_threshold').val(initialUnitVal);
-    }
-
-    flipIcon($(this), unitPassThreshDisabled);
-  });
-
-  var initialDiscussionVal = $('#account_settings_discussion_score_threshold').val();
-  $('#edit_school_discussion_threshold_btn').click(function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    var discussionPassThreshDisabled = $('#account_settings_discussion_score_threshold').prop('disabled');
-    $('#account_settings_discussion_score_threshold').prop('disabled', !discussionPassThreshDisabled);
-    $("#discussion_threshold_edited").remove();
-    $(this).append("<input type='hidden' id='discussion_threshold_edited' name='discussion_threshold_edited' value=" + discussionPassThreshDisabled + " />")
-    if ($('#account_settings_discussion_score_threshold').prop('disabled')) {
-      $('#account_settings_discussion_score_threshold').val(initialDiscussionVal);
-    }
-
-    flipIcon($(this), discussionPassThreshDisabled);
-  });
-
   $('#edit_passing_thresholds_btn').click(function(e) {
     e.preventDefault();
     e.stopPropagation();
-    var thresholdFields = getThresholdFields();
-    console.log(thresholdFields);
+    let thresholdFields = getThresholdFields();
+    let thresholdFieldsDisabled = thresholdFields[0].disabled;
 
-    var thresholdFieldsDisabled = thresholdFields[0].disabled;
-    thresholdFields.forEach(function(el, i) {
-      var initialFieldValue = $(el).val();
-      $(el).attr('disabled', !thresholdFieldsDisabled);
-      var id_string = $(el).attr('id').split('_').slice(2).join('_');
-      var edited_id_string = id_string + "_edited";
-      $("#" + edited_id_string).val(thresholdFieldsDisabled);
-      if($("#" + id_string).prop('disabled')) {
-        $("#" + id_string).val(initialFieldValue);
-      }
-    });
+    editThresholdFields(thresholdFields, thresholdFieldsDisabled)
 
     flipIcon($(this), thresholdFieldsDisabled);
   });
 
   function getThresholdFields() {
     return Array.from($('.passing-threshold-number-field'));
+  }
+
+  function editThresholdFields(thresholdFields, thresholdFieldsDisabled){
+    thresholdFields.forEach(function(el, i) {
+      var initialFieldValue = $(el).val();
+      var id_string = $(el).attr('id').split('_').slice(2).join('_');
+      var edited_id_string = id_string + "_edited";
+      
+      $(el).attr('disabled', !thresholdFieldsDisabled);
+      $("#" + edited_id_string).val(thresholdFieldsDisabled);
+      
+      if($("#" + id_string).prop('disabled')) {
+        $("#" + id_string).val(initialFieldValue);
+      }
+    });
   }
 });
