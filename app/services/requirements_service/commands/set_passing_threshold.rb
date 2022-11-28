@@ -5,8 +5,11 @@ module RequirementsService
         @type = type
         @threshold = threshold
         setting_name = (type == "school" ? "score" : "passing")
-        setting_name += "_exam" if exam
-        @setting = "#{setting_name}_threshold"
+        if threshold_type.present?
+          @setting = threshold_type
+        else
+          @setting = "#{setting_name}_threshold"
+        end
         @edited = (edited == "true")
         @id = id
         @last_threshold = RequirementsService.get_raw_passing_threshold(type: type.to_sym, id: id, exam: exam)
