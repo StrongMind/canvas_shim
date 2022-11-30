@@ -9,7 +9,7 @@ ContentTag.class_eval do
     PipelineService.publish PipelineService::Nouns::ModuleItem.new(self)
   end
 
-  after_save :call_requirements_service #TODO: add a check, why are we saving?
+  # after_save :call_requirements_service #TODO: add a check, why are we saving?
 
   def call_requirements_service
     if self.content.assignment.present?

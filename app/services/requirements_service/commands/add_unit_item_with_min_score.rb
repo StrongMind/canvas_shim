@@ -5,22 +5,24 @@ module RequirementsService
         @context_module = context_module
         @content_tag = content_tag
         @course = context_module.course
+        @score_threshold = RequirementsService.get_passing_threshold(type: :course, id: course.try(:id), threshold_type: threshold_type)
 
-        if threshold_type.present?
-          @setting = threshold_type
-        else
-          @setting = "#{setting_name}_threshold"
-        end
 
-        if
-          @score_threshold = RequirementsService.get_passing_threshold(type: 'school', threshold_type: @setting)
-        else
-          @score_threshold = RequirementsService.get_passing_threshold(type: :course, id: course.try(:id))
-        end
+        # if threshold_type.present?
+        #   @setting = threshold_type
+        # else
+        #   @setting = "#{setting_name}_threshold"
+        # end
+
+        # if
+        #   @score_threshold = RequirementsService.get_passing_threshold(type: 'school', threshold_type: @setting)
+        # else
+        #   @score_threshold = RequirementsService.get_passing_threshold(type: :course, id: course.try(:id))
+        # end
       end
 
       def call
-        add_threshold_to_module if gradeable_tag_type? && RequirementsService.get_course_assignment_passing_threshold?(course)
+        add_threshold_to_module if gradeable_tag_type? && @score_threshold
       end
 
       private

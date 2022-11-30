@@ -5,7 +5,7 @@ module RequirementsService
         @type = type
         @threshold = threshold
         setting_name = (type == "school" ? "score" : "passing")
-        if threshold_type.present?
+        if threshold_type.present? && type == "school"
           @setting = threshold_type
         else
           @setting = "#{setting_name}_threshold"

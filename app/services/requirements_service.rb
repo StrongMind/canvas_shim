@@ -41,10 +41,11 @@ module RequirementsService
     ).call
   end
 
-  def self.add_unit_item_with_min_score(context_module:, content_tag:)
+  def self.add_unit_item_with_min_score(context_module:, content_tag:, threshold_type:)
     Commands::AddUnitItemWithMinScore.new(
       context_module: context_module,
       content_tag: content_tag,
+      threshold_type: threshold_type
     ).call
   end
 
