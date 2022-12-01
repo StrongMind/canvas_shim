@@ -22,4 +22,13 @@ Assignment.class_eval do
   def assignment_group_name
     assignment_group.name
   end
+
+  def ensure_assignment_group(do_save = true)
+    self.context.require_assignment_group
+    assignment_groups = self.context.assignment_groups.active
+    if !assignment_groups.map(&:id).include?(self.assignment_group_id)
+      self.assignment_group = assignment_groups.find_by_name('Assignments') || assignment_groups.first
+      save! if do_save
+    end
+  end
 end

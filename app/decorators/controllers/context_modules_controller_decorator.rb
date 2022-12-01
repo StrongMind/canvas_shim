@@ -20,26 +20,20 @@ ContextModulesController.class_eval do
   def strongmind_add_item
     instructure_add_item
     call_requirements_service
-    # RequirementsService.add_unit_item_with_min_score(context_module: @module, content_tag: @tag)
   end
 
   alias_method :instructure_add_item, :add_item
   alias_method :add_item, :strongmind_add_item
 
   def call_requirements_service
-    puts "************"
-    puts "************"
-    puts "#{params}"
-    puts "************"
-    puts "************"
-
-    @assignment_group = Assignment.find(params[:item][:id]).assignment_group
-    if AssignmentGroup::GROUP_NAMES.include?(@assignment_group.name)
-      puts "included"
+    if params[:item][:type].downcase == 'discussion_topic'
+      if @assignment = DiscussionTopic.find(params[:item][:id]).assignment
+        @assignment_group = @assignment.assignment_group_name.singularize.downcase.gsub(/\s/, "_")
+      end
     else
-
+      @assignment_group = Assignment.find(params[:item][:id]).assignment_group_name.singularize.downcase.gsub(/\s/, "_")
     end
-
+    RequirementsService.add_unit_item_with_min_score(context_module: @module, content_tag: @tag, threshold_type: @assignment_group)
   end
 
   def strongmind_item_redirect
