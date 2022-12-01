@@ -1,6 +1,6 @@
 <% @assignment_group_thresholds.each do |group_name, threshold| %>
   <tr>
-    <td><%= settings.blabel "#{group_name}_score_threshold".to_sym, :en => "Passing Threshold (#{group_name.humanize})" %></td>
+    <td><%= settings.blabel "#{group_name}_score_threshold".to_sym, :en => "#{group_name.humanize.pluralize}" %></td>
     <td>
       <%= settings.number_field "#{group_name}_score_threshold".to_sym,
                                 :value => threshold,

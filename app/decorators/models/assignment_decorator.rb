@@ -18,4 +18,8 @@ Assignment.class_eval do
 
     excused_submissions.exists?(user_id: user.id)
   end
+
+  def assignment_group_name
+    assignment_group.name
+  end
 end

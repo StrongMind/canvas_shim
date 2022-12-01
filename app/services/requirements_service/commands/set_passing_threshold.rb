@@ -8,7 +8,7 @@ module RequirementsService
         if threshold_type.present? && type == "school"
           @setting = threshold_type
         else
-          @setting = "#{setting_name}_threshold"
+          @setting = "#{threshold_type}_#{setting_name}_threshold"
         end
         @edited = (edited == "true")
         @id = id
