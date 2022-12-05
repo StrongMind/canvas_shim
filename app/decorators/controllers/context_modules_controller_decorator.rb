@@ -27,11 +27,11 @@ ContextModulesController.class_eval do
 
   def call_requirements_service
     if params[:item][:type].downcase == 'discussion_topic'
-      if @assignment = DiscussionTopic.find(params[:item][:id]).assignment
-        @assignment_group = @assignment.assignment_group_name.singularize.downcase.gsub(/\s/, "_")
-      end
+      @assignment = DiscussionTopic.find(params[:item][:id]).assignment
+      return unless @assignment
+      @assignment_group = @assignment.passing_threshold_setting_name
     else
-      @assignment_group = Assignment.find(params[:item][:id]).assignment_group_name.singularize.downcase.gsub(/\s/, "_")
+      @assignment_group = Assignment.find(params[:item][:id]).passing_threshold_setting_name
     end
     RequirementsService.add_unit_item_with_min_score(context_module: @module, content_tag: @tag, threshold_type: @assignment_group)
   end

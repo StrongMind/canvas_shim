@@ -19,7 +19,7 @@ ContentMigration.class_eval do
 
     content_tags.each do |tag|
       next unless assignment = tag.assignment
-      threshold_type = assignment.assignment_group_name.singularize.downcase.gsub(/\s/, "_")
+      threshold_type = assignment.passing_threshold_setting_name
       RequirementsService.add_unit_item_with_min_score(context_module: tag.context_module, content_tag: tag, threshold_type: threshold_type )
     end
   end
