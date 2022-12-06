@@ -4,13 +4,8 @@ module RequirementsService
       def initialize(type:, id: 1, threshold_type: nil)
         @id = id
         @type = type
-        setting_name = (type == :school ? "score" : "passing")
-
-        if threshold_type.present? && type == "school"
-          @setting = threshold_type
-        else
-          @setting = "#{threshold_type}_#{setting_name}_threshold"
-        end
+        setting_name = (type == "school" ? "score" : "passing")
+        @setting = "#{threshold_type}_#{setting_name}_threshold"
       end
 
       def call

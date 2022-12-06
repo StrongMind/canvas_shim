@@ -5,14 +5,10 @@ module RequirementsService
         @type = type
         @threshold = threshold
         setting_name = (type == "school" ? "score" : "passing")
-        if threshold_type.present? && type == "school"
-          @setting = threshold_type
-        else
-          @setting = "#{threshold_type}_#{setting_name}_threshold"
-        end
+        @setting = "#{threshold_type}_#{setting_name}_threshold"
         @edited = (edited == "true")
         @id = id
-        @last_threshold = RequirementsService.get_raw_passing_threshold(type: type.to_sym, id: id, exam: exam)
+        @last_threshold = RequirementsService.get_raw_passing_threshold(type: type, id: id, threshold_type: threshold_type)
       end
 
       def call
@@ -38,7 +34,6 @@ module RequirementsService
       end
 
       def valid_compared_to_last_threshold?
-        last_threshold.nil? && threshold.positive? ||
         last_threshold.to_f != threshold
       end
     end

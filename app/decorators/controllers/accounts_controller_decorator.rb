@@ -17,10 +17,6 @@ AccountsController.class_eval do
     get_first_assignment_due
     get_last_assignment_due
 
-    # @school_threshold         = RequirementsService.get_passing_threshold(type: :school)
-    # @school_exam_threshold    = RequirementsService.get_passing_threshold(type: :school, threshold_type: "exam")
-    # @school_discussion_threshold = RequirementsService.get_passing_threshold(type: :school, threshold_type: "discussion")
-    # @school_project_threshold = RequirementsService.get_passing_threshold(type: :school, threshold_type: "project")
     @course_thresh_enabled    = RequirementsService.course_threshold_setting_enabled?
     @assignment_group_thresholds = get_assignment_group_thresholds(ASSIGNMENT_GROUP_NAMES)
 
@@ -45,10 +41,6 @@ AccountsController.class_eval do
 
   def strongmind_update
     if account_settings_params
-      # set_school_passing_threshold
-      # set_school_unit_exam_passing_threshold
-      # set_school_discussion_passing_threshold
-      # set_school_project_passing_threshold
       set_assignment_group_thresholds(ASSIGNMENT_GROUP_NAMES)
       set_threshold_permissions
 
@@ -116,23 +108,6 @@ AccountsController.class_eval do
     )
   end
 
-  def set_school_passing_threshold
-    RequirementsService.set_passing_threshold(
-      type: "school",
-      threshold: params[:account][:settings][:score_threshold].to_f,
-      edited: params[:threshold_edited]
-    )
-  end
-
-  def set_school_unit_exam_passing_threshold
-    RequirementsService.set_passing_threshold(
-      type: "school",
-      threshold: params[:account][:settings][:unit_score_threshold].to_f,
-      edited: params[:unit_threshold_edited],
-      exam: true
-    )
-  end
-
   def course_threshold_enablement_params
     params[:account][:settings][:enable_thresholds_in_courses].to_i.positive?
   end
@@ -182,8 +157,7 @@ AccountsController.class_eval do
   def get_assignment_group_thresholds(assignment_group_names)
     thresholds = {}
     assignment_group_names.each do |group_name|
-      setting_name = "#{group_name}_score_threshold"
-      thresholds[group_name] = RequirementsService.get_passing_threshold(type: 'school', threshold_type: setting_name)
+      thresholds[group_name] = RequirementsService.get_passing_threshold(type: 'school', threshold_type: group_name)
     end
     thresholds
   end
@@ -196,7 +170,7 @@ AccountsController.class_eval do
         type: "school",
         threshold: account_settings_params[threshold_name].to_f,
         edited: params[threshold_edited],
-        threshold_type: threshold_name
+        threshold_type: group_name
       )
     end
   end

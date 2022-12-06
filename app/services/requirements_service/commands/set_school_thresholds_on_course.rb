@@ -12,8 +12,8 @@ module RequirementsService
         # set_default_course_exam_threshold if account_exam_threshold_set?
         # set_default_course_discussion_threshold if account_discussion_threshold_set?
         # set_default_course_project_threshold if account_project_threshold_set?
-        non_zero_thresholds = get_default_course_thresholds(ASSIGNMENT_GROUP_NAMES)
-        set_default_course_thresholds(non_zero_thresholds)
+        account_level_thresholds = get_default_course_thresholds(ASSIGNMENT_GROUP_NAMES)
+        set_default_course_thresholds(account_level_thresholds)
       end
 
       private
@@ -34,10 +34,9 @@ module RequirementsService
       def get_default_course_thresholds(assignment_group_names)
         thresholds = {}
         assignment_group_names.each do |group_name|
-          setting_name = "#{group_name}_score_threshold"
-          thresholds[group_name] = RequirementsService.get_passing_threshold(type: 'school', threshold_type: setting_name)
+          thresholds[group_name] = RequirementsService.get_passing_threshold(type: 'school', threshold_type: group_name)
         end
-        thresholds.reject{ |key, value| !value.positive? }
+        thresholds
       end
 
       # def set_default_course_threshold
