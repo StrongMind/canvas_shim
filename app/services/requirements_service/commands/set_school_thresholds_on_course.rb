@@ -8,10 +8,6 @@ module RequirementsService
       end
 
       def call
-        # set_default_course_threshold if account_threshold_set?
-        # set_default_course_exam_threshold if account_exam_threshold_set?
-        # set_default_course_discussion_threshold if account_discussion_threshold_set?
-        # set_default_course_project_threshold if account_project_threshold_set?
         account_level_thresholds = get_default_course_thresholds(ASSIGNMENT_GROUP_NAMES)
         set_default_course_thresholds(account_level_thresholds)
       end
@@ -20,8 +16,8 @@ module RequirementsService
       attr_reader :course
 
       def set_default_course_thresholds(thresholds)
-        thresholds.each do |threshold_name, value|
-          threshold_setting_name = "#{threshold_name}_passing_threshold"
+        thresholds.each do |assignment_group_name, value|
+          threshold_setting_name = "#{assignment_group_name}_passing_threshold"
           SettingsService.update_settings(
             object: 'course',
             id: course.id,
@@ -34,78 +30,10 @@ module RequirementsService
       def get_default_course_thresholds(assignment_group_names)
         thresholds = {}
         assignment_group_names.each do |group_name|
-          thresholds[group_name] = RequirementsService.get_passing_threshold(type: 'school', threshold_type: group_name)
+          thresholds[group_name] = RequirementsService.get_passing_threshold(type: 'school', assignment_group_name: group_name)
         end
         thresholds
       end
-
-      # def set_default_course_threshold
-      #   SettingsService.update_settings(
-      #     object: 'course',
-      #     id: course.id,
-      #     setting: 'passing_threshold',
-      #     value: account_threshold
-      #   )
-      # end
-
-      # def set_default_course_exam_threshold
-      #   SettingsService.update_settings(
-      #     object: 'course',
-      #     id: course.id,
-      #     setting: 'passing_exam_threshold',
-      #     value: account_exam_threshold
-      #   )
-      # end
-
-      # def set_default_course_discussion_threshold
-      #   SettingsService.update_settings(
-      #     object: 'course',
-      #     id: course.id,
-      #     setting: 'passing_discussion_threshold',
-      #     value: account_discussion_threshold
-      #   )
-      #   end
-
-      # def set_default_course_project_threshold
-      #   SettingsService.update_settings(
-      #     object: 'course',
-      #     id: course.id,
-      #     setting: 'passing_project_threshold',
-      #     value: account_project_threshold
-      #   )
-      # end
-
-      # def account_threshold
-      #   RequirementsService.get_passing_threshold(type: :school)
-      # end
-
-      # def account_threshold_set?
-      #   account_threshold.positive?
-      # end
-
-      # def account_exam_threshold
-      #   RequirementsService.get_passing_threshold(type: :school, threshold_type: "exam")
-      # end
-
-      # def account_discussion_threshold
-      #   RequirementsService.get_passing_threshold(type: :school, threshold_type: "discussion")
-      # end
-
-      # def account_project_threshold
-      #   RequirementsService.get_passing_threshold(type: :school, threshold_type: "project")
-      # end
-
-      # def account_exam_threshold_set?
-      #   account_exam_threshold.positive?
-      # end
-
-      # def account_discussion_threshold_set?
-      #   account_discussion_threshold.positive?
-      # end
-
-      # def account_project_threshold_set?
-      #   account_project_threshold.positive?
-      # end
     end
   end
 end

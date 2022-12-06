@@ -16,13 +16,13 @@ module RequirementsService
     Commands::ForceMinScores.new(course: course).call
   end
 
-  def self.set_passing_threshold(type:, threshold:, edited:, id: 1, exam: false)
+  def self.set_passing_threshold(type:, threshold:, edited:, id: 1, assignment_group_name:)
     Commands::SetPassingThreshold.new(
       type: type,
       threshold: threshold,
       edited: edited,
       id: id,
-      exam: exam,
+      assignment_group_name: assignment_group_name
     ).call
   end
 
@@ -41,11 +41,11 @@ module RequirementsService
     ).call
   end
 
-  def self.add_unit_item_with_min_score(context_module:, content_tag:, threshold_type:)
+  def self.add_unit_item_with_min_score(context_module:, content_tag:, assignment_group_name:)
     Commands::AddUnitItemWithMinScore.new(
       context_module: context_module,
       content_tag: content_tag,
-      threshold_type: threshold_type
+      assignment_group_name: assignment_group_name
     ).call
   end
 
@@ -53,12 +53,12 @@ module RequirementsService
     Commands::SetSchoolThresholdsOnCourse.new(course: course).call
   end
 
-  def self.get_raw_passing_threshold(type:, id: 1, exam: false)
-    Queries::GetPassingThreshold.new(type: type, id: id, exam: exam).call
+  def self.get_raw_passing_threshold(type:, id: 1, assignment_group_name: nil)
+    Queries::GetPassingThreshold.new(type: type, id: id, assignment_group_name: assignment_group_name).call
   end
 
-  def self.get_passing_threshold(type:, id: 1, exam: false)
-    get_raw_passing_threshold(type: type, id: id, exam: exam).to_f
+  def self.get_passing_threshold(type:, id: 1, assignment_group_name:)
+    get_raw_passing_threshold(type: type, id: id, assignment_group_name: assignment_group_name).to_f
   end
 
   def self.get_course_assignment_passing_threshold?(context)

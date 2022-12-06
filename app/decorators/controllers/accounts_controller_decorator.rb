@@ -157,20 +157,20 @@ AccountsController.class_eval do
   def get_assignment_group_thresholds(assignment_group_names)
     thresholds = {}
     assignment_group_names.each do |group_name|
-      thresholds[group_name] = RequirementsService.get_passing_threshold(type: 'school', threshold_type: group_name)
+      thresholds[group_name] = RequirementsService.get_passing_threshold(type: 'school', assignment_group_name: group_name)
     end
     thresholds
   end
 
   def set_assignment_group_thresholds(assignment_group_names)
     assignment_group_names.each do |group_name|
-      threshold_name = "#{group_name}_score_threshold"
-      threshold_edited = "#{group_name}_score_threshold_edited"
+      threshold_name = "#{group_name}_passing_threshold"
+      threshold_edited = "#{group_name}_passing_threshold_edited"
       RequirementsService.set_passing_threshold(
         type: "school",
         threshold: account_settings_params[threshold_name].to_f,
         edited: params[threshold_edited],
-        threshold_type: group_name
+        assignment_group_name: group_name
       )
     end
   end

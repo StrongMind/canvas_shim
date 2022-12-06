@@ -26,7 +26,7 @@ Assignment.class_eval do
     assignment_group.name
   end
 
-  def passing_threshold_setting_name
+  def passing_threshold_group_name
     assignment_group_name.singularize.downcase.gsub(/\s/, "_")
   end
 
@@ -43,15 +43,15 @@ Assignment.class_eval do
     content_tag = self.submission_types.include?('discussion_topic') ? ContentTag.find_by_content_id_and_content_type(self.discussion_topic.id, self.discussion_topic.class) : ContentTag.find_by_content_id_and_content_type(self.id, self.class)
     return unless content_tag
     context_module = content_tag.context_module
-    threshold_type = self.passing_threshold_setting_name
+    group_name = self.passing_threshold_group_name
     if min_score_req = context_module.completion_requirements.select{ |r| r[:type] == 'min_score' && r[:id] == content_tag.id }.first
       context_module.completion_requirements.delete(min_score_req)
-      passing_threshold = RequirementsService.get_passing_threshold(type: :course, id: self.course.try(:id), threshold_type: threshold_type)
+      passing_threshold = RequirementsService.get_passing_threshold(type: :course, id: self.course.try(:id), assignment_group_name: group_name)
       min_score_req[:min_score] = passing_threshold
       context_module.completion_requirements << min_score_req
       context_module.update_column(:completion_requirements, context_module.completion_requirements)
     else
-      RequirementsService.add_unit_item_with_min_score(context_module: context_module, content_tag: content_tag, threshold_type: threshold_type)
+      RequirementsService.add_unit_item_with_min_score(context_module: context_module, content_tag: content_tag, assignment_group_name: group_name)
     end
   end
 end

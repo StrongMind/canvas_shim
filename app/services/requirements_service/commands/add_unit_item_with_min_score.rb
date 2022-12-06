@@ -1,11 +1,11 @@
 module RequirementsService
   module Commands
     class AddUnitItemWithMinScore
-      def initialize(context_module:, content_tag:, threshold_type:)
+      def initialize(context_module:, content_tag:, assignment_group_name:)
         @context_module = context_module
         @content_tag = content_tag
         @course = context_module.course
-        @score_threshold = RequirementsService.get_passing_threshold(type: :course, id: course.try(:id), threshold_type: threshold_type)
+        @score_threshold = RequirementsService.get_passing_threshold(type: :course, id: course.try(:id), assignment_group_name: assignment_group_name)
       end
 
       def call

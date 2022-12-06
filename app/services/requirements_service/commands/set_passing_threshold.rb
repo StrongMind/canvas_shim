@@ -1,14 +1,13 @@
 module RequirementsService
   module Commands
     class SetPassingThreshold
-      def initialize(type:, threshold:, edited:, id: 1, exam: false)
+      def initialize(type:, threshold:, edited:, id: 1, assignment_group_name:)
         @type = type
         @threshold = threshold
-        setting_name = (type == "school" ? "score" : "passing")
-        @setting = "#{threshold_type}_#{setting_name}_threshold"
+        @setting = "#{assignment_group_name}_passing_threshold"
         @edited = (edited == "true")
         @id = id
-        @last_threshold = RequirementsService.get_raw_passing_threshold(type: type, id: id, threshold_type: threshold_type)
+        @last_threshold = RequirementsService.get_raw_passing_threshold(type: type, id: id, assignment_group_name: assignment_group_name)
       end
 
       def call
