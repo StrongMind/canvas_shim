@@ -16,7 +16,8 @@ module RequirementsService
     Commands::ForceMinScores.new(course: course).call
   end
 
-  def self.set_passing_threshold(type:, threshold:, edited:, id: 1, assignment_group_name:)
+  def self.set_passing_threshold(type:, threshold:, edited:, id: 1, assignment_group_name: nil)
+    return unless assignment_group_name
     Commands::SetPassingThreshold.new(
       type: type,
       threshold: threshold,
@@ -57,7 +58,8 @@ module RequirementsService
     Queries::GetPassingThreshold.new(type: type, id: id, assignment_group_name: assignment_group_name).call
   end
 
-  def self.get_passing_threshold(type:, id: 1, assignment_group_name:)
+  def self.get_passing_threshold(type:, id: 1, assignment_group_name: nil)
+    return unless assignment_group_name
     get_raw_passing_threshold(type: type, id: id, assignment_group_name: assignment_group_name).to_f
   end
 

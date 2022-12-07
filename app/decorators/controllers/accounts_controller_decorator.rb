@@ -41,7 +41,10 @@ AccountsController.class_eval do
 
   def strongmind_update
     if account_settings_params
-      set_assignment_group_thresholds(ASSIGNMENT_GROUP_NAMES)
+      if account_settings_params.keys.select{|k| k.match(/(_passing_threshold)/)}.any?
+        set_assignment_group_thresholds(ASSIGNMENT_GROUP_NAMES)
+        update_course_passing_requirements
+      end
       set_threshold_permissions
 
       set_allowed_filetypes if params[:allowed_filetypes]
@@ -173,6 +176,10 @@ AccountsController.class_eval do
         assignment_group_name: group_name
       )
     end
+  end
+
+  def update_course_passing_requirements
+    @account.update_course_passing_requirements
   end
 
   private

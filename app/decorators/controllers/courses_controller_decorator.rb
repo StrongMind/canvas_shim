@@ -190,7 +190,6 @@ CoursesController.class_eval do
       threshold: params[:passing_unit_threshold].to_f,
       edited: params[:unit_threshold_edited],
       id: @course.try(:id),
-      exam: true
     )
   end
 
@@ -198,7 +197,7 @@ CoursesController.class_eval do
     @threshold_visible = threshold_ui_allowed?
     return unless @threshold_visible
     @course_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id])
-    @course_exam_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id], exam: true)
+    @course_exam_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id], threshold_type: "exam")
   end
 
   def threshold_ui_allowed?

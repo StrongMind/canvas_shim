@@ -127,6 +127,13 @@ Course.class_eval do
     context_modules.none? { |cm| cm.completion_requirements.any? }
   end
 
+  def update_context_module_completion_reqs
+    self.context_modules.each do |context_module|
+      context_module.update_threshold_reqs
+    end
+  end
+  handle_asynchronously :update_context_module_completion_reqs
+
   private
   def filtered_announcements(filter)
     active_announcements.where("discussion_topics.id IN (?)", filter.map(&:id))
