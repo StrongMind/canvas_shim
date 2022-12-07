@@ -45,7 +45,7 @@ module RequirementsService
 
       def skippable_requirement?(req)
         return true unless req[:min_score]
-        exam ? !unit_exam?(req) : unit_exam?(req)
+        @exam ? !unit_exam?(req) : unit_exam?(req)
       end
 
       def unit_exam?(requirement)

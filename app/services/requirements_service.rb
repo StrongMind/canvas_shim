@@ -68,11 +68,7 @@ module RequirementsService
   end
 
   def self.get_course_exam_passing_threshold?(context)
-    get_raw_passing_threshold(type: :course, id: context.try(:id), exam: true)
-  end
-
-  def self.get_course_project_passing_threshold?(context)
-    get_raw_passing_threshold(type: :course, id: context.try(:id), threshold_type: "project")
+    get_raw_passing_threshold(type: :course, id: context.try(:id), assignment_group_name: nil)
   end
 
   def self.course_has_set_threshold?(context)
