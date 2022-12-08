@@ -27,7 +27,7 @@ Assignment.class_eval do
   end
 
   def passing_threshold_group_name
-    assignment_group_name.singularize.downcase.gsub(/\s/, "_")
+    assignment_group_name.strip.singularize.downcase.gsub(/\s/, "_")
   end
 
   def ensure_assignment_group(do_save = true)
