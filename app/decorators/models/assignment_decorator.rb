@@ -50,6 +50,7 @@ Assignment.class_eval do
       min_score_req[:min_score] = passing_threshold
       context_module.completion_requirements << min_score_req
       context_module.update_column(:completion_requirements, context_module.completion_requirements)
+      context_module.touch
     else
       RequirementsService.add_unit_item_with_min_score(context_module: context_module, content_tag: content_tag, assignment_group_name: group_name)
     end
