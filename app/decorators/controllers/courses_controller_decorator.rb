@@ -196,8 +196,8 @@ CoursesController.class_eval do
   def get_course_threshold
     @threshold_visible = threshold_ui_allowed?
     return unless @threshold_visible
-    @course_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id])
-    @course_exam_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id], threshold_type: "exam")
+    @course_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id], assignment_group_name: nil)
+    @course_exam_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id], assignment_group_name: nil)
   end
 
   def threshold_ui_allowed?

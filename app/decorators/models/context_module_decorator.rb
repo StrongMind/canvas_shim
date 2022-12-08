@@ -18,6 +18,7 @@ ContextModule.class_eval do
       req[:min_score] = value
     end
     self.update_column(:completion_requirements, self.completion_requirements)
+    self.touch
   end
   handle_asynchronously :update_threshold_reqs
 end
