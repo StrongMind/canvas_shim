@@ -107,4 +107,13 @@ describe Pseudonym do
       end
     end
   end
+
+  context "when integration_id is nil" do
+    let(:pseudonym) { described_class.create }
+    it "is valid" do
+      pseudonym.user = User.create!
+      pseudonym.integration_id = nil
+      expect(pseudonym.save).to be true
+    end
+  end
 end
