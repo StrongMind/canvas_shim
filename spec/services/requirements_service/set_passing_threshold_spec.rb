@@ -7,7 +7,7 @@ describe RequirementsService::Commands::SetPassingThreshold do
     end
 
     context "Happy path school" do
-      subject { described_class.new(type: 'school', threshold: 70, edited: 'true') }
+      subject { described_class.new(type: 'school', threshold: 70, edited: 'true', assignment_group_name: 'workbook') }
 
       it "receives set_threshold" do
         expect(subject).to receive(:set_threshold)
@@ -18,7 +18,7 @@ describe RequirementsService::Commands::SetPassingThreshold do
         new_threshold = {
           object: 'school',
           id: 1,
-          setting: "score_threshold",
+          setting: "workbook_passing_threshold",
           value: 70
         }
 
@@ -28,7 +28,7 @@ describe RequirementsService::Commands::SetPassingThreshold do
     end
 
     context "Happy path course" do
-      subject { described_class.new(type: 'course', id: Course.first.id, threshold: 70, edited: 'true') }
+      subject { described_class.new(type: 'course', id: Course.first.id, threshold: 70, edited: 'true', assignment_group_name: 'workbook') }
 
       it "receives set_threshold" do
         expect(subject).to receive(:set_threshold)
@@ -39,7 +39,7 @@ describe RequirementsService::Commands::SetPassingThreshold do
         new_threshold = {
           object: 'course',
           id: Course.first.id,
-          setting: "passing_threshold",
+          setting: "workbook_passing_threshold",
           value: 70
         }
 
@@ -49,7 +49,7 @@ describe RequirementsService::Commands::SetPassingThreshold do
     end
 
     context "Sent a 0" do
-      subject { described_class.new(type: 'school', threshold: 0, edited: 'true') }
+      subject { described_class.new(type: 'school', threshold: 0, edited: 'true', assignment_group_name: 'workbook') }
 
       it "does not set_threshold" do
         expect(subject).to_not receive(:set_threshold)
@@ -58,7 +58,7 @@ describe RequirementsService::Commands::SetPassingThreshold do
 
       context "has previous setting" do
         before do
-          allow(SettingsService).to receive(:get_settings).and_return({ "score_threshold" => 70 })
+          allow(SettingsService).to receive(:get_settings).and_return({ "workbook_passing_threshold" => 70 })
         end
 
         it "receives set_threshold" do
@@ -69,10 +69,10 @@ describe RequirementsService::Commands::SetPassingThreshold do
     end
 
     context "Threshold is the same" do
-      subject { described_class.new(type: 'school', threshold: 70, edited: 'true') }
+      subject { described_class.new(type: 'school', threshold: 70, edited: 'true', assignment_group_name: 'workbook') }
 
       before do
-        allow(SettingsService).to receive(:get_settings).and_return({ "score_threshold" => 70 })
+        allow(SettingsService).to receive(:get_settings).and_return({ "workbook_passing_threshold" => 70 })
       end
 
       it "does not set_threshold" do
@@ -82,10 +82,10 @@ describe RequirementsService::Commands::SetPassingThreshold do
     end
 
     context "Threshold is different" do
-      subject { described_class.new(type: 'school', threshold: 75, edited: 'true') }
+      subject { described_class.new(type: 'school', threshold: 75, edited: 'true', assignment_group_name: 'workbook') }
 
       before do
-        allow(SettingsService).to receive(:get_settings).and_return({ "score_threshold" => 70 })
+        allow(SettingsService).to receive(:get_settings).and_return({ "workbook_score_threshold" => 70 })
       end
 
       it "does not set_threshold" do
@@ -95,7 +95,7 @@ describe RequirementsService::Commands::SetPassingThreshold do
     end
 
     context "Threshold not edited" do
-      subject { described_class.new(type: 'school', threshold: 70, edited: 'false') }
+      subject { described_class.new(type: 'school', threshold: 70, edited: 'false', assignment_group_name: 'workbook') }
 
       it "does not receive set_threshold" do
         expect(subject).to_not receive(:set_threshold)
@@ -104,7 +104,7 @@ describe RequirementsService::Commands::SetPassingThreshold do
     end
 
     context "Threshold too high" do
-      subject { described_class.new(type: 'school', threshold: 101, edited: 'false') }
+      subject { described_class.new(type: 'school', threshold: 101, edited: 'false', assignment_group_name: 'workbook') }
 
       it "does not receive set_threshold" do
         expect(subject).to_not receive(:set_threshold)
@@ -113,7 +113,7 @@ describe RequirementsService::Commands::SetPassingThreshold do
     end
 
     context "Threshold too low" do
-      subject { described_class.new(type: 'school', threshold: -1, edited: 'false') }
+      subject { described_class.new(type: 'school', threshold: -1, edited: 'false', assignment_group_name: 'workbook') }
 
       it "does not receive set_threshold" do
         expect(subject).to_not receive(:set_threshold)

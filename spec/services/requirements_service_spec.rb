@@ -33,7 +33,7 @@ describe RequirementsService do
 
     it 'Calls the command object' do
       expect(command_instance).to receive(:call)
-      subject.set_passing_threshold(type: 'school', threshold: 70, edited: 'true')
+      subject.set_passing_threshold(type: 'school', threshold: 70, edited: 'true', assignment_group_name: 'workbook')
     end
   end
 
@@ -60,7 +60,7 @@ describe RequirementsService do
 
     it 'Calls the command object' do
       expect(command_instance).to receive(:call)
-      subject.add_unit_item_with_min_score(context_module: context_module, content_tag: content_tag)
+      subject.add_unit_item_with_min_score(context_module: context_module, content_tag: content_tag, assignment_group_name: nil)
     end
   end
 
