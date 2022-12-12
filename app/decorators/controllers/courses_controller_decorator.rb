@@ -112,13 +112,8 @@ CoursesController.class_eval do
 
 
   def strongmind_settings
-<<<<<<< HEAD
     @expose_discussion_and_project_threshold_field = Rails.configuration.launch_darkly_client.variation("expose-discussion-and-project-threshold-field", launch_darkly_user, false)
-
-    get_course_threshold
-=======
     @assignment_group_thresholds = get_course_thresholds(AssignmentGroup::GROUP_NAMES.map{|n| n.strip.downcase.gsub(/\s+/, '_')})
->>>>>>> bc224314 (QTY-1601: Stub assignment group thresholds in course settings)
     get_course_dates
     hide_destructive_course_options?
     instructure_settings
