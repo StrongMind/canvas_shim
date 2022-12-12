@@ -11,8 +11,6 @@
                                 :placeholder => "Choose a number between 0-100",
                                 :disabled => true %>
       <%= hidden_field_tag "#{group_name}_passing_threshold_edited", false %>
-      <p style="font-size: 0.9em;"><%= t("Set a school-wide minimum percentage for all #{group_name.humanize.downcase.pluralize}. Each of these #{group_name.humanize.downcase.pluralize} will have an adjusted minimum score based on this percentage.") %></p>
-      <p style="font-size: 0.9em;"><%= t("This setting is off by default, and/or when the threshold is set to 0.0.") %></p>
     </td>
   </tr><tr>
 <% end %>
