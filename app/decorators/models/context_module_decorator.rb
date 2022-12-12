@@ -13,7 +13,14 @@ ContextModule.class_eval do
     self.completion_requirements.each do |req|
       next unless req[:type] == 'min_score'
       content_tag = ContentTag.find(req[:id])
-      assignment_group_name = content_tag.content_type == 'DiscussionTopic' ? content_tag.content.assignment.passing_threshold_group_name : content_tag.content.passing_threshold_group_name
+      assignment_group_name = case content_tag.content_type
+                              when 'DiscussionTopic'
+                                content_tag.content.assignment.passing_threshold_group_name
+                              when 'Assignment'
+                                content_tag.content.passing_threshold_group_name
+                              else
+                                next
+                              end
       value = passing_thresholds["#{assignment_group_name}_passing_threshold"]
       req[:min_score] = value
     end
