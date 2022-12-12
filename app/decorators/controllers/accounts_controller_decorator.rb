@@ -1,4 +1,6 @@
 AccountsController.class_eval do
+  ASSIGNMENT_GROUP_NAMES = AssignmentGroup::GROUP_NAMES.map{|n| n.downcase.gsub(/\s/, "_")}
+
   def show_account_by_uuid
     @account = Account.find_by(uuid: params[:account_uuid].split(":").last)
 
@@ -15,9 +17,8 @@ AccountsController.class_eval do
     get_first_assignment_due
     get_last_assignment_due
 
-    @school_threshold         = RequirementsService.get_passing_threshold(type: :school)
-    @school_exam_threshold    = RequirementsService.get_passing_threshold(type: :school, exam: true)
     @course_thresh_enabled    = RequirementsService.course_threshold_setting_enabled?
+    @assignment_group_thresholds = get_assignment_group_thresholds(ASSIGNMENT_GROUP_NAMES)
 
     if @course_thresh_enabled
       @post_enrollment_thresh_enabled = RequirementsService.post_enrollment_thresholds_enabled?
@@ -26,6 +27,7 @@ AccountsController.class_eval do
     @module_editing_disabled = RequirementsService.disable_module_editing_on?
 
     @expose_first_and_last_assignment_due_date_field = Rails.configuration.launch_darkly_client.variation("expose-first-and-last-assignment-due-date-field", launch_darkly_user, false)
+    @expose_discussion_and_project_threshold_field = Rails.configuration.launch_darkly_client.variation("expose-discussion-and-project-threshold-field", launch_darkly_user, false)
 
     js_env({
       HOLIDAYS: @holidays,
@@ -39,8 +41,10 @@ AccountsController.class_eval do
 
   def strongmind_update
     if account_settings_params
-      set_school_passing_threshold
-      set_school_unit_exam_passing_threshold
+      if account_settings_params.keys.select{|k| k.match(/(_passing_threshold)/)}.any?
+        set_assignment_group_thresholds(ASSIGNMENT_GROUP_NAMES)
+        update_course_passing_requirements
+      end
       set_threshold_permissions
 
       set_allowed_filetypes if params[:allowed_filetypes]
@@ -72,7 +76,7 @@ AccountsController.class_eval do
   def first_assignment_due
     account_settings_params[:first_assignment_due].present? ? account_settings_params[:first_assignment_due] : false
   end
-  
+
   def last_assignment_due
     account_settings_params[:last_assignment_due].present? ? account_settings_params[:last_assignment_due] : false
   end
@@ -104,23 +108,6 @@ AccountsController.class_eval do
       id: 1,
       setting: 'allowed_filetypes',
       value: allowed_filetypes
-    )
-  end
-
-  def set_school_passing_threshold
-    RequirementsService.set_passing_threshold(
-      type: "school",
-      threshold: params[:account][:settings][:score_threshold].to_f,
-      edited: params[:threshold_edited]
-    )
-  end
-
-  def set_school_unit_exam_passing_threshold
-    RequirementsService.set_passing_threshold(
-      type: "school",
-      threshold: params[:account][:settings][:unit_score_threshold].to_f,
-      edited: params[:unit_threshold_edited],
-      exam: true
     )
   end
 
@@ -168,6 +155,31 @@ AccountsController.class_eval do
       setting: 'last_assignment_due',
       value: last_assignment_due
     )
+  end
+
+  def get_assignment_group_thresholds(assignment_group_names)
+    thresholds = {}
+    assignment_group_names.each do |group_name|
+      thresholds[group_name] = RequirementsService.get_passing_threshold(type: 'school', assignment_group_name: group_name)
+    end
+    thresholds
+  end
+
+  def set_assignment_group_thresholds(assignment_group_names)
+    assignment_group_names.each do |group_name|
+      threshold_name = "#{group_name}_passing_threshold"
+      threshold_edited = "#{group_name}_passing_threshold_edited"
+      RequirementsService.set_passing_threshold(
+        type: "school",
+        threshold: account_settings_params[threshold_name].to_f,
+        edited: params[threshold_edited],
+        assignment_group_name: group_name
+      )
+    end
+  end
+
+  def update_course_passing_requirements
+    @account.update_course_passing_requirements
   end
 
   private

@@ -10,33 +10,33 @@ function flipIcon(element, threshDisabled) {
 }
 
 $(window).on("load", function(event) {
-  var initialVal = $('#account_settings_score_threshold').val();
-  $('#edit_school_threshold_btn').click(function(e) {
+  $('#edit_passing_thresholds_btn').click(function(e) {
     e.preventDefault();
     e.stopPropagation();
-    var passThreshDisabled = $('#account_settings_score_threshold').prop('disabled');
-    $('#account_settings_score_threshold').prop('disabled', !passThreshDisabled);
-    $("#threshold_edited").remove();
-    $(this).append("<input type='hidden' id='threshold_edited' name='threshold_edited' value=" + passThreshDisabled + " />")
-    if ($('#account_settings_score_threshold').prop('disabled')) {
-      $('#account_settings_score_threshold').val(initialVal);
-    }
+    let thresholdFields = getThresholdFields();
+    let thresholdFieldsDisabled = thresholdFields[0].disabled;
 
-    flipIcon($(this), passThreshDisabled);
+    editThresholdFields(thresholdFields, thresholdFieldsDisabled)
+
+    flipIcon($(this), thresholdFieldsDisabled);
   });
 
-  var initialUnitVal = $('#account_settings_unit_score_threshold').val();
-  $('#edit_school_unit_threshold_btn').click(function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    var unitPassThreshDisabled = $('#account_settings_unit_score_threshold').prop('disabled');
-    $('#account_settings_unit_score_threshold').prop('disabled', !unitPassThreshDisabled);
-    $("#unit_threshold_edited").remove();
-    $(this).append("<input type='hidden' id='unit_threshold_edited' name='unit_threshold_edited' value=" + unitPassThreshDisabled + " />")
-    if ($('#account_settings_unit_score_threshold').prop('disabled')) {
-      $('#account_settings_unit_score_threshold').val(initialUnitVal);
-    }
+  function getThresholdFields() {
+    return Array.from($('.passing-threshold-number-field'));
+  }
 
-    flipIcon($(this), unitPassThreshDisabled);
-  });
+  function editThresholdFields(thresholdFields, thresholdFieldsDisabled){
+    thresholdFields.forEach(function(el, i) {
+      var initialFieldValue = $(el).val();
+      var id_string = $(el).attr('id').split('_').slice(2).join('_');
+      var edited_id_string = id_string + "_edited";
+      
+      $(el).attr('disabled', !thresholdFieldsDisabled);
+      $("#" + edited_id_string).val(thresholdFieldsDisabled);
+      
+      if($("#" + id_string).prop('disabled')) {
+        $("#" + id_string).val(initialFieldValue);
+      }
+    });
+  }
 });

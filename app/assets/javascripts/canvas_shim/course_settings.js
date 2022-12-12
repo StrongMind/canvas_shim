@@ -68,7 +68,7 @@ $(window).on("load", function(event) {
     } else if (id === "distribute_due_dates" && !confirmDistribute() || id === "clear_due_dates" && !confirmClear()) {
       return;
     }
-    
+
     var target = $(this).data("target");
     var id = $(this).attr("id");
 

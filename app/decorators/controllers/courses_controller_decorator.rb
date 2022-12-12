@@ -112,6 +112,8 @@ CoursesController.class_eval do
 
 
   def strongmind_settings
+    @expose_discussion_and_project_threshold_field = Rails.configuration.launch_darkly_client.variation("expose-discussion-and-project-threshold-field", launch_darkly_user, false)
+
     get_course_threshold
     get_course_dates
     hide_destructive_course_options?
@@ -188,15 +190,14 @@ CoursesController.class_eval do
       threshold: params[:passing_unit_threshold].to_f,
       edited: params[:unit_threshold_edited],
       id: @course.try(:id),
-      exam: true
     )
   end
 
   def get_course_threshold
     @threshold_visible = threshold_ui_allowed?
     return unless @threshold_visible
-    @course_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id])
-    @course_exam_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id], exam: true)
+    @course_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id], assignment_group_name: nil)
+    @course_exam_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id], assignment_group_name: nil)
   end
 
   def threshold_ui_allowed?

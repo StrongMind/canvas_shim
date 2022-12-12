@@ -7,4 +7,25 @@ ContextModule.class_eval do
       RequirementsService.apply_minimum_scores(context_module: self)
     end
   end
+
+  def update_threshold_reqs
+    passing_thresholds = SettingsService.get_settings(object: 'course', id: self.course.try(:id))
+    self.completion_requirements.each do |req|
+      next unless req[:type] == 'min_score'
+      content_tag = ContentTag.find(req[:id])
+      assignment_group_name = case content_tag.content_type
+                              when 'DiscussionTopic'
+                                content_tag.content.assignment.passing_threshold_group_name
+                              when 'Assignment'
+                                content_tag.content.passing_threshold_group_name
+                              else
+                                next
+                              end
+      value = passing_thresholds["#{assignment_group_name}_passing_threshold"]
+      req[:min_score] = value
+    end
+    self.update_column(:completion_requirements, self.completion_requirements)
+    self.touch
+  end
+  handle_asynchronously :update_threshold_reqs
 end

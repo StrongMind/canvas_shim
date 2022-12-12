@@ -1,4 +1,6 @@
 ContextModulesController.class_eval do
+  ASSIGNMENT_GROUP_NAMES = AssignmentGroup::GROUP_NAMES.map{|n| n.downcase.gsub(/\s/, "_")}
+
   def strongmind_update
     @module = @context.context_modules.not_deleted.find(params[:id])
 
@@ -17,11 +19,22 @@ ContextModulesController.class_eval do
 
   def strongmind_add_item
     instructure_add_item
-    RequirementsService.add_unit_item_with_min_score(context_module: @module, content_tag: @tag)
+    call_requirements_service
   end
 
   alias_method :instructure_add_item, :add_item
   alias_method :add_item, :strongmind_add_item
+
+  def call_requirements_service
+    if params[:item][:type].downcase == 'discussion_topic'
+      @assignment = DiscussionTopic.find(params[:item][:id]).assignment
+      return unless @assignment
+      @assignment_group = @assignment.passing_threshold_group_name
+    else
+      @assignment_group = Assignment.find(params[:item][:id]).passing_threshold_group_name
+    end
+    RequirementsService.add_unit_item_with_min_score(context_module: @module, content_tag: @tag, assignment_group_name: @assignment_group)
+  end
 
   def strongmind_item_redirect
     if @context.is_a?(Course) && @context.user_is_student?(@current_user) && RequirementsService.course_has_set_threshold?(@context)

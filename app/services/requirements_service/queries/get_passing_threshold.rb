@@ -1,12 +1,10 @@
 module RequirementsService
   module Queries
     class GetPassingThreshold
-      def initialize(type:, id: 1, exam: false)
-        @type = type
-        setting_name = (type == :school ? "score" : "passing")
-        setting_name += "_exam" if exam
-        @setting = "#{setting_name}_threshold"
+      def initialize(type:, id: 1, assignment_group_name:)
         @id = id
+        @type = type
+        @setting = "#{assignment_group_name}_passing_threshold"
       end
 
       def call

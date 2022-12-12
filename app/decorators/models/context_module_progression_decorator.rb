@@ -8,6 +8,7 @@ ContextModuleProgression.class_eval do
   end
 
   def uncollapse!
+    return unless self.id?
     return unless self.collapsed?
     retry_count = 0
     begin

@@ -1,6 +1,6 @@
 describe RequirementsService::Commands::AddUnitItemWithMinScore do
   include_context 'stubbed_network'
-  subject { described_class.new(context_module: context_module, content_tag: content_tag) }
+  subject { described_class.new(context_module: context_module, content_tag: content_tag, assignment_group_name: nil) }
   before do
     allow(subject).to receive(:score_threshold).and_return(70.0)
   end
