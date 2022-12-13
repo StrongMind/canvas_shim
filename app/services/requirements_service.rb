@@ -1,16 +1,6 @@
 module RequirementsService
   def self.apply_minimum_scores(context_module:, force: false, assignment_group_names:)
-    # apply_assignment_min_scores(context_module: context_module, force: force)
-    # apply_unit_exam_min_scores(context_module: context_module, force: force)
     apply_assignment_group_min_scores(context_module: context_module, force: force, assignment_group_names: assignment_group_names)
-  end
-
-  def self.apply_assignment_min_scores(context_module:, force: false)
-    Commands::ApplyAssignmentMinScores.new(context_module: context_module, force: force).call
-  end
-
-  def self.apply_unit_exam_min_scores(context_module:, force: false)
-    Commands::ApplyUnitExamMinScores.new(context_module: context_module, force: force).call
   end
 
   def self.apply_assignment_group_min_scores(context_module:, force: false, assignment_group_names:)
@@ -115,8 +105,8 @@ module RequirementsService
     )
   end
 
-  def self.reset_requirements(context_module:, exam: false)
-    Commands::ResetRequirements.new(context_module: context_module, exam: exam).call
+  def self.reset_requirements(context_module:, assignment_group_name:)
+    Commands::ResetRequirements.new(context_module: context_module, assignment_group_name: assignment_group_name).call
   end
 
   def self.set_third_party_requirements(course:)

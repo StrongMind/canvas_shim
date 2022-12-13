@@ -9,12 +9,12 @@ module RequirementsService
         @settings = SettingsService.get_settings(object: :course, id: course.try(:id))
         @setting_name = "#{assignment_group_name}_passing_threshold"
         @threshold_exists = !!settings["#{@setting_name}"]
-        @score_threshold = settings["#{setting_name}"].to_f
+        @score_threshold = settings["#{@setting_name}"].to_f
         @threshold_overrides = settings['threshold_overrides']
+        @assignment_group_name = assignment_group_name
       end
 
       def call
-        binding.pry
         return unless threshold_exists
 
         if force
@@ -28,7 +28,7 @@ module RequirementsService
 
       private
 
-      attr_reader :completion_requirements, :context_module, :course, :force, :score_threshold, :threshold_overrides, :settings, :threshold_exists
+      attr_reader :completion_requirements, :context_module, :course, :force, :score_threshold, :threshold_overrides, :settings, :threshold_exists, :assignment_group_name
 
       def run_command
         if score_threshold.zero?
@@ -40,7 +40,7 @@ module RequirementsService
       end
 
       def reset_requirements
-        RequirementsService.reset_requirements(context_module: context_module)
+        RequirementsService.reset_requirements(context_module: context_module, assignment_group_name: assignment_group_name)
       end
 
       def finalize_update
@@ -50,8 +50,8 @@ module RequirementsService
 
       def threshold_changes_needed?
         return false unless score_threshold.positive?
-        completion_requirements.any? do |req|
-          is_submittable?(req) || (min_score_different_than_threshold?(req) && not_unit_exam?(req))
+        completion_requirements.each do |req|
+          is_submittable?(req) || min_score_different_than_threshold?(req)
         end
       end
 
@@ -68,11 +68,18 @@ module RequirementsService
       end
 
       def skippable_requirement?(requirement)
-        has_threshold_override?(requirement) ||
-        ["must_submit", "must_contribute", "min_score"].none? { |type| type == requirement[:type] } ||
-        unit_exam?(requirement)
+        content_tag = ContentTag.find(requirement[:id])
+        passing_threshold_group_name = case content_tag.content_type
+                                when 'DiscussionTopic'
+                                  content_tag.content.assignment.passing_threshold_group_name
+                                when 'Assignment'
+                                  content_tag.content.passing_threshold_group_name
+                                else
+                                  return true
+                                end
+        has_threshold_override?(requirement) || !["must_submit", "must_contribute", "min_score"].include?(requirement[:type]) || passing_threshold_group_name != assignment_group_name
       end
-    
+
       def add_min_score_to_requirements
         completion_requirements.each do |requirement|
           next if skippable_requirement?(requirement)

@@ -62,7 +62,7 @@ ContextModulesController.class_eval do
   private
 
   def can_add_threshold_overrides?
-    RequirementsService.course_has_set_threshold?(@context) && RequirementsService.module_editing_enabled? &&
+    RequirementsService.course_has_set_threshold?(context: @context, assignment_group_names: ASSIGNMENT_GROUP_NAMES) && RequirementsService.module_editing_enabled? &&
     context_module_params[:completion_requirements] && authorized_action(@module, @current_user, :update)
   end
 
