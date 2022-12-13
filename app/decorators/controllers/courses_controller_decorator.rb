@@ -1,5 +1,6 @@
 CoursesController.class_eval do
   helper_method :enrollment_name, :user_can_conclude_enrollments?
+  ASSIGNMENT_GROUP_NAMES = AssignmentGroup::GROUP_NAMES.map{|n| n.strip.downcase.gsub(/\s+/, '_')}
 
   def show_course_enrollments
     get_context
@@ -113,7 +114,7 @@ CoursesController.class_eval do
 
   def strongmind_settings
     @expose_discussion_and_project_threshold_field = Rails.configuration.launch_darkly_client.variation("expose-discussion-and-project-threshold-field", launch_darkly_user, false)
-    @assignment_group_thresholds = get_course_thresholds(AssignmentGroup::GROUP_NAMES.map{|n| n.strip.downcase.gsub(/\s+/, '_')})
+    @assignment_group_thresholds = get_course_thresholds(ASSIGNMENT_GROUP_NAMES)
     get_course_dates
     hide_destructive_course_options?
     instructure_settings
@@ -202,7 +203,11 @@ CoursesController.class_eval do
   def get_course_thresholds(assignment_group_names)
     @threshold_visible = threshold_ui_allowed?
     return unless @threshold_visible
-    {"workbook"=>30}
+    thresholds = {}
+    assignment_group_names.each do |group_name|
+      thresholds[group_name] = RequirementsService.get_passing_threshold(type: 'course', id: params[:course_id], assignment_group_name: group_name)
+    end
+    thresholds
   end
 
   def threshold_ui_allowed?

@@ -27,7 +27,7 @@ function confirmClear() {
 }
 
 $(window).on("load", function(event) {
-  $('#edit_passing_thresholds_btn').click(function(e) {
+  $('#edit_course_passing_thresholds_btn').click(function(e) {
     e.preventDefault();
     e.stopPropagation();
     let thresholdFields = getThresholdFields();
