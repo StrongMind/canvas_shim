@@ -33,9 +33,9 @@ Course.class_eval do
     alias_method :default_tabs, :strongmind_default_tabs
   end
 
-  def force_min_scores
+  def force_min_scores(assignment_group_names:)
     context_modules.each do |cm|
-      RequirementsService.apply_minimum_scores(context_module: cm, force: true)
+      RequirementsService.apply_minimum_scores(context_module: cm, force: true, assignment_group_names: assignment_group_names)
     end
   end
 

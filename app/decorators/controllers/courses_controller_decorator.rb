@@ -129,6 +129,7 @@ CoursesController.class_eval do
     if course_settings_params
       if course_settings_params.keys.select{|k| k.match(/(_passing_threshold)/)}.any?
         set_assignment_group_thresholds(ASSIGNMENT_GROUP_NAMES)
+        RequirementsService.force_min_scores(course: @course, assignment_group_names: ASSIGNMENT_GROUP_NAMES)
       end  
     end
   end

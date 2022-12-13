@@ -1,7 +1,8 @@
 module RequirementsService
-  def self.apply_minimum_scores(context_module:, force: false)
-    apply_assignment_min_scores(context_module: context_module, force: force)
-    apply_unit_exam_min_scores(context_module: context_module, force: force)
+  def self.apply_minimum_scores(context_module:, force: false, assignment_group_names:)
+    # apply_assignment_min_scores(context_module: context_module, force: force)
+    # apply_unit_exam_min_scores(context_module: context_module, force: force)
+    apply_assignment_group_min_scores(context_module: context_module, force: force, assignment_group_names: assignment_group_names)
   end
 
   def self.apply_assignment_min_scores(context_module:, force: false)
@@ -12,8 +13,14 @@ module RequirementsService
     Commands::ApplyUnitExamMinScores.new(context_module: context_module, force: force).call
   end
 
-  def self.force_min_scores(course:)
-    Commands::ForceMinScores.new(course: course).call
+  def self.apply_assignment_group_min_scores(context_module:, force: false, assignment_group_names:)
+    assignment_group_names.each do |group_name|
+      Commands::ApplyAssignmentGroupMinScores.new(context_module: context_module, force: force, assignment_group_name: group_name).call
+    end
+  end
+
+  def self.force_min_scores(course:, assignment_group_names:)
+    Commands::ForceMinScores.new(course: course, assignment_group_names: assignment_group_names).call
   end
 
   def self.set_passing_threshold(type:, threshold:, edited:, id: 1, assignment_group_name: nil)
@@ -71,9 +78,12 @@ module RequirementsService
     get_raw_passing_threshold(type: :course, id: context.try(:id), assignment_group_name: nil)
   end
 
-  def self.course_has_set_threshold?(context)
-    get_course_assignment_passing_threshold?(context) ||
-    get_course_exam_passing_threshold?(context)
+  def self.course_has_set_threshold?(context:, assignment_group_names: assignment_group_names)
+    thresholds = {}
+    assignment_group_names.each do |group_name|
+      thresholds[group_name] = RequirementsService.get_passing_threshold(type: 'course', id: context.try(:id), assignment_group_name: group_name)
+    end
+    thresholds.any?
   end
 
   def self.is_unit_exam?(content_tag:)
