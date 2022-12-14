@@ -9,7 +9,7 @@ module RequirementsService
     end
   end
 
-  def self.force_min_scores(course:, assignment_group_names: AssignmentGroup::GROUP_NAMES.map{|n| n.strip.downcase.gsub(/\s+/, '_')})
+  def self.force_min_scores(course:, assignment_group_names: AssignmentGroup.passing_threshold_group_names)
     Commands::ForceMinScores.new(course: course, assignment_group_names: assignment_group_names).call
   end
 
@@ -68,11 +68,16 @@ module RequirementsService
     get_raw_passing_threshold(type: :course, id: context.try(:id), assignment_group_name: nil)
   end
 
-  def self.course_has_set_threshold?(context:, assignment_group_names: assignment_group_names)
+  def self.get_assignment_group_passing_thresholds(context:, assignment_group_names: AssignmentGroup.passing_threshold_group_names)
     thresholds = {}
     assignment_group_names.each do |group_name|
-      thresholds[group_name] = RequirementsService.get_passing_threshold(type: 'course', id: context.try(:id), assignment_group_name: group_name)
+      thresholds[group_name] = get_passing_threshold(type: context&.class&.to_s&.downcase, id: context.try(:id), assignment_group_name: group_name).to_f
     end
+    thresholds
+  end
+  
+  def self.course_has_set_threshold?(context:, assignment_group_names: assignment_group_names)
+    thresholds = get_assignment_group_passing_thresholds(context: context, assignment_group_names: assignment_group_names)
     thresholds.any?
   end
 

@@ -15,11 +15,7 @@ module PipelineService
       end
 
       def passing_thresholds
-        { 'passing_thresholds' => {
-            'assignment' => format_threshold(:get_course_assignment_passing_threshold?),
-            'exam' => format_threshold(:get_course_exam_passing_threshold?)
-          }
-        }
+        { 'passing_thresholds' => get_assignment_group_passing_thresholds }
       end
 
       def powerschool_ids
@@ -33,6 +29,10 @@ module PipelineService
         threshold = RequirementsService.send(method, @course)
         return nil if threshold.nil?
         threshold.to_f
+      end
+
+      def get_assignment_group_passing_thresholds
+        RequirementsService.get_assignment_group_passing_thresholds(context: @course)
       end
     end
   end
