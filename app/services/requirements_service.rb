@@ -9,7 +9,7 @@ module RequirementsService
     end
   end
 
-  def self.force_min_scores(course:, assignment_group_names:)
+  def self.force_min_scores(course:, assignment_group_names: AssignmentGroup::GROUP_NAMES.map{|n| n.strip.downcase.gsub(/\s+/, '_')})
     Commands::ForceMinScores.new(course: course, assignment_group_names: assignment_group_names).call
   end
 
@@ -74,10 +74,6 @@ module RequirementsService
       thresholds[group_name] = RequirementsService.get_passing_threshold(type: 'course', id: context.try(:id), assignment_group_name: group_name)
     end
     thresholds.any?
-  end
-
-  def self.is_unit_exam?(content_tag:)
-    Queries::FindUnitExam.new(content_tag: content_tag).call
   end
 
   def self.course_threshold_setting_enabled?

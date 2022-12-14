@@ -95,16 +95,6 @@ module RequirementsService
                     )
         requirement.merge!(type: 'min_score', min_score: min_score)
       end
-
-      def unit_exam?(requirement)
-        content_tag = ContentTag.find_by(id: requirement[:id])
-        content_tag && RequirementsService.is_unit_exam?(content_tag: content_tag)
-      end
-
-      def not_unit_exam?(requirement)
-        !unit_exam?(requirement)
-      end
-
     end
   end
 end

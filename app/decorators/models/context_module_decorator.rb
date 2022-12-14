@@ -4,7 +4,7 @@ ContextModule.class_eval do
 
   def assign_threshold
     if completion_requirements_was&.empty?
-      RequirementsService.apply_minimum_scores(context_module: self)
+      RequirementsService.apply_minimum_scores(context_module: self, assignment_group_names: AssignmentGroup::GROUP_NAMES.map{|n| n.strip.downcase.gsub(/\s+/, '_')})
     end
   end
 

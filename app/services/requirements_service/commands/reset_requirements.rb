@@ -22,6 +22,7 @@ module RequirementsService
 
       def reset_requirements
         completion_requirements.each do |requirement|
+          next if skippable_requirement?(requirement)
           reset_individual_requirement(requirement)
         end
       end

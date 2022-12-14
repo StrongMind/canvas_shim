@@ -37,7 +37,7 @@ ContextModulesController.class_eval do
   end
 
   def strongmind_item_redirect
-    if @context.is_a?(Course) && @context.user_is_student?(@current_user) && RequirementsService.course_has_set_threshold?(@context)
+    if @context.is_a?(Course) && @context.user_is_student?(@current_user) && RequirementsService.course_has_set_threshold?(context: @context, assignment_group_names: ASSIGNMENT_GROUP_NAMES)
       course_progress = CourseProgress.new(@context, @current_user)
       @course_progress_assignment = course_progress.try(&:current_content_tag).try(&:assignment)
       submission = @course_progress_assignment.submissions.find_by(user: @current_user) if @course_progress_assignment
