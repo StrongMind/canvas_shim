@@ -1,6 +1,6 @@
 CoursesController.class_eval do
   helper_method :enrollment_name, :user_can_conclude_enrollments?
-  ASSIGNMENT_GROUP_NAMES = AssignmentGroup::GROUP_NAMES.map{|n| n.strip.downcase.gsub(/\s+/, '_')}
+  ASSIGNMENT_GROUP_NAMES = AssignmentGroup.passing_threshold_group_names
 
   def show_course_enrollments
     get_context

@@ -6,6 +6,7 @@ describe RequirementsService do
   let(:requirements) { double('requirements') }
   let(:content_tag) { double('content_tag') }
   let(:command_instance) { double('command instance') }
+  let(:assignment_group_names) { ["assignment", "checkpoint", "close_reading_project", "discussion", "exam", "final_exam", "pretest", "project", "workbook"] }
 
   before do
     allow(command_class).to receive(:new).and_return(command_instance)
@@ -13,17 +14,26 @@ describe RequirementsService do
   end
   
   describe '#apply_minimum_scores' do
-    let(:command_class) { RequirementsService::Commands::ApplyAssignmentMinScores }
+    let(:command_class) { RequirementsService::Commands::ApplyAssignmentGroupMinScores }
 
     it 'Calls the command object' do
       expect(command_instance).to receive(:call)
-      subject.apply_assignment_min_scores(context_module: context_module)
+      subject.apply_assignment_group_min_scores(context_module: context_module, assignment_group_names: assignment_group_names)
     end
 
     context "stripping overrides" do
       it 'accepts a strip overrides parameter' do
-        expect(command_class).to receive(:new).with(context_module: context_module, force: true)
-        subject.apply_assignment_min_scores(context_module: context_module, force: true)
+        expect(command_class).to receive(:new).with(context_module: context_module, force: true, assignment_group_name: assignment_group_names[0])
+        expect(command_class).to receive(:new).with(context_module: context_module, force: true, assignment_group_name: assignment_group_names[1])
+        expect(command_class).to receive(:new).with(context_module: context_module, force: true, assignment_group_name: assignment_group_names[2])
+        expect(command_class).to receive(:new).with(context_module: context_module, force: true, assignment_group_name: assignment_group_names[3])
+        expect(command_class).to receive(:new).with(context_module: context_module, force: true, assignment_group_name: assignment_group_names[4])
+        expect(command_class).to receive(:new).with(context_module: context_module, force: true, assignment_group_name: assignment_group_names[5])
+        expect(command_class).to receive(:new).with(context_module: context_module, force: true, assignment_group_name: assignment_group_names[6])
+        expect(command_class).to receive(:new).with(context_module: context_module, force: true, assignment_group_name: assignment_group_names[7])
+        expect(command_class).to receive(:new).with(context_module: context_module, force: true, assignment_group_name: assignment_group_names[8])
+
+        subject.apply_assignment_group_min_scores(context_module: context_module, force: true, assignment_group_names: assignment_group_names)
       end
     end
   end

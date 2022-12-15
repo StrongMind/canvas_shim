@@ -22,7 +22,6 @@ module RequirementsService
         else
           return unless threshold_changes_needed?
         end
-
         run_command
       end
 
@@ -62,7 +61,7 @@ module RequirementsService
       def min_score_different_than_threshold?(req)
         (req[:min_score] && req[:min_score] != score_threshold)
       end
-    
+
       def has_threshold_override?(requirement)
         threshold_overrides.split(",").map(&:to_i).include?(requirement[:id]) if threshold_overrides
       end
@@ -86,7 +85,7 @@ module RequirementsService
           update_score(requirement)
         end
       end
-    
+
       def update_score(requirement)
         content_tag = ContentTag.find_by(id: requirement[:id])
         min_score = RequirementsService.percentify_min_score(

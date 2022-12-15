@@ -1,5 +1,5 @@
 AccountsController.class_eval do
-  ASSIGNMENT_GROUP_NAMES = AssignmentGroup::GROUP_NAMES.map{|n| n.downcase.gsub(/\s/, "_")}
+  ASSIGNMENT_GROUP_NAMES = AssignmentGroup.passing_threshold_group_names
 
   def show_account_by_uuid
     @account = Account.find_by(uuid: params[:account_uuid].split(":").last)

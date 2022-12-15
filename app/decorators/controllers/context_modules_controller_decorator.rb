@@ -1,5 +1,5 @@
 ContextModulesController.class_eval do
-  ASSIGNMENT_GROUP_NAMES = AssignmentGroup::GROUP_NAMES.map{|n| n.downcase.gsub(/\s/, "_")}
+  ASSIGNMENT_GROUP_NAMES = AssignmentGroup.passing_threshold_group_names
 
   def strongmind_update
     @module = @context.context_modules.not_deleted.find(params[:id])
