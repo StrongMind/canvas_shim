@@ -69,13 +69,14 @@ module RequirementsService
   end
 
   def self.get_assignment_group_passing_thresholds(context:, assignment_group_names: AssignmentGroup.passing_threshold_group_names)
+    type = context&.class&.to_s&.downcase == 'pipelineservice::models::noun' ? context.noun_class : context&.class
     thresholds = {}
     assignment_group_names.each do |group_name|
-      thresholds[group_name] = get_passing_threshold(type: context&.class&.to_s&.downcase, id: context.try(:id), assignment_group_name: group_name).to_f
+      thresholds[group_name] = get_passing_threshold(type: type&.to_s&.downcase, id: context.try(:id), assignment_group_name: group_name).to_f
     end
     thresholds
   end
-  
+
   def self.course_has_set_threshold?(context:, assignment_group_names: assignment_group_names)
     thresholds = get_assignment_group_passing_thresholds(context: context, assignment_group_names: assignment_group_names)
     thresholds.any?
