@@ -127,9 +127,12 @@ CoursesController.class_eval do
     return if params[:course].blank?
     if course_settings_params
       if course_settings_params.keys.select{|k| k.match(/(_passing_threshold)/)}.any?
-        set_assignment_group_thresholds(ASSIGNMENT_GROUP_NAMES)
-        RequirementsService.force_min_scores(course: @course, assignment_group_names: ASSIGNMENT_GROUP_NAMES)
-      end  
+        thresholds_to_update = determine_assignment_group_overrides
+        assignment_group_names = thresholds_to_update['assignment_group_names']
+        set_assignment_group_threshold_overrides(thresholds_to_update['override_group_names'])
+        set_assignment_group_thresholds(assignment_group_names)
+        RequirementsService.force_min_scores(course: @course, assignment_group_names: assignment_group_names)
+      end
     end
   end
 
@@ -197,6 +200,33 @@ CoursesController.class_eval do
         assignment_group_name: group_name
       )
     end
+  end
+
+  def set_assignment_group_threshold_overrides(override_group_names)
+    SettingsService.update_settings(
+      object: 'course',
+      id: @course.id,
+      setting: 'assignment_group_threshold_overrides',
+      value: override_group_names.join(',')
+    )
+  end
+
+  def determine_assignment_group_overrides
+    school_thresholds = SettingsService.get_settings(object: 'school', id: 1).select{ |s| s.match?(/(_passing_threshold)$/) }
+    existing_overrides = SettingsService.get_settings(object: 'course', id: @course.id)['assignment_group_threshold_overrides']
+    course_thresholds = course_settings_params.select{|k,v| k.match(/(_passing_threshold)$/)}.to_unsafe_h
+    assignment_group_names = []
+    override_group_names = []
+    course_thresholds.each_pair do |setting_name, value|
+      group_name = setting_name.gsub(/(_passing_threshold)$/, '')
+      if school_thresholds[setting_name.to_s] != value.to_i
+        assignment_group_names << group_name
+        override_group_names << group_name
+      elsif school_thresholds[setting_name.to_s] == value.to_i && existing_overrides&.include?(setting_name.to_s.gsub(/(_passing_threshold)$/, ''))
+        assignment_group_names << group_name
+      end
+    end
+    {'assignment_group_names'=>assignment_group_names, 'override_group_names'=>override_group_names}
   end
 
   def threshold_ui_allowed?
