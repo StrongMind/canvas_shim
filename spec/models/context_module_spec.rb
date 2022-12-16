@@ -2,26 +2,54 @@ describe ContextModule do
   include_context 'stubbed_network'
   
   describe "#assign_threshold" do
+    let(:course) do
+      FactoryBot.create(:course)
+    end
+
+    let(:content_tags) do
+      FactoryBot.create_list(:content_tag, 3, :with_assignment, context_id: course.id, context_type: "Course")
+    end
+
+
     let(:completion_requirements) do
+      content_tags[0].content.assignment_group.update(name: "workbooks")
+      content_tags[1].content.assignment_group.update(name: "exams")
+      content_tags[2].content.assignment_group.update(name: "assignment")
       [
-        {:id=>53, :type=>"must_view"},
-        {:id=>56, :type=>"must_submit"},
-        {:id=>58, :type=>"must_contribute"}
+        {:id=>content_tags[0].id, :type=>"must_view"},
+        {:id=>content_tags[1].id, :type=>"must_submit"},
+        {:id=>content_tags[2].id, :type=>"must_contribute"}
       ]
+    end
+
+    let(:course_settings) do
+      {
+        "assignment_passing_threshold"=>60, 
+        "checkpoint_passing_threshold"=>60, 
+        "close_reading_project_passing_threshold"=>60, 
+        "discussion_passing_threshold"=>60, 
+        "exam_passing_threshold"=>60, 
+        "final_exam_passing_threshold"=>60, 
+        "pretest_passing_threshold"=>60, 
+        "project_passing_threshold"=>60, 
+        "workbook_passing_threshold"=>60
+      }
+    end
+
+    let(:threshold_overides) do 
+      course_settings.merge("threshold_overrides"=>content_tags[1].id.to_s) #to_s because values in dynamodb are comma-delimited string of IDs
     end
 
     context "school threshold default" do
       before do
-        allow(SettingsService).to receive(:get_settings).and_return('passing_threshold' => 70)
-        allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentMinScores).to receive(:score_threshold).and_return(60.0)
-        allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentMinScores).to receive(:has_threshold_override?).and_return(false)
+        allow(SettingsService).to receive(:get_settings).and_return(course_settings)
         ContextModule.create(completion_requirements: completion_requirements)
       end
 
       it "modifies submittable types" do
-        req_types = ContextModule.last.completion_requirements.map { |req| req[:type] }
-        expect(req_types).to_not include "must_submit"
-        expect(req_types).to_not include "must_contribute"
+        requirement_types = ContextModule.last.completion_requirements.map { |req| req[:type] }
+        expect(requirement_types).to_not include "must_submit"
+        expect(requirement_types).to_not include "must_contribute"
       end
 
       it "sets min scores" do
@@ -36,8 +64,8 @@ describe ContextModule do
 
       context "no threshold score available" do
         before do
-          allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentMinScores).to receive(:score_threshold).and_return(0.0)
-          allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentMinScores).to receive(:has_threshold_override?).and_return(false)
+          allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentGroupMinScores).to receive(:score_threshold).and_return(0.0)
+          allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentGroupMinScores).to receive(:has_threshold_override?).and_return(false)
           ContextModule.create(completion_requirements: completion_requirements)
         end
 
@@ -46,11 +74,10 @@ describe ContextModule do
         end
       end
 
-
       context "has threshold overrides" do
         before do
-          allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentMinScores).to receive(:has_threshold_override?).with({:id=>56, :type=>"must_submit"}).and_return(true)
-          ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
+          allow(SettingsService).to receive(:get_settings).and_return(threshold_overides)
+          ContextModule.create(completion_requirements: completion_requirements, course: course)
         end
 
         it "ignores the overridden requirement" do
@@ -64,16 +91,19 @@ describe ContextModule do
 
       context "requirements taken from previous course" do
         let(:completion_requirements) do
+          content_tags[0].content.assignment_group.update(name: "workbooks")
+          content_tags[1].content.assignment_group.update(name: "exams")
+          content_tags[2].content.assignment_group.update(name: "assignment")
           [
-            {:id=>53, :type=>"min_score", min_score: 70.0},
-            {:id=>56, :type=>"min_score", min_score: 70.0},
-            {:id=>58, :type=>"min_score", min_score: 70.0}
+            {:id=>content_tags[0].id, :type=>"min_score", min_score: 70.0},
+            {:id=>content_tags[1].id, :type=>"min_score", min_score: 70.0},
+            {:id=>content_tags[2].id, :type=>"min_score", min_score: 70.0}
           ]
         end
 
         before do
-          allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentMinScores).to receive(:score_threshold).and_return(60.0)
-          ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
+          allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentGroupMinScores).to receive(:score_threshold).and_return(60.0)
+          ContextModule.create(completion_requirements: completion_requirements, course: course)
         end
 
         it "overrides with actual threshold" do
@@ -85,9 +115,9 @@ describe ContextModule do
 
     context "Course has overridden school threshold" do
       before do
-        allow(SettingsService).to receive(:get_settings).and_return('passing_threshold' => 70)
-        allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentMinScores).to receive(:score_threshold).and_return(70.0)
-        ContextModule.create(completion_requirements: completion_requirements, course: Course.create)
+        allow(SettingsService).to receive(:get_settings).and_return(course_settings)
+        allow_any_instance_of(RequirementsService::Commands::ApplyAssignmentGroupMinScores).to receive(:score_threshold).and_return(70.0)
+        ContextModule.create(completion_requirements: completion_requirements, course: course)
       end
 
       it "uses the course score threshold" do

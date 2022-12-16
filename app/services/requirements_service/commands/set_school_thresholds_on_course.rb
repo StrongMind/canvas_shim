@@ -1,7 +1,7 @@
 module RequirementsService
   module Commands
     class SetSchoolThresholdsOnCourse
-      ASSIGNMENT_GROUP_NAMES = AssignmentGroup::GROUP_NAMES.map{|n| n.downcase.gsub(/\s/, "_")}
+      ASSIGNMENT_GROUP_NAMES = AssignmentGroup.passing_threshold_group_names
 
       def initialize(course:)
         @course = course

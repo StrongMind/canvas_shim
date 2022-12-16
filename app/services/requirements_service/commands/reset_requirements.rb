@@ -1,10 +1,10 @@
 module RequirementsService
   module Commands
     class ResetRequirements
-      def initialize(context_module:, exam: false)
+      def initialize(context_module:, assignment_group_name:)
         @context_module = context_module
         @completion_requirements = context_module.completion_requirements
-        @exam = exam
+        @assignment_group_name = assignment_group_name
       end
 
       def call
@@ -13,7 +13,7 @@ module RequirementsService
       end
 
       private
-      attr_reader :context_module, :completion_requirements, :exam
+      attr_reader :context_module, :completion_requirements, :exam, :assignment_group_name
 
       def update_completion_requirements
         context_module.update_column(:completion_requirements, completion_requirements)
@@ -24,12 +24,21 @@ module RequirementsService
         completion_requirements.each do |requirement|
           next if skippable_requirement?(requirement)
           reset_individual_requirement(requirement)
-        end  
+        end
       end
         
       def reset_individual_requirement(requirement)
         content_tag = get_content_tag(requirement)
         return unless content_tag
+        passing_threshold_group_name = case content_tag.content_type
+          when 'DiscussionTopic'
+            content_tag.content.assignment.passing_threshold_group_name
+          when 'Assignment'
+            content_tag.content.passing_threshold_group_name
+          else
+            return
+          end
+        return unless passing_threshold_group_name == assignment_group_name
         requirement.delete(:min_score)
         requirement.merge!(type: requirement_type(content_tag))
       end
@@ -45,12 +54,6 @@ module RequirementsService
 
       def skippable_requirement?(req)
         return true unless req[:min_score]
-        @exam ? !unit_exam?(req) : unit_exam?(req)
-      end
-
-      def unit_exam?(requirement)
-        content_tag = get_content_tag(requirement)
-        content_tag && RequirementsService.is_unit_exam?(content_tag: content_tag)
       end
 
       def get_content_tag(requirement)

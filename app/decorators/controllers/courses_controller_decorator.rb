@@ -1,5 +1,6 @@
 CoursesController.class_eval do
   helper_method :enrollment_name, :user_can_conclude_enrollments?
+  ASSIGNMENT_GROUP_NAMES = AssignmentGroup.passing_threshold_group_names
 
   def show_course_enrollments
     get_context
@@ -102,8 +103,7 @@ CoursesController.class_eval do
 
   def strongmind_show
     instructure_show
-    score_threshold = RequirementsService.get_course_assignment_passing_threshold?(@context)
-    js_env(score_threshold: score_threshold.to_s) if score_threshold
+    js_env(passing_thresholds: RequirementsService.get_assignment_group_passing_thresholds(context: @context))
     js_env(module_editing_disabled: RequirementsService.disable_module_editing_on?)
   end
 
@@ -112,9 +112,8 @@ CoursesController.class_eval do
 
 
   def strongmind_settings
-    @expose_discussion_and_project_threshold_field = Rails.configuration.launch_darkly_client.variation("expose-discussion-and-project-threshold-field", launch_darkly_user, false)
-
-    get_course_threshold
+    @expose_course_level_passing_threshold_fields = Rails.configuration.launch_darkly_client.variation("expose-course-level-passing-threshold-fields", launch_darkly_user, false)
+    @assignment_group_thresholds = get_course_thresholds(ASSIGNMENT_GROUP_NAMES)
     get_course_dates
     hide_destructive_course_options?
     instructure_settings
@@ -126,10 +125,14 @@ CoursesController.class_eval do
   def strongmind_update
     instructure_update
     return if params[:course].blank?
-    set_course_passing_threshold
-    set_course_exam_passing_threshold
-    if params[:threshold_edited] && RequirementsService.course_has_set_threshold?(@course)
-      RequirementsService.force_min_scores(course: @course)
+    if course_settings_params
+      if course_settings_params.keys.select{|k| k.match(/(_passing_threshold)/)}.any?
+        thresholds_to_update = determine_assignment_group_overrides
+        assignment_group_names = thresholds_to_update['assignment_group_names']
+        set_assignment_group_threshold_overrides(thresholds_to_update['override_group_names'])
+        set_assignment_group_thresholds(assignment_group_names)
+        RequirementsService.force_min_scores(course: @course, assignment_group_names: assignment_group_names)
+      end
     end
   end
 
@@ -175,29 +178,55 @@ CoursesController.class_eval do
     params.permit(enrollment_ids: [])
   end
 
-  def set_course_passing_threshold
-    RequirementsService.set_passing_threshold(
-      type: "course",
-      threshold: params[:passing_threshold].to_f,
-      edited: params[:threshold_edited],
-      id: @course.try(:id)
-    )
-  end
-
-  def set_course_exam_passing_threshold
-    RequirementsService.set_passing_threshold(
-      type: "course",
-      threshold: params[:passing_unit_threshold].to_f,
-      edited: params[:unit_threshold_edited],
-      id: @course.try(:id),
-    )
-  end
-
-  def get_course_threshold
+  def get_course_thresholds(assignment_group_names)
     @threshold_visible = threshold_ui_allowed?
     return unless @threshold_visible
-    @course_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id], assignment_group_name: nil)
-    @course_exam_threshold = RequirementsService.get_passing_threshold(type: :course, id: params[:course_id], assignment_group_name: nil)
+    thresholds = {}
+    assignment_group_names.each do |group_name|
+      thresholds[group_name] = RequirementsService.get_passing_threshold(type: 'course', id: params[:course_id], assignment_group_name: group_name)
+    end
+    thresholds
+  end
+
+  def set_assignment_group_thresholds(assignment_group_names)
+    assignment_group_names.each do |group_name|
+      threshold_name = "#{group_name}_passing_threshold"
+      threshold_edited = "#{group_name}_passing_threshold_edited"
+      RequirementsService.set_passing_threshold(
+        type: "course",
+        threshold: course_settings_params[threshold_name].to_f,
+        edited: params[threshold_edited],
+        id: @course.id,
+        assignment_group_name: group_name
+      )
+    end
+  end
+
+  def set_assignment_group_threshold_overrides(override_group_names)
+    SettingsService.update_settings(
+      object: 'course',
+      id: @course.id,
+      setting: 'assignment_group_threshold_overrides',
+      value: override_group_names.join(',')
+    )
+  end
+
+  def determine_assignment_group_overrides
+    school_thresholds = SettingsService.get_settings(object: 'school', id: 1).select{ |s| s.match?(/(_passing_threshold)$/) }
+    existing_overrides = SettingsService.get_settings(object: 'course', id: @course.id)['assignment_group_threshold_overrides']
+    course_thresholds = course_settings_params.select{|k,v| k.match(/(_passing_threshold)$/)}.to_unsafe_h
+    assignment_group_names = []
+    override_group_names = []
+    course_thresholds.each_pair do |setting_name, value|
+      group_name = setting_name.gsub(/(_passing_threshold)$/, '')
+      if school_thresholds[setting_name.to_s] != value.to_i
+        assignment_group_names << group_name
+        override_group_names << group_name
+      elsif school_thresholds[setting_name.to_s] == value.to_i && existing_overrides&.include?(setting_name.to_s.gsub(/(_passing_threshold)$/, ''))
+        assignment_group_names << group_name
+      end
+    end
+    {'assignment_group_names'=>assignment_group_names, 'override_group_names'=>override_group_names}
   end
 
   def threshold_ui_allowed?
@@ -294,5 +323,9 @@ CoursesController.class_eval do
   def currently_importing?(context)
     return @currently_importing unless @currently_importing.nil?
     @currently_importing = context.content_migrations.exists?(workflow_state: "importing")
+  end
+
+  def course_settings_params
+    params[:course][:settings]
   end
 end

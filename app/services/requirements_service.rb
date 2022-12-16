@@ -1,19 +1,16 @@
 module RequirementsService
-  def self.apply_minimum_scores(context_module:, force: false)
-    apply_assignment_min_scores(context_module: context_module, force: force)
-    apply_unit_exam_min_scores(context_module: context_module, force: force)
+  def self.apply_minimum_scores(context_module:, force: false, assignment_group_names:)
+    apply_assignment_group_min_scores(context_module: context_module, force: force, assignment_group_names: assignment_group_names)
   end
 
-  def self.apply_assignment_min_scores(context_module:, force: false)
-    Commands::ApplyAssignmentMinScores.new(context_module: context_module, force: force).call
+  def self.apply_assignment_group_min_scores(context_module:, force: false, assignment_group_names:)
+    assignment_group_names.each do |group_name|
+      Commands::ApplyAssignmentGroupMinScores.new(context_module: context_module, force: force, assignment_group_name: group_name).call
+    end
   end
 
-  def self.apply_unit_exam_min_scores(context_module:, force: false)
-    Commands::ApplyUnitExamMinScores.new(context_module: context_module, force: force).call
-  end
-
-  def self.force_min_scores(course:)
-    Commands::ForceMinScores.new(course: course).call
+  def self.force_min_scores(course:, assignment_group_names: AssignmentGroup.passing_threshold_group_names)
+    Commands::ForceMinScores.new(course: course, assignment_group_names: assignment_group_names).call
   end
 
   def self.set_passing_threshold(type:, threshold:, edited:, id: 1, assignment_group_name: nil)
@@ -71,13 +68,18 @@ module RequirementsService
     get_raw_passing_threshold(type: :course, id: context.try(:id), assignment_group_name: nil)
   end
 
-  def self.course_has_set_threshold?(context)
-    get_course_assignment_passing_threshold?(context) ||
-    get_course_exam_passing_threshold?(context)
+  def self.get_assignment_group_passing_thresholds(context:, assignment_group_names: AssignmentGroup.passing_threshold_group_names)
+    type = context&.class&.to_s&.downcase == 'pipelineservice::models::noun' ? context.noun_class : context&.class
+    thresholds = {}
+    assignment_group_names.each do |group_name|
+      thresholds[group_name] = get_passing_threshold(type: type&.to_s&.downcase, id: context.try(:id), assignment_group_name: group_name).to_f
+    end
+    thresholds
   end
 
-  def self.is_unit_exam?(content_tag:)
-    Queries::FindUnitExam.new(content_tag: content_tag).call
+  def self.course_has_set_threshold?(context:, assignment_group_names: assignment_group_names)
+    thresholds = get_assignment_group_passing_thresholds(context: context, assignment_group_names: assignment_group_names)
+    thresholds.any?
   end
 
   def self.course_threshold_setting_enabled?
@@ -105,8 +107,8 @@ module RequirementsService
     )
   end
 
-  def self.reset_requirements(context_module:, exam: false)
-    Commands::ResetRequirements.new(context_module: context_module, exam: exam).call
+  def self.reset_requirements(context_module:, assignment_group_name:)
+    Commands::ResetRequirements.new(context_module: context_module, assignment_group_name: assignment_group_name).call
   end
 
   def self.set_third_party_requirements(course:)

@@ -276,40 +276,26 @@
 
       <% end %>
 
-      <% if @threshold_visible %>
-        </tr><tr>
-          <td class="form-label"><label for="passing_threshold" id="passing_threshold_label"><%= t("Passing Threshold (Assignments):") %></label></td>
-          <td class="tall-row">
-            <div>
-              <input type="number" name="passing_threshold" id="passing_threshold" placeholder="Number b/w 0-100" value="<%= @course_threshold %>" min="0" max="100" step="0.1" style="width: 50px;" disabled />
-              <a id="edit_threshold_btn" href="" class="Button Button--icon-action">
+      <% if @threshold_visible && @expose_course_level_passing_threshold_fields %>
+      </tr><tr>
+        <td colspan="2">
+          <fieldset>
+            <legend><%= t(:passing_threshold_settings, 'Passing Threshold Settings') %>
+              <a id="edit_course_passing_thresholds_btn" class="Button Button--icon-action">
                 <i class="icon-edit"></i>
               </a>
-            </div>
-
-            <div class="aside palign">
-              <p><%= t("Set a course-wide minimum percentage for all graded assignments. Each assignment will have an adjusted minimum score based on this percentage.") %></p>
-              <p><%= t('Adjusting this setting will override the score set by the administrator and any previously changed module settings.') %></p>
-              <p><%= t('Restoring the score to 0.0 turns the threshold off.') %></p>
-            </div>
-          </td>
-
-        </tr><tr>
-          <td class="form-label"><label for="passing_unit_threshold" id="passing_unit_threshold_label"><%= t("Passing Threshold (Exams):") %></label></td>
-          <td class="tall-row">
-            <div>
-              <input type="number" name="passing_unit_threshold" id="passing_unit_threshold" placeholder="Number b/w 0-100" value="<%= @course_exam_threshold %>" min="0" max="100" step="0.1" style="width: 50px;" disabled />
-              <a id="edit_unit_threshold_btn" href="" class="Button Button--icon-action">
-                <i class="icon-edit"></i>
-              </a>
-            </div>
-
-            <div class="aside palign">
-              <p><%= t("Set a course-wide minimum percentage for all unit/final exams. Each of these exams will have an adjusted minimum score based on this percentage.") %></p>
-              <p><%= t('Adjusting this setting will override the score set by the administrator and any previously changed module settings.') %></p>
-              <p><%= t('Restoring the score to 0.0 turns the threshold off.') %></p>
-            </div>
-          </td>
+            </legend>
+          </fieldset>
+        </td>
+        <%= f.fields_for :settings do |settings| %>
+          <%= render partial: "assignment_groups_thresholds", locals: {settings: settings} %>
+        <% end %>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <hr>
+        </td>
+      </tr><tr>
       <% end %>
       
       <% if available_locales.size > 1 %>
