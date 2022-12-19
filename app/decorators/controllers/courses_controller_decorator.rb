@@ -103,7 +103,10 @@ CoursesController.class_eval do
 
   def strongmind_show
     instructure_show
-    js_env(passing_thresholds: RequirementsService.get_assignment_group_passing_thresholds(context: @context))
+    if @context
+      passing_thresholds = RequirementsService.get_assignment_group_passing_thresholds(context: @context) 
+    end
+    js_env(passing_thresholds: passing_thresholds) if passing_thresholds
     js_env(module_editing_disabled: RequirementsService.disable_module_editing_on?)
   end
 
