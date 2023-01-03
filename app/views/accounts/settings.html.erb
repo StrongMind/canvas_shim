@@ -450,6 +450,21 @@ TEXT
           </fieldset>
         <% end %>
 
+        <fieldset>
+          <legend><%= t(:default_start_time, 'Default Course Start Time') %>
+          </legend>
+            <table>
+          <tr>
+            <td class="form-label"><%= f.blabel :default_start_time, :en => "Starts" %></td>
+            <td class="nobr">
+              <%= f.fields_for :settings do |settings| %>
+                  <%= settings.time_select :default_start_time, :default => {:minute => '00'} %>
+              <% end %>
+            </td>
+          </tr>
+          </table>
+        </fieldset>
+
         <%= render partial: 'additional_settings', locals: { f: f } %>
 
         <% if !@account.site_admin? &&
