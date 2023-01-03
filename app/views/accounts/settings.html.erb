@@ -450,20 +450,22 @@ TEXT
           </fieldset>
         <% end %>
 
-        <fieldset>
-          <legend><%= t(:default_start_time, 'Default Course Start Time') %>
-          </legend>
-            <table>
-          <tr>
-            <td class="form-label"><%= f.blabel :default_start_time, :en => "Starts" %></td>
-            <td class="nobr">
-              <%= f.fields_for :settings do |settings| %>
-                  <%= settings.time_select :default_start_time, :default => {:minute => '00'} %>
-              <% end %>
-            </td>
-          </tr>
-          </table>
-        </fieldset>
+        <% if @expose_account_level_first_day_start_time %>
+          <fieldset>
+            <legend><%= t(:default_start_time, 'Default Course Start Time') %>
+            </legend>
+              <table>
+            <tr>
+              <td class="form-label"><%= f.blabel :default_start_time, :en => "Starts" %></td>
+              <td class="nobr">
+                <%= f.fields_for :settings do |settings| %>
+                    <%= settings.time_select :default_start_time, :default => {:hour => '00',:minute => '00'},:ampm => true %>
+                <% end %>
+              </td>
+            </tr>
+            </table>
+          </fieldset>
+        <% end %>
 
         <%= render partial: 'additional_settings', locals: { f: f } %>
 
