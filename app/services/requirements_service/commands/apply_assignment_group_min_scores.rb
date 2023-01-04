@@ -48,7 +48,6 @@ module RequirementsService
       end
 
       def threshold_changes_needed?
-        return false unless score_threshold.positive?
         completion_requirements.each do |req|
           is_submittable?(req) || min_score_different_than_threshold?(req)
         end

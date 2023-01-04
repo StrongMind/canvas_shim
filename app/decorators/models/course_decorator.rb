@@ -115,7 +115,7 @@ Course.class_eval do
   def non_expired_announcements
     filtered_announcements(non_expired_announcements_array)
   end
-  
+
   def snapshot_students
     active_students.eager_load(:user)
     .pluck(:id, :user_id, 'users.name').map do |stu_arr|
@@ -129,7 +129,7 @@ Course.class_eval do
 
   def update_context_module_completion_reqs
     self.context_modules.each do |context_module|
-      context_module.update_threshold_reqs
+      RequirementsService.apply_minimum_scores(context_module: context_module, assignment_group_names: AssignmentGroup.passing_threshold_group_names)
     end
   end
   handle_asynchronously :update_context_module_completion_reqs
