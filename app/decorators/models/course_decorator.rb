@@ -6,7 +6,9 @@ Course.class_eval do
       where("enrollments.workflow_state NOT IN ('rejected', 'deleted', 'inactive') AND enrollments.type = 'StudentEnrollment'").preload(:user)
     }, class_name: 'Enrollment'
 
+
   before_create :set_course_start_time_from_school
+
   after_commit -> { PipelineService.publish_as_v2(self) }
   after_create -> { RequirementsService.set_school_thresholds_on_course(course: self) }
 
@@ -99,10 +101,11 @@ Course.class_eval do
       student_id: student.id,
     ).payload.size
   end
-  
+
   def set_course_start_time_from_school
     @course_start_time = SettingsService.get_settings(object: 'school', id: 1)['course_start_time']
-    self.start_at = DateTime.now.change({ hour: @course_start_time.split(":")[0].to_i, min: @course_start_time.split(":")[1].to_i })
+    self.start_at = DateTime.new(self.start_at.year, self.start_at.month, self.start_at.day, hour: @course_start_time.split(":")[0], min: @course_start_time.split(":")[1])
+
   end
 
   def online_user_count

@@ -85,7 +85,7 @@ AccountsController.class_eval do
   end
 
   def course_start_time
-    account_settings_params[:course_start_time].present? ? account_settings_params[:course_start_time] : false
+    account_settings_params[:course_start_time].present? ? account_settings_params[:course_start_time] : "00:00"
   end
 
   def grab_holidays
@@ -147,7 +147,7 @@ AccountsController.class_eval do
   end
 
   def get_course_start_time
-    @course_start_time = SettingsService.get_settings(object: 'school', id: 1)['course_start_time']
+    @course_start_time = SettingsService.get_settings(object: 'school', id: 1)['course_start_time'] || "00:00"
   end
 
   def set_course_start_time
@@ -158,7 +158,7 @@ AccountsController.class_eval do
       setting: 'course_start_time',
       value: start_time
     )
-    end
+  end
 
   def set_first_assignment_due
     SettingsService.update_settings(
