@@ -452,15 +452,15 @@ TEXT
 
         <% if @expose_account_level_first_day_start_time %>
           <fieldset>
-            <legend><%= t(:default_start_time, 'Default Course Start Time') %>
+            <legend><%= t(:course_start_time, 'Default Course Start Time') %>
             </legend>
               <table>
             <tr>
-              <td class="form-label"><%= f.blabel :default_start_time, :en => "Starts" %></td>
-              <td class="nobr">
+              <td class="form-label"><%= f.blabel :course_start_time, :en => "Starts" %></td>
+              <td class="formtable">
                 <%= f.fields_for :settings do |settings| %>
-                    <%= settings.time_select :default_start_time, :default => {:hour => '00',:minute => '00'},:ampm => true %>
-                <% end %>
+                   <%= settings.time_select :course_start_time, :default => {hour: @course_start_time.split(":")[0], minute: @course_start_time.split(":")[1]}, :ampm => true %>
+              <% end %>
               </td>
             </tr>
             </table>

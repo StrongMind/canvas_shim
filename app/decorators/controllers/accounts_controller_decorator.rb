@@ -10,12 +10,13 @@ AccountsController.class_eval do
 
     show
   end
-  
+
   def strongmind_settings
     grab_holidays
     get_allowed_filetypes
     get_first_assignment_due
     get_last_assignment_due
+    get_course_start_time
 
     @course_thresh_enabled    = RequirementsService.course_threshold_setting_enabled?
     @assignment_group_thresholds = get_assignment_group_thresholds(ASSIGNMENT_GROUP_NAMES)
@@ -52,6 +53,7 @@ AccountsController.class_eval do
       set_holidays if params[:holidays]
       set_first_assignment_due if account_settings_params[:first_assignment_due]
       set_last_assignment_due if account_settings_params[:last_assignment_due]
+      set_course_start_time
     end
 
     instructure_update
@@ -140,6 +142,20 @@ AccountsController.class_eval do
     @last_assignment_due = SettingsService.get_settings(object: 'school', id: 1)['last_assignment_due']
   end
 
+  def get_course_start_time
+    @course_start_time = SettingsService.get_settings(object: 'school', id: 1)['course_start_time']
+  end
+
+  def set_course_start_time
+    start_time = "#{params[:account][:settings]['course_start_time(4i)']}:#{params[:account][:settings]['course_start_time(5i)']}"
+    SettingsService.update_settings(
+      object: 'school',
+      id: 1,
+      setting: 'course_start_time',
+      value: start_time
+    )
+    end
+
   def set_first_assignment_due
     SettingsService.update_settings(
       object: 'school',
@@ -183,9 +199,12 @@ AccountsController.class_eval do
     @account.update_course_passing_requirements
   end
 
+
   private
 
   def account_settings_params
     params[:account][:settings]
   end
+
+
 end
