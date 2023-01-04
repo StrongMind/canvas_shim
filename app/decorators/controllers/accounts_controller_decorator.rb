@@ -84,12 +84,16 @@ AccountsController.class_eval do
     account_settings_params[:last_assignment_due].present? ? account_settings_params[:last_assignment_due] : false
   end
 
+  def course_start_time
+    account_settings_params[:course_start_time].present? ? account_settings_params[:course_start_time] : false
+  end
+
   def grab_holidays
     @holidays = SettingsService.get_settings(object: :school, id: 1)['holidays']
     @holidays = @holidays.split(",") if @holidays
     @holidays ||= (ENV["HOLIDAYS"] && @holidays != false) ? ENV["HOLIDAYS"].split(",") : []
   end
-  
+
   def get_allowed_filetypes
     @allowed_filetypes = SettingsService.get_settings(object: 'school', id: 1)['allowed_filetypes']
     @allowed_filetypes = @allowed_filetypes.split(',') if @allowed_filetypes
