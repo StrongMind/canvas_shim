@@ -1,0 +1,174 @@
+diff --git a/app/decorators/models/assignment_decorator.rb b/app/decorators/models/assignment_decorator.rb
+index 30588351..56425fdd 100644
+--- a/app/decorators/models/assignment_decorator.rb
++++ b/app/decorators/models/assignment_decorator.rb
+@@ -1,5 +1,5 @@
+ Assignment.class_eval do
+-  after_commit -> { PipelineService.publish_as_v2(self) }
++  # after_commit -> { PipelineService.publish_as_v2(self) }
+   def toggle_exclusion(student_id, bool)
+     subs = submissions.where(user_id: student_id)
+     if subs.any?
+diff --git a/app/decorators/models/context_module_decorator.rb b/app/decorators/models/context_module_decorator.rb
+index d0773ab6..a4fbaf65 100644
+--- a/app/decorators/models/context_module_decorator.rb
++++ b/app/decorators/models/context_module_decorator.rb
+@@ -1,6 +1,6 @@
+ ContextModule.class_eval do
+   after_save :assign_threshold
+-  after_commit -> { PipelineService.publish_as_v2(self, alias: 'module') }
++  # after_commit -> { PipelineService.publish_as_v2(self, alias: 'module') }
+ 
+   def assign_threshold
+     if completion_requirements_was&.empty?
+diff --git a/app/decorators/models/context_module_progression_decorator.rb b/app/decorators/models/context_module_progression_decorator.rb
+index 7af230b4..17f1a9ac 100644
+--- a/app/decorators/models/context_module_progression_decorator.rb
++++ b/app/decorators/models/context_module_progression_decorator.rb
+@@ -16,9 +16,9 @@ ContextModuleProgression.class_eval do
+       course_id: context_module.context.id
+     )
+ 
+-    PipelineService.publish_as_v2(
+-      PipelineService::Nouns::CourseProgress.new(self)
+-    )
++    # PipelineService.publish_as_v2(
++    #   PipelineService::Nouns::CourseProgress.new(self)
++    # )
+   end
+ 
+   def sequence_control_on?
+diff --git a/app/decorators/models/conversation_batch_decorator.rb b/app/decorators/models/conversation_batch_decorator.rb
+index d5bd4204..8172d812 100644
+--- a/app/decorators/models/conversation_batch_decorator.rb
++++ b/app/decorators/models/conversation_batch_decorator.rb
+@@ -4,7 +4,7 @@ ConversationBatch.class_eval do
+   def publish_messages_as_v2
+     conversation_message_ids.each do |cm_id|
+       message = ConversationMessage.find_by(id: cm_id)
+-      PipelineService.publish_as_v2(message) if message
++      # PipelineService.publish_as_v2(message) if message
+     end
+   end
+-end
+\ No newline at end of file
++end
+diff --git a/app/decorators/models/conversation_decorator.rb b/app/decorators/models/conversation_decorator.rb
+index e4c72a18..78c374ec 100644
+--- a/app/decorators/models/conversation_decorator.rb
++++ b/app/decorators/models/conversation_decorator.rb
+@@ -1,3 +1,3 @@
+ Conversation.class_eval do
+-  after_commit { PipelineService.publish_as_v2(self) }
+-end
+\ No newline at end of file
++  # after_commit { PipelineService.publish_as_v2(self) }
++end
+diff --git a/app/decorators/models/conversation_message_decorator.rb b/app/decorators/models/conversation_message_decorator.rb
+index 2dafc132..fabc9dd7 100644
+--- a/app/decorators/models/conversation_message_decorator.rb
++++ b/app/decorators/models/conversation_message_decorator.rb
+@@ -1,5 +1,5 @@
+ ConversationMessage.class_eval do
+-  after_commit :publish_as_v2_if_conversation_id
++  # after_commit :publish_as_v2_if_conversation_id
+ 
+   def publish_as_v2_if_conversation_id
+     PipelineService.publish_as_v2(self) if conversation_id
+diff --git a/app/decorators/models/conversation_participant_decorator.rb b/app/decorators/models/conversation_participant_decorator.rb
+index a75ada23..38c24872 100644
+--- a/app/decorators/models/conversation_participant_decorator.rb
++++ b/app/decorators/models/conversation_participant_decorator.rb
+@@ -1,3 +1,3 @@
+ ConversationParticipant.class_eval do
+-  after_commit { PipelineService.publish_as_v2(self) }
+-end
+\ No newline at end of file
++  # after_commit { PipelineService.publish_as_v2(self) }
++end
+diff --git a/app/decorators/models/course_decorator.rb b/app/decorators/models/course_decorator.rb
+index f97ae568..3b63d379 100644
+--- a/app/decorators/models/course_decorator.rb
++++ b/app/decorators/models/course_decorator.rb
+@@ -6,7 +6,7 @@ Course.class_eval do
+       where("enrollments.workflow_state NOT IN ('rejected', 'deleted', 'inactive') AND enrollments.type = 'StudentEnrollment'").preload(:user)
+     }, class_name: 'Enrollment'
+ 
+-  after_commit -> { PipelineService.publish_as_v2(self) }
++  # after_commit -> { PipelineService.publish_as_v2(self) }
+   after_create -> { RequirementsService.set_school_thresholds_on_course(course: self) }
+ 
+   TAB_SNAPSHOT = 18
+@@ -115,7 +115,7 @@ Course.class_eval do
+   def non_expired_announcements
+     filtered_announcements(non_expired_announcements_array)
+   end
+-  
++
+   def snapshot_students
+     active_students.eager_load(:user)
+     .pluck(:id, :user_id, 'users.name').map do |stu_arr|
+diff --git a/app/decorators/models/enrollment_decorator.rb b/app/decorators/models/enrollment_decorator.rb
+index 7259614e..dc5b0fff 100644
+--- a/app/decorators/models/enrollment_decorator.rb
++++ b/app/decorators/models/enrollment_decorator.rb
+@@ -5,7 +5,7 @@ Enrollment.class_eval do
+   def all_scores
+     Score.where(enrollment: self)
+   end
+-  
++
+   def ensure_active_scores
+     return if !active_student? || active_scores? || !all_scores.one?
+     all_scores.first.update(workflow_state: "active")
+@@ -17,7 +17,7 @@ Enrollment.class_eval do
+ 
+   def publish_as_v2
+     unless deleted? && (guarded_for_deleted_publish? || guarded_for_deleted_while_active?)
+-      PipelineService.publish_as_v2(self)
++      # PipelineService.publish_as_v2(self)
+     end
+   end
+ 
+diff --git a/app/decorators/models/submission_decorator.rb b/app/decorators/models/submission_decorator.rb
+index 32ef5e48..288c8d2a 100644
+--- a/app/decorators/models/submission_decorator.rb
++++ b/app/decorators/models/submission_decorator.rb
+@@ -10,9 +10,9 @@ Submission.class_eval do
+ 
+   def send_unit_grades_to_pipeline
+     return unless enable_unit_grade_calculations?
+-    PipelineService.publish_as_v2(
+-      PipelineService::Nouns::UnitGrades.new(self)
+-    )
++    # PipelineService.publish_as_v2(
++    #   PipelineService::Nouns::UnitGrades.new(self)
++    # )
+   end
+ 
+   def set_cached_regrade_alert_applicable
+diff --git a/app/services/pipeline_service/V2/client.rb b/app/services/pipeline_service/V2/client.rb
+index 55ed3e48..065db7a8 100644
+--- a/app/services/pipeline_service/V2/client.rb
++++ b/app/services/pipeline_service/V2/client.rb
+@@ -6,7 +6,6 @@ module PipelineService
+       include Singleton
+ 
+       def initialize
+-
+         Aws.config.update(
+           region: REGION,
+           credentials: Aws::Credentials.new(
+@@ -20,10 +19,12 @@ module PipelineService
+       end
+ 
+       def self.publish(payload)
++        return
+         instance.publish(payload)
+       end
+ 
+       def publish(payload)
++        return
+         @sqs.send_message(queue_url: @url, message_body: payload.to_json)
+       end
+     end
