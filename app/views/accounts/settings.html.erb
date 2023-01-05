@@ -457,7 +457,7 @@ TEXT
               <table>
             <tr>
               <td class="form-label"><%= f.blabel :course_start_time, :en => "Starts" %></td>
-              <td class="formtable small-select">
+              <td class="formtable">
                 <%= f.fields_for :settings do |settings| %>
                   <%= settings.number_field :course_start_time_hour,
                                             :value => @course_start_time_hour,
