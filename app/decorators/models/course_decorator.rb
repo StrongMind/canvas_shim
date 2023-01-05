@@ -103,9 +103,11 @@ Course.class_eval do
   end
 
   def set_course_start_time_from_school
-    @course_start_time = SettingsService.get_settings(object: 'school', id: 1)['course_start_time']
-    self.start_at = DateTime.new(self.start_at.year, self.start_at.month, self.start_at.day, hour: @course_start_time.split(":")[0], min: @course_start_time.split(":")[1])
-
+    unless self.start_at.nil?
+      @course_start_time_hour = SettingsService.get_settings(object: 'school', id: 1)['course_start_time_hour']
+      @course_start_time_minute = SettingsService.get_settings(object: 'school', id: 1)['course_start_time_minute']
+      self.start_at = DateTime.new(self.start_at.year, self.start_at.month, self.start_at.day, @course_start_time_hour, @course_start_time_minute)
+    end
   end
 
   def online_user_count

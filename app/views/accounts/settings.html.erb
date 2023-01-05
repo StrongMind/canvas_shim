@@ -459,7 +459,21 @@ TEXT
               <td class="form-label"><%= f.blabel :course_start_time, :en => "Starts" %></td>
               <td class="formtable">
                 <%= f.fields_for :settings do |settings| %>
-                   <%= settings.time_select :course_start_time, :default => {}, :ampm => true %>
+                  <%#= settings.time_select :course_start_time, :default => {hour: @course_start_time.split(":")[0], minute: @course_start_time.split(":")[1]}, :ampm => true %>
+                  <%= settings.number_field :course_start_time_hour,
+                                            :value => @course_start_time_hour,
+                                            :default => @course_start_time_hour,
+                                            :min => "00",
+                                            :max => "12",
+                                            :style => "width: 40px;",
+                                            :disabled => false %>
+                  <%= settings.number_field :course_start_time_minute,
+                                            :value => @course_start_time_minute,
+                                            :default => @course_start_time_minute,
+                                            :min => "00",
+                                            :max => "59",
+                                            :style => "width: 40px;",
+                                            :disabled => false %>
               <% end %>
               </td>
             </tr>
