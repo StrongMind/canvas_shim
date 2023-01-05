@@ -18,6 +18,7 @@ AccountsController.class_eval do
     get_last_assignment_due
     get_course_start_time_hour
     get_course_start_time_minute
+    get_course_time_ampm
 
     @course_thresh_enabled    = RequirementsService.course_threshold_setting_enabled?
     @assignment_group_thresholds = get_assignment_group_thresholds(ASSIGNMENT_GROUP_NAMES)
@@ -56,6 +57,7 @@ AccountsController.class_eval do
       set_last_assignment_due if account_settings_params[:last_assignment_due]
       set_course_start_time_hour
       set_course_start_time_minute
+      set_course_time_ampm
     end
 
     instructure_update
@@ -92,6 +94,10 @@ AccountsController.class_eval do
 
   def course_start_time_minute
     account_settings_params[:course_start_time_minute].present? ? account_settings_params[:course_start_time_minute] : "00"
+  end
+
+  def course_time_ampm
+    account_settings_params[:course_time_ampm].present? ? account_settings_params[:course_time_ampm] : "PM"
   end
 
   def grab_holidays
@@ -160,14 +166,28 @@ AccountsController.class_eval do
     @course_start_time_minute = SettingsService.get_settings(object: 'school', id: 1)['course_start_time_minute'] || "00"
   end
 
+  def get_course_time_ampm
+    @course_time_ampm = SettingsService.get_settings(object: 'school', id: 1)['course_time_ampm'] || "PM"
+  end
+
+  def set_course_time_ampm
+    ampm = "#{params[:account][:settings]['course_time_ampm']}"
+      SettingsService.update_settings(
+        object: 'school',
+        id: 1,
+        setting: 'course_time_ampm',
+        value: ampm
+      )
+  end
+
+
   def set_course_start_time_hour
     start_time = "#{params[:account][:settings]['course_start_time_hour']}"
-    SettingsService.update_settings(
+      SettingsService.update_settings(
       object: 'school',
       id: 1,
       setting: 'course_start_time_hour',
-      value: start_time
-    )
+      value: start_time)
   end
 
   def set_course_start_time_minute

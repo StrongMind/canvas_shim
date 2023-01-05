@@ -104,8 +104,14 @@ Course.class_eval do
 
   def set_course_start_time_from_school
     unless self.start_at.nil?
-      @course_start_time_hour = SettingsService.get_settings(object: 'school', id: 1)['course_start_time_hour']
-      @course_start_time_minute = SettingsService.get_settings(object: 'school', id: 1)['course_start_time_minute']
+      @course_time_ampm = SettingsService.get_settings(object: 'school', id: 1)['course_time_ampm']
+      @course_start_time_hour = (SettingsService.get_settings(object: 'school', id: 1)['course_start_time_hour']).to_i
+      @course_start_time_minute = (SettingsService.get_settings(object: 'school', id: 1)['course_start_time_minute']).to_i
+
+      if @course_time_ampm == 'PM'
+        @course_start_time_hour = @course_start_time_hour + 12
+      end
+
       self.start_at = DateTime.new(self.start_at.year, self.start_at.month, self.start_at.day, @course_start_time_hour, @course_start_time_minute)
     end
   end
