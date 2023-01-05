@@ -473,7 +473,6 @@ TEXT
                                             :max => "59",
                                             :style => "width: 40px;",
                                             :disabled => false %>
-                  <%#= select_tag(:course_time_ampm, options_for_select([["AM",1],["PM",2]], @course_time_ampm), class:"select", :style => "width: 80px;") %>
                 <%= settings.select :course_time_ampm, [["AM","AM"],["PM","PM"]], :selected => @course_time_ampm, :style => "width: 20px;" %>
               <% end %>
               </td>

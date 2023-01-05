@@ -97,7 +97,7 @@ AccountsController.class_eval do
   end
 
   def course_time_ampm
-    account_settings_params[:course_time_ampm].present? ? account_settings_params[:course_time_ampm] : "PM"
+    account_settings_params[:course_time_ampm].present? ? account_settings_params[:course_time_ampm] : "AM"
   end
 
   def grab_holidays
@@ -167,7 +167,7 @@ AccountsController.class_eval do
   end
 
   def get_course_time_ampm
-    @course_time_ampm = SettingsService.get_settings(object: 'school', id: 1)['course_time_ampm'] || "PM"
+    @course_time_ampm = SettingsService.get_settings(object: 'school', id: 1)['course_time_ampm'] || "AM"
   end
 
   def set_course_time_ampm
