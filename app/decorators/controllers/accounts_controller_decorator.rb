@@ -89,7 +89,7 @@ AccountsController.class_eval do
   end
 
   def course_start_time_hour
-    account_settings_params[:course_start_time_hour].present? ? account_settings_params[:course_start_time_hour] : "00"
+    account_settings_params[:course_start_time_hour].present? ? account_settings_params[:course_start_time_hour] : "12"
   end
 
   def course_start_time_minute
@@ -159,7 +159,7 @@ AccountsController.class_eval do
   end
 
   def get_course_start_time_hour
-    @course_start_time_hour = SettingsService.get_settings(object: 'school', id: 1)['course_start_time_hour'] || "00"
+    @course_start_time_hour = SettingsService.get_settings(object: 'school', id: 1)['course_start_time_hour'] || "12"
   end
 
   def get_course_start_time_minute
@@ -182,16 +182,17 @@ AccountsController.class_eval do
 
 
   def set_course_start_time_hour
-    start_time = "#{params[:account][:settings]['course_start_time_hour']}"
+    start_time = "0#{params[:account][:settings]['course_start_time_hour']}"[0..1]
       SettingsService.update_settings(
       object: 'school',
       id: 1,
       setting: 'course_start_time_hour',
-      value: start_time)
+      value: start_time
+      )
   end
 
   def set_course_start_time_minute
-    start_time = "#{params[:account][:settings]['course_start_time_minute']}"
+    start_time = "0#{params[:account][:settings]['course_start_time_minute']}"[0..1]
     SettingsService.update_settings(
       object: 'school',
       id: 1,
@@ -243,12 +244,9 @@ AccountsController.class_eval do
     @account.update_course_passing_requirements
   end
 
-
   private
 
   def account_settings_params
     params[:account][:settings]
   end
-
-
 end

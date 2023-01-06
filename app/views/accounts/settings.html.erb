@@ -462,10 +462,10 @@ TEXT
                   <%= settings.number_field :course_start_time_hour,
                                             :value => @course_start_time_hour,
                                             :default => @course_start_time_hour,
-                                            :min => "00",
+                                            :min => "01",
                                             :max => "12",
                                             :style => "width: 40px;",
-                                            :disabled => false %>
+                                            :disabled => false %> :
                   <%= settings.number_field :course_start_time_minute,
                                             :value => @course_start_time_minute,
                                             :default => @course_start_time_minute,

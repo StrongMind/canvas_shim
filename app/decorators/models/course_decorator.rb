@@ -112,7 +112,7 @@ Course.class_eval do
         @course_start_time_hour = @course_start_time_hour + 12
       end
 
-      self.start_at = DateTime.new(self.start_at.year, self.start_at.month, self.start_at.day, @course_start_time_hour, @course_start_time_minute)
+      self.start_at = DateTime.new(self.start_at.year, self.start_at.month, self.start_at.day, @course_start_time_hour, @course_start_time_minute, 0, Time.zone.now.formatted_offset)
     end
   end
 
