@@ -19,6 +19,7 @@ ContentMigration.class_eval do
 
     content_tags.each do |tag|
       next unless assignment = tag.assignment
+      next if tag.context_module.completion_requirements.pluck(:id).include?(tag.id)
       group_name = assignment.passing_threshold_group_name
       RequirementsService.add_unit_item_with_min_score(context_module: tag.context_module, content_tag: tag, assignment_group_name: group_name )
     end
