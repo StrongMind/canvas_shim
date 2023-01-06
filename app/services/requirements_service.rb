@@ -39,8 +39,8 @@ module RequirementsService
     ).call
   end
 
-  def self.add_unit_item_with_min_score(context_module:, content_tag:, assignment_group_name:)
-    Commands::AddUnitItemWithMinScore.new(
+  def self.add_unit_item_with_passing_threshold(context_module:, content_tag:, assignment_group_name:)
+    Commands::AddUnitItemWithPassingThreshold.new(
       context_module: context_module,
       content_tag: content_tag,
       assignment_group_name: assignment_group_name

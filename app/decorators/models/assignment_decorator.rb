@@ -44,15 +44,9 @@ Assignment.class_eval do
     return unless content_tag
     context_module = content_tag.context_module
     group_name = self.passing_threshold_group_name
-    if min_score_req = context_module.completion_requirements.select{ |r| r[:type] == 'min_score' && r[:id] == content_tag.id }.first
+    if min_score_req = context_module.completion_requirements.select{ |r| r[:id] == content_tag.id }.first
       context_module.completion_requirements.delete(min_score_req)
-      passing_threshold = RequirementsService.get_passing_threshold(type: :course, id: self.course.try(:id), assignment_group_name: group_name)
-      min_score_req[:min_score] = passing_threshold
-      context_module.completion_requirements << min_score_req
-      context_module.update_column(:completion_requirements, context_module.completion_requirements)
-      context_module.touch
-    else
-      RequirementsService.add_unit_item_with_min_score(context_module: context_module, content_tag: content_tag, assignment_group_name: group_name)
     end
+    RequirementsService.add_unit_item_with_passing_threshold(context_module: context_module, content_tag: content_tag, assignment_group_name: group_name)
   end
 end
