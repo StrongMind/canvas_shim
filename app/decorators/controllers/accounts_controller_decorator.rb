@@ -18,14 +18,12 @@ AccountsController.class_eval do
     get_last_assignment_due
     course_start_time = DateTime.parse(get_course_start_time)
 
-    @course_start_time_hour = course_start_time.hour.to_i < 10 ? "0#{course_start_time.hour}" : course_start_time.hour
-    @course_start_time_minute = course_start_time.minute.to_i < 10 ? "0#{course_start_time.minute}" : course_start_time.minute
-
+    @course_start_time_hour = course_start_time.strftime("%I")
+    @course_start_time_minute = course_start_time.strftime("%M")
     @course_time_ampm = course_start_time.strftime("%p")
 
     @course_thresh_enabled    = RequirementsService.course_threshold_setting_enabled?
     @assignment_group_thresholds = get_assignment_group_thresholds(ASSIGNMENT_GROUP_NAMES)
-
     if @course_thresh_enabled
       @post_enrollment_thresh_enabled = RequirementsService.post_enrollment_thresholds_enabled?
     end
@@ -89,21 +87,6 @@ AccountsController.class_eval do
     account_settings_params[:last_assignment_due].present? ? account_settings_params[:last_assignment_due] : false
   end
 
-  def course_start_time_hour
-    account_settings_params[:course_start_time_hour].present? ? account_settings_params[:course_start_time_hour] : "12"
-  end
-
-  def course_start_time_minute
-    account_settings_params[:course_start_time_minute].present? ? account_settings_params[:course_start_time_minute] : "00"
-  end
-
-  def course_time_ampm
-    account_settings_params[:course_time_ampm].present? ? account_settings_params[:course_time_ampm] : "AM"
-  end
-
-  def course_start_time
-    account_settings_params[:course_start_time].present? ? account_settings_params[:course_start_time] : "12:00 AM"
-  end
 
   def grab_holidays
     @holidays = SettingsService.get_settings(object: :school, id: 1)['holidays']
