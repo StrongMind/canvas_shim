@@ -18,8 +18,9 @@ AccountsController.class_eval do
     get_last_assignment_due
     course_start_time = DateTime.parse(get_course_start_time)
 
-    @course_start_time_hour = course_start_time.hour
-    @course_start_time_minute = course_start_time.minute
+    @course_start_time_hour = course_start_time.hour.to_i < 10 ? "0#{course_start_time.hour}" : course_start_time.hour
+    @course_start_time_minute = course_start_time.minute.to_i < 10 ? "0#{course_start_time.minute}" : course_start_time.minute
+
     @course_time_ampm = course_start_time.strftime("%p")
 
     @course_thresh_enabled    = RequirementsService.course_threshold_setting_enabled?
@@ -185,8 +186,8 @@ AccountsController.class_eval do
   end
 
   def set_course_start_time
-    start_time_hour = "0#{params[:account][:settings]['course_start_time_hour']}"[0..1]
-    start_time_minute = "0#{params[:account][:settings]['course_start_time_minute']}"[0..1]
+    start_time_hour = "#{params[:account][:settings]['course_start_time_hour']}"
+    start_time_minute = "#{params[:account][:settings]['course_start_time_minute']}"
     ampm = "#{params[:account][:settings]['course_time_ampm']}"
     start_time = "#{start_time_hour}:#{start_time_minute} #{ampm}"
 
