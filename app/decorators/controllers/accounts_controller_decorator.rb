@@ -16,9 +16,11 @@ AccountsController.class_eval do
     get_allowed_filetypes
     get_first_assignment_due
     get_last_assignment_due
-    get_course_start_time_hour
-    get_course_start_time_minute
-    get_course_time_ampm
+    course_start_time = DateTime.parse(get_course_start_time)
+
+    @course_start_time_hour = course_start_time.hour
+    @course_start_time_minute = course_start_time.minute
+    @course_time_ampm = course_start_time.strftime("%p")
 
     @course_thresh_enabled    = RequirementsService.course_threshold_setting_enabled?
     @assignment_group_thresholds = get_assignment_group_thresholds(ASSIGNMENT_GROUP_NAMES)
@@ -55,9 +57,7 @@ AccountsController.class_eval do
       set_holidays if params[:holidays]
       set_first_assignment_due if account_settings_params[:first_assignment_due]
       set_last_assignment_due if account_settings_params[:last_assignment_due]
-      set_course_start_time_hour
-      set_course_start_time_minute
-      set_course_time_ampm
+      set_course_start_time
     end
 
     instructure_update
@@ -98,6 +98,10 @@ AccountsController.class_eval do
 
   def course_time_ampm
     account_settings_params[:course_time_ampm].present? ? account_settings_params[:course_time_ampm] : "AM"
+  end
+
+  def course_start_time
+    account_settings_params[:course_start_time].present? ? account_settings_params[:course_start_time] : "12:00 AM"
   end
 
   def grab_holidays
@@ -158,47 +162,8 @@ AccountsController.class_eval do
     @last_assignment_due = SettingsService.get_settings(object: 'school', id: 1)['last_assignment_due']
   end
 
-  def get_course_start_time_hour
-    @course_start_time_hour = SettingsService.get_settings(object: 'school', id: 1)['course_start_time_hour'] || "12"
-  end
-
-  def get_course_start_time_minute
-    @course_start_time_minute = SettingsService.get_settings(object: 'school', id: 1)['course_start_time_minute'] || "00"
-  end
-
-  def get_course_time_ampm
-    @course_time_ampm = SettingsService.get_settings(object: 'school', id: 1)['course_time_ampm'] || "AM"
-  end
-
-  def set_course_time_ampm
-    ampm = "#{params[:account][:settings]['course_time_ampm']}"
-      SettingsService.update_settings(
-        object: 'school',
-        id: 1,
-        setting: 'course_time_ampm',
-        value: ampm
-      )
-  end
-
-
-  def set_course_start_time_hour
-    start_time = "0#{params[:account][:settings]['course_start_time_hour']}"[0..1]
-      SettingsService.update_settings(
-      object: 'school',
-      id: 1,
-      setting: 'course_start_time_hour',
-      value: start_time
-      )
-  end
-
-  def set_course_start_time_minute
-    start_time = "0#{params[:account][:settings]['course_start_time_minute']}"[0..1]
-    SettingsService.update_settings(
-      object: 'school',
-      id: 1,
-      setting: 'course_start_time_minute',
-      value: start_time
-    )
+  def get_course_start_time
+    SettingsService.get_settings(object: 'school', id: 1)['course_start_time'] || "12:00 AM"
   end
 
   def set_first_assignment_due
@@ -216,6 +181,20 @@ AccountsController.class_eval do
       id: 1,
       setting: 'last_assignment_due',
       value: last_assignment_due
+    )
+  end
+
+  def set_course_start_time
+    start_time_hour = "0#{params[:account][:settings]['course_start_time_hour']}"[0..1]
+    start_time_minute = "0#{params[:account][:settings]['course_start_time_minute']}"[0..1]
+    ampm = "#{params[:account][:settings]['course_time_ampm']}"
+    start_time = "#{start_time_hour}:#{start_time_minute} #{ampm}"
+
+    SettingsService.update_settings(
+      object: 'school',
+      id: 1,
+      setting: 'course_start_time',
+      value: start_time
     )
   end
 

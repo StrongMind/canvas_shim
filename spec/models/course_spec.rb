@@ -159,9 +159,7 @@ describe Course do
   describe "#check course start time" do
     context "course has start time" do
       before do
-        allow(SettingsService).to receive(:get_settings).and_return({'course_start_time_hour' => "5",
-                                                                     'course_start_time_minute' => "55",
-                                                                     'course_time_ampm' => "PM"})
+        allow(SettingsService).to receive(:get_settings).and_return('course_start_time' => "5:55 PM")
       end
 
       date_param = DateTime.new(2023, 5, 18, 3, 33, 0, Time.zone.now.formatted_offset)
