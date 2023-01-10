@@ -21,7 +21,7 @@ Account.class_eval do
   handle_asynchronously :update_course_passing_requirements
 
   def get_assignment_group_thresholds
-    assignment_group_names = AssignmentGroup::GROUP_NAMES.map{|n| n.downcase.gsub(/\s/, "_")}
+    assignment_group_names = AssignmentGroup.passing_threshold_group_names
     thresholds = {}
     assignment_group_names.each do |group_name|
       thresholds[group_name] = RequirementsService.get_passing_threshold(type: 'school', assignment_group_name: group_name)

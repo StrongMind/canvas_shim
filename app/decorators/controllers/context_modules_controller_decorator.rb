@@ -33,7 +33,7 @@ ContextModulesController.class_eval do
     else
       @assignment_group = Assignment.find(params[:item][:id]).passing_threshold_group_name
     end
-    RequirementsService.add_unit_item_with_min_score(context_module: @module, content_tag: @tag, assignment_group_name: @assignment_group)
+    RequirementsService.add_unit_item_with_passing_threshold(context_module: @module, content_tag: @tag, assignment_group_name: @assignment_group)
   end
 
   def strongmind_item_redirect

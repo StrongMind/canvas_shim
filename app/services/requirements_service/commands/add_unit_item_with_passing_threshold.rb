@@ -1,6 +1,6 @@
 module RequirementsService
   module Commands
-    class AddUnitItemWithMinScore
+    class AddUnitItemWithPassingThreshold
       def initialize(context_module:, content_tag:, assignment_group_name:)
         @context_module = context_module
         @content_tag = content_tag
@@ -21,7 +21,16 @@ module RequirementsService
       end
 
       def add_threshold_to_module
-        context_module.completion_requirements << { :id => content_tag.id, :type => "min_score", :min_score => score_threshold }
+        if score_threshold.zero?
+          case content_tag.content_type
+          when "DiscussionTopic"
+            context_module.completion_requirements << { :id => content_tag.id, :type => "must_contribute" }
+          else
+            context_module.completion_requirements << { :id => content_tag.id, :type => "must_submit" }
+          end
+        else
+          context_module.completion_requirements << { :id => content_tag.id, :type => "min_score", :min_score => score_threshold }
+        end
         context_module.update_column(:completion_requirements, context_module.completion_requirements)
       end
     end

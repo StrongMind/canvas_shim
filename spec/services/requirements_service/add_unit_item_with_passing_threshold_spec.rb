@@ -1,4 +1,4 @@
-describe RequirementsService::Commands::AddUnitItemWithMinScore do
+describe RequirementsService::Commands::AddUnitItemWithPassingThreshold do
   include_context 'stubbed_network'
   subject { described_class.new(context_module: context_module, content_tag: content_tag, assignment_group_name: nil) }
   before do

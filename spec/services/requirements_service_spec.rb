@@ -12,7 +12,7 @@ describe RequirementsService do
     allow(command_class).to receive(:new).and_return(command_instance)
     allow(command_instance).to receive(:call)
   end
-  
+
   describe '#apply_minimum_scores' do
     let(:command_class) { RequirementsService::Commands::ApplyAssignmentGroupMinScores }
 
@@ -65,12 +65,12 @@ describe RequirementsService do
     end
   end
 
-  describe '#add_unit_item_with_min_score' do
-    let(:command_class) { RequirementsService::Commands::AddUnitItemWithMinScore }
+  describe '#add_unit_item_with_passing_threshold' do
+    let(:command_class) { RequirementsService::Commands::AddUnitItemWithPassingThreshold }
 
     it 'Calls the command object' do
       expect(command_instance).to receive(:call)
-      subject.add_unit_item_with_min_score(context_module: context_module, content_tag: content_tag, assignment_group_name: nil)
+      subject.add_unit_item_with_passing_threshold(context_module: context_module, content_tag: content_tag, assignment_group_name: nil)
     end
   end
 
