@@ -450,6 +450,37 @@ TEXT
           </fieldset>
         <% end %>
 
+        <% if @expose_account_level_first_day_start_time %>
+          <fieldset>
+            <legend><%= t(:course_start_time, 'Default Course Start Time') %>
+            </legend>
+              <table>
+            <tr>
+              <td class="form-label"><%= f.blabel :course_start_time, :en => "Starts" %></td>
+              <td class="formtable small-select">
+                <%= f.fields_for :settings do |settings| %>
+                  <%= settings.number_field :course_start_time_hour,
+                                            :value => @course_start_time_hour,
+                                            :default => @course_start_time_hour,
+                                            :min => "01",
+                                            :max => "12",
+                                            :style => "width: 40px;",
+                                            :disabled => false %> :
+                  <%= settings.number_field :course_start_time_minute,
+                                            :value => @course_start_time_minute,
+                                            :default => @course_start_time_minute,
+                                            :min => "00",
+                                            :max => "59",
+                                            :style => "width: 40px;",
+                                            :disabled => false %>
+                <%= settings.select :course_time_ampm, [["AM","AM"],["PM","PM"]], :selected => @course_time_ampm, :style => "width: 20px;" %>
+              <% end %>
+              </td>
+            </tr>
+            </table>
+          </fieldset>
+        <% end %>
+
         <%= render partial: 'additional_settings', locals: { f: f } %>
 
         <% if !@account.site_admin? &&

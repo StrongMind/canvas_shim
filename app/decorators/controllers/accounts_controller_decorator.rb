@@ -10,16 +10,20 @@ AccountsController.class_eval do
 
     show
   end
-  
+
   def strongmind_settings
     grab_holidays
     get_allowed_filetypes
     get_first_assignment_due
     get_last_assignment_due
+    course_start_time = DateTime.parse(get_course_start_time)
+
+    @course_start_time_hour = course_start_time.strftime("%I")
+    @course_start_time_minute = course_start_time.strftime("%M")
+    @course_time_ampm = course_start_time.strftime("%p")
 
     @course_thresh_enabled    = RequirementsService.course_threshold_setting_enabled?
     @assignment_group_thresholds = get_assignment_group_thresholds(ASSIGNMENT_GROUP_NAMES)
-
     if @course_thresh_enabled
       @post_enrollment_thresh_enabled = RequirementsService.post_enrollment_thresholds_enabled?
     end
@@ -28,11 +32,12 @@ AccountsController.class_eval do
 
     @expose_first_and_last_assignment_due_date_field = Rails.configuration.launch_darkly_client.variation("expose-first-and-last-assignment-due-date-field", launch_darkly_user, false)
     @expose_discussion_and_project_threshold_field = Rails.configuration.launch_darkly_client.variation("expose-discussion-and-project-threshold-field", launch_darkly_user, false)
+    @expose_account_level_first_day_start_time = Rails.configuration.launch_darkly_client.variation("expose-account-level-first-day-start-time", launch_darkly_user, false)
 
     js_env({
       HOLIDAYS: @holidays,
       FILETYPES: @allowed_filetypes
-    }) 
+    })
     instructure_settings
   end
 
@@ -51,6 +56,7 @@ AccountsController.class_eval do
       set_holidays if params[:holidays]
       set_first_assignment_due if account_settings_params[:first_assignment_due]
       set_last_assignment_due if account_settings_params[:last_assignment_due]
+      set_course_start_time
     end
 
     instructure_update
@@ -81,12 +87,13 @@ AccountsController.class_eval do
     account_settings_params[:last_assignment_due].present? ? account_settings_params[:last_assignment_due] : false
   end
 
+
   def grab_holidays
     @holidays = SettingsService.get_settings(object: :school, id: 1)['holidays']
     @holidays = @holidays.split(",") if @holidays
     @holidays ||= (ENV["HOLIDAYS"] && @holidays != false) ? ENV["HOLIDAYS"].split(",") : []
   end
-  
+
   def get_allowed_filetypes
     @allowed_filetypes = SettingsService.get_settings(object: 'school', id: 1)['allowed_filetypes']
     @allowed_filetypes = @allowed_filetypes.split(',') if @allowed_filetypes
@@ -139,6 +146,10 @@ AccountsController.class_eval do
     @last_assignment_due = SettingsService.get_settings(object: 'school', id: 1)['last_assignment_due']
   end
 
+  def get_course_start_time
+    SettingsService.get_settings(object: 'school', id: 1)['course_start_time'] || "12:00 AM"
+  end
+
   def set_first_assignment_due
     SettingsService.update_settings(
       object: 'school',
@@ -154,6 +165,20 @@ AccountsController.class_eval do
       id: 1,
       setting: 'last_assignment_due',
       value: last_assignment_due
+    )
+  end
+
+  def set_course_start_time
+    start_time_hour = "#{params[:account][:settings]['course_start_time_hour']}"
+    start_time_minute = "#{params[:account][:settings]['course_start_time_minute']}"
+    ampm = "#{params[:account][:settings]['course_time_ampm']}"
+    start_time = "#{start_time_hour}:#{start_time_minute} #{ampm}"
+
+    SettingsService.update_settings(
+      object: 'school',
+      id: 1,
+      setting: 'course_start_time',
+      value: start_time
     )
   end
 

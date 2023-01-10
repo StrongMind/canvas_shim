@@ -10,9 +10,9 @@ describe Course do
 
   describe "#online_user_count" do
     let(:course) { Course.create }
-    let(:user_1) { User.create } 
-    let(:user_2) { User.create } 
-    let(:user_3) { User.create } 
+    let(:user_1) { User.create }
+    let(:user_2) { User.create }
+    let(:user_3) { User.create }
     let(:enrollent_1) { Enrollment.create(course: course, user: user_1, workflow_state: 'active', type: 'StudentEnrollment') }
     let(:enrollent_2) { Enrollment.create(course: course, user: user_2, workflow_state: 'inactive', type: 'StudentEnrollment') }
     let(:enrollent_3) { Enrollment.create(course: course, user: user_3, workflow_state: 'active', type: 'TeacherEnrollment') }
@@ -154,5 +154,30 @@ describe Course do
         expect(course.snapshot_students.size).to eq(2)
       end
     end
+  end
+
+  describe "#check course start time" do
+    context "course has start time" do
+      before do
+        allow(SettingsService).to receive(:get_settings).and_return('course_start_time' => "5:55 PM")
+      end
+
+      date_param = DateTime.new(2023, 5, 18, 3, 33, 0, Time.zone.now.formatted_offset)
+      let(:course) { Course.create(start_at: date_param) }
+
+      it "matches start time in account settings" do
+        expected_start_time = "17:55 PM"
+        actual_start_time = course.start_at.strftime("%H:%M %p")
+        expect(actual_start_time).to eq(expected_start_time)
+      end
+    end
+
+    context "course start time is nil" do
+      let(:course) { Course.create() }
+      it "creates a course without a start_at" do
+        expect(course.start_at).to be nil
+      end
+    end
+
   end
 end
