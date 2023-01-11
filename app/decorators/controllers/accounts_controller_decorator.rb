@@ -156,7 +156,7 @@ AccountsController.class_eval do
   end
 
   def get_course_end_time
-    SettingsService.get_settings(object: 'school', id: 1)['course_end_time'] || "12:00 AM"
+    SettingsService.get_settings(object: 'school', id: 1)['course_end_time'] || "11:59 PM"
   end
 
   def set_first_assignment_due
