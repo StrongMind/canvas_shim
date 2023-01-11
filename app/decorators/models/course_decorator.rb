@@ -8,6 +8,7 @@ Course.class_eval do
 
 
   before_create :set_course_start_time_from_school
+  before_create :set_course_end_time_from_school
 
   after_commit -> { PipelineService.publish_as_v2(self) }
   after_create -> { RequirementsService.set_school_thresholds_on_course(course: self) }
@@ -109,9 +110,22 @@ Course.class_eval do
       course_start_date_time = DateTime.parse(course_start_time)
       @course_start_time_hour = course_start_date_time.hour.to_i
       @course_start_time_minute = course_start_date_time.minute.to_i
-      @course_time_ampm = course_start_date_time.strftime("%p")
+      @course_start_time_ampm = course_start_date_time.strftime("%p")
 
       self.start_at = DateTime.new(self.start_at.year, self.start_at.month, self.start_at.day, @course_start_time_hour, @course_start_time_minute, 0, Time.zone.now.formatted_offset)
+    end
+  end
+
+  def set_course_end_time_from_school
+    unless self.end_at.nil?
+      course_end_time = SettingsService.get_settings(object: 'school', id: 1)['course_end_time']
+      return if course_end_time.nil?
+      course_end_date_time = DateTime.parse(course_end_time)
+      @course_end_time_hour = course_end_date_time.hour.to_i
+      @course_end_time_minute = course_end_date_time.minute.to_i
+      @course_end_time_ampm = course_end_date_time.strftime("%p")
+
+      self.end_at = DateTime.new(self.end_at.year, self.end_at.month, self.end_at.day, @course_end_time_hour, @course_end_time_minute, 0, Time.zone.now.formatted_offset)
     end
   end
 
