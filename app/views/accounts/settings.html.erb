@@ -452,7 +452,7 @@ TEXT
 
         <% if @expose_account_level_first_day_start_time %>
           <fieldset>
-            <legend><%= t(:course_start_time, 'Default Course Start Time') %>
+            <legend><%= t(:course_start_time, 'Default Course Access Times') %>
             </legend>
               <table>
             <tr>
@@ -478,13 +478,6 @@ TEXT
               </td>
             </tr>
             </table>
-          </fieldset>
-        <% end %>
-
-        <% if @expose_account_level_first_day_start_time %>
-          <fieldset>
-            <legend><%= t(:course_end_time, 'Default Course End Time') %>
-            </legend>
             <table>
               <tr>
                 <td class="form-label"><%= f.blabel :course_end_time, :en => "Ends" %></td>
