@@ -1,19 +1,19 @@
 <%
-# Copyright (C) 2011 - present Instructure, Inc.
-#
-# This file is part of Canvas.
-#
-# Canvas is free software: you can redistribute it and/or modify it under
-# the terms of the GNU Affero General Public License as published by the Free
-# Software Foundation, version 3 of the License.
-#
-# Canvas is distributed in the hope that it will be useful, but WITHOUT ANY
-# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-# A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
-# details.
-#
-# You should have received a copy of the GNU Affero General Public License along
-# with this program. If not, see <http://www.gnu.org/licenses/>.
+  # Copyright (C) 2011 - present Instructure, Inc.
+  #
+  # This file is part of Canvas.
+  #
+  # Canvas is free software: you can redistribute it and/or modify it under
+  # the terms of the GNU Affero General Public License as published by the Free
+  # Software Foundation, version 3 of the License.
+  #
+  # Canvas is distributed in the hope that it will be useful, but WITHOUT ANY
+  # WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+  # A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+  # details.
+  #
+  # You should have received a copy of the GNU Affero General Public License along
+  # with this program. If not, see <http://www.gnu.org/licenses/>.
 %>
 
 <%
@@ -42,16 +42,18 @@
 <h1 class='screenreader-only'><%= t(:page_header_title, "Account Settings") %></h1>
 <% content_for :stylesheets do %>
   <style type="text/css" media="screen">
-    fieldset {
-      margin: 2em 0;
-    }
-    fieldset.nested {
-      margin-top: 0;
-      margin-left: 20px;
-    }
-    legend{
-      font-size: 1.1em;
-    }
+      fieldset {
+          margin: 2em 0;
+      }
+
+      fieldset.nested {
+          margin-top: 0;
+          margin-left: 20px;
+      }
+
+      legend {
+          font-size: 1.1em;
+      }
   </style>
 <% end %>
 
@@ -64,7 +66,8 @@
       <li><a href="#tab-quotas" id="tab-quotas-link"><%= t(:tab_quotas, "Quotas") %></a></li>
     <% end %>
     <% if can_do(@context, @current_user, :manage_account_settings) && @account.root_account? && !@account.site_admin? %>
-      <li><a href="#tab-notifications" id="tab-notifications-link"><%= t(:tab_notifications, "Notifications") %></a></li>
+      <li><a href="#tab-notifications" id="tab-notifications-link"><%= t(:tab_notifications, "Notifications") %></a>
+      </li>
     <% end %>
     <li><a href="#tab-users" id="tab-users-link"><%= t(:tab_admins, "Admins") %></a></li>
     <li><a href="#tab-announcements" id="tab-announcements-link"><%= t(:tab_announcements, "Announcements") %></a></li>
@@ -84,7 +87,7 @@
   <% if can_do(@context, @current_user, :manage_account_settings) %>
     <div id="tab-settings">
       <h2 class="screenreader-only"><%= t('headings.settings', "Account Settings") %></h2>
-      <%= form_for :account, :url => account_url(@account), :html => {:method => :put, :id => "account_settings", :class => 'account_settings'} do |f| %>
+      <%= form_for :account, :url => account_url(@account), :html => { :method => :put, :id => "account_settings", :class => 'account_settings' } do |f| %>
         <fieldset id="account_settings">
           <legend><%= t(:account_settings_title, "Account Settings") %></legend>
           <table class="formtable">
@@ -97,7 +100,7 @@
                 <label>Domain Name</label>
               </td>
               <td>
-                  <div id="domains-form-container">
+                <div id="domains-form-container">
                   <%
                     begin
                       domains = JSON.parse(@account.settings[:domains])
@@ -106,23 +109,23 @@
                     end
                   %>
                   <% if domains.length > 0 -%>
-                      <%  domains.each do |domain| -%>
-                        <% unless domain == "" -%>
-                          <div>
-                            <input name="account[settings][domains][]" type="text" value="<%= domain %>" class="same-width-as-select"/>
-                          </div>
-                        <% end -%>
+                    <% domains.each do |domain| -%>
+                      <% unless domain == "" -%>
+                        <div>
+                          <input name="account[settings][domains][]" type="text" value="<%= domain %>" class="same-width-as-select"/>
+                        </div>
                       <% end -%>
+                    <% end -%>
                   <% else %>
                     <div>
                       <input name="account[settings][domains][]" type="text" class="same-width-as-select"/>
                     </div>
                   <% end -%>
-                  </div>
-                  <div>
-                    <a id="add-domain-input" class="Button Button--secondary">Add Another Domain</a>
-                  </div>
-                  <br>
+                </div>
+                <div>
+                  <a id="add-domain-input" class="Button Button--secondary">Add Another Domain</a>
+                </div>
+                <br>
               </td>
             </tr>
             <script type="text/javascript">
@@ -131,11 +134,13 @@
                     template.innerHTML = html;
                     return template.content.firstChild;
                 }
-                function addInput(){
-                  let input = '<div><input name="account[settings][domains][]" type="text" class="same-width-as-select"/></div>';
-                  let domainInput = htmlToElement(input)
-                  document.getElementById("domains-form-container").appendChild(domainInput)
+
+                function addInput() {
+                    let input = '<div><input name="account[settings][domains][]" type="text" class="same-width-as-select"/></div>';
+                    let domainInput = htmlToElement(input)
+                    document.getElementById("domains-form-container").appendChild(domainInput)
                 }
+
                 let el = document.getElementById("add-domain-input");
                 el.addEventListener('click', addInput, false);
             </script>
@@ -154,20 +159,20 @@
               </tr>
             <% end %>
             <% if available_locales.size > 1 %>
-            <tr>
-              <td><%= f.blabel :default_locale, :default_language, :en => "Default Language" %></td>
-              <td>
-                <% no_language = t(:no_language_preference, "Not set (defaults to %{language})", :language => available_locales[infer_locale(:context => @context.parent_account)]) %>
-                <%= f.select :default_locale, [[no_language, nil]] + available_locales.invert.sort, {:selected => @context.default_locale}, {:class => 'locale'} %>
-                <%= render :partial => 'shared/locale_warning' %>
-                <p class="unbreakable"><%= mt :transifex_message, <<-TEXT, :transifex_url => "https://www.transifex.com/instructure/canvas-crowdsource/"
+              <tr>
+                <td><%= f.blabel :default_locale, :default_language, :en => "Default Language" %></td>
+                <td>
+                  <% no_language = t(:no_language_preference, "Not set (defaults to %{language})", :language => available_locales[infer_locale(:context => @context.parent_account)]) %>
+                  <%= f.select :default_locale, [[no_language, nil]] + available_locales.invert.sort, { :selected => @context.default_locale }, { :class => 'locale' } %>
+                  <%= render :partial => 'shared/locale_warning' %>
+                  <p class="unbreakable"><%= mt :transifex_message, <<-TEXT, :transifex_url => "https://www.transifex.com/instructure/canvas-crowdsource/"
 Join the [Canvas Translation Community](%{transifex_url})
-TEXT
-                %>
-                </p>
-                <p style="font-size: 0.9em;"><%= t(:default_language_description, "This will override any browser/OS language settings. Preferred languages can still be set at the course/user level.") %></p>
-              </td>
-            </tr>
+                                             TEXT
+                  %>
+                  </p>
+                  <p style="font-size: 0.9em;"><%= t(:default_language_description, "This will override any browser/OS language settings. Preferred languages can still be set at the course/user level.") %></p>
+                </td>
+              </tr>
             <% end %>
             <% if @account.root_account? %>
               <tr>
@@ -192,16 +197,16 @@ TEXT
                     <td><%= settings.blabel :self_enrollment, :en => "Allow Self-Enrollment" %></td>
                     <td>
                       <%= settings.select :self_enrollment, [
-                              [t(:never_allow_self_enrollment_option, 'Never'), ''],
-                              [t(:self_enroll_for_manually_created_courses_option, 'For Manually-Created Courses'), 'manually_created'],
-                              [t(:self_enroll_for_any_courses_option, 'For Any Courses'), 'any']
-                        ], :selected => @account.settings[:self_enrollment] %>
+                        [t(:never_allow_self_enrollment_option, 'Never'), ''],
+                        [t(:self_enroll_for_manually_created_courses_option, 'For Manually-Created Courses'), 'manually_created'],
+                        [t(:self_enroll_for_any_courses_option, 'For Any Courses'), 'any']
+                      ], :selected => @account.settings[:self_enrollment] %>
                     </td>
                   </tr>
 
                   <% unless @account.non_canvas_auth_configured?
-                    # if the account has a account_authorization_config,
-                    # we'll control this setting from that page
+                       # if the account has a account_authorization_config,
+                       # we'll control this setting from that page
                   %>
                     <tr>
                       <td>
@@ -237,12 +242,14 @@ TEXT
                         <span aria-hidden="true"><i class="icon-plus"></i></span>
                         <span class="screenreader-only">Add a new allowed filetype</span>
                       </a>
-                      <p id="update_settings_hint" style="color: green; display: none;"><small>Added! Don't forget to click Update Settings below!</small></p>
+                      <p id="update_settings_hint" style="color: green; display: none;">
+                        <small>Added! Don't forget to click Update Settings below!</small></p>
 
                       <dl id="filetypes">
                         <% if @allowed_filetypes %>
                           <% @allowed_filetypes.each do |filetype| %>
-                            <dd class="filetype-badge ic-badge ic-badge--neutral" filetype="<%= filetype %>"><%= filetype %> <sup><a href="#" class="del-filetype">x</a></sup></dd>
+                            <dd class="filetype-badge ic-badge ic-badge--neutral" filetype="<%= filetype %>"><%= filetype %>
+                              <sup><a href="#" class="del-filetype">x</a></sup></dd>
                           <% end %>
                         <% end %>
                       </dl>
@@ -262,24 +269,25 @@ TEXT
                     <td>
                       <dl id="holidates">
                         <% @holidays.each do |holiday| %>
-                          <dd class="holiday-badge ic-badge ic-badge--neutral"><%= DateTime.parse(holiday).strftime("%b %e, %Y") %> <sup><a href="#" class="del-date">x</a></sup></dd>
+                          <dd class="holiday-badge ic-badge ic-badge--neutral"><%= DateTime.parse(holiday).strftime("%b %e, %Y") %>
+                            <sup><a href="#" class="del-date">x</a></sup></dd>
                         <% end %>
                       </dl>
                     </td>
                   </tr>
                   <tr>
                     <td colspan="2"><%= settings.check_box :prevent_course_renaming_by_teachers, :checked => @account.settings[:prevent_course_renaming_by_teachers] %>
-                    <%= settings.label :prevent_course_renaming_by_teachers, :en => "Don't let teachers rename their courses" %>
+                      <%= settings.label :prevent_course_renaming_by_teachers, :en => "Don't let teachers rename their courses" %>
                     </td>
                   </tr>
                   <tr>
                     <td colspan="2"><%= settings.check_box :allow_sending_scores_in_emails, :checked => @account.settings[:allow_sending_scores_in_emails] != false %>
-                    <%= settings.label :allow_sending_scores_in_emails, :en => "Students can opt-in to receiving scores in email notifications" %>
+                      <%= settings.label :allow_sending_scores_in_emails, :en => "Students can opt-in to receiving scores in email notifications" %>
                     </td>
                   </tr>
                   <% if @account.grants_right?(@current_user, :manage_site_settings) %>
                     <tr>
-                      <td colspan="2"><%= settings.check_box :include_students_in_global_survey, checked: @account.include_students_in_global_survey?%>
+                      <td colspan="2"><%= settings.check_box :include_students_in_global_survey, checked: @account.include_students_in_global_survey? %>
                         <%= settings.label :include_students_in_global_survey, en: "Include students in global surveys" %>
                       </td>
                     </tr>
@@ -299,7 +307,7 @@ TEXT
                   <% disabled = hash[:locked] && hash[:inherited] %>
                   <tr>
                     <td colspan="2"><%= r.check_box :value, :checked => hash[:value], :disabled => disabled %>
-                      <%= r.label :value , t("Restrict students from accessing courses before start date") %>
+                      <%= r.label :value, t("Restrict students from accessing courses before start date") %>
                     </td>
                   </tr>
                   <% unless disabled %>
@@ -380,39 +388,39 @@ TEXT
             <% end %>
           </table>
         </fieldset>
-        
-        <% if @expose_discussion_and_project_threshold_field %>
-        <fieldset>
-          <legend><%= t(:passing_threshold_settings, 'Passing Threshold Settings') %>
-            <a id="edit_passing_thresholds_btn" class="Button Button--icon-action">
-              <i class="icon-edit"></i>
-            </a>
-          </legend>
 
-          <table class="formtable">
-            <%= f.fields_for :settings do |settings| %>
+        <% if @expose_discussion_and_project_threshold_field %>
+          <fieldset>
+            <legend><%= t(:passing_threshold_settings, 'Passing Threshold Settings') %>
+              <a id="edit_passing_thresholds_btn" class="Button Button--icon-action">
+                <i class="icon-edit"></i>
+              </a>
+            </legend>
+
+            <table class="formtable">
+              <%= f.fields_for :settings do |settings| %>
                 <tr>
-                  <%= render partial: "assignment_groups_thresholds", locals: {settings: settings} %>
+                  <%= render partial: "assignment_groups_thresholds", locals: { settings: settings } %>
                 </tr>
 
                 <tr>
                   <td colspan="2"><%= settings.check_box :enable_thresholds_in_courses, :checked => @course_thresh_enabled, :title => "Allow teachers to add custom passing thresholds to courses" %>
-                  <%= settings.label :enable_thresholds_in_courses, :en => "Enable teachers to set minimum score thresholds" %>
+                    <%= settings.label :enable_thresholds_in_courses, :en => "Enable teachers to set minimum score thresholds" %>
                   </td>
                 </tr>
                 <tr>
                   <td colspan="2" class="sub_checkbox"><%= settings.check_box :enable_post_enrollment_threshold_updates, :checked => @post_enrollment_thresh_enabled, :disabled => !@course_thresh_enabled %>
-                  <%= settings.label :enable_post_enrollment_threshold_updates, :en => "Allow passing threshold adjustments once the first student starts a course" %>
+                    <%= settings.label :enable_post_enrollment_threshold_updates, :en => "Allow passing threshold adjustments once the first student starts a course" %>
                   </td>
                 </tr>
                 <tr>
                   <td colspan="2" class="sub_checkbox"><%= settings.check_box :prevent_module_editing, :checked => @module_editing_disabled, :title => "Prevent teachers from editing passing requirements for a unit" %>
-                  <%= settings.label :prevent_module_editing, :en => "Prevent teachers from adjusting passing thresholds at the unit level" %>
+                    <%= settings.label :prevent_module_editing, :en => "Prevent teachers from adjusting passing thresholds at the unit level" %>
                   </td>
                 </tr>
-            <% end %>
-          </table>
-        </fieldset>
+              <% end %>
+            </table>
+          </fieldset>
         <% end %>
 
 
@@ -425,11 +433,11 @@ TEXT
                   <td><%= settings.blabel :first_assignment_due, :en => "First Assignment Due" %></td>
                   <td>
                     <%= settings.number_field :first_assignment_due,
-                                            :value => @first_assignment_due || 1,
-                                            :min => "0",
-                                            :max => "31",
-                                            :style => "width: 40px;", 
-                                            :disabled => false %>
+                                              :value => @first_assignment_due || 1,
+                                              :min => "0",
+                                              :max => "31",
+                                              :style => "width: 40px;",
+                                              :disabled => false %>
                     School day(s) after first day
                   </td>
                 </tr>
@@ -437,11 +445,11 @@ TEXT
                   <td><%= settings.blabel :last_assignment_due, :en => "Last Assignment Due" %></td>
                   <td>
                     <%= settings.number_field :last_assignment_due,
-                                            :value => @last_assignment_due || 2,
-                                            :min => "0",
-                                            :max => "31",
-                                            :style => "width: 40px;", 
-                                            :disabled => false %>
+                                              :value => @last_assignment_due || 2,
+                                              :min => "0",
+                                              :max => "31",
+                                              :style => "width: 40px;",
+                                              :disabled => false %>
                     School day(s) before last day
                   </td>
                 </tr>
@@ -454,33 +462,36 @@ TEXT
           <fieldset>
             <legend><%= t(:course_start_time, 'Default Course Access Times') %>
             </legend>
-              <table>
-            <tr>
-              <td class="form-label"><%= f.blabel :course_start_time, :en => "Starts" %></td>
-              <td class="formtable small-select">
-                <%= f.fields_for :settings do |settings| %>
-                  <%= settings.number_field :course_start_time_hour,
-                                            :value => @course_start_time_hour,
-                                            :default => @course_start_time_hour,
-                                            :min => "01",
-                                            :max => "12",
-                                            :style => "width: 40px;",
-                                            :disabled => false %> :
-                  <%= settings.number_field :course_start_time_minute,
-                                            :value => @course_start_time_minute,
-                                            :default => @course_start_time_minute,
-                                            :min => "00",
-                                            :max => "59",
-                                            :style => "width: 40px;",
-                                            :disabled => false %>
-                <%= settings.select :course_start_time_ampm, [["AM","AM"],["PM","PM"]], :selected => @course_start_time_ampm, :style => "width: 20px;" %>
-              <% end %>
-              </td>
-            </tr>
-            </table>
             <table>
               <tr>
-                <td class="form-label"><%= f.blabel :course_end_time, :en => "Ends" %></td>
+                <td colspan=2>
+                  <p style="font-size: 0.9em;"><%= t("This setting affects when a student will be able to access a course on the first day and when access closes on the last day.") %></p>
+                </td>
+              </tr>
+              <tr>
+                <td class="form-label"><%= f.blabel :course_start_time, :en => "Course Start Time" %></td>
+                <td class="formtable small-select">
+                  <%= f.fields_for :settings do |settings| %>
+                    <%= settings.number_field :course_start_time_hour,
+                                              :value => @course_start_time_hour,
+                                              :default => @course_start_time_hour,
+                                              :min => "01",
+                                              :max => "12",
+                                              :style => "width: 40px;",
+                                              :disabled => false %> :
+                    <%= settings.number_field :course_start_time_minute,
+                                              :value => @course_start_time_minute,
+                                              :default => @course_start_time_minute,
+                                              :min => "00",
+                                              :max => "59",
+                                              :style => "width: 40px;",
+                                              :disabled => false %>
+                    <%= settings.select :course_start_time_ampm, [["AM", "AM"], ["PM", "PM"]], :selected => @course_start_time_ampm, :style => "width: 20px;" %>
+                  <% end %>
+                </td>
+              </tr>
+              <tr>
+                <td class="form-label"><%= f.blabel :course_end_time, :en => "Course End Time" %></td>
                 <td class="formtable small-select">
                   <%= f.fields_for :settings do |settings| %>
                     <%= settings.number_field :course_end_time_hour,
@@ -497,7 +508,7 @@ TEXT
                                               :max => "59",
                                               :style => "width: 40px;",
                                               :disabled => false %>
-                    <%= settings.select :course_end_time_ampm, [["AM","AM"],["PM","PM"]], :selected => @course_end_time_ampm, :style => "width: 20px;" %>
+                    <%= settings.select :course_end_time_ampm, [["AM", "AM"], ["PM", "PM"]], :selected => @course_end_time_ampm, :style => "width: 20px;" %>
                   <% end %>
                 </td>
               </tr>
@@ -508,14 +519,14 @@ TEXT
         <%= render partial: 'additional_settings', locals: { f: f } %>
 
         <% if !@account.site_admin? &&
-               @account.root_account? &&
-               @account.feature_enabled?(:google_docs_domain_restriction) &&
-               @account.grants_right?(@current_user, :manage_site_settings) %>
+          @account.root_account? &&
+          @account.feature_enabled?(:google_docs_domain_restriction) &&
+          @account.grants_right?(@current_user, :manage_site_settings) %>
           <fieldset id="google-docs-domain">
             <legend><%= t(:google_docs_domain, 'Allowed Google Docs Domain') %></legend>
 
             <%= f.fields_for :settings do |settings| %>
-              <%= settings.label      :google_docs_domain, t('labels.domain', 'Domain:') %>
+              <%= settings.label :google_docs_domain, t('labels.domain', 'Domain:') %>
               <%= settings.text_field :google_docs_domain, placeholder: 'gmail.com', value: @account.settings[:google_docs_domain] %>
             <% end %>
           </fieldset>
@@ -523,30 +534,33 @@ TEXT
 
         <% unless @account.site_admin? %>
           <fieldset>
-            <legend><%= t(:quiz_ip_filters_title, "Quiz IP Address Filters")%>
+            <legend><%= t(:quiz_ip_filters_title, "Quiz IP Address Filters") %>
               <%= link_to("<i class='icon-question standalone-icon'></i>".html_safe, '#', :class => 'ip_help_link no-hover', :title => t(:quiz_ip_filters_help_tooltip, "What are Quiz IP Filters?")) %></legend>
 
             <div id="ip_filters_dialog" style="display: none;">
               <h2><%= t(:quiz_ip_filters_help_title, "What are Quiz IP Filters?") %></h2>
               <%= mt(:quiz_ip_filters_help_message,
-              "Quiz IP filters are a way to limit access to quizzes to computers in a specified IP range.\n\n" +
+                     "Quiz IP filters are a way to limit access to quizzes to computers in a specified IP range.\n\n" +
 
-              "Specify a set of IP address filters that teachers can use to " +
-              "protect access to quizzes.  Filters can be a comma-separated " +
-              "list of addresses, or an address followed by a mask " +
-              "(\"192.168.217.1/24\" or \"192.168.217.1/255.255.255.0\").\"") %>
+                       "Specify a set of IP address filters that teachers can use to " +
+                       "protect access to quizzes.  Filters can be a comma-separated " +
+                       "list of addresses, or an address followed by a mask " +
+                       "(\"192.168.217.1/24\" or \"192.168.217.1/255.255.255.0\").\"") %>
             </div>
             <table class="formtable">
               <tbody id="ip_filters">
-                <% ((@account.settings[:ip_filters] || {}).sort_by(&:first) << [nil, nil]).each do |name, filter| %>
-                  <tr class="ip_filter <%= raw ' blank" style="display: none;' if name.nil? %>">
-                    <td> <label> <%= t("Name:") %></label> <input aria-label="<%= t("Name") %>" type="text" class="name" value="<%= name %>"/></td>
-                    <td> <label> <%= t("Filter:") %></label> <input aria-label="<%= t("Filter") %>" type="text" class="value" value="<%= filter %>" maxlength="255"/></td>
-                    <td>
-                      <a href="#" title="<%= t(:quiz_ip_filters_delete, "Remove Filter") %>" class="delete_filter_link"><i class="icon-end standalone-icon"></i></a>
-                    </td>
-                  </tr>
-                <% end %>
+              <% ((@account.settings[:ip_filters] || {}).sort_by(&:first) << [nil, nil]).each do |name, filter| %>
+                <tr class="ip_filter <%= raw ' blank" style="display: none;' if name.nil? %>">
+                  <td><label> <%= t("Name:") %></label>
+                    <input aria-label="<%= t("Name") %>" type="text" class="name" value="<%= name %>"/></td>
+                  <td><label> <%= t("Filter:") %></label>
+                    <input aria-label="<%= t("Filter") %>" type="text" class="value" value="<%= filter %>" maxlength="255"/>
+                  </td>
+                  <td>
+                    <a href="#" title="<%= t(:quiz_ip_filters_delete, "Remove Filter") %>" class="delete_filter_link"><i class="icon-end standalone-icon"></i></a>
+                  </td>
+                </tr>
+              <% end %>
               </tbody>
             </table>
             <a href="#" class="icon-add add_ip_filter_link">
@@ -609,11 +623,12 @@ TEXT
                   <%= settings.label :global_includes, :en => "Custom CSS/JavaScript overrides" %>
                   <div id="global_includes_warning_message" class="account_settings__help-text">
                     <p>
-                      <%= t ("Custom CSS and Javascript may cause accessibility issues or conflicts with future Canvas updates!")%>
+                      <%= t ("Custom CSS and Javascript may cause accessibility issues or conflicts with future Canvas updates!") %>
                     </p>
                     <p>
                       <%= t do %>
-                      Before implementing custom CSS or Javascript, please refer to <a href="https://community.canvaslms.com/docs/DOC-3010" target="_blank"> our documentation</a>.
+                        Before implementing custom CSS or Javascript, please refer to
+                        <a href="https://community.canvaslms.com/docs/DOC-3010" target="_blank"> our documentation</a>.
                       <% end %>
                     </p>
                   </div>
@@ -643,13 +658,13 @@ TEXT
                       <%= link_to(image_tag('warning.png', :alt => ''), '#',
                                   :class => 'open_registration_delegated_warning_link no-hover',
                                   :title => t(:open_registration_delegated_warning_tooltip,
-                                  "An External Identity Provider is Enabled"))
-                                %>
+                                              "An External Identity Provider is Enabled"))
+                      %>
                     </legend>
 
                     <div id="open_registration_delegated_warning_dialog" style="display: none;">
-                        <%= t(:open_registration_delegated_warning_message,
-                        "An external identity provider is enabled, and users created via open registration may not be able to log in unless
+                      <%= t(:open_registration_delegated_warning_message,
+                            "An external identity provider is enabled, and users created via open registration may not be able to log in unless
                         the external identity provider's login form has a link back to %{url}.", :url => canvas_login_url) %>
                     </div>
                   <% end %>
@@ -662,12 +677,12 @@ TEXT
 
               <div>
                 <%= settings.check_box :edit_institution_email, :checked => @account.edit_institution_email? %>
-                <%= settings.label     :edit_institution_email, :en => "Users can delete their institution-assigned email address" %>
+                <%= settings.label :edit_institution_email, :en => "Users can delete their institution-assigned email address" %>
               </div>
 
               <div>
                 <%= settings.check_box :author_email_in_notifications, :checked => @account.author_email_in_notifications? %>
-                <%= settings.label     :author_email_in_notifications, :en => "Show the email address of sender for user interaction Notifications" %>
+                <%= settings.label :author_email_in_notifications, :en => "Show the email address of sender for user interaction Notifications" %>
               </div>
             <% end %>
             <% unless @account.site_admin? %>
@@ -684,7 +699,7 @@ TEXT
             <% end %>
           <% end %>
           <%= f.fields_for :services do |services| %>
-            <% Account.services_exposed_to_ui_hash(:setting, @current_user, @account).sort_by { |k,h| Canvas::ICU.collation_key(h[:name]) }.each do |key, service| %>
+            <% Account.services_exposed_to_ui_hash(:setting, @current_user, @account).sort_by { |k, h| Canvas::ICU.collation_key(h[:name]) }.each do |key, service| %>
               <div>
                 <%= services.check_box key, :checked => @account.service_enabled?(key) %>
                 <%= services.label key, service[:name] + " " %>
@@ -694,11 +709,11 @@ TEXT
         </fieldset>
 
         <% unless @account.site_admin? %>
-            <% if @account.feature_enabled?(:new_sis_integrations) %>
-                <%= render partial: 'sis_integration_settings', locals: { f: f } %>
-            <% else %>
-                <%= render partial: 'sis_integration_settings_old', locals: { f: f } %>
-            <% end %>
+          <% if @account.feature_enabled?(:new_sis_integrations) %>
+            <%= render partial: 'sis_integration_settings', locals: { f: f } %>
+          <% else %>
+            <%= render partial: 'sis_integration_settings_old', locals: { f: f } %>
+          <% end %>
         <% end %>
 
         <% if @account.root_account? && !@account.site_admin? && show_feedback_link? %>
@@ -776,7 +791,7 @@ TEXT
                 <tr>
                   <td><%= f.blabel :originality_report_visibility, :en => "Students can see the originality report" %></td>
                   <td>
-                    <%= f.select :turnitin_originality, options_for_select(turnitin_originality_options, @account.turnitin_originality)%>
+                    <%= f.select :turnitin_originality, options_for_select(turnitin_originality_options, @account.turnitin_originality) %>
                   </td>
                 </tr>
               </table>
@@ -788,7 +803,7 @@ TEXT
           <fieldset>
             <legend><%= t(:enabled_web_serices_title, "Enabled Web Services") %></legend>
             <%= f.fields_for :services do |services| %>
-              <% exposed_services.sort_by { |k,h| Canvas::ICU.collation_key(h[:name]) }.each do |key, service| %>
+              <% exposed_services.sort_by { |k, h| Canvas::ICU.collation_key(h[:name]) }.each do |key, service| %>
                 <div>
                   <%= services.check_box key, :checked => @account.service_enabled?(key) %>
                   <%= services.label key, service[:name] + " " %>
@@ -810,7 +825,7 @@ not supported by the Canvas document previewer.
 By using this service you
 acknowledge that you have read and agreed to the
 [Google Docs Viewer Terms of Service](%{terms_url}).
-                  TEXT
+                    TEXT
                 %>
               </div>
             </div>
@@ -855,7 +870,7 @@ acknowledge that you have read and agreed to the
 
   <% if can_do(@context, @current_user, :manage_account_settings) && @account.root_account? && !@account.site_admin? %>
     <div id="tab-notifications">
-      <%= form_for :account, :url => account_url(@account), :html => {:method => :put, :id => "account_settings_notifications"} do |f| %>
+      <%= form_for :account, :url => account_url(@account), :html => { :method => :put, :id => "account_settings_notifications" } do |f| %>
         <h2><%= t(:email_notification_from_settings, 'E-mail Notification "From" Settings') %></h2>
         <p><%= t(:email_notification_from_description, "This setting allows the Admin to brand or label the 'From' text on all notifications sent from Canvas for this Account.") %></p>
         <%= f.fields_for :settings do |settings| %>
@@ -869,27 +884,27 @@ acknowledge that you have read and agreed to the
             <strong><%= t 'notifications.example', 'Example:' %></strong>
             <blockquote>
               <table class="formtable" style='margin-left: 1.5em;'>
-              <tr>
-                <td><%= t 'notifications.from', 'From' %></td>
-                <td><%= HostUrl.outgoing_email_default_name %> <%= '<notifications@instructure.com>' %></td>
-              </tr>
-              <tr>
-                <td><%= t 'notifications.subject', 'Subject' %></td>
-                <td><%= t 'notifications.sample_subject', 'Grade Changed: Check In Survey, Testing Course' %></td>
-              </tr>
-              <tr>
-                <td><%= t 'notifications.email_date', 'Date' %></td>
-                <td><%= datetime_string(Time.zone.now) %></td>
-              </tr>
-              <tr>
-                <td><%= t 'notifications.email_to', 'To' %></td>
-                <td><%= 'recipient@instructure.com' %></td>
-              </tr>
-              <tr>
-                <td><%= t 'notifications.email_reply_to', 'Reply-To' %></td>
-                <td><%= 'notifications+e79df3ljk09s3jkl09ssljk3lkj2l-10191633@instructure.com' %></td>
-              </tr>
-            </table>
+                <tr>
+                  <td><%= t 'notifications.from', 'From' %></td>
+                  <td><%= HostUrl.outgoing_email_default_name %> <%= '<notifications@instructure.com>' %></td>
+                </tr>
+                <tr>
+                  <td><%= t 'notifications.subject', 'Subject' %></td>
+                  <td><%= t 'notifications.sample_subject', 'Grade Changed: Check In Survey, Testing Course' %></td>
+                </tr>
+                <tr>
+                  <td><%= t 'notifications.email_date', 'Date' %></td>
+                  <td><%= datetime_string(Time.zone.now) %></td>
+                </tr>
+                <tr>
+                  <td><%= t 'notifications.email_to', 'To' %></td>
+                  <td><%= 'recipient@instructure.com' %></td>
+                </tr>
+                <tr>
+                  <td><%= t 'notifications.email_reply_to', 'Reply-To' %></td>
+                  <td><%= 'notifications+e79df3ljk09s3jkl09ssljk3lkj2l-10191633@instructure.com' %></td>
+                </tr>
+              </table>
             </blockquote>
           </div>
           <div>
@@ -908,38 +923,40 @@ acknowledge that you have read and agreed to the
           <div style='padding-left: 2em;'>
             <strong><%= t 'notifications.example', 'Example:' %></strong>
             <blockquote>
-            <table class="formtable" style='margin-left: 1.5em;'>
-              <tr>
-                <td><%= t 'notifications.from', 'From' %></td>
-                <td><strong id='custom_default_name_display'></strong> <%= '<notifications@instructure.com>' %></td>
-              </tr>
-              <tr>
-                <td><%= t 'notifications.subject', 'Subject' %></td>
-                <td><%= t 'notifications.sample_subject', 'Grade Changed: Check In Survey, Testing Course' %></td>
-              </tr>
-              <tr>
-                <td><%= t 'notifications.email_date', 'Date' %></td>
-                <td><%= datetime_string(Time.zone.now) %></td>
-              </tr>
-              <tr>
-                <td><%= t 'notifications.email_to', 'To' %></td>
-                <td><%= 'recipient@instructure.com' %></td>
-              </tr>
-              <tr>
-                <td><%= t 'notifications.email_reply_to', 'Reply-To' %></td>
-                <td><%= 'notifications+e79df3ljk09s3jkl09ssljk3lkj2l-10191633@instructure.com' %></td>
-              </tr>
-            </table>
+              <table class="formtable" style='margin-left: 1.5em;'>
+                <tr>
+                  <td><%= t 'notifications.from', 'From' %></td>
+                  <td><strong id='custom_default_name_display'></strong> <%= '<notifications@instructure.com>' %></td>
+                </tr>
+                <tr>
+                  <td><%= t 'notifications.subject', 'Subject' %></td>
+                  <td><%= t 'notifications.sample_subject', 'Grade Changed: Check In Survey, Testing Course' %></td>
+                </tr>
+                <tr>
+                  <td><%= t 'notifications.email_date', 'Date' %></td>
+                  <td><%= datetime_string(Time.zone.now) %></td>
+                </tr>
+                <tr>
+                  <td><%= t 'notifications.email_to', 'To' %></td>
+                  <td><%= 'recipient@instructure.com' %></td>
+                </tr>
+                <tr>
+                  <td><%= t 'notifications.email_reply_to', 'Reply-To' %></td>
+                  <td><%= 'notifications+e79df3ljk09s3jkl09ssljk3lkj2l-10191633@instructure.com' %></td>
+                </tr>
+              </table>
             </blockquote>
           </div>
 
           <h2><%= t('notifications.external_services', 'Notifications Sent to External Services') %></h2>
           <table class="formtable">
             <tr>
-              <td><input type="checkbox" id="account_settings_external_notification_warning_checkbox" <%= 'checked="checked"' if @account.settings[:external_notification_warning] %> /></td>
+              <td>
+                <input type="checkbox" id="account_settings_external_notification_warning_checkbox" <%= 'checked="checked"' if @account.settings[:external_notification_warning] %> />
+              </td>
               <td>
                 <label for="account_settings_external_notification_warning_checkbox"><%= t('notifications.external_services_label', 'Display one time pop-up warning on Notification Preferences page.') %></label>
-                <input type="hidden" name="account[settings][external_notification_warning]" id="account_settings_external_notification_warning" value="<%= @account.settings[:external_notification_warning] ? 1 : 0 %>" />
+                <input type="hidden" name="account[settings][external_notification_warning]" id="account_settings_external_notification_warning" value="<%= @account.settings[:external_notification_warning] ? 1 : 0 %>"/>
               </td>
             </tr>
           </table>
@@ -948,7 +965,7 @@ acknowledge that you have read and agreed to the
             <tr>
               <td>
                 <b><%= t('notifications.external_services_warning_label', 'Pop-up Message Content:') %></b>
-                <blockquote><%= t('notifications.external_services_warning', 'Notice: Some notifications may contain confidential information. Selecting to receive notifications at an email other than your institution provided address may result in sending sensitive Canvas course and group information outside of the institutional system.')%></blockquote>
+                <blockquote><%= t('notifications.external_services_warning', 'Notice: Some notifications may contain confidential information. Selecting to receive notifications at an email other than your institution provided address may result in sending sensitive Canvas course and group information outside of the institutional system.') %></blockquote>
               </td>
             </tr>
           </table>
@@ -973,16 +990,17 @@ acknowledge that you have read and agreed to the
     </ul>
     <% unless available_roles.empty? %>
       <% js_bundle :user_lists %>
-      <a href="#" class="add_users_link Button Button--primary" title="<%= t('Add Account Admins') %>" aria-label="<%= t('Add Account Admins') %>"><i class="icon-plus"></i> <%= t('links.add_admins', %{Account Admins}) %></a>
-      <%= form_tag account_add_account_user_url(@account), {:id => "enroll_users_form", :style => "display: none;"} do  %>
+      <a href="#" class="add_users_link Button Button--primary" title="<%= t('Add Account Admins') %>" aria-label="<%= t('Add Account Admins') %>"><i class="icon-plus"></i> <%= t('links.add_admins', %{Account Admins}) %>
+      </a>
+      <%= form_tag account_add_account_user_url(@account), { :id => "enroll_users_form", :style => "display: none;" } do %>
         <h2><%= t(:add_admin_title, "Add Account Admins") %></h2>
         <div style="margin-top: 5px;">
           <div>
             <%= label_tag :role_id, t("Add More") %>
             <select name="role_id" id="admin_role_id">
-            <% available_roles.each do |role| %>
-              <option value="<%= role.id %>"><%= AccountUser.readable_type(role.name) %></option>
-            <% end %>
+              <% available_roles.each do |role| %>
+                <option value="<%= role.id %>"><%= AccountUser.readable_type(role.name) %></option>
+              <% end %>
             </select>
           </div>
           <%= render :partial => 'shared/user_lists' %>
@@ -1001,7 +1019,7 @@ acknowledge that you have read and agreed to the
   <div id="tab-announcements">
     <h2><%= t(:global_announcements_title, "Global Announcements") %></h2>
     <ul class="announcements_list unstyled_list">
-      <%= will_paginate(@announcements, params: {anchor: "tab-announcements"}) %>
+      <%= will_paginate(@announcements, params: { anchor: "tab-announcements" }) %>
       <% @announcements.each do |announcement| %>
 
         <li class="announcements_list_item">
@@ -1069,15 +1087,15 @@ acknowledge that you have read and agreed to the
                 <%= roles_message(@account) %>
                 <ul>
                   <% announcement.account_notification_roles.each do |r| %>
-                    <% @course_roles.select {|rt| rt[:id] == r.role_id }.each do |rt| %>
+                    <% @course_roles.select { |rt| rt[:id] == r.role_id }.each do |rt| %>
                       <li><%= rt[:label] %></li>
                     <% end %>
                     <% # NilEnrollment is a special case %>
                     <% if r.role_id.nil? %>
                       <li><%= t :no_enrollment_roles, "Unenrolled users" %></li>
                     <% end %>
-                    <% @account_roles.select {|rt| rt[:id] == r.role_id }.each do |rt| %>
-                      <li><%= rt[:label]  %></li>
+                    <% @account_roles.select { |rt| rt[:id] == r.role_id }.each do |rt| %>
+                      <li><%= rt[:label] %></li>
                     <% end %>
                   <% end %>
                 </ul>
@@ -1089,7 +1107,7 @@ acknowledge that you have read and agreed to the
               </div>
             <% end %>
             <% if can_do(@account, @current_user, :manage_alerts) %>
-              <%= render(:partial => "edit_account_notification", :locals => {:announcement => announcement}) %>
+              <%= render(:partial => "edit_account_notification", :locals => { :announcement => announcement }) %>
             <% end %>
           </div>
         </li>
@@ -1100,11 +1118,11 @@ acknowledge that you have read and agreed to the
         <i class="icon-plus"></i> <%= t("New Announcement") %>
       </button>
       <%= form_for :account_notification,
-       url: account_account_notifications_url(@account),
-       html: {
-         id: "add_notification_form",
-         class: "hidden_form",
-         role: "region" } do |f| %>
+                   url: account_account_notifications_url(@account),
+                   html: {
+                     id: "add_notification_form",
+                     class: "hidden_form",
+                     role: "region" } do |f| %>
 
         <div class="grid-row">
 
@@ -1127,11 +1145,11 @@ acknowledge that you have read and agreed to the
                 class="ic-Input"
                 name="account_notification[icon]"
               >
-                <%= options_for_select([[t("information"), "information", {:class=>"information"}],
-                  [t("error"), "error", {:class=>"error"}],
-                  [t("warning"), "warning", {:class=>"warning"}],
-                  [t("question"), "question", {:class=>"question"}],
-                  [t("calendar"), "calendar", {:class=>"calendar"}]]) %>
+                <%= options_for_select([[t("information"), "information", { :class => "information" }],
+                                        [t("error"), "error", { :class => "error" }],
+                                        [t("warning"), "warning", { :class => "warning" }],
+                                        [t("question"), "question", { :class => "question" }],
+                                        [t("calendar"), "calendar", { :class => "calendar" }]]) %>
               </select>
             </div>
           </div>
@@ -1154,7 +1172,7 @@ acknowledge that you have read and agreed to the
           <div class="ic-Checkbox-group">
             <div class="ic-Form-control ic-Form-control--checkbox">
               <div id="survey_announcement_field">
-                <input type="checkbox" name="account_notification[required_account_service]" id="account_notification_required_account_service" value="account_survey_notifications" />
+                <input type="checkbox" name="account_notification[required_account_service]" id="account_notification_required_account_service" value="account_survey_notifications"/>
                 <label class="ic-Label" for="account_notification_required_account_service">
                   <%= t "Site Admin Only. Send to 1 / %{denominator} users in enabled accounts each month.", denominator: f.text_field(:months_in_display_cycle, value: AccountNotification.default_months_in_display_cycle, disabled: true) %>
                 </label>
@@ -1177,7 +1195,7 @@ acknowledge that you have read and agreed to the
                     <label class="ic-Label" for="<%= "account_notification_role_#{r[:id]}_cbx" %>">
                       <%= r[:label] %>
                       <span class="screenreader-only">
-                        <%=t "Send this announcement to users with the course role of %{role}", :role => r[:label] %>
+                        <%= t "Send this announcement to users with the course role of %{role}", :role => r[:label] %>
                       </span>
                     </label>
                   </div>
@@ -1188,7 +1206,7 @@ acknowledge that you have read and agreed to the
                     <label class="ic-Label" for="<%= "account_notification_role_NilEnrollment_cbx" %>">
                       <%= t "Unenrolled users" %>
                       <span class="screenreader-only">
-                        <%=t "Send this announcement to unenrolled users" %>
+                        <%= t "Send this announcement to unenrolled users" %>
                       </span>
                     </label>
                   </div>
@@ -1204,7 +1222,7 @@ acknowledge that you have read and agreed to the
                     <label class="ic-Label" for="<%= "account_notification_role_#{r[:id]}_cbx" %>">
                       <%= r[:label] %>
                       <span class="screenreader-only">
-                        <%=t "Send this announcement to users with the account role of %{role}", :role => r[:label] %>
+                        <%= t "Send this announcement to users with the account role of %{role}", :role => r[:label] %>
                       </span>
                     </label>
                   </div>
@@ -1272,17 +1290,17 @@ acknowledge that you have read and agreed to the
           <th class="reports"><%= t 'headers.report_last_run', 'Last Run' %></th>
           <th class="reports"></th>
         </tr>
-        <% @available_reports.sort_by {|_, details| details.title}.each do |report, details|
-           title = details.title
-           description_partial = details[:description_partial]
-           description_partial = report + '_description' if description_partial == true
-           parameters_partial = details[:parameters_partial]
-           parameters_partial = report + '_parameters' if parameters_partial == true
-           last_complete = @last_complete_reports[report]
-           last_report = @last_reports[report]
-           in_progress = last_report && last_report.in_progress?
-           #the extra text is added so that you can give more than the date for the last run report
-           extra_text = last_complete.try(:parameters).try(:[], "extra_text")
+        <% @available_reports.sort_by { |_, details| details.title }.each do |report, details|
+          title = details.title
+          description_partial = details[:description_partial]
+          description_partial = report + '_description' if description_partial == true
+          parameters_partial = details[:parameters_partial]
+          parameters_partial = report + '_parameters' if parameters_partial == true
+          last_complete = @last_complete_reports[report]
+          last_report = @last_reports[report]
+          in_progress = last_report && last_report.in_progress?
+          #the extra text is added so that you can give more than the date for the last run report
+          extra_text = last_complete.try(:parameters).try(:[], "extra_text")
         %>
           <tr id="<%= report %>" class="reports">
             <td class="title reports">
@@ -1319,7 +1337,7 @@ acknowledge that you have read and agreed to the
                       <div class="report_parameters">
                         <%= render :partial => parameters_partial if parameters_partial %>
                       </div>
-                      <br />
+                      <br/>
                       <a href="#" id="run_<%= report %>" class="Button Button--primary Button--small run_report_link"><%= t 'links.run_report', 'Run Report' %></a>
                     </form>
                   </div>
@@ -1343,15 +1361,15 @@ acknowledge that you have read and agreed to the
     </div>
   <% end %>
   <% if can_do(@context, @current_user, :read_as_admin) %>
-      <div id="tab-tools">
-        <%= render :partial => 'external_tools/external_tools', :object => @context.context_external_tools.active %>
-      </div>
+    <div id="tab-tools">
+      <%= render :partial => 'external_tools/external_tools', :object => @context.context_external_tools.active %>
+    </div>
   <% end %>
   <% if @context.root_account.settings[:enable_alerts] && can_do(@context, @current_user, :manage_interaction_alerts) %>
-      <div id="tab-alerts">
-        <h2><%= t(:alerts_title, "Alerts") %></h2>
-        <%= render :partial => 'alerts/alerts' %>
-      </div>
+    <div id="tab-alerts">
+      <h2><%= t(:alerts_title, "Alerts") %></h2>
+      <%= render :partial => 'alerts/alerts' %>
+    </div>
   <% end %>
   <% if can_do(@context, @current_user, :manage_feature_flags) %>
     <div id="tab-features"></div>
