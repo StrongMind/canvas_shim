@@ -458,7 +458,7 @@ Join the [Canvas Translation Community](%{transifex_url})
           </fieldset>
         <% end %>
 
-        <% if @expose_account_level_first_day_start_time %>
+        <% if @expose_default_course_access_times %>
           <fieldset>
             <legend><%= t(:course_start_time, 'Default Course Access Times') %>
             </legend>
@@ -469,7 +469,7 @@ Join the [Canvas Translation Community](%{transifex_url})
                 </td>
               </tr>
               <tr>
-                <td class="form-label"><%= f.blabel :course_start_time, :en => "Course Start Time" %></td>
+                <td style="width:15%" class="form-label"><%= f.blabel :course_start_time, :en => "Course Start Time" %></td>
                 <td class="formtable small-select">
                   <%= f.fields_for :settings do |settings| %>
                     <%= settings.number_field :course_start_time_hour,
@@ -491,7 +491,7 @@ Join the [Canvas Translation Community](%{transifex_url})
                 </td>
               </tr>
               <tr>
-                <td class="form-label"><%= f.blabel :course_end_time, :en => "Course End Time" %></td>
+                <td style="width:15%" class="form-label"><%= f.blabel :course_end_time, :en => "Course End Time" %></td>
                 <td class="formtable small-select">
                   <%= f.fields_for :settings do |settings| %>
                     <%= settings.number_field :course_end_time_hour,

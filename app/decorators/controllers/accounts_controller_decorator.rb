@@ -36,7 +36,7 @@ AccountsController.class_eval do
 
     @expose_first_and_last_assignment_due_date_field = Rails.configuration.launch_darkly_client.variation("expose-first-and-last-assignment-due-date-field", launch_darkly_user, false)
     @expose_discussion_and_project_threshold_field = Rails.configuration.launch_darkly_client.variation("expose-discussion-and-project-threshold-field", launch_darkly_user, false)
-    @expose_account_level_first_day_start_time = Rails.configuration.launch_darkly_client.variation("expose-account-level-first-day-start-time", launch_darkly_user, false)
+    @expose_default_course_access_times = Rails.configuration.launch_darkly_client.variation("expose-default-course-access-times", launch_darkly_user, false)
 
     js_env({
       HOLIDAYS: @holidays,
