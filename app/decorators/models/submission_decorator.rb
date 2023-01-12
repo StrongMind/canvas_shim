@@ -7,6 +7,7 @@ Submission.class_eval do
 
   after_update :record_excused_removed
   after_save :send_unit_grades_to_pipeline
+  after_save :send_guided_practice_submitted_alert, if: Proc.new { |submission| submission.assignment.present? && submission.assignment.assignment_group_name == 'Guided Practice' && submitted_at_changed? }
 
   def send_unit_grades_to_pipeline
     return unless enable_unit_grade_calculations?
@@ -51,6 +52,19 @@ Submission.class_eval do
         )
       end
       Rails.cache.delete(cache_key)
+    end
+  end
+
+  def send_guided_practice_submitted_alert
+    teacher_ids = assignment.course.teacher_enrollments.active.pluck(:user_id)
+    teacher_ids.each do |teacher_id|
+      AlertsService::Client.create(
+        :guided_practice_submitted,
+        teacher_id: teacher_id,
+        student_id: user.id,
+        assignment_id: assignment.id,
+        course_id: assignment.course.id,
+        )
     end
   end
 

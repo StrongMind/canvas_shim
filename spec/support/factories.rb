@@ -3,7 +3,13 @@ FactoryBot.define do
     collapsed true
   end
 
+  factory :user do
+  end
+
   factory :course do
+  end
+
+  factory :enrollment do
   end
 
   factory :content_tag do
