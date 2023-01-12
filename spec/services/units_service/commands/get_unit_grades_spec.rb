@@ -71,7 +71,7 @@ describe UnitsService::Commands::GetUnitGrades do
   context "#unit_excused?" do
     let!(:course) {Course.create()}
     let!(:cm) {ContextModule.create(position: 3, course: course)}
-    let!(:assignment) { Assignment.create(workflow_state: 'active', course: course)}
+    let!(:assignment) { create(:assignment, :with_assignment_group, workflow_state: 'active', course: course)}
     let!(:content_tag) { ContentTag.create(context_module: cm, assignment: assignment, content_type: 'Assignment', content_id: assignment.id) }
     let!(:submission) { Submission.create(grader_id: 2, submitted_at: current_time, user: user, assignment: assignment) }
 
@@ -86,8 +86,8 @@ describe UnitsService::Commands::GetUnitGrades do
 
     it 'returns false if not all are excused' do
       cm = ContextModule.create()
-      assignment = Assignment.create(workflow_state: 'active')
-      assignment_2 = Assignment.create(workflow_state: 'active')
+      assignment = create(:assignment, :with_assignment_group, workflow_state: 'active')
+      assignment_2 = create(:assignment, :with_assignment_group, workflow_state: 'active')
 
       content_tag = ContentTag.create(context_module: cm, assignment: assignment, content_type: 'Assignment', content_id: assignment.id)
       content_tag_2 = ContentTag.create(context_module: cm, assignment: assignment_2, content_type: 'Assignment', content_id: assignment.id)

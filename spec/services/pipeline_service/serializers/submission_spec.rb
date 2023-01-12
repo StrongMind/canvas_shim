@@ -39,7 +39,7 @@ describe PipelineService::Serializers::Submission do
 
   let(:headers) { { Authorization: "Bearer #{ENV['STRONGMIND_INTEGRATION_KEY']}" } }
   let(:course) { Course.create }
-  let(:assignment) { Assignment.create(course: course) }
+  let(:assignment) { create(:assignment, :with_assignment_group, course: course) }
   let(:user) { User.create }
   let(:submission) { Submission.create(submitted_at: Time.now, assignment: assignment, user: user) }
   let(:integration_key) { rand.to_s }

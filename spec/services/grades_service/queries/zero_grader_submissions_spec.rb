@@ -5,7 +5,7 @@ describe GradesService::Queries::ZeroGraderSubmissions do
   describe '#submissions_scope' do
     it 'Will query after the course' do
       course = Course.create(conclude_at: 2.hours.ago)
-      assignment = Assignment.create(course: course, due_at: 1.day.ago, workflow_state: 'published')
+      assignment = create(:assignment, :with_assignment_group, course: course, due_at: 1.day.ago, workflow_state: 'published')
       submission = Submission.create(assignment: assignment,
           workflow_state: 'unsubmitted',
           score: nil,

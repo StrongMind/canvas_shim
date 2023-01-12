@@ -2,7 +2,7 @@ describe StudentEnrollment do
   include_context "stubbed_network"
   let!(:course) { Course.create }
   let!(:user) { User.create }
-  let!(:assignment) { Assignment.create(course: course) }
+  let!(:assignment) { create(:assignment, :with_assignment_group, course: course) }
   let!(:submission) do 
     Submission.create(
       assignment: assignment,
@@ -48,7 +48,7 @@ describe StudentEnrollment do
 
   describe "#missing_assignments_count" do
     context "deleted assignment" do
-      let!(:assignment) { Assignment.create(course: course, workflow_state: "deleted") }
+      let!(:assignment) { create(:assignment, :with_assignment_group, course: course, workflow_state: "deleted") }
 
       let!(:submission) do
         Submission.create(
@@ -66,7 +66,7 @@ describe StudentEnrollment do
     end
 
     context "unpublished assignment" do
-      let!(:assignment) { Assignment.create(course: course, workflow_state: "unpublished") }
+      let!(:assignment) { create(:assignment, :with_assignment_group, course: course, workflow_state: "unpublished") }
 
       let!(:submission) do
         Submission.create(
@@ -84,7 +84,7 @@ describe StudentEnrollment do
     end
 
     context "past due and unsubmitted" do
-      let!(:assignment) { Assignment.create(course: course, workflow_state: "published") }
+      let!(:assignment) { create(:assignment, :with_assignment_group, course: course, workflow_state: "published") }
 
       let!(:submission) do 
         Submission.create(
@@ -102,7 +102,7 @@ describe StudentEnrollment do
     end
 
     context "Zero graded" do
-      let!(:assignment) { Assignment.create(course: course, workflow_state: "published") }
+      let!(:assignment) { create(:assignment, :with_assignment_group, course: course, workflow_state: "published") }
 
       let!(:submission) do 
         Submission.create(

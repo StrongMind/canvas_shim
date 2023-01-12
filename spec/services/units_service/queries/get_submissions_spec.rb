@@ -3,7 +3,7 @@ describe UnitsService::Queries::GetSubmissions do
   let(:student) { User.create }
   let(:course)  { Course.create(context_modules: [unit]) }
   let(:submission) { Submission.create!(user: student, assignment: assignment) }
-  let(:assignment) { Assignment.create(course: course, published: true) }
+  let(:assignment) { create(:assignment, :with_assignment_group, course: course, published: true) }
   let(:unit) { ContextModule.create }
   let(:item) { ContentTag.create(content: assignment) }
 
@@ -23,7 +23,7 @@ describe UnitsService::Queries::GetSubmissions do
     let!(:discussion_course) { Course.create(context_modules: [discussion_context_module]) }
     let!(:discussion_topic) { DiscussionTopic.create(workflow_state: 'active') }
     let!(:discussion_context_module) { ContextModule.create(content_tags: [discussion_content_tag]) }
-    let!(:discussion_assignment) { Assignment.create(discussion_topic: discussion_topic, workflow_state: 'published') }
+    let!(:discussion_assignment) { create(:assignment, :with_assignment_group, discussion_topic: discussion_topic, workflow_state: 'published') }
     let!(:discussion_submission) { Submission.create!(user: student, assignment: discussion_assignment) }
     let!(:discussion_content_tag) { ContentTag.create(content: discussion_topic) }
 

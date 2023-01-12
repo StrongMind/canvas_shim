@@ -5,7 +5,7 @@ describe PipelineService::Serializers::UnitGrades do
     context 'when given a submission' do
       subject { described_class.new(object: unit_grades)}
 
-      let(:assignment) { Assignment.create(course: course) }
+      let(:assignment) { create(:assignment, :with_assignment_group, course: course) }
       let(:course) { Course.create }
       let(:pseudonym) { Pseudonym.create }
       let(:student) { User.create(pseudonym: pseudonym) }
