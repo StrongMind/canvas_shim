@@ -180,4 +180,29 @@ describe Course do
     end
 
   end
+
+  describe "#check course end time" do
+    context "course has end time" do
+      before do
+        allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "5:55 PM")
+      end
+
+      date_param = DateTime.new(2023, 5, 18, 3, 33, 0, Time.zone.now.formatted_offset)
+      let(:course) { Course.create(conclude_at: date_param) }
+
+      it "matches end time in account settings" do
+        expected_end_time = "17:55 PM"
+        actual_end_time = course.conclude_at.strftime("%H:%M %p")
+        expect(actual_end_time).to eq(expected_end_time)
+      end
+    end
+
+    context "course end time is nil" do
+      let(:course) { Course.create() }
+      it "creates a course without a conclude_at" do
+        expect(course.conclude_at).to be nil
+      end
+    end
+
+  end
 end

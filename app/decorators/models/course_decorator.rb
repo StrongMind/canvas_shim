@@ -6,8 +6,7 @@ Course.class_eval do
       where("enrollments.workflow_state NOT IN ('rejected', 'deleted', 'inactive') AND enrollments.type = 'StudentEnrollment'").preload(:user)
     }, class_name: 'Enrollment'
 
-
-  before_create :set_course_start_time_from_school
+  before_create :set_course_start_end_time_from_school
 
   after_commit -> { PipelineService.publish_as_v2(self) }
   after_create -> { RequirementsService.set_school_thresholds_on_course(course: self) }
@@ -102,16 +101,18 @@ Course.class_eval do
     ).payload.size
   end
 
-  def set_course_start_time_from_school
-    unless self.start_at.nil?
-      course_start_time = SettingsService.get_settings(object: 'school', id: 1)['course_start_time']
-      return if course_start_time.nil?
-      course_start_date_time = DateTime.parse(course_start_time)
-      @course_start_time_hour = course_start_date_time.hour.to_i
-      @course_start_time_minute = course_start_date_time.minute.to_i
-      @course_time_ampm = course_start_date_time.strftime("%p")
+  def set_course_start_end_time_from_school
+    ["start_at", "conclude_at"].each do |method|
+      unless self.send(method).nil?
+        setting_name = method == "start_at" ? "course_start_time" : "course_end_time"
+        course_time = SettingsService.get_settings(object: 'school', id: 1)[setting_name]
+        return if course_time.nil?
+        course_date_time = DateTime.parse(course_time)
+        course_time_hour = course_date_time.hour.to_i
+        course_time_minute = course_date_time.minute.to_i
 
-      self.start_at = DateTime.new(self.start_at.year, self.start_at.month, self.start_at.day, @course_start_time_hour, @course_start_time_minute, 0, Time.zone.now.formatted_offset)
+        self.send("#{method}=", DateTime.new(self.send(method).year, self.send(method).month, self.send(method).day, course_time_hour, course_time_minute, 0, Time.zone.now.formatted_offset))
+      end
     end
   end
 
