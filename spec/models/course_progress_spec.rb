@@ -46,8 +46,8 @@ describe CourseProgress do
 
   describe "#requirement_count" do
     context "with excused submission" do
-      let(:assn) { Assignment.create(course_id: course.id) }
-      let(:assn_2) { Assignment.create(course_id: course.id) }
+      let(:assn) { create(:assignment, :with_assignment_group, course_id: course.id) }
+      let(:assn_2) { create(:assignment, :with_assignment_group, course_id: course.id) }
       let!(:sub) { Submission.create(assignment: assn, user: user) }
       let(:excused_sub) { Submission.create(assignment: assn_2, user: user, context_code: "course_#{course.id}") }
       let(:content_tag_1) { ContentTag.create }

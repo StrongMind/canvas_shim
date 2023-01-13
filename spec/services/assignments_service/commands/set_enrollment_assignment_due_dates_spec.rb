@@ -19,8 +19,8 @@ describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
     )
   end
 
-  let(:assignment) { Assignment.create(submissions: [submission], due_at: Time.now) }
-  let(:assignment2) { Assignment.create(submissions: [submission2], due_at: Time.now) }
+  let(:assignment) { create(:assignment, :with_assignment_group, submissions: [submission], due_at: Time.now) }
+  let(:assignment2) { create(:assignment, :with_assignment_group, submissions: [submission2], due_at: Time.now) }
 
   before do
     allow(PipelineService).to receive(:publish)
@@ -94,8 +94,8 @@ describe AssignmentsService::Commands::SetEnrollmentAssignmentDueDates do
       end
 
       context 'assignment has no due date' do
-        let(:assignment) { Assignment.create(submissions: [submission]) }
-        let(:assignment2) { Assignment.create(submissions: [submission2]) }
+          let(:assignment) { create(:assignment, :with_assignment_group, submissions: [submission]) }
+          let(:assignment2) { create(:assignment, :with_assignment_group, submissions: [submission2]) }
 
         it 'wont run' do
           expect(AssignmentOverrideStudent).to_not receive(:create)

@@ -5,7 +5,7 @@ describe PipelineService::Models::Noun do
     let(:submission) { Submission.create(assignment: assignment, user: user) }
     let(:submission_noun) { described_class.new(submission) }
     let(:course) { Course.create }
-    let(:assignment) { Assignment.create(course: course) }
+    let(:assignment) { create(:assignment, :with_assignment_group, course: course) }
     let(:deleted_conversation) { Conversation.create() }
     let(:teacher_enrollment) { TeacherEnrollment.new }
     let(:teacher_enrollment_noun) { described_class.new(teacher_enrollment)}

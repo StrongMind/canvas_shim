@@ -3,7 +3,7 @@ describe PipelineService::V2::Nouns::Submission do
   
     subject { described_class.new(object: noun) }
   
-    let(:active_record_object) { ::Submission.create!(assignment: Assignment.create!(course: Course.create)) }
+    let(:active_record_object) { ::Submission.create!(assignment: create(:assignment, :with_assignment_group, course: Course.create)) }
   
     let(:noun) { PipelineService::V2::Noun.new(active_record_object)}
   

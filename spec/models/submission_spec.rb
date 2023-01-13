@@ -7,7 +7,7 @@ describe Submission do
     end
 
     context "V2 Submissions" do
-      let(:assignment) { Assignment.create }
+      let(:assignment) { create(:assignment, :with_assignment_group) }
 
       describe '#send_submission_to_pipeline' do
         before do
@@ -45,7 +45,7 @@ describe Submission do
     let!(:submission) { Submission.create(score: 30, assignment: assignment, excused: true) }
     let!(:submission2) { Submission.create(score: 30, assignment: assignment, excused: true) }
 
-    let(:assignment) { Assignment.new }
+    let(:assignment) { create(:assignment, :with_assignment_group) }
     let(:teacher) { User.create }
 
     it "records a comment when the excused tag is removed" do
@@ -65,7 +65,7 @@ context "Submission Needs Regrading" do
 
     let!(:course) { Course.create() }
     let!(:teacher_enrollment) { TeacherEnrollment.create(course: course, user: teacher) }
-    let!(:assignment) { Assignment.new(course: course) }
+    let!(:assignment) { create(:assignment, :with_assignment_group, course: course) }
     let!(:teacher) { User.create() }
 
     it "sends an alert when a zero graded submission is submitted" do

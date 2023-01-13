@@ -5,7 +5,7 @@ describe SubmissionComment do
     let(:course) { Course.create(users: [teacher, student]) }
     let(:teacher) { User.create }
     let(:student) { User.create }
-    let(:assignment) { Assignment.create(course: course) }
+    let(:assignment) { create(:assignment, :with_assignment_group, course: course) }
     let(:submission) { Submission.create(user: student, assignment: assignment) }
     let(:teacher_enrollments) { course.enrollments.where(user: teacher) }
     let(:student_enrollments) { course.enrollments.where(user: student) }

@@ -1,6 +1,6 @@
 describe Assignment do
   include_context "stubbed_network"
-  let(:assignment) { Assignment.create }
+  let(:assignment) { create(:assignment, :with_assignment_group)}
   let(:user) { User.create }
   let(:submission) { Submission.create(assignment: assignment, user: user, excused: nil) }
   let(:user_2) { User.create }
@@ -40,7 +40,7 @@ describe Assignment do
   describe "when saved" do
     it "publishes to pipeline" do
       expect(PipelineService).to receive(:publish_as_v2)
-      Assignment.create
+      create(:assignment, :with_assignment_group) 
     end
   end
 end
