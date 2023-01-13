@@ -32,12 +32,30 @@ jobs:
         # needed because the postgres container does not provide a healthcheck
         # tmpfs makes DB faster by using RAM
     steps:
+      # Install local deps if this action is being run locally
+      - name: Install local dependencies
+        if: ${{ env.ACT }}
+        run: |
+          npm i -g yarn
+          sudo apt-get update
+          sudo apt-get -yqq install libgconf-2-4 libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf2.0-0 libgtk-3-0 libgbm-dev libnss3-dev libxss-dev libasound2 libxshmfence-dev postgresql postgresql-contrib redis-server
+
+      - name: Boot local dependencies
+        if: ${{ env.ACT }}
+        run: |
+          sudo service postgresql start
+          sudo service redis-server start
+
+      - name: Configure local dependencies
+        if: ${{ env.ACT }}
+        run: |
+          sudo -u postgres psql -U postgres -d postgres -c "alter user postgres with password 'postgres';"
       - uses: actions/checkout@v3
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.4.10
-          bundler-cache: true
+          ruby-version: 2.5.0
+          bundler-cache: false
       - name: Setup DB, Run tests
         env:
           DATABASE_URL: postgres://postgres:@localhost:5432/test
