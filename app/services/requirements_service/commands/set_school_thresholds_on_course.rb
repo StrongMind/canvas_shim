@@ -1,15 +1,18 @@
 module RequirementsService
   module Commands
     class SetSchoolThresholdsOnCourse
-      ASSIGNMENT_GROUP_NAMES = AssignmentGroup.passing_threshold_group_names
 
       def initialize(course:)
         @course = course
       end
 
       def call
-        account_level_thresholds = get_default_course_thresholds(ASSIGNMENT_GROUP_NAMES)
+        account_level_thresholds = get_default_course_thresholds(passing_threshold_group_names)
         set_default_course_thresholds(account_level_thresholds)
+      end
+
+      def passing_threshold_group_names
+        AssignmentGroup.passing_threshold_group_names
       end
 
       private
