@@ -1,5 +1,4 @@
 AccountsController.class_eval do
-  ASSIGNMENT_GROUP_NAMES = AssignmentGroup.passing_threshold_group_names
 
   def show_account_by_uuid
     @account = Account.find_by(uuid: params[:account_uuid].split(":").last)
@@ -27,7 +26,7 @@ AccountsController.class_eval do
     @course_end_time_ampm = course_end_time.strftime("%p")
 
     @course_thresh_enabled    = RequirementsService.course_threshold_setting_enabled?
-    @assignment_group_thresholds = get_assignment_group_thresholds(ASSIGNMENT_GROUP_NAMES)
+    @assignment_group_thresholds = get_assignment_group_thresholds(passing_threshold_group_names)
     if @course_thresh_enabled
       @post_enrollment_thresh_enabled = RequirementsService.post_enrollment_thresholds_enabled?
     end
@@ -51,7 +50,7 @@ AccountsController.class_eval do
   def strongmind_update
     if account_settings_params
       if account_settings_params.keys.select{|k| k.match(/(_passing_threshold)/)}.any?
-        set_assignment_group_thresholds(ASSIGNMENT_GROUP_NAMES)
+        set_assignment_group_thresholds(passing_threshold_group_names)
         update_course_passing_requirements
       end
       set_threshold_permissions
@@ -228,6 +227,10 @@ AccountsController.class_eval do
 
   def update_course_passing_requirements
     @account.update_course_passing_requirements
+  end
+
+  def passing_threshold_group_names
+    AssignmentGroup.passing_threshold_group_names
   end
 
   private

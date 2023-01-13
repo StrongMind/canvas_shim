@@ -19,7 +19,7 @@ Dotenv.load('.env.development')
 
 module TestApp
   class Application < Rails::Application
-    #config.paths['lib'].eager_load!
+    config.paths['lib'].eager_load!
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.

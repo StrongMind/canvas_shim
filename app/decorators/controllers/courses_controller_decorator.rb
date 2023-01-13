@@ -1,6 +1,5 @@
 CoursesController.class_eval do
   helper_method :enrollment_name, :user_can_conclude_enrollments?
-  ASSIGNMENT_GROUP_NAMES = AssignmentGroup.passing_threshold_group_names
 
   def show_course_enrollments
     get_context
@@ -104,7 +103,7 @@ CoursesController.class_eval do
   def strongmind_show
     instructure_show
     if @context
-      passing_thresholds = RequirementsService.get_assignment_group_passing_thresholds(context: @context) 
+      passing_thresholds = RequirementsService.get_assignment_group_passing_thresholds(context: @context)
     end
     js_env(passing_thresholds: passing_thresholds) if passing_thresholds
     js_env(module_editing_disabled: RequirementsService.disable_module_editing_on?)
@@ -116,7 +115,7 @@ CoursesController.class_eval do
 
   def strongmind_settings
     @expose_course_level_passing_threshold_fields = Rails.configuration.launch_darkly_client.variation("expose-course-level-passing-threshold-fields", launch_darkly_user, false)
-    @assignment_group_thresholds = get_course_thresholds(ASSIGNMENT_GROUP_NAMES)
+    @assignment_group_thresholds = get_course_thresholds(passing_threshold_group_names)
     get_course_dates
     hide_destructive_course_options?
     instructure_settings
@@ -173,6 +172,10 @@ CoursesController.class_eval do
     if authorized_action(@context, @current_user, :manage_grades)
       set_snapshot_variables
     end
+  end
+
+  def passing_threshold_group_names
+    AssignmentGroup.passing_threshold_group_names
   end
 
   private
