@@ -9,7 +9,7 @@ on:
   push:
     branches: [ "*" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 jobs:
   test:
@@ -69,5 +69,5 @@ jobs:
           sudo apt-get -yqq install libpq-dev
           gem install bundler:2.3.25
           bundle install --jobs 4 --retry 3
-          bundle exec rails db:setup
-          bundle exec rspec
+          RAILS_ENV=test bundle exec rails db:setup
+          RAILS_ENV=test bundle exec rspec
