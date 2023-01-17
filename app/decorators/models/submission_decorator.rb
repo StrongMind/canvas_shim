@@ -7,7 +7,7 @@ Submission.class_eval do
 
   after_update :record_excused_removed
   after_save :send_unit_grades_to_pipeline
-  after_save :send_guided_practice_submitted_alert, if: Proc.new { |submission| submission.assignment.present? && submission.assignment.assignment_group_name == 'Guided Practice' && submitted_at_changed? }
+  after_save :send_guided_practice_submitted_alert, if: Proc.new { |submission| expose_guided_practice_submission_alerts && submission.assignment.present? && submission.assignment.assignment_group_name == 'Guided Practice' && submitted_at_changed? }
 
   def send_unit_grades_to_pipeline
     return unless enable_unit_grade_calculations?
@@ -109,5 +109,10 @@ Submission.class_eval do
 
   def enable_unit_grade_calculations?
     SettingsService.get_settings(object: :school, id: 1)['enable_unit_grade_calculations'] == true
+  end
+
+  def expose_guided_practice_submission_alerts
+    return true if Rails.env.development? || Rails.env.test?
+    Rails.configuration.launch_darkly_client.variation("expose-guided-practice-submitted-alerts", launch_darkly_user, false)
   end
 end
