@@ -113,6 +113,6 @@ Submission.class_eval do
 
   def expose_guided_practice_submission_alerts
     return true if Rails.env.development? || Rails.env.test?
-    Rails.configuration.launch_darkly_client.variation("expose-guided-practice-submitted-alerts", launch_darkly_user, false)
+    Rails.configuration.launch_darkly_client.variation("expose-guided-practice-submitted-alerts", @launch_darkly_user, false)
   end
 end

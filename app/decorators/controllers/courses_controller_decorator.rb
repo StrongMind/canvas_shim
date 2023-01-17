@@ -114,7 +114,7 @@ CoursesController.class_eval do
 
 
   def strongmind_settings
-    @expose_course_level_passing_threshold_fields = Rails.configuration.launch_darkly_client.variation("expose-course-level-passing-threshold-fields", launch_darkly_user, false)
+    @expose_course_level_passing_threshold_fields = Rails.configuration.launch_darkly_client.variation("expose-course-level-passing-threshold-fields", @launch_darkly_user, false)
     @assignment_group_thresholds = get_course_thresholds(passing_threshold_group_names)
     get_course_dates
     hide_destructive_course_options?
