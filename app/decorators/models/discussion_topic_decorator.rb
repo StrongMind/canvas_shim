@@ -6,6 +6,6 @@ DiscussionTopic.class_eval do
   end
 
   def graded_discussion?
-    self.root_topic.nil? && self.type.nil? && self.threaded? && self.assignment.present?
+    self.root_topic.nil? && self.type.nil? && self.assignment.present?
   end
 end
