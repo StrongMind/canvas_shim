@@ -134,6 +134,9 @@ CoursesController.class_eval do
         set_assignment_group_threshold_overrides(thresholds_to_update['override_group_names'])
         set_assignment_group_thresholds(assignment_group_names)
         RequirementsService.force_min_scores(course: @course, assignment_group_names: assignment_group_names)
+        if assignment_group_names.any?
+          json['context_module']['relock_warning'] = true
+        end
       end
     end
   end
