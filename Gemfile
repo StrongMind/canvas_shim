@@ -135,3 +135,11 @@ group :development, :test do
   gem 'sanitize', '2.1.0', require: false
   gem 'factory_bot_rails', '4.11.0'
 end
+
+gem "rubocop", "~> 1.28"
+
+gem "rubocop-rspec", "~> 2.10"
+
+gem "rubocop-rails", "~> 2.14"
+
+gem "rubocop-performance", "~> 1.13"

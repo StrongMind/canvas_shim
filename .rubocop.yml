@@ -1,36 +1,33 @@
 require:
   - rubocop-rspec
-  # this odd relative path is so that rubocop works when run without "bundle
-  # exec", such as from most editors/IDEs.
-  - ./gems/rubocop-canvas/lib/rubocop_canvas
+  - rubocop-performance
+  - rubocop-rails
 
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.5
 
 # our style changes: disabling style rules we aren't interested in
 Style/StringLiterals:
   Enabled: false
 Style/SignalException:
   Enabled: false
-Style/SpaceBeforeBlockBraces:
+Layout/SpaceBeforeBlockBraces:
   Enabled: false
-Style/SpaceInsideBlockBraces:
+Layout/SpaceInsideBlockBraces:
   Enabled: false
 Style/NumericLiterals:
   Enabled: false
-Style/BracesAroundHashParameters:
+Layout/SpaceInsideHashLiteralBraces:
   Enabled: false
-Style/SpaceInsideBrackets:
-  Enabled: false
-Style/SpaceInsideHashLiteralBraces:
+Layout/SpaceInsideArrayLiteralBrackets:
   Enabled: false
 Style/PercentLiteralDelimiters:
   Enabled: false
-Style/SpaceAroundOperators:
+Layout/SpaceAroundOperators:
   Enabled: false
-Style/SpaceAfterColon:
+Layout/SpaceAfterColon:
   Enabled: false
-Style/SpaceAfterComma:
+Layout/SpaceAfterComma:
   Enabled: false
 Style/Documentation:
   Enabled: false
@@ -38,25 +35,25 @@ Style/ClassAndModuleChildren:
   Enabled: false
 Style/RegexpLiteral:
   Enabled: false
-Style/EmptyLines:
+Layout/EmptyLines:
   Enabled: false
-Style/EmptyLinesAroundMethodBody:
+Layout/EmptyLinesAroundMethodBody:
   Enabled: false
-Style/EmptyLinesAroundClassBody:
+Layout/EmptyLinesAroundClassBody:
   Enabled: false
-Style/EmptyLinesAroundModuleBody:
+Layout/EmptyLinesAroundModuleBody:
   Enabled: false
-Style/EmptyLinesAroundBlockBody:
+Layout/EmptyLinesAroundBlockBody:
   Enabled: false
 Style/GuardClause:
   Enabled: false
 Style/RedundantSelf:
   Enabled: false
-Style/SpaceAroundEqualsInParameterDefault:
+Layout/SpaceAroundEqualsInParameterDefault:
   Enabled: false
-Style/SpaceBeforeFirstArg:
+Layout/SpaceBeforeFirstArg:
   Enabled: false
-Style/EmptyLinesAroundAccessModifier:
+Layout/EmptyLinesAroundAccessModifier:
   Enabled: false
 Style/IfUnlessModifier:
   Enabled: false
@@ -64,35 +61,35 @@ Style/WordArray:
   Enabled: false
 Style/PercentQLiterals:
   Enabled: false
-Style/IndentHash:
+Layout/FirstHashElementIndentation:
   Enabled: false
 Style/DoubleNegation:
   Enabled: false
 Style/TrailingCommaInArguments:
   Enabled: false
-Style/TrailingCommaInLiteral:
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+Style/TrailingCommaInHashLiteral:
   Enabled: false
 Style/MethodCallWithoutArgsParentheses:
   Enabled: false
 Style/MethodCallWithArgsParentheses:
   Enabled: false
-Style/TrailingBlankLines:
+Layout/TrailingEmptyLines:
   Enabled: false
-Style/IndentationConsistency:
+Layout/IndentationConsistency:
   Enabled: false
-Style/IndentationWidth:
+Layout/IndentationWidth:
   Enabled: false
-Style/AlignParameters:
+Layout/ParameterAlignment:
   Enabled: false
-Style/DotPosition:
+Layout/DotPosition:
   Enabled: false
-Style/TrailingWhitespace:
+Layout/TrailingWhitespace:
   Enabled: false
-Style/MultilineOperationIndentation:
+Layout/MultilineOperationIndentation:
   Enabled: false
-Style/AlignHash:
-  Enabled: false
-Style/AlignParameters:
+Layout/HashAlignment:
   Enabled: false
 Style/Lambda:
   Enabled: false
@@ -102,13 +99,11 @@ Style/ParallelAssignment:
   Enabled: false
 Style/ZeroLengthPredicate:
   Enabled: false
-Style/SpaceInLambdaLiteral:
+Layout/SpaceInLambdaLiteral:
   Enabled: false
 Style/NumericPredicate:
   Enabled: false
-Style/VariableNumber:
-  Enabled: false
-Style/SpaceInLambdaLiteral:
+Naming/VariableNumber:
   Enabled: false
 # We may want to enable this when we start working toward Ruby 3
 Style/FrozenStringLiteralComment:
@@ -149,7 +144,7 @@ Lint/UselessAssignment:
   Severity: convention
 Lint/Debugger:
   Severity: error
-Lint/EndAlignment:
+Layout/EndAlignment:
   Severity: convention
 
 # Performance changes
@@ -161,9 +156,9 @@ Style/AndOr:
   EnforcedStyle: conditionals
 Style/RescueModifier:
   Severity: warning
-Style/MultilineMethodCallIndentation:
+Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
-Style/IndentArray:
+Layout/FirstArrayElementIndentation:
   EnforcedStyle: consistent
 
 # these don't make sense pre-Rails 4
@@ -183,7 +178,7 @@ Performance/RegexpMatch:
 # Things we may want to tighten down later
 Metrics/AbcSize:
   Enabled: false
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
 Metrics/MethodLength:
   Max: 16
