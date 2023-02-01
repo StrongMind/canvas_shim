@@ -42,7 +42,7 @@ ContextModuleProgression.class_eval do
   def sequence_control_on?
     enrollment = StudentEnrollment.active.where(user_id: user.id, course_id: context_module.context.id).first
     settings = enrollment ? SettingsService.get_enrollment_settings(id: enrollment.id) : {}
-    if Account.first.name == 'Primavera Online High School' || "iSucceed Virtual High School"
+    if Account.first.name == 'Primavera Online High School'
       false
     else
       settings.fetch('sequence_control', true)
