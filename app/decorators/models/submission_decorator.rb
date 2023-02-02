@@ -7,7 +7,7 @@ Submission.class_eval do
 
   after_update :record_excused_removed
   after_save :send_unit_grades_to_pipeline
-  after_save :send_guided_practice_submitted_alert, if: Proc.new { |submission| expose_guided_practice_submission_alerts && submission.assignment.present? && submission.assignment.assignment_group_name == 'Guided Practice' && submitted_at_changed? }
+  after_save :send_guided_practice_submitted_alert, if: Proc.new { |submission| submission.assignment.present? && submission.assignment.assignment_group_name == 'Guided Practice' && submitted_at_changed? && expose_guided_practice_submission_alerts }
 
   def send_unit_grades_to_pipeline
     return unless enable_unit_grade_calculations?
