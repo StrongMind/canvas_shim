@@ -118,7 +118,10 @@ CoursesController.class_eval do
     @assignment_group_thresholds = get_course_thresholds(passing_threshold_group_names)
     get_course_dates
     hide_destructive_course_options?
+    # puts "*****SETTINGS: #{session[:relock_warning]}*****
+    js_env(relock_warning: session[:relock_warning])
     instructure_settings
+    # binding.pry
   end
 
   alias_method :instructure_settings, :settings
@@ -127,6 +130,9 @@ CoursesController.class_eval do
   def strongmind_update
     instructure_update
     return if params[:course].blank?
+    session[:relock_warning] = false
+    # puts "*****UPDATE: #{session[:relock_warning]}*****"
+    # binding.pry
     if course_settings_params
       if course_settings_params.keys.select{|k| k.match(/(_passing_threshold)/)}.any?
         thresholds_to_update = determine_assignment_group_overrides
@@ -134,9 +140,8 @@ CoursesController.class_eval do
         set_assignment_group_threshold_overrides(thresholds_to_update['override_group_names'])
         set_assignment_group_thresholds(assignment_group_names)
         RequirementsService.force_min_scores(course: @course, assignment_group_names: assignment_group_names)
-        if assignment_group_names.any?
-          json['context_module']['relock_warning'] = true
-        end
+        session[:relock_warning] = true
+        puts "*****PARAMS UPDATE: #{session[:relock_warning]}*****"
       end
     end
   end

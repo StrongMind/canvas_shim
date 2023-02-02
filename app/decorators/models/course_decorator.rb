@@ -10,6 +10,7 @@ Course.class_eval do
 
   after_commit -> { PipelineService.publish_as_v2(self) }
   after_create -> { RequirementsService.set_school_thresholds_on_course(course: self) }
+  after_save :relock_warning_check
 
   TAB_SNAPSHOT = 18
 
@@ -149,6 +150,14 @@ Course.class_eval do
     end
   end
   handle_asynchronously :update_context_module_completion_reqs
+
+  def relock_warning_check
+    # @relock_warning = session[:relock_warning]
+  end
+
+  def relock_warning?
+    @relock_warning
+  end
 
   private
   def filtered_announcements(filter)
