@@ -7,6 +7,12 @@ module PipelineService
         end
 
         def call
+          @disable_pipeline = Rails.cache.read('disable_pipeline')
+          if @disable_pipeline.nil?
+            @disable_pipeline = SettingsService.get_settings(object: 'school', id: 1)['disable_pipeline']
+            Rails.cache.write('disable_pipeline', @disable_pipeline, expires_in: 1.hour)
+          end
+          return if @disable_pipeline
           @noun = Noun.new(@model)
           @payload = Payload.new(
             object: @noun
