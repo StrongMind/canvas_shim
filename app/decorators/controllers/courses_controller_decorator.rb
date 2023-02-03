@@ -1,5 +1,6 @@
 CoursesController.class_eval do
   helper_method :enrollment_name, :user_can_conclude_enrollments?
+  after_action :clean_up_session_keys, only: [:settings]
 
   def show_course_enrollments
     get_context
@@ -118,10 +119,8 @@ CoursesController.class_eval do
     @assignment_group_thresholds = get_course_thresholds(passing_threshold_group_names)
     get_course_dates
     hide_destructive_course_options?
-    # puts "*****SETTINGS: #{session[:relock_warning]}*****
     js_env(relock_warning: session[:relock_warning])
     instructure_settings
-    # binding.pry
   end
 
   alias_method :instructure_settings, :settings
@@ -131,17 +130,15 @@ CoursesController.class_eval do
     instructure_update
     return if params[:course].blank?
     session[:relock_warning] = false
-    # puts "*****UPDATE: #{session[:relock_warning]}*****"
-    # binding.pry
+    passing_thresholds_edited = params.select{|k,v| k.match(/(_passing_threshold_edited)/) && v == "true"}.present?
     if course_settings_params
-      if course_settings_params.keys.select{|k| k.match(/(_passing_threshold)/)}.any?
+      if course_settings_params.keys.select{|k| k.match(/(_passing_threshold)/)}.any? && passing_thresholds_edited
         thresholds_to_update = determine_assignment_group_overrides
         assignment_group_names = thresholds_to_update['assignment_group_names']
         set_assignment_group_threshold_overrides(thresholds_to_update['override_group_names'])
         set_assignment_group_thresholds(assignment_group_names)
         RequirementsService.force_min_scores(course: @course, assignment_group_names: assignment_group_names)
         session[:relock_warning] = true
-        puts "*****PARAMS UPDATE: #{session[:relock_warning]}*****"
       end
     end
   end
@@ -341,5 +338,9 @@ CoursesController.class_eval do
 
   def course_settings_params
     params[:course][:settings]
+  end
+  
+  def clean_up_session_keys
+    session.delete(:relock_warning) if session[:relock_warning].present?
   end
 end
