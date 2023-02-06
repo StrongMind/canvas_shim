@@ -183,6 +183,19 @@ CoursesController.class_eval do
     AssignmentGroup.passing_threshold_group_names
   end
 
+  def relock
+    @course = Course.find_by(id: params[:course_id])
+    course_modules = @course.context_modules
+    course_modules.each do |course_module|
+      course_module.relock_progressions
+    end
+
+    respond_to do |format|
+      format.html { redirect_to course_settings_url }
+      format.json { render :json => {} }
+    end
+  end
+
   private
 
   def grade_out_users_params
@@ -339,7 +352,7 @@ CoursesController.class_eval do
   def course_settings_params
     params[:course][:settings]
   end
-  
+
   def clean_up_session_keys
     session.delete(:relock_warning) if session[:relock_warning].present?
   end
