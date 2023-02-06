@@ -150,6 +150,12 @@ Course.class_eval do
   end
   handle_asynchronously :update_context_module_completion_reqs
 
+  def relock
+    context_modules.each do |context_module|
+      context_module.relock_progressions
+    end
+  end
+
   private
   def filtered_announcements(filter)
     active_announcements.where("discussion_topics.id IN (?)", filter.map(&:id))

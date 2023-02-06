@@ -185,10 +185,7 @@ CoursesController.class_eval do
 
   def relock
     @course = Course.find_by(id: params[:course_id])
-    course_modules = @course.context_modules
-    course_modules.each do |course_module|
-      course_module.relock_progressions
-    end
+    @course.relock
 
     respond_to do |format|
       format.html { redirect_to course_settings_url }
