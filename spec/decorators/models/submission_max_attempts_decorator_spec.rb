@@ -61,14 +61,14 @@ describe "SubmissionMaxAttemptsDecorator" do
   end
 
   describe "#student_locked?" do
-    it "does not error is score is nil" do
+    it "does not error if score is nil" do
       allow(submission).to receive(:lti_graded_attempts).and_return(3)
       allow(submission).to receive(:max_attempts).and_return(3)
       allow(submission).to receive(:score).and_return(nil)
       expect(submission.student_locked?).to eq(true)
     end
 
-    it "does not error is best score is nil" do
+    it "does not error if best score is nil" do
       allow(submission).to receive(:lti_graded_attempts).and_return(3)
       allow(submission).to receive(:max_attempts).and_return(3)
       allow(submission).to receive(:score).and_return(nil)
@@ -84,14 +84,14 @@ describe "SubmissionMaxAttemptsDecorator" do
       expect(submission.student_locked?).to eq(true)
     end
 
-    it "returns false if max_attempts reached and score greater than min_score" do
+    it "returns nil if max_attempts reached and score greater than min_score" do
       allow(submission).to receive(:max_attempts).and_return(3)
       allow(submission).to receive(:lti_graded_attempts).and_return(3)
       allow(submission).to receive(:score).and_return(60)
       expect(submission.student_locked?).to be_nil
     end
 
-    it "returns false if best score is higher than threshold" do
+    it "returns nil if best score is higher than threshold" do
       allow(submission).to receive(:max_attempts).and_return(3)
       allow(submission).to receive(:lti_graded_attempts).and_return(3)
       allow(submission).to receive(:score).and_return(10)
