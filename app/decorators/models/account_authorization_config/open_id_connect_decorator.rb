@@ -1,8 +1,6 @@
 AccountAuthorizationConfig::OpenIDConnect.class_eval do
-  def admin_role?(token)
-    return unless roles(token)
-    setting = SettingsService.global_settings["admin_roles"] || ""
-    setting.split(",").any? { |role| roles(token).include?(role) }
+  def aad_account?(token)
+    return aad_id(token)
   end
 
   def identity_email_address(token)
@@ -13,7 +11,7 @@ AccountAuthorizationConfig::OpenIDConnect.class_eval do
 
   private
 
-  def roles(token)
-    claims(token)["role"]
+  def aad_id(token)
+    claims(token)["AADId"]
   end
 end

@@ -1,48 +1,20 @@
 describe AccountAuthorizationConfig::OpenIDConnect do
   subject { described_class.new }
 
-  describe "admin_role?" do
-    context "Admin role exists in SettingsService" do
-      before do
-        allow(SettingsService).to receive(:global_settings).and_return(
-          { "admin_roles" => "sgi-developers,cat,dog" }
-        )
-      end
-
+  describe "aad_account?" do
+    context "User is AAD user" do
       it "Returns truthy" do
-        expect(subject.admin_role?("12345")).to be_truthy
-      end
-  
-      context "Claims don't have role" do
-        before do
-          allow(subject).to receive(:claims).and_return({})
-        end
-
-        it "Returns falsy if claims don't have role" do
-          expect(subject.admin_role?("12345")).to be_falsy
-        end
+        expect(subject.aad_account?("12345")).to be_truthy
       end
     end
 
-    context "Admin role does not exist in SettingsService" do
+    context "User is not an AAD user" do
       before do
-        allow(SettingsService).to receive(:global_settings).and_return(
-          { "admin_roles" => "pony,cat,dog" }
-        )
+        allow(subject).to receive(:claims).and_return({})
       end
 
       it "Returns falsy" do
-        expect(subject.admin_role?("12345")).to be_falsy
-      end
-    end
-
-    context "Setting does not exist" do
-      before do
-        allow(SettingsService).to receive(:global_settings).and_return({})
-      end
-
-      it "Returns falsy" do
-        expect(subject.admin_role?("12345")).to be_falsy
+        expect(subject.aad_account?("12345")).to be_falsy
       end
     end
   end
