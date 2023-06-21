@@ -198,7 +198,9 @@ GEM
       net-protocol
       timeout
     nio4r (2.5.9)
-    nokogiri (1.12.5-x86_64-darwin)
+    nokogiri (1.15.2-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.15.2-x86_64-linux)
       racc (~> 1.4)
     pandarus (0.7.0)
       activesupport (~> 5.0)
@@ -329,6 +331,7 @@ GEM
 
 PLATFORMS
   x86_64-darwin-20
+  x86_64-linux
 
 DEPENDENCIES
   actioncable (~> 5)
