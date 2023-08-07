@@ -129,20 +129,21 @@
               </td>
             </tr>
             <script type="text/javascript">
-                function htmlToElement(html) {
-                    var template = document.createElement('template');
-                    template.innerHTML = html;
-                    return template.content.firstChild;
-                }
+              function htmlToElement (html) {
+                var template = document.createElement('template');
+                template.innerHTML = html;
+                return template.content.firstChild;
+              }
 
-                function addInput() {
-                    let input = '<div><input name="account[settings][domains][]" type="text" class="same-width-as-select"/></div>';
-                    let domainInput = htmlToElement(input)
-                    document.getElementById("domains-form-container").appendChild(domainInput)
-                }
+              function addInput () {
+                let input = '<div><input name="account[settings][domains][]" type="text" class="same-width-as-select"/></div>';
+                let domainInput = htmlToElement(input)
+                document.getElementById('domains-form-container')
+                  .appendChild(domainInput)
+              }
 
-                let el = document.getElementById("add-domain-input");
-                el.addEventListener('click', addInput, false);
+              let el = document.getElementById('add-domain-input');
+              el.addEventListener('click', addInput, false);
             </script>
             <% if !@account.root_account? && (@context.sis_source_id && can_do(@context.root_account, @current_user, :read_sis) || can_do(@context.root_account, @current_user, :manage_sis)) %>
               <tr>
@@ -458,63 +459,61 @@ Join the [Canvas Translation Community](%{transifex_url})
           </fieldset>
         <% end %>
 
-        <% if @expose_default_course_access_times %>
-          <fieldset>
-            <legend><%= t(:course_start_time, 'Default Course Access Times') %>
-            </legend>
-            <table>
-              <tr>
-                <td colspan=2>
-                  <p style="font-size: 0.9em;"><%= t("This setting affects when a student will be able to access a course on the first day and when access closes on the last day.") %></p>
-                </td>
-              </tr>
-              <tr>
-                <td style="width:15%" class="form-label"><%= f.blabel :course_start_time, :en => "Course Start Time" %></td>
-                <td class="formtable small-select">
-                  <%= f.fields_for :settings do |settings| %>
-                    <%= settings.number_field :course_start_time_hour,
-                                              :value => @course_start_time_hour,
-                                              :default => @course_start_time_hour,
-                                              :min => "01",
-                                              :max => "12",
-                                              :style => "width: 40px;",
-                                              :disabled => false %> :
-                    <%= settings.number_field :course_start_time_minute,
-                                              :value => @course_start_time_minute,
-                                              :default => @course_start_time_minute,
-                                              :min => "00",
-                                              :max => "59",
-                                              :style => "width: 40px;",
-                                              :disabled => false %>
-                    <%= settings.select :course_start_time_ampm, [["AM", "AM"], ["PM", "PM"]], :selected => @course_start_time_ampm, :style => "width: 20px;" %>
-                  <% end %>
-                </td>
-              </tr>
-              <tr>
-                <td style="width:15%" class="form-label"><%= f.blabel :course_end_time, :en => "Course End Time" %></td>
-                <td class="formtable small-select">
-                  <%= f.fields_for :settings do |settings| %>
-                    <%= settings.number_field :course_end_time_hour,
-                                              :value => @course_end_time_hour,
-                                              :default => @course_end_time_hour,
-                                              :min => "01",
-                                              :max => "12",
-                                              :style => "width: 40px;",
-                                              :disabled => false %> :
-                    <%= settings.number_field :course_end_time_minute,
-                                              :value => @course_end_time_minute,
-                                              :default => @course_end_time_minute,
-                                              :min => "00",
-                                              :max => "59",
-                                              :style => "width: 40px;",
-                                              :disabled => false %>
-                    <%= settings.select :course_end_time_ampm, [["AM", "AM"], ["PM", "PM"]], :selected => @course_end_time_ampm, :style => "width: 20px;" %>
-                  <% end %>
-                </td>
-              </tr>
-            </table>
-          </fieldset>
-        <% end %>
+        <fieldset>
+          <legend><%= t(:course_start_time, 'Default Course Access Times') %>
+          </legend>
+          <table>
+            <tr>
+              <td colspan=2>
+                <p style="font-size: 0.9em;"><%= t("This setting affects when a student will be able to access a course on the first day and when access closes on the last day.") %></p>
+              </td>
+            </tr>
+            <tr>
+              <td style="width:15%" class="form-label"><%= f.blabel :course_start_time, :en => "Course Start Time" %></td>
+              <td class="formtable small-select">
+                <%= f.fields_for :settings do |settings| %>
+                  <%= settings.number_field :course_start_time_hour,
+                                            :value => @course_start_time_hour,
+                                            :default => @course_start_time_hour,
+                                            :min => "01",
+                                            :max => "12",
+                                            :style => "width: 40px;",
+                                            :disabled => false %> :
+                  <%= settings.number_field :course_start_time_minute,
+                                            :value => @course_start_time_minute,
+                                            :default => @course_start_time_minute,
+                                            :min => "00",
+                                            :max => "59",
+                                            :style => "width: 40px;",
+                                            :disabled => false %>
+                  <%= settings.select :course_start_time_ampm, [["AM", "AM"], ["PM", "PM"]], :selected => @course_start_time_ampm, :style => "width: 20px;" %>
+                <% end %>
+              </td>
+            </tr>
+            <tr>
+              <td style="width:15%" class="form-label"><%= f.blabel :course_end_time, :en => "Course End Time" %></td>
+              <td class="formtable small-select">
+                <%= f.fields_for :settings do |settings| %>
+                  <%= settings.number_field :course_end_time_hour,
+                                            :value => @course_end_time_hour,
+                                            :default => @course_end_time_hour,
+                                            :min => "01",
+                                            :max => "12",
+                                            :style => "width: 40px;",
+                                            :disabled => false %> :
+                  <%= settings.number_field :course_end_time_minute,
+                                            :value => @course_end_time_minute,
+                                            :default => @course_end_time_minute,
+                                            :min => "00",
+                                            :max => "59",
+                                            :style => "width: 40px;",
+                                            :disabled => false %>
+                  <%= settings.select :course_end_time_ampm, [["AM", "AM"], ["PM", "PM"]], :selected => @course_end_time_ampm, :style => "width: 20px;" %>
+                <% end %>
+              </td>
+            </tr>
+          </table>
+        </fieldset>
 
         <%= render partial: 'additional_settings', locals: { f: f } %>
 
