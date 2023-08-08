@@ -425,39 +425,37 @@ Join the [Canvas Translation Community](%{transifex_url})
         <% end %>
 
 
-        <% if @expose_first_and_last_assignment_due_date_field %>
-          <fieldset>
-            <legend><%= t(:distribute_due_dates_settings, 'Distribute Due Dates') %></legend>
-            <table class="formtable">
-              <%= f.fields_for :settings do |settings| %>
-                <tr>
-                  <td><%= settings.blabel :first_assignment_due, :en => "First Assignment Due" %></td>
-                  <td>
-                    <%= settings.number_field :first_assignment_due,
-                                              :value => @first_assignment_due || 1,
-                                              :min => "0",
-                                              :max => "31",
-                                              :style => "width: 40px;",
-                                              :disabled => false %>
-                    School day(s) after first day
-                  </td>
-                </tr>
-                <tr>
-                  <td><%= settings.blabel :last_assignment_due, :en => "Last Assignment Due" %></td>
-                  <td>
-                    <%= settings.number_field :last_assignment_due,
-                                              :value => @last_assignment_due || 2,
-                                              :min => "0",
-                                              :max => "31",
-                                              :style => "width: 40px;",
-                                              :disabled => false %>
-                    School day(s) before last day
-                  </td>
-                </tr>
-              <% end %>
-            </table>
-          </fieldset>
-        <% end %>
+        <fieldset>
+          <legend><%= t(:distribute_due_dates_settings, 'Distribute Due Dates') %></legend>
+          <table class="formtable">
+            <%= f.fields_for :settings do |settings| %>
+              <tr>
+                <td><%= settings.blabel :first_assignment_due, :en => "First Assignment Due" %></td>
+                <td>
+                  <%= settings.number_field :first_assignment_due,
+                                            :value => @first_assignment_due || 1,
+                                            :min => "0",
+                                            :max => "31",
+                                            :style => "width: 40px;",
+                                            :disabled => false %>
+                  School day(s) after first day
+                </td>
+              </tr>
+              <tr>
+                <td><%= settings.blabel :last_assignment_due, :en => "Last Assignment Due" %></td>
+                <td>
+                  <%= settings.number_field :last_assignment_due,
+                                            :value => @last_assignment_due || 2,
+                                            :min => "0",
+                                            :max => "31",
+                                            :style => "width: 40px;",
+                                            :disabled => false %>
+                  School day(s) before last day
+                </td>
+              </tr>
+            <% end %>
+          </table>
+        </fieldset>
 
         <fieldset>
           <legend><%= t(:course_start_time, 'Default Course Access Times') %>
