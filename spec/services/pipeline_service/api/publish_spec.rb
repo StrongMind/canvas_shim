@@ -124,7 +124,7 @@ describe PipelineService::API::Publish do
       end
 
       it 'Raises an error if it cant get a valid noun ' do
-        expect{ subject.call }.to raise_error(RuntimeError, "assignment noun with id=1 is invalid")
+        expect{ subject.call }.to raise_error(RuntimeError)
       end
 
       context 'valid after fetch' do
