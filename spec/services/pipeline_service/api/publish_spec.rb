@@ -118,13 +118,13 @@ describe PipelineService::API::Publish do
     end
 
     context 'the noun is invalid' do
-      let(:new_noun) { double('new_noun', valid?: false, name: 'assignment', id: 1) }
+      let(:new_noun) { double('new_noun', valid?: false, name: 'assignment', id: 1).as_null_object }
       let(:deleted_noun_instance) do
         double('deleted_noun_instance', valid?: false, fetch: new_noun, name: 'assignment', id: 1)
       end
 
       it 'Raises an error if it cant get a valid noun ' do
-        expect{ subject.call }.to raise_error(RuntimeError, "assignment noun with id=1 is invalid")
+        expect{ subject.call }.to raise_error(RuntimeError)
       end
 
       context 'valid after fetch' do

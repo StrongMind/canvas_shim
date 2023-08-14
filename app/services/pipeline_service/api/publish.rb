@@ -42,7 +42,7 @@ module PipelineService
       def retry_if_invalid
         @object = object.fetch
         return if object.valid?
-        raise "#{object.name} noun with id=#{object.id} is invalid"
+        raise "#{object.name} noun with id=#{object.id} is invalid, validation errors: #{object.errors.full_messages}"
       end
 
       def command
