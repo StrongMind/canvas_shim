@@ -31,6 +31,7 @@ If you're decorating a page in CanvasLMS and need assets
   <%= javascript_include_tag 'canvas_shim/application' %>
 <% end %>
 ```
+
 - If you're working in views that are a part of the shim engine, and you want shim to have a unique layout, everything works at a typical Rails app where Shim has it's own layout(s) for it's internal controllers
 
 - **Note** that jQuery's ready event doesn't seem to fire with Canvas, you should be able to use window.on 'load' instead
