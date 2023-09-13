@@ -179,7 +179,7 @@ AccountsController.class_eval do
     start_time_hour = "#{params[:account][:settings]['course_start_time_hour']}"
     start_time_minute = "#{params[:account][:settings]['course_start_time_minute']}"
     ampm = "#{params[:account][:settings]['course_start_time_ampm']}"
-    start_time = "#{start_time_hour}:#{start_time_minute} #{ampm}"
+    start_time = "#{start_time_hour}:#{start_time_minute} #{ampm} #{SettingsService.get_settings(object: 'school', id: 1)["timezone"]}"
 
     SettingsService.update_settings(
       object: 'school',
@@ -193,7 +193,7 @@ AccountsController.class_eval do
     end_time_hour = "#{params[:account][:settings]['course_end_time_hour']}"
     end_time_minute = "#{params[:account][:settings]['course_end_time_minute']}"
     ampm = "#{params[:account][:settings]['course_end_time_ampm']}"
-    end_time = "#{end_time_hour}:#{end_time_minute} #{ampm}"
+    end_time = "#{end_time_hour}:#{end_time_minute} #{ampm} #{SettingsService.get_settings(object: 'school', id: 1)["timezone"]}"
 
     SettingsService.update_settings(
       object: 'school',
