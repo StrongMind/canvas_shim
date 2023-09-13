@@ -15,8 +15,9 @@ AccountsController.class_eval do
     get_allowed_filetypes
     get_first_assignment_due
     get_last_assignment_due
-    course_start_time = DateTime.parse(get_course_start_time)
-    course_end_time = DateTime.parse(get_course_end_time)
+    timezone = SettingsService.get_settings(object: 'school', id: 1)['timezone']
+    course_start_time = "#{get_course_start_time} #{timezone}"
+    course_end_time = "#{get_course_end_time} #{timezone}"
     @course_start_time_hour = course_start_time.strftime("%I")
     @course_start_time_minute = course_start_time.strftime("%M")
     @course_start_time_ampm = course_start_time.strftime("%p")
