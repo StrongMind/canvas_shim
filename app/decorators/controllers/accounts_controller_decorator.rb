@@ -15,9 +15,9 @@ AccountsController.class_eval do
     get_allowed_filetypes
     get_first_assignment_due
     get_last_assignment_due
-    timezone = SettingsService.get_settings(object: 'school', id: 1)['timezone']
-    course_start_time = "#{get_course_start_time} #{timezone}"
-    course_end_time = "#{get_course_end_time} #{timezone}"
+    course_start_time = DateTime.parse(get_course_start_time)
+    course_end_time = DateTime.parse(get_course_end_time)
+
     @course_start_time_hour = course_start_time.strftime("%I")
     @course_start_time_minute = course_start_time.strftime("%M")
     @course_start_time_ampm = course_start_time.strftime("%p")
@@ -157,6 +157,10 @@ AccountsController.class_eval do
     SettingsService.get_settings(object: 'school', id: 1)['course_end_time'] || "11:59 PM"
   end
 
+  def get_timezone
+    SettingsService.get_settings(object: 'school', id: 1)['timezone'] || "UTC"
+  end
+
   def set_first_assignment_due
     SettingsService.update_settings(
       object: 'school',
@@ -179,7 +183,7 @@ AccountsController.class_eval do
     start_time_hour = "#{params[:account][:settings]['course_start_time_hour']}"
     start_time_minute = "#{params[:account][:settings]['course_start_time_minute']}"
     ampm = "#{params[:account][:settings]['course_start_time_ampm']}"
-    start_time = "#{start_time_hour}:#{start_time_minute} #{ampm} #{SettingsService.get_settings(object: 'school', id: 1)["timezone"]}"
+    start_time = "#{start_time_hour}:#{start_time_minute} #{ampm} #{get_timezone}"
 
     SettingsService.update_settings(
       object: 'school',
@@ -193,7 +197,7 @@ AccountsController.class_eval do
     end_time_hour = "#{params[:account][:settings]['course_end_time_hour']}"
     end_time_minute = "#{params[:account][:settings]['course_end_time_minute']}"
     ampm = "#{params[:account][:settings]['course_end_time_ampm']}"
-    end_time = "#{end_time_hour}:#{end_time_minute} #{ampm} #{SettingsService.get_settings(object: 'school', id: 1)["timezone"]}"
+    end_time = "#{end_time_hour}:#{end_time_minute} #{ampm} #{get_timezone}"
 
     SettingsService.update_settings(
       object: 'school',
