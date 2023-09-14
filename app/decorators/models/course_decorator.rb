@@ -107,11 +107,7 @@ Course.class_eval do
         setting_name = method == "start_at" ? "course_start_time" : "course_end_time"
         course_time = SettingsService.get_settings(object: 'school', id: 1)[setting_name]
         return if course_time.nil?
-        course_date_time = DateTime.parse(course_time)
-        course_time_hour = course_date_time.hour.to_i
-        course_time_minute = course_date_time.minute.to_i
-
-        self.send("#{method}=", DateTime.new(self.send(method).year, self.send(method).month, self.send(method).day, course_time_hour, course_time_minute, 0, Time.zone.now.formatted_offset))
+        self.send("#{method}=", course_time)
       end
     end
   end
