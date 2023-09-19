@@ -128,7 +128,7 @@
                 assignment_id="
                 <% if module_item.try(:content_type) == "DiscussionTopic" %>
                   <%= module_item.content.try(:assignment_id) %>
-                <% elsif module_item %>item_name
+                <% elsif module_item %>
                   <%= module_item.content_id %>
                 <% end %>"
 
