@@ -60,12 +60,12 @@
       tabindex="-1"
       class="for-nvda"
       content_type="<%= module_item ? module_item.content_type : '' %>"
-      assignment_id=
+      assignment_id="
       <% if module_item.try(:content_type) == "DiscussionTopic" %>
         <%= module_item.content.try(:assignment_id) %>
       <% elsif module_item %>
         <%= module_item.content_id %>
-      <% end %>
+      <% end %>""
 
       href="<%= context_url(@context, :context_url) %>/modules/items/<%= module_item ? module_item.id : "{{ id }}" %>">
       <%= module_item && module_item.title %>
@@ -106,12 +106,12 @@
               title="<%= module_item && module_item.title %>"
               class="title external_url_link"
                 content_type="<%= module_item ? module_item.content_type : '' %>"
-                assignment_id=
+                assignment_id="
                 <% if module_item.try(:content_type) == "DiscussionTopic" %>
                   <%= module_item.content.try(:assignment_id) %>
                 <% elsif module_item %>
                   <%= module_item.content_id %>
-                <% end %> 
+                <% end %>"
               target="_blank"
               href="<%= module_item.url %>"
               data-item-href="<%= context_url(@context, :context_url) %>/modules/items/<%= module_item.id %>"
@@ -125,12 +125,12 @@
               title="<%= module_item && module_item.title %>"
               class="ig-title title"
                 content_type="<%= module_item ? module_item.content_type : '' %>"
-                assignment_id=
+                assignment_id="
                 <% if module_item.try(:content_type) == "DiscussionTopic" %>
                   <%= module_item.content.try(:assignment_id) %>
-                <% elsif module_item %>
+                <% elsif module_item %>item_name
                   <%= module_item.content_id %>
-                <% end %>
+                <% end %>"
 
               href="<%= context_url(@context, :context_url) %>/modules/items/<%= module_item ? module_item.id : "{{ id }}" %>"
               <% if item_data[:mastery_paths] && item_data[:mastery_paths][:locked] %>
