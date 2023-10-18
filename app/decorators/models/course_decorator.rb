@@ -102,14 +102,29 @@ Course.class_eval do
   end
 
   def set_course_start_end_time_from_school
-    ["start_at", "conclude_at"].each do |method|
-      unless self.send(method).nil?
-        setting_name = method == "start_at" ? "course_start_time" : "course_end_time"
-        course_time = SettingsService.get_settings(object: 'school', id: 1)[setting_name]
-        return if course_time.nil?
-        self.send("#{method}=", course_time)
-      end
-    end
+    return if start_at.nil? && conclude_at.nil?
+    self.start_at = course_start_time_from_school
+    self.conclude_at = course_end_time_from_school
+  end
+
+  def course_start_time_from_school
+    return nil if start_at.nil?
+    course_time = SettingsService.get_settings(object: 'school', id: 1)['course_start_time']
+    return start_at if course_time.nil?
+    course_date_time = DateTime.parse(course_time)
+    course_time_hour = course_date_time.hour.to_i
+    course_time_minute = course_date_time.minute.to_i
+    return DateTime.new(self.start_at.year, self.start_at.month, self.start_at.day, course_time_hour, course_time_minute, 0, Time.zone.now.formatted_offset)
+  end
+
+  def course_end_time_from_school
+    return nil if conclude_at.nil?
+    course_time = SettingsService.get_settings(object: 'school', id: 1)['course_end_time']
+    return conclude_at if course_time.nil?
+    course_date_time = DateTime.parse(course_time)
+    course_time_hour = course_date_time.hour.to_i
+    course_time_minute = course_date_time.minute.to_i
+    return DateTime.new(self.conclude_at.year, self.conclude_at.month, self.conclude_at.day, course_time_hour, course_time_minute, 0, Time.zone.now.formatted_offset)
   end
 
   def online_user_count
