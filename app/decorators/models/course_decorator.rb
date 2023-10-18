@@ -6,7 +6,7 @@ Course.class_eval do
       where("enrollments.workflow_state NOT IN ('rejected', 'deleted', 'inactive') AND enrollments.type = 'StudentEnrollment'").preload(:user)
     }, class_name: 'Enrollment'
 
-  before_create :set_course_start_end_time_from_school if Rails.env.production?
+  before_create :set_course_start_end_time_from_school
 
   after_commit -> { PipelineService.publish_as_v2(self) }
   after_create -> { RequirementsService.set_school_thresholds_on_course(course: self) }
@@ -110,7 +110,7 @@ Course.class_eval do
   def course_start_time_from_school
     return nil if start_at.nil?
     course_time = SettingsService.get_settings(object: 'school', id: 1)['course_start_time']
-    return nil if course_time.nil?
+    return start_at if course_time.nil?
     course_date_time = DateTime.parse(course_time)
     course_time_hour = course_date_time.hour.to_i
     course_time_minute = course_date_time.minute.to_i
@@ -120,7 +120,7 @@ Course.class_eval do
   def course_end_time_from_school
     return nil if conclude_at.nil?
     course_time = SettingsService.get_settings(object: 'school', id: 1)['course_end_time']
-    return nil if course_time.nil?
+    return conclude_at if course_time.nil?
     course_date_time = DateTime.parse(course_time)
     course_time_hour = course_date_time.hour.to_i
     course_time_minute = course_date_time.minute.to_i
