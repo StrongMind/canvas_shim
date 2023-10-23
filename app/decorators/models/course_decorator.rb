@@ -111,20 +111,34 @@ Course.class_eval do
     return nil if start_at.nil?
     course_time = SettingsService.get_settings(object: 'school', id: 1)['course_start_time']
     return start_at if course_time.nil?
-    course_date_time = DateTime.parse(course_time)
-    course_time_hour = course_date_time.hour.to_i
-    course_time_minute = course_date_time.minute.to_i
-    return DateTime.new(self.start_at.year, self.start_at.month, self.start_at.day, course_time_hour, course_time_minute, 0, Time.zone.now.formatted_offset)
+
+    course_time_parts = course_time.split(':')
+    course_time_hour = course_time_parts[0].to_i
+    course_time_minute = course_time_parts[1].to_i
+    am_pm = course_time_parts[1][3..4]
+
+    course_time_hour += 12 if am_pm == "PM" && course_time_hour != 12
+    course_time_hour = 0 if am_pm == "AM" && course_time_hour == 12
+
+    adjusted_start_at = start_at.change(hour:course_time_hour, min: course_time_minute)
+    return adjusted_start_at
   end
 
   def course_end_time_from_school
     return nil if conclude_at.nil?
     course_time = SettingsService.get_settings(object: 'school', id: 1)['course_end_time']
     return conclude_at if course_time.nil?
-    course_date_time = DateTime.parse(course_time)
-    course_time_hour = course_date_time.hour.to_i
-    course_time_minute = course_date_time.minute.to_i
-    return DateTime.new(self.conclude_at.year, self.conclude_at.month, self.conclude_at.day, course_time_hour, course_time_minute, 0, Time.zone.now.formatted_offset)
+
+    course_time_parts = course_time.split(':')
+    course_time_hour = course_time_parts[0].to_i
+    course_time_minute = course_time_parts[1].to_i
+    am_pm = course_time_parts[1][3..4]
+
+    course_time_hour += 12 if am_pm == "PM" && course_time_hour != 12
+    course_time_hour = 0 if am_pm == "AM" && course_time_hour == 12
+
+    adjusted_end_at = conclude_at.change(hour:course_time_hour, min: course_time_minute)
+    return adjusted_end_at
   end
 
   def online_user_count
