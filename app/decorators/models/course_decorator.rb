@@ -181,6 +181,17 @@ Course.class_eval do
     end
   end
 
+  def self.touch_courses
+    courses_to_touch = "courses_to_touch"
+
+    redis = Redis.new(url: ENV['REDIS_SERVER'])
+    redis.smembers(courses_to_touch).each do |member|
+      Course.find_by_id(member).touch
+      redis.srem(courses_to_touch, member)
+    end
+  end
+
+
   private
   def filtered_announcements(filter)
     active_announcements.where("discussion_topics.id IN (?)", filter.map(&:id))
