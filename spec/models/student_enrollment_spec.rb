@@ -127,7 +127,7 @@ describe StudentEnrollment do
       subject.update(workflow_state: "active")
     end
 
-    skip "will run when workflow_state is completed" do
+    it "will run when workflow_state is completed" do
       expect(StudentEnrollment).to receive(:send_later).with(
         :recompute_final_score, user.id, course.id
       )
