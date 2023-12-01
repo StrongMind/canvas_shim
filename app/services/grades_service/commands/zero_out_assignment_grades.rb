@@ -8,7 +8,6 @@ module GradesService
         @student = @submission.user
         @course = @assignment.context
         @grader = GradesService::Account.account_admin
-        @enrollment = StudentEnrollment.find_by(user: @student, course: @course, workflow_state: 'active')
       end
 
       def call!(options={})
@@ -29,10 +28,6 @@ module GradesService
         end
 
         @assignment.grade_student(@student, score: 0, grader: @grader)
-        if @enrollment
-          @enrollment.publish_as_v2
-        end
-
       end
 
       private
