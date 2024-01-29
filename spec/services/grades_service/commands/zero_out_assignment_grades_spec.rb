@@ -26,8 +26,8 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
 
   let!(:user) { User.create() }
   let(:grader) { double("grader") }
-  let!(:enrollment) { Enrollment.create(type: 'StudentEnrollment', course: course, user: user)}
   let!(:course) { Course.create}
+  let!(:enrollment) { Enrollment.create(type: 'StudentEnrollment', course: course, user: user)}
 
   let(:submission) do
     double(
@@ -40,9 +40,13 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
       grade: nil,
       grader: nil,
       excused?: nil,
-      cached_due_date: 1.hour.ago
+      cached_due_date: 1.hour.ago,
+      context: course
     )
   end
+
+  let(:student_enrollments_double) { double('StudentEnrollments')}
+
 
   before do
     allow(GradesService::Account).to receive(:account_admin).and_return(grader)
@@ -50,7 +54,9 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
     allow(SettingsService).to receive('get_settings').and_return({'zero_out_past_due' => 'on'})
     allow(course).to receive('admin_visible_student_enrollments').and_return([enrollment])
     allow(course).to receive('includes_user?').and_return(true)
-
+    allow(course).to receive(:student_enrollments).and_return(student_enrollments_double)
+    allow(student_enrollments_double).to receive('where').and_return([enrollment])
+    allow(Enrollment).to receive(:recompute_final_score)
   end
 
   context '#call' do
@@ -61,6 +67,11 @@ describe GradesService::Commands::ZeroOutAssignmentGrades do
 
     it 'updates the score to 0' do
       expect(assignment).to receive(:grade_student).with(any_args, hash_including(score: 0))
+      subject.call!(log_file: 'logfile')
+    end
+
+    it 'calls recompute final score' do
+      expect(Enrollment).to receive(:recompute_final_score)
       subject.call!(log_file: 'logfile')
     end
 
