@@ -28,6 +28,12 @@ module GradesService
         end
 
         @assignment.grade_student(@student, score: 0, grader: @grader)
+
+        if @submission.context.is_a?(Course)
+          @submission.context.student_enrollments.where(user: @submission.user).each do |student_enrollment|
+            Enrollment.recompute_final_score(student_enrollment.user_id, student_enrollment.course_id)
+          end
+        end
       end
 
       private
