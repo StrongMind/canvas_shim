@@ -26,10 +26,7 @@ module PipelineService
     end
 
     def post
-      http_client.post(
-        'https://3wupzgqsoh.execute-api.us-west-2.amazonaws.com/prod',
-        body: message.to_json
-      )
+      # empty body temporarily to get us through an outage, in case there are multiple places calling this.
     end
   end
 end
