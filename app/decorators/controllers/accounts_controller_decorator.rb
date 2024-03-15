@@ -47,19 +47,21 @@ AccountsController.class_eval do
   alias_method :settings, :strongmind_settings
 
   def strongmind_update
-    if account_settings_params
-      if account_settings_params.keys.select{|k| k.match(/(_passing_threshold)/)}.any?
-        set_assignment_group_thresholds(passing_threshold_group_names)
-        update_course_passing_requirements
-      end
-      set_threshold_permissions
+    if authorized_action(@account, @current_user, :manage_account_settings)
+      if account_settings_params
+        if account_settings_params.keys.select { |k| k.match(/(_passing_threshold)/) }.any?
+          set_assignment_group_thresholds(passing_threshold_group_names)
+          update_course_passing_requirements
+        end
+        set_threshold_permissions
 
-      set_allowed_filetypes if params[:allowed_filetypes]
-      set_holidays if params[:holidays]
-      set_first_assignment_due if account_settings_params[:first_assignment_due]
-      set_last_assignment_due if account_settings_params[:last_assignment_due]
-      set_course_start_time
-      set_course_end_time
+        set_allowed_filetypes if params[:allowed_filetypes]
+        set_holidays if params[:holidays]
+        set_first_assignment_due if account_settings_params[:first_assignment_due]
+        set_last_assignment_due if account_settings_params[:last_assignment_due]
+        set_course_start_time
+        set_course_end_time
+      end
     end
 
     instructure_update
