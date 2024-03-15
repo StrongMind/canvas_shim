@@ -22,7 +22,9 @@ DiscussionTopicsController.class_eval do
 
   def strongmind_create
     instructure_create
-    set_announcement_expiration_date?
+    if authorized_action(@topic, @current_user, (is_new ? :create : :update))
+      set_announcement_expiration_date?
+    end
   end
 
   alias_method :instructure_create, :create
