@@ -1,16 +1,20 @@
 AssignmentsApiController.class_eval do
   def strongmind_update
-    @assignment = @context.active_assignments.api_id(params[:id])
-    bulk_excuse
-    instructure_update
+    if authorized_action(@assignment, @current_user, :update)
+      @assignment = @context.active_assignments.api_id(params[:id])
+      bulk_excuse
+      instructure_update
+    end
   end
 
   alias_method :instructure_update, :update
   alias_method :update, :strongmind_update
 
   def strongmind_create
-    instructure_create
-    bulk_excuse
+    if authorized_action(@assignment, @current_user, :create)
+      instructure_create
+      bulk_excuse
+    end
   end
 
   alias_method :instructure_create, :create
