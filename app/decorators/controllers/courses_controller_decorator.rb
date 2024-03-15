@@ -186,12 +186,14 @@ CoursesController.class_eval do
   end
 
   def relock
-    @course = Course.find_by(id: params[:course_id])
-    @course.relock
+    if authorized_action(@course, @current_user, [:update, :manage_content, :change_course_state])
+      @course = Course.find_by(id: params[:course_id])
+      @course.relock
 
-    respond_to do |format|
-      format.html { redirect_to course_settings_url }
-      format.json { render :json => {} }
+      respond_to do |format|
+        format.html { redirect_to course_settings_url }
+        format.json { render :json => {} }
+      end
     end
   end
 
