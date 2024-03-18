@@ -48,16 +48,19 @@ EnrollmentsApiController.class_eval do
 
   def observer_popout
     student = StudentEnrollment.find(params[:id])
-    return render :json => {}, :status => :unprocessable_entity unless student
 
-    render :json => {
-      last_active: student.days_since_active,
-      last_submission: student.last_submission_formatted,
-      missing_assignments: student.missing_assignments_count,
-      total_assignment_count: @context.submissions.where("excused IS NOT true").count,
-      course_progress: "#{@context.calculate_progress(student, cached: true).round(1)}%",
-      teachers: @context.teacher_enrollments.eager_load(:user).pluck(:name)
-    }, status => :ok
+    if authorized_action(student, @current_user, :read)
+      return render :json => {}, :status => :unprocessable_entity unless student
+
+      render :json => {
+        last_active: student.days_since_active,
+        last_submission: student.last_submission_formatted,
+        missing_assignments: student.missing_assignments_count,
+        total_assignment_count: @context.submissions.where("excused IS NOT true").count,
+        course_progress: "#{@context.calculate_progress(student, cached: true).round(1)}%",
+        teachers: @context.teacher_enrollments.eager_load(:user).pluck(:name)
+      }, status => :ok
+    end
   end
 
 end

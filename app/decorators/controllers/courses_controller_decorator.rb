@@ -130,15 +130,17 @@ CoursesController.class_eval do
     instructure_update
     return if params[:course].blank?
     session[:relock_warning] = false
-    passing_thresholds_edited = params.select{|k,v| k.match(/(_passing_threshold_edited)/) && v == "true"}.present?
-    if course_settings_params
-      if course_settings_params.keys.select{|k| k.match(/(_passing_threshold)/)}.any? && passing_thresholds_edited
-        thresholds_to_update = determine_assignment_group_overrides
-        assignment_group_names = thresholds_to_update['assignment_group_names']
-        set_assignment_group_threshold_overrides(thresholds_to_update['override_group_names'])
-        set_assignment_group_thresholds(assignment_group_names)
-        RequirementsService.force_min_scores(course: @course, assignment_group_names: assignment_group_names)
-        session[:relock_warning] = true
+    if authorized_action(@course, @current_user, [:update, :manage_content, :change_course_state])
+      passing_thresholds_edited = params.select { |k, v| k.match(/(_passing_threshold_edited)/) && v == "true" }.present?
+      if course_settings_params
+        if course_settings_params.keys.select { |k| k.match(/(_passing_threshold)/) }.any? && passing_thresholds_edited
+          thresholds_to_update = determine_assignment_group_overrides
+          assignment_group_names = thresholds_to_update['assignment_group_names']
+          set_assignment_group_threshold_overrides(thresholds_to_update['override_group_names'])
+          set_assignment_group_thresholds(assignment_group_names)
+          RequirementsService.force_min_scores(course: @course, assignment_group_names: assignment_group_names)
+          session[:relock_warning] = true
+        end
       end
     end
   end
@@ -184,12 +186,14 @@ CoursesController.class_eval do
   end
 
   def relock
-    @course = Course.find_by(id: params[:course_id])
-    @course.relock
+    if authorized_action(@course, @current_user, [:update, :manage_content, :change_course_state])
+      @course = Course.find_by(id: params[:course_id])
+      @course.relock
 
-    respond_to do |format|
-      format.html { redirect_to course_settings_url }
-      format.json { render :json => {} }
+      respond_to do |format|
+        format.html { redirect_to course_settings_url }
+        format.json { render :json => {} }
+      end
     end
   end
 
