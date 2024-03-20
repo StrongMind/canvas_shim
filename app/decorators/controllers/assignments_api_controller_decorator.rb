@@ -11,6 +11,7 @@ AssignmentsApiController.class_eval do
   alias_method :update, :strongmind_update
 
   def strongmind_create
+    @assignment = @context.assignments.build
     if authorized_action(@assignment, @current_user, :create)
       instructure_create
       bulk_excuse
