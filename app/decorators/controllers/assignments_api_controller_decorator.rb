@@ -1,7 +1,7 @@
 AssignmentsApiController.class_eval do
   def strongmind_update
+    @assignment = @context.active_assignments.api_id(params[:id])
     if authorized_action(@assignment, @current_user, :update)
-      @assignment = @context.active_assignments.api_id(params[:id])
       bulk_excuse
       instructure_update
     end
