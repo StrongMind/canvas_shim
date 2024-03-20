@@ -22,7 +22,7 @@ DiscussionTopicsController.class_eval do
 
   def strongmind_create
     instructure_create
-    if authorized_action(@topic, @current_user, (is_new ? :create : :update))
+    if authorized_action(@topic, @current_user, :create)
       set_announcement_expiration_date?
     end
   end
@@ -31,6 +31,7 @@ DiscussionTopicsController.class_eval do
   alias_method :create, :strongmind_create
 
   private
+
   def excused_discussion_topics
     return [] unless topics_available?
     @discussions.map do |topic|
