@@ -54,6 +54,9 @@ module PipelineService
 
       def valid?
         return true if additional_identifiers.nil?
+        if additional_identifiers.values.any?(&:nil?)
+          Rails.logger.info "additional_identifiers contains nil values: #{additional_identifiers}"
+        end
         !additional_identifiers.values.any?(&:nil?)
       end
 
