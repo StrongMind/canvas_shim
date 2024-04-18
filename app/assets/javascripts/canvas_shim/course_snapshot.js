@@ -122,9 +122,22 @@ function replaceDataTable() {
     {
       "columnDefs": [
         {
+
           "targets": [7],
           "orderable": false,
           "visible": false,
+        },
+        {
+          "targets": [0, 6], // Target the first column
+          "type": "string", // Set alphabetical sorting for the first column
+          "orderable": true, // Allow sorting for the first column
+          "visible": true // Make the first column visible
+        },
+        {
+          "targets": "_all", // Target all columns
+          "type": "num-html-na", // Set numerical sorting for all columns
+          "orderable": true, // Allow sorting for all columns
+          "visible": true // Make all columns visible
         }
       ]
     }
@@ -134,6 +147,22 @@ function replaceDataTable() {
   $('#studentDetails').show();
 }
 
+// this allows dataTable to sort numerics and strings in the same column
+$(document).ready(function() {
+  // Define a custom sorting function
+  jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+    "num-html-na-pre": function(data) {
+      console.log(data)
+      return data === "N/A" ? -Infinity : parseFloat(data);
+    },
+    "num-html-na-asc": function(a, b) {
+      return a - b;
+    },
+    "num-html-na-desc": function(a, b) {
+      return b - a;
+    }
+  });
+});
 
 function updateAverageCourseProgress() {
 
