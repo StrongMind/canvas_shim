@@ -127,7 +127,7 @@ function replaceDataTable() {
           "visible": false,
         },
         {
-          "targets": [0, 6], // Target the first column
+          "targets": [0, 6], // Target the first and seventh column
           "type": "string", // Set alphabetical sorting for the first column
           "orderable": true, // Allow sorting for the first column
           "visible": true // Make the first column visible
