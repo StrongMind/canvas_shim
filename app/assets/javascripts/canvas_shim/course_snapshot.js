@@ -6,15 +6,15 @@ $(window).on("load", function(event) {
   if (typeof ga === 'function') {
     ga('create', ENV["analytics"]["ga_tracking_id"]);
   }
-  
+
   $("#course-snapshot-course-select").change(function(e) {
     var oldURL = window.location.pathname;
     var newURL = $(this).children(":selected").data("url");
 
     if ((typeof ga === 'function') && oldURL !== newURL) {
-      ga('send', 'event', 
-        'Snapshot: Course Selection', 
-        'click', 
+      ga('send', 'event',
+        'Snapshot: Course Selection',
+        'click',
         $(this).children(":selected").text()
       );
       var finalURL = window.location.href.replace(oldURL, newURL)
@@ -30,18 +30,18 @@ $(window).on("load", function(event) {
   if(typeof ga === 'function') {
     // Capture card link clicks
     $('body').on('click', '.card-link', function() {
-      ga('send', 'event', 
-          'Snapshot: Card Link', 
-          'click', 
+      ga('send', 'event',
+          'Snapshot: Card Link',
+          'click',
           $(this).text(),
       );
     });
 
     // capture table sorts
     $('#studentDetails').on('click', 'thead th', function() {
-      ga('send', 'event', 
-        'Snapshot: Student Detail Table', 
-        $(this).attr('class'), 
+      ga('send', 'event',
+        'Snapshot: Student Detail Table',
+        $(this).attr('class'),
         $(this).text(),
       );
     });
@@ -57,9 +57,9 @@ $(window).on("load", function(event) {
 
     // capture access report info click
     $('#activity-chart-info').on('click', '.icon-info', function() {
-      ga('send', 'event', 
-        'Snapshot: Access Report', 
-        'click', 
+      ga('send', 'event',
+        'Snapshot: Access Report',
+        'click',
         'Access Report Info Icon'
       );
     });
@@ -77,8 +77,8 @@ $(window).on("load", function(event) {
 });
 
 function triggerSearchEvent() {
-  ga('send', 'event', 
-      'Snapshot: Student Detail Table', 
+  ga('send', 'event',
+      'Snapshot: Student Detail Table',
       'search'
     );
 }
@@ -102,7 +102,7 @@ function fillDetailRow(student) {
 
     student.find('.enr-progress-bar .value').css('width', response.course_progress);
     student.find('.enr-progress-bar .progress').attr('data-label', response.course_progress);
-  
+
 
     if (doneLoading()) { replaceDataTable(); updateAverageCourseProgress() }
 
@@ -125,6 +125,18 @@ function replaceDataTable() {
           "targets": [7],
           "orderable": false,
           "visible": false,
+        },
+        {
+          "targets": [0, 6], // Target the first and seventh column
+          "type": "string", // Set alphabetical sorting for the first column
+          "orderable": true, // Allow sorting for the first column
+          "visible": true // Make the first column visible
+        },
+        {
+          "targets": "_all", // Target all columns
+          "type": "num-html-na", // Set numerical sorting for all columns
+          "orderable": true, // Allow sorting for all columns
+          "visible": true // Make all columns visible
         }
       ]
     }
@@ -134,6 +146,22 @@ function replaceDataTable() {
   $('#studentDetails').show();
 }
 
+// this allows dataTable to sort numerics and strings in the same column
+$(document).ready(function() {
+  // Define a custom sorting function
+  jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+    "num-html-na-pre": function(data) {
+      console.log(data)
+      return data === "N/A" ? -Infinity : parseFloat(data);
+    },
+    "num-html-na-asc": function(a, b) {
+      return a - b;
+    },
+    "num-html-na-desc": function(a, b) {
+      return b - a;
+    }
+  });
+});
 
 function updateAverageCourseProgress() {
 
@@ -142,7 +170,7 @@ function updateAverageCourseProgress() {
     var sum = data.reduce( function ( a, b ) {
         return (a*1) + (b*1); // cast values in-case they are strings
     }, 0 );
-  
+
     return sum / data.length;
   } );
 
