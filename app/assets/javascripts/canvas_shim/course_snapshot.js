@@ -127,7 +127,7 @@ function replaceDataTable() {
           "visible": false,
         },
         {
-          "targets": [0, 6], // Target the first and seventh column
+          "targets": [0], // Target the first column
           "type": "string", // Set alphabetical sorting for the first column
           "orderable": true, // Allow sorting for the first column
           "visible": true // Make the first column visible
@@ -151,7 +151,15 @@ $(document).ready(function() {
   // Define a custom sorting function
   jQuery.extend(jQuery.fn.dataTableExt.oSort, {
     "num-html-na-pre": function(data) {
-      console.log(data)
+
+      // For the progress bar column, it is sorting it as a string, we only want the progress value
+      var temp = document.createElement('div');
+      temp.innerHTML = data;
+      var htmlObject = temp.querySelector('.progress');
+      if (htmlObject) {
+        return parseFloat(htmlObject.getAttribute('data-label'));
+      }
+
       return data === "N/A" ? -Infinity : parseFloat(data);
     },
     "num-html-na-asc": function(a, b) {
