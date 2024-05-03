@@ -11,6 +11,8 @@ DiscussionTopicsController.class_eval do
   alias_method :index, :strongmind_index
 
   def strongmind_update
+    return unless authorized_action(@topic, @current_user, :update)
+
     get_discussion_assignment
     ExcusedService.bulk_excuse(assignment: @assignment, exclusions: params['excluded_students'])
     instructure_update
