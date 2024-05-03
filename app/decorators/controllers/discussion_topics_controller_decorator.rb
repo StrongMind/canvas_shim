@@ -11,6 +11,8 @@ DiscussionTopicsController.class_eval do
   alias_method :index, :strongmind_index
 
   def strongmind_update
+    @topic = @context.all_discussion_topics.active.find(params[:topic_id]) if params[:topic_id].present?
+
     return unless authorized_action(@topic, @current_user, :update)
 
     get_discussion_assignment
