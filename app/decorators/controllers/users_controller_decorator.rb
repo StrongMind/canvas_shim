@@ -1,7 +1,7 @@
 UsersController.class_eval do
   def special_programs
 
-    return unless @context.grants_right?(@current_user, session, :manage_sis)
+    return unless @context.grants_right?(@current_user, session, :read_sis)
 
     accommodations = Rails.cache.read("accommodations_#{params[:id]}")
     unless accommodations
