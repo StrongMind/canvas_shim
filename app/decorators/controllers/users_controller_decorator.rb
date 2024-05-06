@@ -1,6 +1,10 @@
 UsersController.class_eval do
   def special_programs
 
+    get_context
+    @context = @domain_root_account || Account.default unless @context.is_a?(Account)
+    @context = @context.root_account
+
     return unless @context.grants_right?(@current_user, session, :read_sis)
 
     accommodations = Rails.cache.read("accommodations_#{params[:id]}")
