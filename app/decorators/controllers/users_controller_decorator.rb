@@ -1,5 +1,8 @@
 UsersController.class_eval do
   def special_programs
+
+    return unless @context.grants_right?(@current_user, session, :read_sis)
+
     accommodations = Rails.cache.read("accommodations_#{params[:id]}")
     unless accommodations
       user = User.find(params[:id])
@@ -10,6 +13,9 @@ UsersController.class_eval do
   end
 
   def observer_enrollments
+
+    return unless observer_dashboard_enabled?
+
     user = User.find(params[:id])
     return render_unauthorized_action unless user
     contexts = user.observer_enrollments.map(&:course)
