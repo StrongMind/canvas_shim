@@ -109,36 +109,35 @@ Course.class_eval do
 
   def course_start_time_from_school
     return nil if start_at.nil?
-    course_time = SettingsService.get_settings(object: 'school', id: 1)['course_start_time']
-    return start_at if course_time.nil?
+    course_start_time = SettingsService.get_settings(object: 'school', id: 1)['course_start_time']
+    return start_at if course_start_time.nil?
 
-    course_time_parts = course_time.split(':')
-    course_time_hour = course_time_parts[0].to_i
-    course_time_minute = course_time_parts[1].to_i
-    am_pm = course_time_parts[1][3..4]
+    coalesce_date_time(time: course_start_time, date: start_at)
+  end
 
-    course_time_hour += 12 if am_pm == "PM" && course_time_hour != 12
-    course_time_hour = 0 if am_pm == "AM" && course_time_hour == 12
+  def coalesce_date_time(date:, time:)
+    utc_time = Time.zone.parse(time)
 
-    adjusted_start_at = start_at.change(hour:course_time_hour, min: course_time_minute)
-    return adjusted_start_at
+    # Rails will always try to convert this to UTC on save and subtract 7.
+    utc_offset = 7
+
+    DateTime.new(
+      date.year,
+      date.month,
+      date.day,
+      utc_time.hour,
+      utc_time.min,
+      utc_time.sec,
+      utc_offset
+    )
   end
 
   def course_end_time_from_school
     return nil if conclude_at.nil?
-    course_time = SettingsService.get_settings(object: 'school', id: 1)['course_end_time']
-    return conclude_at if course_time.nil?
+    course_end_time = SettingsService.get_settings(object: 'school', id: 1)['course_end_time']
+    return conclude_at if course_end_time.nil?
 
-    course_time_parts = course_time.split(':')
-    course_time_hour = course_time_parts[0].to_i
-    course_time_minute = course_time_parts[1].to_i
-    am_pm = course_time_parts[1][3..4]
-
-    course_time_hour += 12 if am_pm == "PM" && course_time_hour != 12
-    course_time_hour = 0 if am_pm == "AM" && course_time_hour == 12
-
-    adjusted_end_at = conclude_at.change(hour:course_time_hour, min: course_time_minute)
-    return adjusted_end_at
+    coalesce_date_time(time: course_end_time, date: conclude_at)
   end
 
   def online_user_count

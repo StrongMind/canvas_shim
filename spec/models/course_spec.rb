@@ -159,15 +159,16 @@ describe Course do
   describe "#check course start time" do
     context "course has start time" do
       before do
-        allow(SettingsService).to receive(:get_settings).and_return('course_start_time' => "5:55 PM")
+        allow(SettingsService).to receive(:get_settings).and_return('course_start_time' => "12:05 AM MST")
       end
 
-      date_param = DateTime.new(2023, 5, 18, 3, 33, 0, Time.zone.now.formatted_offset)
+      date_param = DateTime.new(2023, 5, 18, 0, 0, 0)
       let(:course) { Course.create(start_at: date_param) }
 
       it "matches start time in account settings" do
-        expected_start_time = "17:55 PM"
+        expected_start_time = "07:05 AM"
         actual_start_time = course.start_at.strftime("%H:%M %p")
+
         expect(actual_start_time).to eq(expected_start_time)
       end
     end
@@ -184,14 +185,14 @@ describe Course do
   describe "#check course end time" do
     context "course has end time" do
       before do
-        allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "5:55 PM")
+        allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM MST")
       end
 
-      date_param = DateTime.new(2023, 5, 18, 3, 33, 0, Time.zone.now.formatted_offset)
+      date_param = DateTime.new(2023, 10, 30, 23, 59, 0)
       let(:course) { Course.create(conclude_at: date_param) }
 
       it "matches end time in account settings" do
-        expected_end_time = "17:55 PM"
+        expected_end_time = "06:55 AM"
         actual_end_time = course.conclude_at.strftime("%H:%M %p")
         expect(actual_end_time).to eq(expected_end_time)
       end
