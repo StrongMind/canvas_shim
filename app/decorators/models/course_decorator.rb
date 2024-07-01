@@ -1,16 +1,3 @@
-def coalesce_date_time(date:, time:)
-  utc_time = Time.zone.parse(time)
-
-  DateTime.new(
-    date.year,
-    date.month,
-    date.day,
-    utc_time.hour,
-    utc_time.min,
-    utc_time.sec
-  )
-end
-
 Course.class_eval do
   has_many :active_students, -> {
       where("enrollments.workflow_state NOT IN ('rejected', 'deleted', 'inactive', 'invited') AND enrollments.type = 'StudentEnrollment'").preload(:user)
@@ -126,6 +113,23 @@ Course.class_eval do
     return start_at if course_start_time.nil?
 
     coalesce_date_time(time: course_start_time, date: start_at)
+  end
+
+  def coalesce_date_time(date:, time:)
+    utc_time = Time.zone.parse(time)
+
+    # Rails will always try to convert this to UTC on save and subtract 7.
+    utc_offset = 7
+
+    DateTime.new(
+      date.year,
+      date.month,
+      date.day,
+      utc_time.hour,
+      utc_time.min,
+      utc_time.sec,
+      utc_offset
+    )
   end
 
   def course_end_time_from_school
