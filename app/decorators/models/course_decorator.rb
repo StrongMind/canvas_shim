@@ -102,7 +102,6 @@ Course.class_eval do
   end
 
   def set_course_start_end_time_from_school
-    return if start_at.nil? && conclude_at.nil?
     self.start_at = course_start_time_from_school
     self.conclude_at = course_end_time_from_school
   end
