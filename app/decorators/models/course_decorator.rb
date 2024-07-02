@@ -118,17 +118,13 @@ Course.class_eval do
   def coalesce_date_time(date:, time:)
     utc_time = Time.zone.parse(time)
 
-    # Rails will always try to convert this to UTC on save and subtract 7.
-    utc_offset = 7
-
     DateTime.new(
       date.year,
       date.month,
       date.day,
       utc_time.hour,
       utc_time.min,
-      utc_time.sec,
-      utc_offset
+      utc_time.sec
     )
   end
 
