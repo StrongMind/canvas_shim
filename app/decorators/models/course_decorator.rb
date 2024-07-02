@@ -103,6 +103,7 @@ Course.class_eval do
 
   def set_course_start_end_time_from_school
     return if start_at.nil? && conclude_at.nil?
+
     self.start_at = course_start_time_from_school
     self.conclude_at = course_end_time_from_school
   end
@@ -127,7 +128,7 @@ Course.class_eval do
       utc_time.sec
     )
 
-    time_zone.present ? dt.in_time_zone(time_zone) : dt
+    time_zone.present? ? dt.in_time_zone(time_zone.split(' ').last) : dt.utc
   end
 
   def course_end_time_from_school
