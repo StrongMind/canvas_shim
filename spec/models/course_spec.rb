@@ -166,10 +166,35 @@ describe Course do
       let(:course) { Course.create(start_at: date_param) }
 
       it "matches start time in account settings" do
-        expected_start_time = "07:05 AM"
-        actual_start_time = course.start_at.strftime("%H:%M %p")
+        expected_start_time = "07:05 AM UTC"
+        actual_start_time = course.start_at.strftime("%H:%M %p %Z")
 
         expect(actual_start_time).to eq(expected_start_time)
+      end
+
+      context 'with a time_zone' do
+        before do
+          allow(SettingsService).to receive(:get_settings).and_return('course_start_time' => "12:05 AM MST")
+        end
+
+        let(:time_zone) { ActiveSupport::TimeZone["America/Phoenix"] }
+
+        date_param = DateTime.new(2023, 5, 18, 0, 0, 0).utc
+        let(:course) { Course.create(start_at: date_param) }
+
+        # canvas-lms returns an ActiveSupport::TimeZone object for the time_zone
+        before do
+          def course.time_zone
+            time_zone
+          end
+        end
+
+        it "matches start time in account settings" do
+          expected_start_time = "07:05 AM UTC"
+          actual_start_time = course.start_at.strftime("%H:%M %p %Z")
+
+          expect(actual_start_time).to eq(expected_start_time)
+        end
       end
     end
 
@@ -188,7 +213,7 @@ describe Course do
         allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM MST")
       end
 
-      date_param = DateTime.new(2023, 10, 30, 23, 59, 0)
+      date_param = DateTime.new(2023, 10, 30, 23, 59, 0).utc
       let(:course) { Course.create(conclude_at: date_param) }
 
       it "matches end time in account settings" do

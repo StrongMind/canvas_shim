@@ -103,6 +103,7 @@ Course.class_eval do
 
   def set_course_start_end_time_from_school
     return if start_at.nil? && conclude_at.nil?
+
     self.start_at = course_start_time_from_school
     self.conclude_at = course_end_time_from_school
   end
@@ -116,10 +117,7 @@ Course.class_eval do
   end
 
   def coalesce_date_time(date:, time:)
-    utc_time = Time.zone.parse(time)
-
-    # Rails will always try to convert this to UTC on save and subtract 7.
-    utc_offset = 7
+    utc_time = Time.zone.parse(time).utc
 
     DateTime.new(
       date.year,
@@ -127,8 +125,7 @@ Course.class_eval do
       date.day,
       utc_time.hour,
       utc_time.min,
-      utc_time.sec,
-      utc_offset
+      utc_time.sec
     )
   end
 
