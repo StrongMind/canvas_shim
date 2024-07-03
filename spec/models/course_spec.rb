@@ -180,7 +180,14 @@ describe Course do
         let(:time_zone) { ActiveSupport::TimeZone["America/Phoenix"] }
 
         date_param = DateTime.new(2023, 5, 18, 0, 0, 0).utc
-        let(:course) { Course.create(start_at: date_param, time_zone: time_zone) }
+        let(:course) { Course.create(start_at: date_param) }
+
+        # canvas-lms returns an ActiveSupport::TimeZone object for the time_zone
+        before do
+          def course.time_zone
+            time_zone
+          end
+        end
 
         it "matches start time in account settings" do
           expected_start_time = "07:05 AM UTC"

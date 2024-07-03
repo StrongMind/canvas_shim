@@ -117,9 +117,9 @@ Course.class_eval do
   end
 
   def coalesce_date_time(date:, time:)
-    utc_time = Time.zone.parse(time)
+    utc_time = Time.zone.parse(time).utc
 
-    dt = DateTime.new(
+    DateTime.new(
       date.year,
       date.month,
       date.day,
@@ -127,8 +127,6 @@ Course.class_eval do
       utc_time.min,
       utc_time.sec
     )
-
-    time_zone.present? ? dt.in_time_zone(time_zone.split(' ').last) : dt.utc
   end
 
   def course_end_time_from_school
