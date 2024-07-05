@@ -1,3 +1,10 @@
+def end_day_offset(time)
+  parsed_in_zone = Time.parse(time)
+  zone_offset = (parsed_in_zone.utc_offset / 3600) * -1
+  rollover_limit = 24 - zone_offset
+  parsed_in_zone.hour >= rollover_limit ? 1 : 0
+end
+
 Course.class_eval do
   has_many :active_students, -> {
       where("enrollments.workflow_state NOT IN ('rejected', 'deleted', 'inactive', 'invited') AND enrollments.type = 'StudentEnrollment'").preload(:user)
@@ -113,28 +120,42 @@ Course.class_eval do
     course_start_time = SettingsService.get_settings(object: 'school', id: 1)['course_start_time']
     return start_at if course_start_time.nil?
 
-    coalesce_date_time(time: course_start_time, date: start_at)
+    coalesce_start_datetime(time: course_start_time, date: start_at)
   end
 
-  def coalesce_date_time(date:, time:)
+  def coalesce_start_datetime(date:, time:)
     utc_time = Time.zone.parse(time).utc
-
     DateTime.new(
       date.year,
       date.month,
       date.day,
       utc_time.hour,
       utc_time.min,
+      utc_time.sec,
+    )
+  end
+
+  def coalesce_end_datetime(date:, time:)
+    day_offset = end_day_offset(time)
+
+    utc_time = Time.parse(time).utc
+    DateTime.new(
+      date.year,
+      date.month,
+      date.day + day_offset,
+      utc_time.hour,
+      utc_time.min,
       utc_time.sec
     )
   end
+
 
   def course_end_time_from_school
     return nil if conclude_at.nil?
     course_end_time = SettingsService.get_settings(object: 'school', id: 1)['course_end_time']
     return conclude_at if course_end_time.nil?
 
-    coalesce_date_time(time: course_end_time, date: conclude_at)
+    coalesce_end_datetime(time: course_end_time, date: conclude_at)
   end
 
   def online_user_count
