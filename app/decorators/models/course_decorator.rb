@@ -1,10 +1,3 @@
-def end_day_offset(time)
-  parsed_in_zone = Time.parse(time)
-  zone_offset = (parsed_in_zone.utc_offset / 3600) * -1
-  rollover_limit = 24 - zone_offset
-  parsed_in_zone.hour >= rollover_limit ? 1 : 0
-end
-
 Course.class_eval do
   has_many :active_students, -> {
       where("enrollments.workflow_state NOT IN ('rejected', 'deleted', 'inactive', 'invited') AND enrollments.type = 'StudentEnrollment'").preload(:user)
@@ -116,46 +109,46 @@ Course.class_eval do
   end
 
   def course_start_time_from_school
-    return nil if start_at.nil?
-    course_start_time = SettingsService.get_settings(object: 'school', id: 1)['course_start_time']
-    return start_at if course_start_time.nil?
-
-    coalesce_start_datetime(time: course_start_time, date: start_at)
-  end
-
-  def coalesce_start_datetime(date:, time:)
-    utc_time = Time.zone.parse(time).utc
-    DateTime.new(
-      date.year,
-      date.month,
-      date.day,
-      utc_time.hour,
-      utc_time.min,
-      utc_time.sec,
+    discern_datetime(
+      date: start_at,
+      time: SettingsService.get_settings(object: 'school', id: 1)['course_start_time']
     )
   end
 
-  def coalesce_end_datetime(date:, time:)
-    day_offset = end_day_offset(time)
+  def discern_datetime(date: nil, time: nil)
+    return nil if date.nil?
+    return date if time.nil?
 
+    coalesce_datetime(date: date, time: time)
+  end
+
+  def coalesce_datetime(date:, time:)
+    day_offset = utc_day_offset(time)
     utc_time = Time.parse(time).utc
-    DateTime.new(
+
+    Time.new(
       date.year,
       date.month,
       date.day + day_offset,
       utc_time.hour,
       utc_time.min,
-      utc_time.sec
+      utc_time.sec,
+      '+00:00'
     )
   end
 
+  def utc_day_offset(time)
+    parsed_in_zone = Time.parse(time)
+    hour_offset = (parsed_in_zone.utc_offset / 3_600) * -1
+    rollover_limit = 24 - hour_offset
+    parsed_in_zone.hour >= rollover_limit ? 1 : 0
+  end
 
   def course_end_time_from_school
-    return nil if conclude_at.nil?
-    course_end_time = SettingsService.get_settings(object: 'school', id: 1)['course_end_time']
-    return conclude_at if course_end_time.nil?
-
-    coalesce_end_datetime(time: course_end_time, date: conclude_at)
+    discern_datetime(
+      date: conclude_at,
+      time: SettingsService.get_settings(object: 'school', id: 1)['course_end_time']
+    )
   end
 
   def online_user_count

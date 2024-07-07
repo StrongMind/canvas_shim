@@ -156,31 +156,29 @@ describe Course do
     end
   end
 
-  describe "#check course start time" do
-    context "course has start time" do
+  describe "#course_start_time_from_school" do
+    let(:course) { Course.create(start_at: '2025-06-24 06:59:00' ) }
+
+    context "when start_time is present" do
       before do
         allow(SettingsService).to receive(:get_settings).and_return('course_start_time' => "12:05 AM MST")
       end
 
-      date_param = DateTime.new(2023, 5, 18, 0, 0, 0)
-      let(:course) { Course.create(start_at: date_param) }
+      let(:expected_start_time) { "07:05 AM UTC" }
+      let(:expected_start_date) { "2025-06-24" }
+      let(:actual_start_time) { course.start_at.strftime("%H:%M %p %Z") }
+      let(:actual_start_date) { course.start_at.in_time_zone('Arizona').strftime("%Y-%m-%d") }
 
       it "matches start time in account settings" do
-        expected_start_time = "07:05 AM UTC"
-        actual_start_time = course.start_at.strftime("%H:%M %p %Z")
-
         expect(actual_start_time).to eq(expected_start_time)
       end
 
-      context 'with a time_zone' do
-        before do
-          allow(SettingsService).to receive(:get_settings).and_return('course_start_time' => "12:05 AM MST")
-        end
+      it "returns the correct date for MST" do
+        expect(actual_start_date).to eq(expected_start_date)
+      end
 
+      context 'when the course has a meta-programmed time_zone' do
         let(:time_zone) { ActiveSupport::TimeZone["America/Phoenix"] }
-
-        date_param = DateTime.new(2023, 5, 18, 0, 0, 0).utc
-        let(:course) { Course.create(start_at: date_param) }
 
         # canvas-lms returns an ActiveSupport::TimeZone object for the time_zone
         before do
@@ -189,16 +187,27 @@ describe Course do
           end
         end
 
-        it "matches start time in account settings" do
-          expected_start_time = "07:05 AM UTC"
-          actual_start_time = course.start_at.strftime("%H:%M %p %Z")
-
+        it "it does not effect the saved start_at time" do
           expect(actual_start_time).to eq(expected_start_time)
+        end
+      end
+
+      context 'with a rollover date' do
+        before do
+          allow(SettingsService).to receive(:get_settings).and_return('course_start_time' => "11:55 PM MST")
+        end
+
+        it "returns the correct date for MST" do
+          expect(actual_start_date).to eq(expected_start_date)
+        end
+
+        it "saves the date with the correct offset" do
+          expect(course.start_at.day).to eq(25)
         end
       end
     end
 
-    context "course start time is nil" do
+    context "when start_time is not present" do
       let(:course) { Course.create() }
       it "creates a course without a start_at" do
         expect(course.start_at).to be nil
@@ -207,21 +216,21 @@ describe Course do
 
   end
 
-  describe "#check course end time" do
-    context "course has end time" do
-      context 'with a date rollover' do
-        context 'with MST' do
+  describe "#course_end_time_from_school" do
+    let(:course) { Course.create(conclude_at: '2025-06-24 06:59:00') }
+
+    context "when conclude_at is present" do
+      context 'when the UTC date rolls over' do
+        context 'when course_end_time is in MST' do
           before do
             allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM MST")
           end
 
-          let(:date_param) { '2025-06-24 06:59:00' }
-          let(:course) { Course.create(conclude_at: date_param) }
           let(:expected_end_time) { "06:55 AM" }
+          let(:actual_end_time) {  course.conclude_at.strftime("%H:%M %p") }
           let(:expected_end_date) { "2025-06-24" }
 
           it "matches the time in the account settings" do
-            actual_end_time = course.conclude_at.strftime("%H:%M %p")
             expect(actual_end_time).to eq(expected_end_time)
           end
 
@@ -235,13 +244,11 @@ describe Course do
           end
         end
 
-        context 'with a different timezone' do
+        context 'when course_end_time is in another timezone' do
           before do
             allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM EDT")
           end
 
-          let(:date_param) { '2025-06-24 06:59:00' }
-          let(:course) { Course.create(conclude_at: date_param) }
           let(:expected_end_time) { "03:55 AM" }
           let(:expected_end_date) { "2025-06-24" }
 
@@ -261,13 +268,11 @@ describe Course do
         end
       end
 
-      context 'without a date rollover' do
+      context 'when the UTC date does not roll over' do
         before do
           allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "9:00 AM MST")
         end
 
-        let(:date_param) { '2025-06-24 06:59:00' }
-        let(:course) { Course.create(conclude_at: date_param) }
         let(:expected_end_time) { "16:00 PM" }
         let(:expected_end_date) { "2025-06-24" }
 
@@ -287,12 +292,11 @@ describe Course do
       end
     end
 
-    context "course end time is nil" do
+    context "when conclude_at is not present" do
       let(:course) { Course.create() }
       it "creates a course without a conclude_at" do
         expect(course.conclude_at).to be nil
       end
     end
-
   end
 end
