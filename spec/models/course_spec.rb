@@ -242,6 +242,53 @@ describe Course do
           it "saves the date with the correct offset" do
             expect(course.conclude_at.day).to eq(25)
           end
+
+          context 'when it is the end of the month' do
+            context 'for January' do
+              let(:course) { Course.create(conclude_at: '2025-01-31 06:59:00') }
+              let(:expected_end_date) { "2025-01-31" }
+
+              it "returns the correct date for MST" do
+                actual_end_date = course.conclude_at.in_time_zone('Arizona').strftime("%Y-%m-%d")
+                expect(actual_end_date).to eq(expected_end_date)
+              end
+
+              it "saves the date with the correct offset" do
+                expect(course.conclude_at.day).to eq(01)
+              end
+            end
+
+            context 'for February (for a non-leap year)' do
+              let(:course) { Course.create(conclude_at: '2023-02-28 06:59:00') }
+              let(:expected_end_date) { "2023-02-28" }
+
+              it "returns the correct date for MST" do
+                actual_end_date = course.conclude_at.in_time_zone('Arizona').strftime("%Y-%m-%d")
+                expect(actual_end_date).to eq(expected_end_date)
+              end
+
+              it "saves the date with the correct offset" do
+                expect(course.conclude_at.day).to eq(01)
+                expect(course.conclude_at.month).to eq(03)
+              end
+            end
+          end
+
+          context 'when it is the end of the year' do
+            let(:course) { Course.create(conclude_at: '2025-12-31 06:59:00') }
+            let(:expected_end_date) { "2025-12-31" }
+
+            it "returns the correct date for MST" do
+              actual_end_date = course.conclude_at.in_time_zone('Arizona').strftime("%Y-%m-%d")
+              expect(actual_end_date).to eq(expected_end_date)
+            end
+
+            it "saves the date with the correct offset" do
+              expect(course.conclude_at.day).to eq(01)
+              expect(course.conclude_at.year).to eq(2026)
+              expect(course.conclude_at.month).to eq(01)
+            end
+          end
         end
 
         context 'when course_end_time is in another timezone' do

@@ -124,12 +124,13 @@ Course.class_eval do
 
   def coalesce_datetime(date:, time:)
     day_offset = utc_day_offset(time)
+    date = date + (day_offset).days
     utc_time = Time.parse(time).utc
 
     Time.new(
       date.year,
       date.month,
-      date.day + day_offset,
+      date.day,
       utc_time.hour,
       utc_time.min,
       utc_time.sec,
