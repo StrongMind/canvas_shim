@@ -255,6 +255,7 @@ describe Course do
 
               it "saves the date with the correct offset" do
                 expect(course.conclude_at.day).to eq(01)
+                expect(course.conclude_at.month).to eq(02)
               end
             end
 
@@ -285,8 +286,8 @@ describe Course do
 
             it "saves the date with the correct offset" do
               expect(course.conclude_at.day).to eq(01)
-              expect(course.conclude_at.year).to eq(2026)
               expect(course.conclude_at.month).to eq(01)
+              expect(course.conclude_at.year).to eq(2026)
             end
           end
         end
