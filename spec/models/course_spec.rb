@@ -157,80 +157,239 @@ describe Course do
   end
 
   describe "#course_start_time_from_school" do
-    let(:course) { Course.create(start_at: '2025-06-24 06:59:00' ) }
+    context 'on create' do
+      let(:course) { Course.create(start_at: '2025-06-24 06:59:00' ) }
 
-    context "when start_time is present" do
-      before do
-        allow(SettingsService).to receive(:get_settings).and_return('course_start_time' => "12:05 AM MST")
-      end
-
-      let(:expected_start_time) { "07:05 AM UTC" }
-      let(:expected_start_date) { "2025-06-24" }
-      let(:actual_start_time) { course.start_at.strftime("%H:%M %p %Z") }
-      let(:actual_start_date) { course.start_at.in_time_zone('Arizona').strftime("%Y-%m-%d") }
-
-      it "matches start time in account settings" do
-        expect(actual_start_time).to eq(expected_start_time)
-      end
-
-      it "returns the correct date for MST" do
-        expect(actual_start_date).to eq(expected_start_date)
-      end
-
-      context 'when the course has a meta-programmed time_zone' do
-        let(:time_zone) { ActiveSupport::TimeZone["America/Phoenix"] }
-
-        # canvas-lms returns an ActiveSupport::TimeZone object for the time_zone
+      context "when start_time is present" do
         before do
-          def course.time_zone
-            time_zone
-          end
+          allow(SettingsService).to receive(:get_settings).and_return('course_start_time' => "12:05 AM MST")
         end
 
-        it "it does not effect the saved start_at time" do
+        let(:expected_start_time) { "07:05 AM UTC" }
+        let(:expected_start_date) { "2025-06-24" }
+        let(:actual_start_time) { course.start_at.strftime("%H:%M %p %Z") }
+        let(:actual_start_date) { course.start_at.in_time_zone('Arizona').strftime("%Y-%m-%d") }
+
+        it "matches start time in account settings" do
           expect(actual_start_time).to eq(expected_start_time)
-        end
-      end
-
-      context 'with a rollover date' do
-        before do
-          allow(SettingsService).to receive(:get_settings).and_return('course_start_time' => "11:55 PM MST")
         end
 
         it "returns the correct date for MST" do
           expect(actual_start_date).to eq(expected_start_date)
         end
 
-        it "saves the date with the correct offset" do
-          expect(course.start_at.day).to eq(25)
+        context 'when the course has a meta-programmed time_zone' do
+          let(:time_zone) { ActiveSupport::TimeZone["America/Phoenix"] }
+
+          # canvas-lms returns an ActiveSupport::TimeZone object for the time_zone
+          before do
+            def course.time_zone
+              time_zone
+            end
+          end
+
+          it "it does not effect the saved start_at time" do
+            expect(actual_start_time).to eq(expected_start_time)
+          end
+        end
+
+        context 'with a rollover date' do
+          before do
+            allow(SettingsService).to receive(:get_settings).and_return('course_start_time' => "11:55 PM MST")
+          end
+
+          it "returns the correct date for MST" do
+            expect(actual_start_date).to eq(expected_start_date)
+          end
+
+          it "saves the date with the correct offset" do
+            expect(course.start_at.day).to eq(25)
+          end
+        end
+      end
+
+      context "when start_time is not present" do
+        let(:course) { Course.create() }
+        it "creates a course without a start_at" do
+          expect(course.start_at).to be nil
         end
       end
     end
 
-    context "when start_time is not present" do
-      let(:course) { Course.create() }
-      it "creates a course without a start_at" do
-        expect(course.start_at).to be nil
-      end
-    end
+    context 'on update' do
+      let(:course) { Course.create }
 
+      context "when start_time is present" do
+        before do
+          allow(SettingsService).to receive(:get_settings).and_return('course_start_time' => "12:05 AM MST")
+          course.update!(start_at: '2025-06-24 06:59:00')
+        end
+
+        let(:expected_start_time) { "07:05 AM UTC" }
+        let(:expected_start_date) { "2025-06-24" }
+        let(:actual_start_time) { course.start_at.strftime("%H:%M %p %Z") }
+        let(:actual_start_date) { course.start_at.in_time_zone('Arizona').strftime("%Y-%m-%d") }
+
+        it "matches start time in account settings" do
+          expect(actual_start_time).to eq(expected_start_time)
+        end
+
+        it "returns the correct date for MST" do
+          expect(actual_start_date).to eq(expected_start_date)
+        end
+
+        context 'when the course has a meta-programmed time_zone' do
+          let(:time_zone) { ActiveSupport::TimeZone["America/Phoenix"] }
+
+          # canvas-lms returns an ActiveSupport::TimeZone object for the time_zone
+          before do
+            def course.time_zone
+              time_zone
+            end
+          end
+
+          it "it does not effect the saved start_at time" do
+            expect(actual_start_time).to eq(expected_start_time)
+          end
+        end
+
+        context 'with a rollover date' do
+          before do
+            allow(SettingsService).to receive(:get_settings).and_return('course_start_time' => "11:55 PM MST")
+            course.update!(start_at: '2025-06-24 06:59:00')
+          end
+
+          it "returns the correct date for MST" do
+            expect(actual_start_date).to eq(expected_start_date)
+          end
+
+          it "saves the date with the correct offset" do
+            expect(course.start_at.day).to eq(25)
+          end
+        end
+      end
+
+      context "when start_time is not present" do
+        let(:course) { Course.create() }
+        it "creates a course without a start_at" do
+          expect(course.start_at).to be nil
+        end
+      end
+
+    end
   end
 
   describe "#course_end_time_from_school" do
-    let(:course) { Course.create(conclude_at: '2025-06-24 06:59:00') }
+    context 'on create' do
+      let(:course) { Course.create(conclude_at: '2025-06-24 06:59:00') }
 
-    context "when conclude_at is present" do
-      context 'when the UTC date rolls over' do
-        context 'when course_end_time is in MST' do
-          before do
-            allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM MST")
+      context "when conclude_at is present" do
+        context 'when the UTC date rolls over' do
+          context 'when course_end_time is in MST' do
+            before do
+              allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM MST")
+            end
+
+            let(:expected_end_time) { "06:55 AM" }
+            let(:actual_end_time) {  course.conclude_at.strftime("%H:%M %p") }
+            let(:expected_end_date) { "2025-06-24" }
+
+            it "matches the time in the account settings" do
+              expect(actual_end_time).to eq(expected_end_time)
+            end
+
+            it "returns the correct date for MST" do
+              actual_end_date = course.conclude_at.in_time_zone('Arizona').strftime("%Y-%m-%d")
+              expect(actual_end_date).to eq(expected_end_date)
+            end
+
+            it "saves the date with the correct offset" do
+              expect(course.conclude_at.day).to eq(25)
+            end
+
+            context 'when it is the end of the month' do
+              context 'for January' do
+                let(:course) { Course.create(conclude_at: '2025-01-31 06:59:00') }
+                let(:expected_end_date) { "2025-01-31" }
+
+                it "returns the correct date for MST" do
+                  actual_end_date = course.conclude_at.in_time_zone('Arizona').strftime("%Y-%m-%d")
+                  expect(actual_end_date).to eq(expected_end_date)
+                end
+
+                it "saves the date with the correct offset" do
+                  expect(course.conclude_at.day).to eq(01)
+                  expect(course.conclude_at.month).to eq(02)
+                end
+              end
+
+              context 'for February (for a non-leap year)' do
+                let(:course) { Course.create(conclude_at: '2023-02-28 06:59:00') }
+                let(:expected_end_date) { "2023-02-28" }
+
+                it "returns the correct date for MST" do
+                  actual_end_date = course.conclude_at.in_time_zone('Arizona').strftime("%Y-%m-%d")
+                  expect(actual_end_date).to eq(expected_end_date)
+                end
+
+                it "saves the date with the correct offset" do
+                  expect(course.conclude_at.day).to eq(01)
+                  expect(course.conclude_at.month).to eq(03)
+                end
+              end
+            end
+
+            context 'when it is the end of the year' do
+              let(:course) { Course.create(conclude_at: '2025-12-31 06:59:00') }
+              let(:expected_end_date) { "2025-12-31" }
+
+              it "returns the correct date for MST" do
+                actual_end_date = course.conclude_at.in_time_zone('Arizona').strftime("%Y-%m-%d")
+                expect(actual_end_date).to eq(expected_end_date)
+              end
+
+              it "saves the date with the correct offset" do
+                expect(course.conclude_at.day).to eq(01)
+                expect(course.conclude_at.month).to eq(01)
+                expect(course.conclude_at.year).to eq(2026)
+              end
+            end
           end
 
-          let(:expected_end_time) { "06:55 AM" }
-          let(:actual_end_time) {  course.conclude_at.strftime("%H:%M %p") }
+          context 'when course_end_time is in another timezone' do
+            before do
+              allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM EDT")
+            end
+
+            let(:expected_end_time) { "03:55 AM" }
+            let(:expected_end_date) { "2025-06-24" }
+
+            it "matches the time in the account settings" do
+              actual_end_time = course.conclude_at.strftime("%H:%M %p")
+              expect(actual_end_time).to eq(expected_end_time)
+            end
+
+            it "returns the correct date for MST" do
+              actual_end_date = course.conclude_at.in_time_zone('Eastern Time (US & Canada)').strftime("%Y-%m-%d")
+              expect(actual_end_date).to eq(expected_end_date)
+            end
+
+            it "saves the date with the correct offset" do
+              expect(course.conclude_at.day).to eq(25)
+            end
+          end
+        end
+
+        context 'when the UTC date does not roll over' do
+          before do
+            allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "9:00 AM MST")
+          end
+
+          let(:expected_end_time) { "16:00 PM" }
           let(:expected_end_date) { "2025-06-24" }
 
           it "matches the time in the account settings" do
+            actual_end_time = course.conclude_at.strftime("%H:%M %p")
             expect(actual_end_time).to eq(expected_end_time)
           end
 
@@ -240,44 +399,37 @@ describe Course do
           end
 
           it "saves the date with the correct offset" do
-            expect(course.conclude_at.day).to eq(25)
+            expect(course.conclude_at.day).to eq(24)
           end
+        end
+      end
 
-          context 'when it is the end of the month' do
-            context 'for January' do
-              let(:course) { Course.create(conclude_at: '2025-01-31 06:59:00') }
-              let(:expected_end_date) { "2025-01-31" }
+      context "when conclude_at is not present" do
+        let(:course) { Course.create() }
+        it "creates a course without a conclude_at" do
+          expect(course.conclude_at).to be nil
+        end
+      end
+    end
 
-              it "returns the correct date for MST" do
-                actual_end_date = course.conclude_at.in_time_zone('Arizona').strftime("%Y-%m-%d")
-                expect(actual_end_date).to eq(expected_end_date)
-              end
+    context 'on update' do
+      let(:course) { Course.create }
 
-              it "saves the date with the correct offset" do
-                expect(course.conclude_at.day).to eq(01)
-                expect(course.conclude_at.month).to eq(02)
-              end
+      context "when conclude_at is present" do
+        context 'when the UTC date rolls over' do
+          context 'when course_end_time is in MST' do
+            before do
+              allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM MST")
+              course.update!(conclude_at: '2025-06-24 06:59:00')
             end
 
-            context 'for February (for a non-leap year)' do
-              let(:course) { Course.create(conclude_at: '2023-02-28 06:59:00') }
-              let(:expected_end_date) { "2023-02-28" }
+            let(:expected_end_time) { "06:55 AM" }
+            let(:actual_end_time) {  course.conclude_at.strftime("%H:%M %p") }
+            let(:expected_end_date) { "2025-06-24" }
 
-              it "returns the correct date for MST" do
-                actual_end_date = course.conclude_at.in_time_zone('Arizona').strftime("%Y-%m-%d")
-                expect(actual_end_date).to eq(expected_end_date)
-              end
-
-              it "saves the date with the correct offset" do
-                expect(course.conclude_at.day).to eq(01)
-                expect(course.conclude_at.month).to eq(03)
-              end
+            it "matches the time in the account settings" do
+              expect(actual_end_time).to eq(expected_end_time)
             end
-          end
-
-          context 'when it is the end of the year' do
-            let(:course) { Course.create(conclude_at: '2025-12-31 06:59:00') }
-            let(:expected_end_date) { "2025-12-31" }
 
             it "returns the correct date for MST" do
               actual_end_date = course.conclude_at.in_time_zone('Arizona').strftime("%Y-%m-%d")
@@ -285,19 +437,102 @@ describe Course do
             end
 
             it "saves the date with the correct offset" do
-              expect(course.conclude_at.day).to eq(01)
-              expect(course.conclude_at.month).to eq(01)
-              expect(course.conclude_at.year).to eq(2026)
+              expect(course.conclude_at.day).to eq(25)
+            end
+
+            context 'when it is the end of the month' do
+              context 'for January' do
+                let(:course) { Course.create }
+                let(:expected_end_date) { "2025-01-31" }
+
+                before do
+                  course.update!(conclude_at: '2025-01-31 06:59:00')
+                end
+
+                it "returns the correct date for MST" do
+                  actual_end_date = course.conclude_at.in_time_zone('Arizona').strftime("%Y-%m-%d")
+                  expect(actual_end_date).to eq(expected_end_date)
+                end
+
+                it "saves the date with the correct offset" do
+                  expect(course.conclude_at.day).to eq(01)
+                  expect(course.conclude_at.month).to eq(02)
+                end
+              end
+
+              context 'for February (for a non-leap year)' do
+                let(:course) { Course.create }
+                let(:expected_end_date) { "2023-02-28" }
+
+                before do
+                  course.update!(conclude_at: '2023-02-28 06:59:00')
+                end
+
+                it "returns the correct date for MST" do
+                  actual_end_date = course.conclude_at.in_time_zone('Arizona').strftime("%Y-%m-%d")
+                  expect(actual_end_date).to eq(expected_end_date)
+                end
+
+                it "saves the date with the correct offset" do
+                  expect(course.conclude_at.day).to eq(01)
+                  expect(course.conclude_at.month).to eq(03)
+                end
+              end
+            end
+
+            context 'when it is the end of the year' do
+              let(:course) { Course.create }
+              let(:expected_end_date) { "2025-12-31" }
+
+              before do
+                course.update!(conclude_at: '2025-12-31 06:59:00')
+              end
+
+              it "returns the correct date for MST" do
+                actual_end_date = course.conclude_at.in_time_zone('Arizona').strftime("%Y-%m-%d")
+                expect(actual_end_date).to eq(expected_end_date)
+              end
+
+              it "saves the date with the correct offset" do
+                expect(course.conclude_at.day).to eq(01)
+                expect(course.conclude_at.month).to eq(01)
+                expect(course.conclude_at.year).to eq(2026)
+              end
+            end
+          end
+
+          context 'when course_end_time is in another timezone' do
+            before do
+              allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM EDT")
+              course.update!(conclude_at: '2025-06-24 06:59:00')
+            end
+
+            let(:expected_end_time) { "03:55 AM" }
+            let(:expected_end_date) { "2025-06-24" }
+
+            it "matches the time in the account settings" do
+              actual_end_time = course.conclude_at.strftime("%H:%M %p")
+              expect(actual_end_time).to eq(expected_end_time)
+            end
+
+            it "returns the correct date for MST" do
+              actual_end_date = course.conclude_at.in_time_zone('Eastern Time (US & Canada)').strftime("%Y-%m-%d")
+              expect(actual_end_date).to eq(expected_end_date)
+            end
+
+            it "saves the date with the correct offset" do
+              expect(course.conclude_at.day).to eq(25)
             end
           end
         end
 
-        context 'when course_end_time is in another timezone' do
+        context 'when the UTC date does not roll over' do
           before do
-            allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM EDT")
+            allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "9:00 AM MST")
+            course.update!(conclude_at: '2025-06-24 06:59:00')
           end
 
-          let(:expected_end_time) { "03:55 AM" }
+          let(:expected_end_time) { "16:00 PM" }
           let(:expected_end_date) { "2025-06-24" }
 
           it "matches the time in the account settings" do
@@ -306,44 +541,21 @@ describe Course do
           end
 
           it "returns the correct date for MST" do
-            actual_end_date = course.conclude_at.in_time_zone('Eastern Time (US & Canada)').strftime("%Y-%m-%d")
+            actual_end_date = course.conclude_at.in_time_zone('Arizona').strftime("%Y-%m-%d")
             expect(actual_end_date).to eq(expected_end_date)
           end
 
           it "saves the date with the correct offset" do
-            expect(course.conclude_at.day).to eq(25)
+            expect(course.conclude_at.day).to eq(24)
           end
         end
       end
 
-      context 'when the UTC date does not roll over' do
-        before do
-          allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "9:00 AM MST")
+      context "when conclude_at is not present" do
+        let(:course) { Course.create() }
+        it "creates a course without a conclude_at" do
+          expect(course.conclude_at).to be nil
         end
-
-        let(:expected_end_time) { "16:00 PM" }
-        let(:expected_end_date) { "2025-06-24" }
-
-        it "matches the time in the account settings" do
-          actual_end_time = course.conclude_at.strftime("%H:%M %p")
-          expect(actual_end_time).to eq(expected_end_time)
-        end
-
-        it "returns the correct date for MST" do
-          actual_end_date = course.conclude_at.in_time_zone('Arizona').strftime("%Y-%m-%d")
-          expect(actual_end_date).to eq(expected_end_date)
-        end
-
-        it "saves the date with the correct offset" do
-          expect(course.conclude_at.day).to eq(24)
-        end
-      end
-    end
-
-    context "when conclude_at is not present" do
-      let(:course) { Course.create() }
-      it "creates a course without a conclude_at" do
-        expect(course.conclude_at).to be nil
       end
     end
   end
