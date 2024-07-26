@@ -181,7 +181,6 @@ describe Course do
         context 'when the course has a meta-programmed time_zone' do
           let(:time_zone) { ActiveSupport::TimeZone["America/Phoenix"] }
 
-          # canvas-lms returns an ActiveSupport::TimeZone object for the time_zone
           before do
             def course.time_zone
               time_zone
