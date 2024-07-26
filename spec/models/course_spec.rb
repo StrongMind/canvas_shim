@@ -222,6 +222,7 @@ describe Course do
         before do
           allow(SettingsService).to receive(:get_settings).and_return('course_start_time' => "12:05 AM MST")
           course.update!(start_at: '2025-06-24 06:59:00')
+          course.reload
         end
 
         let(:expected_start_time) { "07:05 AM UTC" }
@@ -256,6 +257,7 @@ describe Course do
           before do
             allow(SettingsService).to receive(:get_settings).and_return('course_start_time' => "11:55 PM MST")
             course.update!(start_at: '2025-06-24 06:59:00')
+            course.reload
           end
 
           it "returns the correct date for MST" do
@@ -420,6 +422,7 @@ describe Course do
             before do
               allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM MST")
               course.update!(conclude_at: '2025-06-24 06:59:00')
+              course.reload
             end
 
             let(:expected_end_time) { "06:55 AM" }
@@ -446,6 +449,7 @@ describe Course do
 
                 before do
                   course.update!(conclude_at: '2025-01-31 06:59:00')
+                  course.reload
                 end
 
                 it "returns the correct date for MST" do
@@ -465,6 +469,7 @@ describe Course do
 
                 before do
                   course.update!(conclude_at: '2023-02-28 06:59:00')
+                  course.reload
                 end
 
                 it "returns the correct date for MST" do
@@ -485,6 +490,7 @@ describe Course do
 
               before do
                 course.update!(conclude_at: '2025-12-31 06:59:00')
+                course.reload
               end
 
               it "returns the correct date for MST" do
@@ -504,6 +510,7 @@ describe Course do
             before do
               allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM EDT")
               course.update!(conclude_at: '2025-06-24 06:59:00')
+              course.reload
             end
 
             let(:expected_end_time) { "03:55 AM" }
@@ -529,6 +536,7 @@ describe Course do
           before do
             allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "9:00 AM MST")
             course.update!(conclude_at: '2025-06-24 06:59:00')
+            course.reload
           end
 
           let(:expected_end_time) { "16:00 PM" }
