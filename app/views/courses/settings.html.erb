@@ -89,6 +89,7 @@
     <% opts = {:id => "course_form", :class => "formtable"} %>
     <% opts[:disabled] = 'disabled' unless can_manage %>
     <%= form_for @context, :html => opts do |f| %>
+      <%= f.hidden_field 'update_with_timezone', true %>
     <table class="coursesettings">
       <% if @context.feature_enabled?(:course_card_images) %>
       <tr>
@@ -297,7 +298,7 @@
         </td>
       </tr><tr>
       <% end %>
-      
+
       <% if available_locales.size > 1 %>
       </tr><tr>
         <td class="form-label"><%= f.blabel :locale, :language, :en => "Language" %></td>
