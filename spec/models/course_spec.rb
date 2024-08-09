@@ -412,6 +412,26 @@ describe Course do
     end
 
     context 'on update' do
+      let(:course) { Course.create(conclude_at: '2025-06-24 06:59:00') }
+
+      before do
+        allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM MST")
+      end
+      let(:expected_end_time) { "06:55 AM" }
+      let(:actual_end_time) {  course.conclude_at.strftime("%H:%M %p") }
+      let(:expected_end_date_after_create) { "2025-06-25" }
+
+      it "It does not change the existing conclude_at" do
+        actual_end_date = course.conclude_at.strftime("%Y-%m-%d")
+        expect(actual_end_date).to eq(expected_end_date_after_create)
+        course.update(workflow_state: 'active')
+
+        actual_end_date = course.conclude_at.strftime("%Y-%m-%d")
+        expect(actual_end_date).to eq(expected_end_date_after_create)
+      end
+    end
+  end
+  context '#update_with_timezone' do
       let(:course) { Course.create }
 
       context "when conclude_at is present" do
@@ -419,7 +439,7 @@ describe Course do
           context 'when course_end_time is in MST' do
             before do
               allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM MST")
-              course.update!(conclude_at: '2025-06-24 06:59:00')
+              course.update_with_timezone(conclude_at: '2025-06-24 06:59:00')
             end
 
             let(:expected_end_time) { "06:55 AM" }
@@ -445,7 +465,7 @@ describe Course do
                 let(:expected_end_date) { "2025-01-31" }
 
                 before do
-                  course.update!(conclude_at: '2025-01-31 06:59:00')
+                  course.update_with_timezone(conclude_at: '2025-01-31 06:59:00')
                 end
 
                 it "returns the correct date for MST" do
@@ -464,7 +484,7 @@ describe Course do
                 let(:expected_end_date) { "2023-02-28" }
 
                 before do
-                  course.update!(conclude_at: '2023-02-28 06:59:00')
+                  course.update_with_timezone(conclude_at: '2023-02-28 06:59:00')
                 end
 
                 it "returns the correct date for MST" do
@@ -484,7 +504,7 @@ describe Course do
               let(:expected_end_date) { "2025-12-31" }
 
               before do
-                course.update!(conclude_at: '2025-12-31 06:59:00')
+                course.update_with_timezone(conclude_at: '2025-12-31 06:59:00')
               end
 
               it "returns the correct date for MST" do
@@ -503,7 +523,7 @@ describe Course do
           context 'when course_end_time is in another timezone' do
             before do
               allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM EDT")
-              course.update!(conclude_at: '2025-06-24 06:59:00')
+              course.update_with_timezone(conclude_at: '2025-06-24 06:59:00')
             end
 
             let(:expected_end_time) { "03:55 AM" }
@@ -528,7 +548,7 @@ describe Course do
         context 'when the UTC date does not roll over' do
           before do
             allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "9:00 AM MST")
-            course.update!(conclude_at: '2025-06-24 06:59:00')
+            course.update_with_timezone(conclude_at: '2025-06-24 06:59:00')
           end
 
           let(:expected_end_time) { "16:00 PM" }
@@ -550,12 +570,64 @@ describe Course do
         end
       end
 
-      context "when conclude_at is not present" do
-        let(:course) { Course.create() }
-        it "creates a course without a conclude_at" do
-          expect(course.conclude_at).to be nil
+      context "when conclude_at is not present in update" do
+        context 'when the the school time is in MST' do
+          let(:course) { Course.create(conclude_at: '2025-06-24 06:59:00') }
+
+          before do
+            allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM MST")
+          end
+          let(:expected_end_time) { "06:55 AM" }
+          let(:actual_end_time) {  course.conclude_at.strftime("%H:%M %p") }
+          let(:expected_end_date) { "2025-06-25" }
+
+          it "does change the existing conclude_at" do
+            actual_end_date = course.conclude_at.strftime("%Y-%m-%d")
+            expect(actual_end_date).to eq(expected_end_date)
+            course.update(workflow_state: 'active')
+
+            actual_end_date = course.conclude_at.strftime("%Y-%m-%d")
+            expect(actual_end_date).to eq(expected_end_date)
+          end
+        end
+        context 'when the school time is in UTC' do
+          let(:course) { Course.create(conclude_at: '2025-06-24 06:59:00') }
+
+          before do
+            allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM UTC")
+          end
+          let(:expected_end_time) { "06:55 AM" }
+          let(:actual_end_time) {  course.conclude_at.strftime("%H:%M %p") }
+          let(:expected_end_date) { "2025-06-24" }
+
+          it "It does not change the existing conclude_at" do
+            actual_end_date = course.conclude_at.strftime("%Y-%m-%d")
+            expect(actual_end_date).to eq(expected_end_date)
+            course.update_with_timezone(workflow_state: 'active')
+
+            actual_end_date = course.conclude_at.strftime("%Y-%m-%d")
+            expect(actual_end_date).to eq(expected_end_date)
+          end
+        end
+        context 'when the the school time is in MDT' do
+          let(:course) { Course.create(conclude_at: '2025-06-24 06:59:00') }
+
+          before do
+            allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM MDT")
+          end
+          let(:expected_end_time) { "06:55 AM" }
+          let(:actual_end_time) {  course.conclude_at.strftime("%H:%M %p") }
+          let(:expected_end_date) { "2025-06-25" }
+
+          it "does change the existing conclude_at" do
+            actual_end_date = course.conclude_at.strftime("%Y-%m-%d")
+            expect(actual_end_date).to eq(expected_end_date)
+            course.update(workflow_state: 'active')
+
+            actual_end_date = course.conclude_at.strftime("%Y-%m-%d")
+            expect(actual_end_date).to eq(expected_end_date)
+          end
         end
       end
-    end
   end
 end

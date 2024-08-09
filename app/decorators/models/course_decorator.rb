@@ -6,7 +6,7 @@ Course.class_eval do
       where("enrollments.workflow_state NOT IN ('rejected', 'deleted', 'inactive') AND enrollments.type = 'StudentEnrollment'").preload(:user)
     }, class_name: 'Enrollment'
 
-  after_commit :set_course_start_end_time_from_school
+  after_create :set_course_start_end_time_from_school
 
   after_commit -> { PipelineService.publish_as_v2(self) }
   after_create -> { RequirementsService.set_school_thresholds_on_course(course: self) }
@@ -108,7 +108,7 @@ Course.class_eval do
     self.conclude_at = course_end_time_from_school
   end
 
-  def update_course_with_timezone(params)
+  def update_with_timezone(params)
     update(params)
     set_course_start_end_time_from_school
     save
