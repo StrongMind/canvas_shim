@@ -106,6 +106,7 @@ Course.class_eval do
 
     self.start_at = course_start_time_from_school
     self.conclude_at = course_end_time_from_school
+    self
   end
 
   def update_with_timezone(params)
