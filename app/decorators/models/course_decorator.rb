@@ -109,12 +109,6 @@ Course.class_eval do
     self
   end
 
-  def update_with_timezone(params)
-    update(params)
-    set_course_start_end_time_from_school
-    save
-  end
-
   def course_start_time_from_school
     discern_datetime(
       date: start_at,
