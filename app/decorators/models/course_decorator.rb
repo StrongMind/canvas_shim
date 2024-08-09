@@ -108,6 +108,12 @@ Course.class_eval do
     self.conclude_at = course_end_time_from_school
   end
 
+  def update_course_with_timezone(params)
+    update(params)
+    set_course_start_end_time_from_school
+    save
+  end
+
   def course_start_time_from_school
     discern_datetime(
       date: start_at,
