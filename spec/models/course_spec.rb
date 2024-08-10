@@ -157,7 +157,7 @@ describe Course do
   end
 
   describe "#course_start_time_from_school" do
-    context 'on create' do
+    context '#before_create' do
       let(:course) { Course.create(start_at: '2025-06-24 06:59:00' ) }
 
       context "when start_time is present" do
@@ -215,13 +215,13 @@ describe Course do
       end
     end
 
-    context 'on update' do
+    context '#update_with_course_dates!' do
       let(:course) { Course.create }
 
       context "when start_time is present" do
         before do
           allow(SettingsService).to receive(:get_settings).and_return('course_start_time' => "12:05 AM MST")
-          course.update!(start_at: '2025-06-24 06:59:00')
+          course.update_with_course_dates!(start_at: '2025-06-24 06:59:00')
           course.reload
         end
 
@@ -256,7 +256,7 @@ describe Course do
         context 'with a rollover date' do
           before do
             allow(SettingsService).to receive(:get_settings).and_return('course_start_time' => "11:55 PM MST")
-            course.update!(start_at: '2025-06-24 06:59:00')
+            course.update_with_course_dates!(start_at: '2025-06-24 06:59:00')
             course.reload
           end
 
@@ -281,7 +281,7 @@ describe Course do
   end
 
   describe "#course_end_time_from_school" do
-    context 'on create' do
+    context '#before_create' do
       let(:course) { Course.create(conclude_at: '2025-06-24 06:59:00') }
 
       context "when conclude_at is present" do
@@ -413,7 +413,7 @@ describe Course do
       end
     end
 
-    context 'on update' do
+    context '#update_with_course_dates!' do
       let(:course) { Course.create }
 
       context "when conclude_at is present" do
@@ -421,7 +421,7 @@ describe Course do
           context 'when course_end_time is in MST' do
             before do
               allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM MST")
-              course.update!(conclude_at: '2025-06-24 06:59:00')
+              course.update_with_course_dates!(conclude_at: '2025-06-24 06:59:00')
               course.reload
             end
 
@@ -448,7 +448,7 @@ describe Course do
                 let(:expected_end_date) { "2025-01-31" }
 
                 before do
-                  course.update!(conclude_at: '2025-01-31 06:59:00')
+                  course.update_with_course_dates!(conclude_at: '2025-01-31 06:59:00')
                   course.reload
                 end
 
@@ -468,7 +468,7 @@ describe Course do
                 let(:expected_end_date) { "2023-02-28" }
 
                 before do
-                  course.update!(conclude_at: '2023-02-28 06:59:00')
+                  course.update_with_course_dates!(conclude_at: '2023-02-28 06:59:00')
                   course.reload
                 end
 
@@ -489,7 +489,7 @@ describe Course do
               let(:expected_end_date) { "2025-12-31" }
 
               before do
-                course.update!(conclude_at: '2025-12-31 06:59:00')
+                course.update_with_course_dates!(conclude_at: '2025-12-31 06:59:00')
                 course.reload
               end
 
@@ -509,7 +509,7 @@ describe Course do
           context 'when course_end_time is in another timezone' do
             before do
               allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM EDT")
-              course.update!(conclude_at: '2025-06-24 06:59:00')
+              course.update_with_course_dates!(conclude_at: '2025-06-24 06:59:00')
               course.reload
             end
 
@@ -535,7 +535,7 @@ describe Course do
         context 'when the UTC date does not roll over' do
           before do
             allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "9:00 AM MST")
-            course.update!(conclude_at: '2025-06-24 06:59:00')
+            course.update_with_course_dates!(conclude_at: '2025-06-24 06:59:00')
             course.reload
           end
 
@@ -564,6 +564,39 @@ describe Course do
           expect(course.conclude_at).to be nil
         end
       end
+    end
+  end
+
+  describe '#update' do
+    let(:course) do
+      Course.create!(
+        start_at: course_start_time,
+        conclude_at: course_end_time
+      )
+    end
+
+    let(:course_start_time) { '2025-06-24 06:59:00' }
+    let(:course_end_time) { '2025-06-24 06:59:00' }
+
+    before do
+      expect(course.start_at).to eq(course_start_time)
+      expect(course.conclude_at).to eq(course_end_time)
+    end
+
+    it 'sets the course start_at normally' do
+      course.update!(start_at: course_start_time)
+      course.reload
+
+      expect(course.start_at).to eq(course_start_time)
+      expect(course.conclude_at).to eq(course_end_time)
+    end
+
+    it 'updates the course conclude_at normally' do
+      course.update!(conclude_at: course_end_time)
+      course.reload
+
+      expect(course.start_at).to eq(course_start_time)
+      expect(course.conclude_at).to eq(course_end_time)
     end
   end
 end
