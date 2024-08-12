@@ -377,7 +377,7 @@ describe Course do
             context 'when course_end_time is in MST' do
               before do
                 allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM MST")
-                course.update(conclude_at: '2025-06-24 06:59:00')
+                course.conclude_at ='2025-06-24 06:59:00'
                 course.save_with_account_times
               end
 
@@ -404,7 +404,7 @@ describe Course do
                   let(:expected_end_date) { "2025-01-31" }
 
                   before do
-                    course.update(conclude_at: '2025-01-31 06:59:00')
+                    course.conclude_at = '2025-01-31 06:59:00'
                     course.set_course_start_end_time_from_school.save
                   end
 
@@ -424,7 +424,7 @@ describe Course do
                   let(:expected_end_date) { "2023-02-28" }
 
                   before do
-                    course.update(conclude_at: '2023-02-28 06:59:00')
+                    course.conclude_at = '2023-02-28 06:59:00'
                     course.set_course_start_end_time_from_school.save
                   end
 
@@ -445,7 +445,7 @@ describe Course do
                 let(:expected_end_date) { "2025-12-31" }
 
                 before do
-                  course.update(conclude_at: '2025-12-31 06:59:00')
+                  course.conclude_at = '2025-12-31 06:59:00'
                   course.set_course_start_end_time_from_school.save
                 end
 
@@ -465,7 +465,7 @@ describe Course do
             context 'when course_end_time is in another timezone' do
               before do
                 allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM EDT")
-                course.update(conclude_at: '2025-06-24 06:59:00')
+                course.conclude_at = '2025-06-24 06:59:00'
                 course.save_with_account_times
 
               end
@@ -492,7 +492,7 @@ describe Course do
           context 'when the UTC date does not roll over' do
             before do
               allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "9:00 AM MST")
-              course.update(conclude_at: '2025-06-24 06:59:00')
+              course.conclude_at = '2025-06-24 06:59:00'
               course.save_with_account_times
 
             end
