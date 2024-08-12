@@ -109,6 +109,10 @@ Course.class_eval do
     self
   end
 
+  def save_with_account_times
+    set_course_start_end_time_from_school.save
+  end
+
   def course_start_time_from_school
     discern_datetime(
       date: start_at,

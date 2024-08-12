@@ -369,7 +369,7 @@ describe Course do
           expect(actual_end_date).to eq(expected_end_date_after_create)
         end
       end
-      context 'when updating time zones' do
+      context 'when updating time zones using #save_with_account_times' do
         let(:course) { Course.create }
 
         context "when conclude_at is present" do
@@ -378,7 +378,7 @@ describe Course do
               before do
                 allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM MST")
                 course.update(conclude_at: '2025-06-24 06:59:00')
-                course.set_course_start_end_time_from_school.save
+                course.save_with_account_times
               end
 
               let(:expected_end_time) { "06:55 AM" }
@@ -466,7 +466,7 @@ describe Course do
               before do
                 allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM EDT")
                 course.update(conclude_at: '2025-06-24 06:59:00')
-                course.set_course_start_end_time_from_school.save
+                course.save_with_account_times
 
               end
 
@@ -493,7 +493,7 @@ describe Course do
             before do
               allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "9:00 AM MST")
               course.update(conclude_at: '2025-06-24 06:59:00')
-              course.set_course_start_end_time_from_school.save
+              course.save_with_account_times
 
             end
 
