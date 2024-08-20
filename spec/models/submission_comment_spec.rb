@@ -1,6 +1,13 @@
 describe SubmissionComment do
   include_context "stubbed_network"
 
+  describe "#after_commit" do
+    it 'does publish to the pipeline' do
+      expect(PipelineService).to receive(:publish)
+      SubmissionComment.create
+    end
+  end
+
   describe '#send_feedback_alert' do
     let(:course) { Course.create(users: [teacher, student]) }
     let(:teacher) { User.create }

@@ -1,6 +1,8 @@
 SubmissionComment.class_eval do
   after_create :send_feedback_alert, if: :is_submission_comment_from_student?
 
+  after_commit -> { PipelineService.publish_as_v2(self) }
+
   def is_submission_comment_from_student?
     return unless reply_alerts_on? && context.is_a?(Course)
     context_student_ids.include?(author_id)
