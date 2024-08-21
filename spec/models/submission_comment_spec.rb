@@ -1,12 +1,43 @@
 describe SubmissionComment do
   include_context "stubbed_network"
 
-  describe "#after_commit" do
-    it 'does publish to the pipeline' do
-      expect(PipelineService).to receive(:publish)
-      SubmissionComment.create
+  context 'callbacks' do
+    before do
+      allow(PipelineService).to receive(:publish)
+      allow(PipelineService::V2).to receive(:publish)
+    end
+
+    context "V2 Submissions" do
+      let(:assignment) { create(:assignment, :with_assignment_group) }
+
+      describe '#send_submission_to_pipeline' do
+        before do
+          allow(SettingsService).to receive(:get_settings).and_return({
+                                                                        'enable_unit_grade_calculations' => false,
+                                                                        'v2_submissions' => true
+                                                                      })
+        end
+
+        it 'publishes on create' do
+          expect(PipelineService::V2).to receive(:publish).with an_instance_of(Submission)
+        end
+
+        it 'publishes on save' do
+          s = Submission.create(assignment: assignment)
+          expect(PipelineService::V2).to receive(:publish).with an_instance_of(Submission)
+          s.save
+        end
+
+        it 'doesnt post to the v1 client' do
+          s = Submission.create(assignment: assignment)
+          expect(PipelineService::HTTPClient).not_to receive(:post)
+          s.save
+        end
+
+      end
     end
   end
+
 
   describe '#send_feedback_alert' do
     let(:course) { Course.create(users: [teacher, student]) }
