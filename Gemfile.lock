@@ -198,11 +198,9 @@ GEM
       net-protocol
       timeout
     nio4r (2.5.9)
-    nokogiri (1.13.10-arm64-darwin)
+    nokogiri (1.16.2-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.13.10-x86_64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.13.10-x86_64-linux)
+    nokogiri (1.16.2-x86_64-darwin)
       racc (~> 1.4)
     pandarus (0.7.0)
       activesupport (~> 5.0)
@@ -332,7 +330,6 @@ GEM
     websocket-extensions (0.1.5)
 
 PLATFORMS
-  arm64-darwin-22
   x86_64-darwin-20
   x86_64-linux
 
@@ -458,4 +455,4 @@ DEPENDENCIES
   websocket-extensions (~> 0)
 
 BUNDLED WITH
-   2.4.22
+   2.3.26
