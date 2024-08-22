@@ -6,8 +6,7 @@ module PipelineService
           @model = model
         end
 
-        def dall
-          puts "in publish.rb"
+        def call
           @disable_pipeline = Rails.cache.read('disable_pipeline')
           if @disable_pipeline.nil?
             @disable_pipeline = SettingsService.get_settings(object: 'school', id: 1)['disable_pipeline']

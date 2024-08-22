@@ -26,7 +26,7 @@ module PipelineService
   module V2
     def self.publish(model)
       begin
-        V2::API::Publish.new(model).dall
+        V2::API::Publish.new(model).call
       rescue StandardError => exception
         Sentry.capture_exception(exception)
       end

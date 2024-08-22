@@ -13,7 +13,7 @@ module PipelineService
         end
 
         def call
-          @submission_comment.to_json
+          @submission_comment
         end
       end
     end
