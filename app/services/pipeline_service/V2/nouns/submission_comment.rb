@@ -13,7 +13,7 @@ module PipelineService
         end
 
         def call
-          @submission_comment
+          @submission_comment.attributes.merge(submission: @submission_comment.submission.attributes)
         end
       end
     end
