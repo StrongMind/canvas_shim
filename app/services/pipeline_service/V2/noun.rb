@@ -11,6 +11,8 @@ module PipelineService
         case short_class_name
         when /ContentTag/
           PipelineService::V2::Nouns::ContentTag
+        when /SubmissionComment/
+          PipelineService::V2::Nouns::SubmissionComment
         when /Submission/
           PipelineService::V2::Nouns::Submission
         when /User/
