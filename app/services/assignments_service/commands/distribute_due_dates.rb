@@ -21,6 +21,7 @@ module AssignmentsService
       end
 
       private
+
       attr_reader :course, :course_assignments, :assignments_per_day, :progress
 
       def create_progress!
@@ -70,6 +71,13 @@ module AssignmentsService
         assignments_for_day.each do |assignment|
           next if assignment.nil?
           assignment.update(due_at: date)
+
+          if assignment.submission.autograded? &&
+            assignment.submission.submitted_at < assignment.due_at &&
+            assignment.submission.score == 0
+
+            assignment.all_submissions.clear
+          end
         end
       end
 
