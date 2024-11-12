@@ -1,19 +1,18 @@
 describe Submission do
   subject { described_class }
   include_context 'stubbed_network'
-  
-  let(:subject_instance) { double('subject_instance')}
-  
+
+  let(:subject_instance) { double('subject_instance') }
+  let(:course) { create(:course) }
+  let(:teacher) { create(:user) }
+  let(:student) { create(:user) }
+  let(:content_tag) { create(:content_tag, :with_assignment) }
+  let(:teacher_enrollment) { create(:enrollment, user: teacher, course: course, type: 'TeacherEnrollment') }
+  let(:student_enrollment) { create(:enrollment, user: student, course: course, type: 'StudentEnrollment') }
+
   describe 'callbacks' do
     describe '#send_guided_practice_submitted_alert' do
-      let(:course) { create(:course) }
-      let(:teacher) { create(:user) }
-      let(:student) { create(:user) }
-      let(:content_tag) { create(:content_tag, :with_assignment)}
-      let(:teacher_enrollment) { create(:enrollment, user: teacher, course: course, type: 'TeacherEnrollment') }
-      let(:student_enrollment) { create(:enrollment, user: student, course: course, type: 'StudentEnrollment') }
-      
-      context 'when the assignment is a Guided Practice' do 
+      context 'when the assignment is a Guided Practice' do
         it "should call #send_guided_practice_alert" do
           assignment = content_tag.content
           assignment.update(course_id: course.id)
@@ -54,6 +53,24 @@ describe Submission do
           submission.update(submitted_at: Time.now)
         end
       end
+    end
+  end
+
+  describe 'validations' do
+    it 'is valid when body is less than or equal to 20,000 characters' do
+      assignment = content_tag.content
+      assignment.update(course_id: course.id)
+      assignment.assignment_group.update(name: 'Guided Practice')
+      submission = Submission.new(user: student, assignment: assignment, body: Faker::Lorem.characters(20_000))
+      expect(submission).to be_valid
+    end
+
+    it 'is not valid when body is over 20,000 characters' do
+      assignment = content_tag.content
+      assignment.update(course_id: course.id)
+      assignment.assignment_group.update(name: 'Guided Practice')
+      submission = Submission.new(user: student, assignment: assignment, body: Faker::Lorem.characters(20_001))
+      expect(submission).to_not be_valid
     end
   end
 end
