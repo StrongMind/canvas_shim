@@ -4,33 +4,23 @@ describe BasicLTI::BasicOutcomes::LtiResponse do
   describe '#create_homework_submission' do
     let(:tool_id) { Faker::Number.number(10) }
     let(:submission_hash) { Faker::Number.number(10) }
-    let!(:assignment) { Assignment.create!(assignment_group: AssignmentGroup.create) }
+    let(:assignment) { Assignment.first }
+    let(:submission) { Submission.first }
     let(:user) { User.create }
     let(:score) { Faker::Number.between(0, 100) }
     let(:new_score) { score }
     let(:raw_score) { score }
 
     context 'featured' do
-      let(:submission) do
-        Submission.create(excused: false,
-                          versions: [version, version2, version3],
-                          score: score,
-                          grade: score,
-                          assignment: assignment)
-      end
+
 
       let(:version) { SubmissionVersion.create(yaml: { score: 100, grade: 100, excused: false }.to_yaml) }
       let(:version2) { SubmissionVersion.create(yaml: { score: 90, grade: 90, excused: false }.to_yaml) }
       let(:version3) { SubmissionVersion.create(yaml: { score: 80, grade: 80, excused: false }.to_yaml) }
 
-
-
       before do
-        assignment
         allow(PipelineService).to receive(:publish)
         allow(SettingsService).to receive(:get_settings).and_return('lti_keep_highest_score' => true)
-        submission.assignment_id = assignment.id
-        submission.save!
       end
 
       it 'should call the shimmed method' do
@@ -54,42 +44,33 @@ describe BasicLTI::BasicOutcomes::LtiResponse do
         let(:higher_score) { Faker::Number.between(51, 100) }
         let(:lower_score) { Faker::Number.between(0, 50) }
 
-        context 'when the previous submission score is higher than the new score' do
-          let!(:submission) do
-            Submission.create(excused: false, versions: [version, version2, version3], score: higher_score, grade: higher_score)
-          end
+        before do
+          subject.instance_variable_set('@submission', submission)
+        end
 
+        context 'when the previous submission score is higher than the new score' do
           it 'updates the submission score with the previous submission score' do
             user
-            Submission.first.update!(assignment_id: Assignment.first.id,
-                                     user_id: User.first.id,
+            submission.update!(assignment_id: assignment.id,
+                                     user_id: user.id,
                                      score: higher_score,
                                      grade: higher_score)
 
-            subject.instance_variable_set('@submission', Submission.first)
-            subject.create_homework_submission(tool_id, submission_hash, Assignment.first, User.first, lower_score, lower_score)
-            expect(Submission.last.score).to eq(higher_score)
+            subject.create_homework_submission(tool_id, submission_hash, assignment, user, lower_score, lower_score)
+            expect(submission.score).to eq(higher_score)
           end
         end
 
         context 'when the previous submission score is lower than the new score' do
-          let!(:submission) do
-            Submission.create!(excused: false,
-                               versions: [version, version2, version3],
-                               score: lower_score,
-                               grade: lower_score,
-                               user: user,
-                               assignment: assignment)
-          end
-
-          before do
-            assignment
-            submission
-          end
-
           it 'does not update the submission score' do
+            user
+            submission.update!(assignment_id: assignment.id,
+                                     user_id: user.id,
+                                     score: lower_score,
+                                     grade: lower_score)
+
             subject.create_homework_submission(tool_id, submission_hash, assignment, user, higher_score, higher_score)
-            expect(Submission.last.score).to eq(higher_score)
+            expect(submission.score).to eq(higher_score)
           end
         end
       end
@@ -114,7 +95,7 @@ describe BasicLTI::BasicOutcomes::LtiResponse do
       let(:submission) do
         Submission.create(excused: true, assignment: assignment)
       end
-      it 'wont update' do
+      it 'will not update' do
         expect(submission).to_not receive(:update)
         subject.create_homework_submission(tool_id, submission_hash, assignment, user, new_score, raw_score)
       end
