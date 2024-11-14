@@ -14,8 +14,8 @@ describe BasicLTI::BasicOutcomes::LtiResponse do
   describe '#create_homework_submission' do
     let(:tool_id) { Faker::Number.number(10) }
     let(:submission_hash) { Faker::Number.number(10) }
-    let(:assignment) { Assignment.first }
-    let(:submission) { Submission.first }
+    let(:assignment) { Assignment.create(assignment_group: AssignmentGroup.create) }
+    let(:submission) { Submission.create(assignment: assignment, user: user) }
     let(:user) { User.create }
     let(:score) { Faker::Number.between(0, 100) }
     let(:new_score) { score }
