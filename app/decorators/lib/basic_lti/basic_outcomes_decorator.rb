@@ -33,8 +33,9 @@ BasicLTI::BasicOutcomes::LtiResponse.class_eval do
   def update_submission_with_best_score
     return unless @submission
     return if @submission.excused?
+    return unless @current_score.present?
 
-    if @current_score.present? && @current_score.to_f > @submission.score.to_f
+    if @current_score.to_f > @submission.score.to_f
       @submission.update_columns({ score: @current_score, grade: @current_grade, published_grade: @current_grade, published_score: @current_score })
     end
   end
