@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20241112214216) do
+ActiveRecord::Schema.define(version: 20241114205608) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -291,6 +291,8 @@ ActiveRecord::Schema.define(version: 20241112214216) do
     t.string   "context_code"
     t.datetime "created_at"
     t.text     "body"
+    t.string   "published_grade"
+    t.float    "published_score"
   end
 
   create_table "user_notes", force: :cascade do |t|

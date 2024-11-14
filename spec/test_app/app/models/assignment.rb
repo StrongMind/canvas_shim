@@ -1,6 +1,7 @@
 class Assignment < ActiveRecord::Base
   has_many :submissions
   has_many :assignment_overrides
+  has_many :all_submissions, class_name: "Submission"
   has_one :discussion_topic
   belongs_to :context, class_name: 'Course'
   belongs_to :course
