@@ -4,6 +4,12 @@ BasicLTI::BasicOutcomes::LtiResponse.class_eval do
   alias_method :homework_submission_alias, :create_homework_submission
 
   def create_homework_submission(_tool, submission_hash, assignment, user, new_score, raw_score)
+    submissions = assignment.all_submissions.where(user_id: user.id)
+    if submissions.present?
+      @current_score = submissions.last.score
+      @current_grade = submissions.last.grade
+    end
+
     homework_submission_alias(_tool, submission_hash, assignment, user, new_score, raw_score)
 
     if SettingsService.get_settings(object: :school, id: 1)['lti_keep_highest_score']
@@ -27,19 +33,10 @@ BasicLTI::BasicOutcomes::LtiResponse.class_eval do
   def update_submission_with_best_score
     return unless @submission
     return if @submission.excused?
+    return unless @current_score.present?
 
-    best_score = @submission.score
-    best_grade = @submission.grade
-    versions   = @submission.versions
-
-    versions.each do |version|
-      version_score = YAML.load(version.yaml).stringify_keys['score']
-      if version_score.to_f > best_score.to_f
-        best_score = version_score
-        best_grade = YAML.load(version.yaml).stringify_keys['grade']
-      end
+    if @current_score.to_f > @submission.score.to_f
+      @submission.update_columns({ score: @current_score, grade: @current_grade, published_grade: @current_grade, published_score: @current_score })
     end
-
-    @submission.update_columns({score: best_score, grade: best_grade, published_grade: best_grade, published_score: best_score})
   end
 end

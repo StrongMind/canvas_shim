@@ -1,41 +1,90 @@
 describe BasicLTI::BasicOutcomes::LtiResponse do
-  subject { described_class.new }
-  describe '#create_homework_submission' do
-    context 'featured' do
-      let(:submission) do
-        Submission.create(excused: false, versions: [version, version2, version3], score: 10, grade: 10)
-      end
+  include_context 'stubbed_network'
 
-      let(:version) { SubmissionVersion.create(yaml: {score: 100, grade: 100, excused: false}.to_yaml) }
-      let(:version2) { SubmissionVersion.create(yaml: {score: 90, grade: 90, excused: false}.to_yaml) }
-      let(:version3) { SubmissionVersion.create(yaml: {score: 80, grade: 80, excused: false}.to_yaml) }
+  subject { described_class.new }
+  let(:sqs_instance) { double('sqs_instance') }
+
+  before do
+    allow(SettingsService).to receive(:get_settings).and_return(
+      'pipeline_sqs_url' => 'sqs_url'
+    )
+    allow(Aws::SQS::Client).to receive(:new).and_return(sqs_instance)
+  end
+
+  describe '#create_homework_submission' do
+    let(:tool_id) { Faker::Number.number(10) }
+    let(:submission_hash) { Faker::Number.number(10) }
+    let(:assignment) { Assignment.create(assignment_group: AssignmentGroup.create) }
+    let(:submission) { Submission.create(assignment: assignment, user: user) }
+    let(:user) { User.create }
+    let(:score) { Faker::Number.between(0, 100) }
+    let(:new_score) { score }
+    let(:raw_score) { score }
+
+    context 'featured' do
+
+
+      let(:version) { SubmissionVersion.create(yaml: { score: 100, grade: 100, excused: false }.to_yaml) }
+      let(:version2) { SubmissionVersion.create(yaml: { score: 90, grade: 90, excused: false }.to_yaml) }
+      let(:version3) { SubmissionVersion.create(yaml: { score: 80, grade: 80, excused: false }.to_yaml) }
 
       before do
         allow(PipelineService).to receive(:publish)
         allow(SettingsService).to receive(:get_settings).and_return('lti_keep_highest_score' => true)
-        subject.instance_variable_set('@submission', submission)
       end
 
       it 'should call the shimmed method' do
         expect(subject).to receive(:update_submission_with_best_score)
-        subject.create_homework_submission(1,2,3,4,5,6)
+        subject.create_homework_submission(tool_id, submission_hash, assignment, user, new_score, raw_score)
       end
 
-      it 'sets the score and grade to the highest in the submission history' do
-        expect(submission).to receive(:update_columns).with({grade: 100, score: 100, published_grade: 100, published_score: 100})
-        subject.create_homework_submission(1,2,3,4,5,6)
-      end
-
-      context "no submission" do
-        before do
-          subject.instance_variable_set('@submission', nil)
-        end
-
+      context "when there are no previous submissions" do
         it 'wont update' do
           expect(submission).to_not receive(:update)
-          subject.create_homework_submission(1,2,3,4,5,6)
+          subject.create_homework_submission(tool_id, submission_hash, assignment, user, new_score, raw_score)
+        end
+
+        it 'has the saved score' do
+          subject.create_homework_submission(tool_id, submission_hash, assignment, user, new_score, raw_score)
+          expect(Submission.last.score).to eq(score)
         end
       end
+
+      context 'when there is a previous submission' do
+        let(:higher_score) { Faker::Number.between(51, 100) }
+        let(:lower_score) { Faker::Number.between(0, 50) }
+
+        before do
+          subject.instance_variable_set('@submission', submission)
+        end
+
+        context 'when the previous submission score is higher than the new score' do
+          it 'updates the submission score with the previous submission score' do
+            user
+            submission.update!(assignment_id: assignment.id,
+                                     user_id: user.id,
+                                     score: higher_score,
+                                     grade: higher_score)
+
+            subject.create_homework_submission(tool_id, submission_hash, assignment, user, lower_score, lower_score)
+            expect(submission.score).to eq(higher_score)
+          end
+        end
+
+        context 'when the previous submission score is lower than the new score' do
+          it 'does not update the submission score' do
+            user
+            submission.update!(assignment_id: assignment.id,
+                                     user_id: user.id,
+                                     score: lower_score,
+                                     grade: lower_score)
+
+            subject.create_homework_submission(tool_id, submission_hash, assignment, user, higher_score, higher_score)
+            expect(submission.score).to eq(higher_score)
+          end
+        end
+      end
+
     end
 
     context 'unfeatured' do
@@ -45,7 +94,7 @@ describe BasicLTI::BasicOutcomes::LtiResponse do
 
       it 'should not call the shimmed method' do
         expect(subject).to_not receive(:update_submission_with_best_score)
-        subject.create_homework_submission(1,2,3,4,5,6)
+        subject.create_homework_submission(tool_id, submission_hash, assignment, user, new_score, raw_score)
       end
     end
 
@@ -54,11 +103,11 @@ describe BasicLTI::BasicOutcomes::LtiResponse do
         allow(SettingsService).to receive(:get_settings).and_return('lti_keep_highest_score' => true)
       end
       let(:submission) do
-        Submission.create(excused: true)
+        Submission.create(excused: true, assignment: assignment)
       end
-      it 'wont update' do
+      it 'will not update' do
         expect(submission).to_not receive(:update)
-        subject.create_homework_submission(1,2,3,4,5,6)
+        subject.create_homework_submission(tool_id, submission_hash, assignment, user, new_score, raw_score)
       end
     end
 
