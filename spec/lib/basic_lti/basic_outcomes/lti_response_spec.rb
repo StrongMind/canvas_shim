@@ -1,5 +1,15 @@
 describe BasicLTI::BasicOutcomes::LtiResponse do
+  include_context 'stubbed_network'
+
   subject { described_class.new }
+  let(:sqs_instance) { double('sqs_instance') }
+
+  before do
+    allow(SettingsService).to receive(:get_settings).and_return(
+      'pipeline_sqs_url' => 'sqs_url'
+    )
+    allow(Aws::SQS::Client).to receive(:new).and_return(sqs_instance)
+  end
 
   describe '#create_homework_submission' do
     let(:tool_id) { Faker::Number.number(10) }
