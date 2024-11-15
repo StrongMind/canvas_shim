@@ -1,21 +1,23 @@
 BasicLTI::BasicOutcomes::LtiResponse.class_eval do
   attr_accessor :submission
 
-  alias_method :homework_submission_alias, :create_homework_submission
-
-  def create_homework_submission(_tool, submission_hash, assignment, user, new_score, raw_score)
+  def strongmind_create_homework_submission(_tool, submission_hash, assignment, user, new_score, raw_score)
     submissions = assignment.all_submissions.where(user_id: user.id)
     if submissions.present?
       @current_score = submissions.last.score
       @current_grade = submissions.last.grade
     end
 
-    homework_submission_alias(_tool, submission_hash, assignment, user, new_score, raw_score)
+    instructure_create_homework_submission(_tool, submission_hash, assignment, user, new_score, raw_score)
 
     if SettingsService.get_settings(object: :school, id: 1)['lti_keep_highest_score']
       update_submission_with_best_score
     end
   end
+
+  alias_method :instructure_create_homework_submission, :create_homework_submission
+  alias_method :create_homework_submission, :strongmind_create_homework_submission
+
 
   protected
 
