@@ -144,10 +144,19 @@ Course.class_eval do
   end
 
   def utc_day_offset(time)
-    parsed_in_zone = Time.parse(time)
-    hour_offset = (parsed_in_zone.utc_offset / 3_600) * -1
+    hour_offset = utc_hour_offset(time)
     rollover_limit = 24 - hour_offset
     parsed_in_zone.hour >= rollover_limit ? 1 : 0
+  end
+
+  def utc_hour_offset(time)
+    school_timezone = SettingsService.get_settings(object: 'school', id: 1)['timezone']
+    custom_timezones = {
+      'MT' => ActiveSupport::TimeZone['America/Denver'],
+    }
+    parsed_in_zone = Time.parse(time)
+    # parsed_in_zone = custom_timezones[school_timezone] ? custom_timezones[school_timezone].parse(time) : Time.parse(time)
+    (parsed_in_zone.utc_offset / 3_600) * -1
   end
 
   def course_end_time_from_school
