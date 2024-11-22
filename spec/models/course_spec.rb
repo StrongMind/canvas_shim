@@ -579,19 +579,17 @@ describe Course do
     end
   end
 
-  describe '#utc_hour_offset' do
+  describe '#parse_time_in_zone' do
     let(:course) { Course.create }
     context 'when the time is in MT' do
       before do
         allow(SettingsService).to receive(:get_settings).and_return('timezone' => 'MT')
       end
-      it 'returns 6 when observing daylight savings' do
-        expect(course.utc_hour_offset('Sat, 5 Oct 2024 1:00 AM MT')).to eq(6)
+      it 'returns the correct date with an offset of 6 when observing daylight savings' do
+        expect(course.parse_time_in_zone('Sat, 5 Oct 2024 1:00 AM MT')).to eq('2024-10-05 01:00:00.000000000 -0600')
       end
-      it 'returns 7 when not observing daylight savings' do
-        Time.use_zone('UTC') do
-          expect(course.utc_hour_offset('Sat, 5 Nov 2024 1:00 AM MT')).to eq(7)
-        end
+      it 'returns the correct date with an offset of 7 when not observing daylight savings' do
+          expect(course.parse_time_in_zone('Sat, 5 Nov 2024 1:00 AM MT')).to eq('2024-11-05 01:00:00.000000000 -0700')
       end
     end
   end
