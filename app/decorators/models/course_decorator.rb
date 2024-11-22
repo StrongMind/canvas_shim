@@ -154,8 +154,7 @@ Course.class_eval do
     custom_timezones = {
       'MT' => ActiveSupport::TimeZone['America/Denver'],
     }
-    parsed_in_zone = Time.parse(time)
-    # parsed_in_zone = custom_timezones[school_timezone] ? custom_timezones[school_timezone].parse(time) : Time.parse(time)
+    parsed_in_zone = custom_timezones[school_timezone] ? custom_timezones[school_timezone].parse(time) : Time.parse(time)
     (parsed_in_zone.utc_offset / 3_600) * -1
   end
 
