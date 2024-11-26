@@ -604,17 +604,17 @@ describe Course do
     end
   end
 
-  describe '#parse_time_in_zone' do
+  describe '#parse_time_in_school_timezone' do
     let(:course) { Course.create }
     context 'when the time is in MT' do
       before do
         allow(SettingsService).to receive(:get_settings).and_return('timezone' => 'MT')
       end
       it 'returns the correct date with an offset of 6 when observing daylight savings' do
-        expect(course.parse_time_in_zone('1:00 AM MDT', '2024-10-05 06:59:00 UTC')).to eq('2024-10-05 01:00:00.000000000 -0600')
+        expect(course.parse_time_in_school_timezone('1:00 AM MDT', '2024-10-05 06:59:00 UTC')).to eq('2024-10-05 01:00:00.000000000 -0600')
       end
       it 'returns the correct date with an offset of 7 when not observing daylight savings' do
-          expect(course.parse_time_in_zone('1:00 AM MDT', '2024-11-05 06:59:00 UTC')).to eq('2024-11-05 01:00:00.000000000 -0700')
+          expect(course.parse_time_in_school_timezone('1:00 AM MDT', '2024-11-05 06:59:00 UTC')).to eq('2024-11-05 01:00:00.000000000 -0700')
       end
     end
   end

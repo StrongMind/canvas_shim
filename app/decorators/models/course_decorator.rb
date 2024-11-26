@@ -124,34 +124,22 @@ Course.class_eval do
     return nil if date.nil?
     return date if time.nil?
 
-    coalesce_datetime(date: date, time: time)
-  end
-
-  def coalesce_datetime(date:, time:)
-    day_offset = utc_day_offset(time, date)
-    utc_time = parse_time_in_zone(time, date).utc
-    date = date + (day_offset).days
+    date_time_in_utc = parse_time_in_school_timezone(time, date).utc
 
     Time.new(
-      date.year,
-      date.month,
-      date.day,
-      utc_time.hour,
-      utc_time.min,
-      utc_time.sec,
+      date_time_in_utc.year,
+      date_time_in_utc.month,
+      date_time_in_utc.day,
+      date_time_in_utc.hour,
+      date_time_in_utc.min,
+      date_time_in_utc.sec,
       '+00:00'
     )
   end
 
-  def utc_day_offset(time, date)
-    parsed_in_zone = parse_time_in_zone(time, date)
-    hour_offset = (parsed_in_zone.utc_offset / 3_600) * -1
-    rollover_limit = 24 - hour_offset
-    parsed_in_zone.hour >= rollover_limit ? 1 : 0
-  end
-
-  def parse_time_in_zone(time, date)
-    datetime = "#{date.to_date} #{time.split(' ')[0..1].join(' ')}"
+  def parse_time_in_school_timezone(time, date)
+    course_time_without_zone = time.split(' ')[0..1].join(' ')
+    datetime = "#{date.to_date} #{course_time_without_zone}"
     school_timezone = SettingsService.get_settings(object: 'school', id: 1)['timezone']
     custom_timezones = {
       'MT' => ActiveSupport::TimeZone['America/Denver'],
