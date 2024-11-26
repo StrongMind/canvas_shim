@@ -136,7 +136,8 @@ Course.class_eval do
       'ET' => ActiveSupport::TimeZone['America/New_York'],
       'UTC' => ActiveSupport::TimeZone['UTC']
     }
-    custom_timezones[school_timezone] ? custom_timezones[school_timezone].parse(datetime) : Time.parse(datetime)
+    # Need to support all timezones rather than default to Phoenix
+    custom_timezones[school_timezone] ? custom_timezones[school_timezone].parse(datetime) : ActiveSupport::TimeZone['America/Phoenix'].parse(datetime)
   end
 
   def course_end_time_from_school
