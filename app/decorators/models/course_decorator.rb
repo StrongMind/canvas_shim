@@ -124,17 +124,7 @@ Course.class_eval do
     return nil if date.nil?
     return date if time.nil?
 
-    date_time_in_utc = parse_time_in_school_timezone(time, date).utc
-
-    Time.new(
-      date_time_in_utc.year,
-      date_time_in_utc.month,
-      date_time_in_utc.day,
-      date_time_in_utc.hour,
-      date_time_in_utc.min,
-      date_time_in_utc.sec,
-      '+00:00'
-    )
+    parse_time_in_school_timezone(time, date).utc
   end
 
   def parse_time_in_school_timezone(time, date)
