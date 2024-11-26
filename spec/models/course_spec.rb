@@ -318,10 +318,7 @@ describe Course do
 
           context 'when SettingsService course_end_time is in a daylight savings timezone' do
             before do
-              allow(SettingsService).to receive(:get_settings).and_return(
-                'course_end_time' => "11:59 PM MDT",
-                'timezone' => "MT"
-              )
+              allow(SettingsService).to receive(:get_settings).and_return({ 'course_end_time' => "11:59 PM MDT", 'timezone' => "MT" })
             end
 
             context 'when the course concludes at a time when daylight savings is not observed' do
@@ -491,7 +488,7 @@ describe Course do
 
             context 'when course_end_time is in another timezone' do
               before do
-                allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM EDT", 'timezone' => "ET")
+                allow(SettingsService).to receive(:get_settings).and_return({'course_end_time' => "11:55 PM EDT", 'timezone' => "ET"})
                 course.conclude_at = '2025-06-24 06:59:00'
                 course.save_with_account_times
 
