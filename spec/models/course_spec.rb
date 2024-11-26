@@ -295,7 +295,7 @@ describe Course do
 
           context 'when course_end_time is in another timezone' do
             before do
-              allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM EDT")
+              allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM EDT", 'timezone' => "ET")
             end
 
             let(:expected_end_time) { "03:55 AM" }
@@ -313,6 +313,30 @@ describe Course do
 
             it "saves the date with the correct offset" do
               expect(course.conclude_at.day).to eq(25)
+            end
+          end
+
+          context 'when SettingsService course_end_time is in a daylight savings timezone' do
+            before do
+              allow(SettingsService).to receive(:get_settings).and_return({ 'course_end_time' => "11:59 PM MDT", 'timezone' => "MT" })
+            end
+
+            context 'when the course concludes at a time when daylight savings is not observed' do
+              let(:course_concluding_during_standard_time) { Course.create(conclude_at: '2025-1-10 01:23:45' ) }
+
+              it 'returns the standard time-zone time' do
+                actual_end_time = course_concluding_during_standard_time.conclude_at.strftime("%H:%M %p")
+                expect(actual_end_time).to eq("06:59 AM")
+              end
+            end
+
+            context 'when the course concludes at a time when daylight savings is observed' do
+              let(:course_concluding_during_daylight_time) { Course.create(conclude_at: '2024-10-28 01:23:45' ) }
+
+              it 'returns the daylight time-zone time' do
+                actual_end_time = course_concluding_during_daylight_time.conclude_at.strftime("%H:%M %p")
+                expect(actual_end_time).to eq("05:59 AM")
+              end
             end
           end
         end
@@ -464,7 +488,7 @@ describe Course do
 
             context 'when course_end_time is in another timezone' do
               before do
-                allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM EDT")
+                allow(SettingsService).to receive(:get_settings).and_return({'course_end_time' => "11:55 PM EDT", 'timezone' => "ET"})
                 course.conclude_at = '2025-06-24 06:59:00'
                 course.save_with_account_times
 
@@ -516,6 +540,7 @@ describe Course do
           end
         end
 
+        # This context does not seem to describe the current behavior
         context "when set_course_start_end_time_from_school is not called" do
           context 'when the the school time is in MST' do
             let(:course) { Course.create(conclude_at: '2025-06-24 06:59:00') }
@@ -540,7 +565,7 @@ describe Course do
             let(:course) { Course.create(conclude_at: '2025-06-24 06:59:00') }
 
             before do
-              allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM UTC")
+              allow(SettingsService).to receive(:get_settings).and_return({'course_end_time' => "11:55 PM UTC", 'timezone' => "UTC"})
             end
             let(:expected_end_time) { "06:55 AM" }
             let(:actual_end_time) {  course.conclude_at.strftime("%H:%M %p") }
@@ -559,7 +584,7 @@ describe Course do
             let(:course) { Course.create(conclude_at: '2025-06-24 06:59:00') }
 
             before do
-              allow(SettingsService).to receive(:get_settings).and_return('course_end_time' => "11:55 PM MDT")
+              allow(SettingsService).to receive(:get_settings).and_return({'course_end_time' => "11:55 PM MDT", 'timezone' => "MT"})
             end
             let(:expected_end_time) { "06:55 AM" }
             let(:actual_end_time) {  course.conclude_at.strftime("%H:%M %p") }
@@ -579,17 +604,17 @@ describe Course do
     end
   end
 
-  describe '#parse_time_in_zone' do
+  describe '#parse_time_in_school_timezone' do
     let(:course) { Course.create }
     context 'when the time is in MT' do
       before do
         allow(SettingsService).to receive(:get_settings).and_return('timezone' => 'MT')
       end
       it 'returns the correct date with an offset of 6 when observing daylight savings' do
-        expect(course.parse_time_in_zone('Sat, 5 Oct 2024 1:00 AM MT')).to eq('2024-10-05 01:00:00.000000000 -0600')
+        expect(course.parse_time_in_school_timezone('1:00 AM MDT', '2024-10-05 06:59:00 UTC')).to eq('2024-10-05 01:00:00.000000000 -0600')
       end
       it 'returns the correct date with an offset of 7 when not observing daylight savings' do
-          expect(course.parse_time_in_zone('Sat, 5 Nov 2024 1:00 AM MT')).to eq('2024-11-05 01:00:00.000000000 -0700')
+          expect(course.parse_time_in_school_timezone('1:00 AM MDT', '2024-11-05 06:59:00 UTC')).to eq('2024-11-05 01:00:00.000000000 -0700')
       end
     end
   end

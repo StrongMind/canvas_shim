@@ -124,38 +124,20 @@ Course.class_eval do
     return nil if date.nil?
     return date if time.nil?
 
-    coalesce_datetime(date: date, time: time)
+    parse_time_in_school_timezone(time, date).utc
   end
 
-  def coalesce_datetime(date:, time:)
-    day_offset = utc_day_offset(time)
-    date = date + (day_offset).days
-    utc_time = Time.parse(time).utc
-
-    Time.new(
-      date.year,
-      date.month,
-      date.day,
-      utc_time.hour,
-      utc_time.min,
-      utc_time.sec,
-      '+00:00'
-    )
-  end
-
-  def utc_day_offset(time)
-    parsed_in_zone = parse_time_in_zone(time)
-    hour_offset = (parsed_in_zone.utc_offset / 3_600) * -1
-    rollover_limit = 24 - hour_offset
-    parsed_in_zone.hour >= rollover_limit ? 1 : 0
-  end
-
-  def parse_time_in_zone(time)
+  def parse_time_in_school_timezone(time, date)
+    course_time_without_zone = time.split(' ')[0..1].join(' ')
+    datetime = "#{date.to_date} #{course_time_without_zone}"
     school_timezone = SettingsService.get_settings(object: 'school', id: 1)['timezone']
     custom_timezones = {
       'MT' => ActiveSupport::TimeZone['America/Denver'],
+      'ET' => ActiveSupport::TimeZone['America/New_York'],
+      'UTC' => ActiveSupport::TimeZone['UTC']
     }
-    custom_timezones[school_timezone] ? custom_timezones[school_timezone].parse(time) : Time.parse(time)
+    # Need to support all timezones rather than default to Phoenix
+    custom_timezones[school_timezone] ? custom_timezones[school_timezone].parse(datetime) : ActiveSupport::TimeZone['America/Phoenix'].parse(datetime)
   end
 
   def course_end_time_from_school
