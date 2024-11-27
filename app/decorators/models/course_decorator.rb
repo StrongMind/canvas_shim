@@ -131,12 +131,18 @@ Course.class_eval do
     course_time_without_zone = time.split(' ')[0..1].join(' ')
     datetime = "#{date.to_date} #{course_time_without_zone}"
     school_timezone = SettingsService.get_settings(object: 'school', id: 1)['timezone']
+
+    <<~TXT
+      We currently only support these timezones. We could do something like this:
+      active_support_tz = SettingsService.get_settings(object: 'school', id: 1)['timezone'] || 'America/Phoenix'
+      school_timezone = ActiveSupport::TimeZone[active_support_tz].parse(datetime)
+    TXT
+
     custom_timezones = {
       'MT' => ActiveSupport::TimeZone['America/Denver'],
       'ET' => ActiveSupport::TimeZone['America/New_York'],
       'UTC' => ActiveSupport::TimeZone['UTC']
     }
-    # Need to support all timezones rather than default to Phoenix
     custom_timezones[school_timezone] ? custom_timezones[school_timezone].parse(datetime) : ActiveSupport::TimeZone['America/Phoenix'].parse(datetime)
   end
 
