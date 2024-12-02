@@ -24,13 +24,13 @@ describe Assignment do
       expect(assignment.toggle_exclusion(user_2.id, true)).to be nil
     end
 
-    it "sets score to be nil" do
+    it "sets score to be nil if is_excused is true" do
       submission
       assignment.toggle_exclusion(user.id, true)
       submission = assignment.submissions.find_by(user_id: user.id)
       expect(submission.score).to be nil
     end
-    it "sets grade to be nil" do
+    it "sets grade to be nil if is_excused is true" do
       submission
       assignment.toggle_exclusion(user.id, true)
       submission = assignment.submissions.find_by(user_id: user.id)
