@@ -2,7 +2,7 @@ describe Assignment do
   include_context "stubbed_network"
   let(:assignment) { create(:assignment, :with_assignment_group)}
   let(:user) { User.create }
-  let(:submission) { Submission.create(assignment: assignment, user: user, excused: nil) }
+  let(:submission) { Submission.create(assignment: assignment, user: user, excused: nil, score: 0.0, grade: "some grade") }
   let(:user_2) { User.create }
 
   describe "#toggle_exclusion" do
@@ -22,6 +22,20 @@ describe Assignment do
 
     it "returns nil if no user found" do
       expect(assignment.toggle_exclusion(user_2.id, true)).to be nil
+    end
+
+    it "sets score to be nil" do
+      submission
+      assignment.toggle_exclusion(user.id, true)
+      submission = assignment.submissions.find_by(user_id: user.id)
+      expect(submission.score).to be nil
+    end
+
+    it "sets grade to be nil" do
+      submission
+      assignment.toggle_exclusion(user.id, true)
+      submission = assignment.submissions.find_by(user_id: user.id)
+      expect(submission.grade).to be nil
     end
   end
 
