@@ -3,11 +3,17 @@ Assignment.class_eval do
 
   before_save :update_min_score_threshold, if: Proc.new { self.assignment_group_id_changed? && self.assignment_group_id_was != nil }
 
-  def toggle_exclusion(student_id, bool)
+  def toggle_exclusion(student_id, is_excused)
     subs = submissions.where(user_id: student_id)
     if subs.any?
       subs.each do |submission|
-        submission.update(excused: bool)
+        submission.excused = is_excused
+        if is_excused
+          submission.grade = nil
+          submission.score = nil
+        end
+
+        submission.save
       end
     end
   end
