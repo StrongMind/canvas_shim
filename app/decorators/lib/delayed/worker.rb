@@ -10,12 +10,13 @@ Delayed::Worker.class_eval do
       Rails.logger.info("Pre Perform Active jobs for worker #{name}: #{@@active_jobs}")
       set_task_protection(true) if @@active_jobs == 1
     end
-    original_perform(job)
+    count = original_perform(job)
     @@mutex.synchronize do
       @@active_jobs -= 1
       Rails.logger.info("Post Perform Active jobs for worker #{name}: #{@@active_jobs}")
       set_task_protection(false) if @@active_jobs == 0
     end
+    count
   end
 
   def set_task_protection(state)
