@@ -7,13 +7,13 @@ Delayed::Worker.class_eval do
   def perform(job)
     @@mutex.synchronize do
       @@active_jobs += 1
-      Rails.logger.info("Active jobs for worker #{name}: #{@@active_jobs}")
+      Rails.logger.info("Pre Perform Active jobs for worker #{name}: #{@@active_jobs}")
       set_task_protection(true) if @@active_jobs == 1
     end
     original_perform(job)
     @@mutex.synchronize do
       @@active_jobs -= 1
-      Rails.logger.info("Active jobs for worker #{name}: #{@@active_jobs}")
+      Rails.logger.info("Post Perform Active jobs for worker #{name}: #{@@active_jobs}")
       set_task_protection(false) if @@active_jobs == 0
     end
   end
