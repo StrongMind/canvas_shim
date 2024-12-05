@@ -20,6 +20,7 @@ Delayed::Worker.class_eval do
   end
 
   def set_task_protection(state)
+    return unless ENV['ECS_AGENT_URI']
     begin
       ecs_agent_uri = ENV['ECS_AGENT_URI']
       state_endpoint = "#{ecs_agent_uri}/task-protection/v1/state"
