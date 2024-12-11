@@ -50,7 +50,6 @@ Delayed::Worker.class_eval do
         if @@active_jobs == 0
           send_task_protection_to_ecs(false)
           @@deactivation_pending = false
-          @@last_task_protection_deactivation = Time.now
         end
       end
     end
