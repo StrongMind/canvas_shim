@@ -49,8 +49,8 @@ Delayed::Worker.class_eval do
       @@mutex.synchronize do
         if @@active_jobs == 0
           send_task_protection_to_ecs(false)
-          @@deactivation_pending = false
         end
+        @@deactivation_pending = false
       end
     end
   end
