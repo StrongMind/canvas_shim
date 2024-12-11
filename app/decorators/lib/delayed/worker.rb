@@ -3,7 +3,6 @@ require 'concurrent/scheduled_task'
 Delayed::Worker.class_eval do
   @@mutex = Mutex.new
   @@active_jobs = 0
-  @@last_task_protection_deactivation = nil
   @@task_protection_state = false
   @@deactivation_pending = false
   @@deactivation_task = nil
