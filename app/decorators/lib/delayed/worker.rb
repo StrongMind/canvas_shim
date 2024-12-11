@@ -30,7 +30,7 @@ Delayed::Worker.class_eval do
     begin
       if state
         cancel_deactivation_task
-        send_task_protection_to_ecs(true) if state
+        send_task_protection_to_ecs(true)
       else
         debounced_task_protection_deactivation
       end
