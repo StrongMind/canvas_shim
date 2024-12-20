@@ -26,16 +26,16 @@ Delayed::Worker.class_eval do
 
   def set_task_protection(state)
     return unless ENV['ECS_AGENT_URI']
+    cancel_deactivation_task if state
     return unless state != @@task_protection_state
     begin
       if state
-        cancel_deactivation_task
         send_task_protection_to_ecs(true)
+        @@task_protection_state = true
       else
         debounced_task_protection_deactivation
       end
 
-      @@task_protection_state = state
 
     rescue StandardError => e
       raise "An error occurred: #{e.message}"
@@ -45,10 +45,11 @@ Delayed::Worker.class_eval do
   def debounced_task_protection_deactivation
     return if @@deactivation_pending
     @@deactivation_pending = true
-    @@deactivation_task = Concurrent::ScheduledTask.execute(60) do
+    @@deactivation_task = Concurrent::ScheduledTask.execute(5) do
       @@mutex.synchronize do
         if @@active_jobs == 0
           send_task_protection_to_ecs(false)
+          @@task_protection_state = false
         end
         @@deactivation_pending = false
       end
