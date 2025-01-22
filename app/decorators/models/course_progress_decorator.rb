@@ -95,7 +95,9 @@ CourseProgress.class_eval do
   def filter_out_excused_requirements(reqs)
     return reqs unless student_has_excused_submission?
     content_tag_ids = reqs.map { |req| req[:id] }
-    content_tags = ContentTag.where(id: content_tag_ids).includes(:content).index_by(&:id)
+    content_tags = ContentTag.where(id: content_tag_ids).includes(
+      content: [:quiz_submissions, :submissions, assignment: :submissions]
+    ).index_by(&:id)
 
     reqs.select do |req|
       ct = content_tags[req[:id]]
