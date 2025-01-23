@@ -114,6 +114,7 @@ gem 'uglifier', '~> 4'
 gem 'virtus', '~> 1'
 gem 'websocket-driver', '~> 0'
 gem 'websocket-extensions', '~> 0'
+gem 'stackprof'
 gem 'sentry-rails', '5.3.1'
 gem 'sentry-ruby', '5.3.1'
 
