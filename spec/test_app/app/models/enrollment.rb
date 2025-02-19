@@ -4,6 +4,8 @@ class Enrollment < ActiveRecord::Base
   belongs_to :associated_user, :class_name => 'User'
   has_many :scores
 
+  scope :active, -> { where(workflow_state: 'active') }
+
   after_create :distribute_due_dates
   after_commit { PipelineService.publish(self)}
 
