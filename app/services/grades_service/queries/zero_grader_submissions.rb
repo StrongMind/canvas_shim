@@ -18,7 +18,6 @@ module GradesService
       def submissions_scope
         @scope = Submission
           .joins(assignment: :course)
-          .where('submissions.workflow_state = ?', 'unsubmitted')
           .where(score: nil)
           .where(grade: nil)
           .where('submissions.cached_due_date < ?', 1.hour.ago)
