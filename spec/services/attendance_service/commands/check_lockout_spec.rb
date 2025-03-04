@@ -83,6 +83,70 @@ describe AttendanceService::Commands::CheckLockout do
             expect(subject.call).to be_truthy
           end
         end
+
+        context "HTTP response handling" do
+          let(:url) { subject.send(:full_url) }
+          let(:headers) { { "CanvasAuth" => subject.send(:auth) } }
+
+          it "is truthy with locked out status" do
+            response = double(code: 200, fetch: true)
+            allow(response).to receive(:try).with(:fetch, "isLockedOut", false).and_return(true)
+            allow(HTTParty).to receive(:get).with(url, headers: headers).and_return(response)
+            expect(subject.call).to be_truthy
+          end
+
+          it "is falsy with not locked out status" do
+            response = double(code: 200, fetch: false)
+            allow(response).to receive(:try).with(:fetch, "isLockedOut", false).and_return(false)
+            allow(HTTParty).to receive(:get).with(url, headers: headers).and_return(response)
+            expect(subject.call).to be_falsy
+          end
+
+          it "raises UnauthorizedError on 401" do
+            response = double(code: 401)
+            allow(HTTParty).to receive(:get).with(url, headers: headers).and_return(response)
+            expect { subject.send(:locked_out?) }.to raise_error(
+              AttendanceService::UnauthorizedError,
+              "Unauthorized access to attendance service"
+            )
+          end
+
+          it "raises UnauthorizedError on 403" do
+            response = double(code: 403)
+            allow(HTTParty).to receive(:get).with(url, headers: headers).and_return(response)
+            expect { subject.send(:locked_out?) }.to raise_error(
+              AttendanceService::UnauthorizedError,
+              "Unauthorized access to attendance service"
+            )
+          end
+
+          it "raises NotFoundError on 404" do
+            response = double(code: 404)
+            allow(HTTParty).to receive(:get).with(url, headers: headers).and_return(response)
+            expect { subject.send(:locked_out?) }.to raise_error(
+              AttendanceService::NotFoundError,
+              "Resource not found in attendance service"
+            )
+          end
+
+          it "raises ServiceError on 500" do
+            response = double(code: 500)
+            allow(HTTParty).to receive(:get).with(url, headers: headers).and_return(response)
+            expect { subject.send(:locked_out?) }.to raise_error(
+              AttendanceService::ServiceError,
+              "Attendance service error: 500"
+            )
+          end
+
+          it "raises UnknownError on unexpected status code" do
+            response = double(code: 418) # I'm a teapot!
+            allow(HTTParty).to receive(:get).with(url, headers: headers).and_return(response)
+            expect { subject.send(:locked_out?) }.to raise_error(
+              AttendanceService::UnknownError,
+              "Unexpected response from attendance service: 418"
+            )
+          end
+        end
       end
     end
   end
