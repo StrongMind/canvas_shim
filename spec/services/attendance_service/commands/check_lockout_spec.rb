@@ -33,10 +33,33 @@ describe AttendanceService::Commands::CheckLockout do
 
       context "no partner name" do
         before do
-          allow(subject).to receive(:partner_name).and_return(nil)
+          allow(SettingsService).to receive(:get_settings).and_return({})
+          ENV['PARTNER_NAME'] = nil
         end
 
-        it "will not work without a partner name" do
+        after do
+          ENV['PARTNER_NAME'] = nil
+        end
+
+        it "raises MissingPartnerError when no partner name in settings or ENV" do
+          expect { subject.send(:partner_name) }.to raise_error(
+            AttendanceService::MissingPartnerError,
+            "No partner name found for user #{user.id}"
+          )
+        end
+
+        it "uses ENV partner name when settings partner name is missing" do
+          ENV['PARTNER_NAME'] = 'env_partner'
+          expect(subject.send(:partner_name)).to eq('env_partner')
+        end
+
+        it "prefers settings partner name over ENV partner name" do
+          ENV['PARTNER_NAME'] = 'env_partner'
+          allow(SettingsService).to receive(:get_settings).and_return({ "partner_name" => "settings_partner" })
+          expect(subject.send(:partner_name)).to eq('settings_partner')
+        end
+
+        it "will not work without any partner name" do
           expect(subject).not_to receive(:locked_out?)
           expect(subject.call).to be false
         end
