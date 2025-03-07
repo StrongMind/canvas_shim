@@ -19,7 +19,12 @@ module AttendanceService
       def checkable?
         auth && attendance_root && pseudonym && user && partner_name
       end
-      
+
+      def locked_out?
+        return false unless ENV.fetch('ATTENDANCE_LOCKOUT_ENABLED', false)
+        HTTParty.get(full_url, headers: { "CanvasAuth" => auth }).try(:fetch, "isLockedOut", false)
+      end
+
       def partner_name
         @partner_name ||= SettingsService.get_settings(object: 'user', id: user.id)["partner_name"]
       end
@@ -30,10 +35,6 @@ module AttendanceService
 
       def full_url
         "#{attendance_root}/#{partner_name}/Accounts/#{integration_id}/Attendance/Status"
-      end
-
-      def locked_out?
-        HTTParty.get(full_url, headers: { "CanvasAuth" => auth }).try(:fetch, "isLockedOut", false)
       end
     end
   end
