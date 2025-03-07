@@ -4,32 +4,32 @@ describe AttendanceService::Commands::CheckLockout do
   let(:user) { User.create(name: "Ryan K Shaw") }
   let(:regular_pseudonym) { Pseudonym.create(user: user, unique_id: "JQUIZZLE", integration_id: "12345") }
   let(:identity_pseudonym) { Pseudonym.create(user: user, unique_id: "JQUEEZY", integration_id: SecureRandom.uuid) }
-  
+
   before do
     allow(SettingsService).to receive(:get_settings).and_return({
       "attendance_root" => "https://google.com",
       "partner_name" => "google",
     })
   end
-  
-  describe "#call" do
-    context "no auth" do
-      it "will not work" do
-        expect(subject).not_to receive(:locked_out?)
-        expect(subject.call).to be false
-      end
-    end
-
-    context "with auth" do
-      before do
-        allow(subject).to receive(:auth).and_return("A REAL API KEY")
+  context 'with ATTENDANCE_LOCKOUT_ENABLED' do
+    describe "#call" do
+      context "no auth" do
+        it "will not work" do
+          expect(subject).not_to receive(:locked_out?)
+          expect(subject.call).to be false
+        end
       end
 
-      it "will not work without a user" do
-        nobody = described_class.new(pseudonym: nil)
-        expect(nobody).not_to receive(:locked_out?)
-        expect(nobody.call).to be false
-      end
+      context "with auth" do
+        before do
+          allow(subject).to receive(:auth).and_return("A REAL API KEY")
+        end
+
+        it "will not work without a user" do
+          nobody = described_class.new(pseudonym: nil)
+          expect(nobody).not_to receive(:locked_out?)
+          expect(nobody.call).to be false
+        end
 
       context "no partner name" do
         before do
@@ -65,37 +65,37 @@ describe AttendanceService::Commands::CheckLockout do
         end
       end
 
-      context "no attendance root" do
-        before do
-          allow(subject).to receive(:attendance_root).and_return(nil)
-        end
-
-        it "will not work without a partner name" do
-          expect(subject).not_to receive(:locked_out?)
-          expect(subject.call).to be false
-        end
-      end
-
-      context "Checkable passes" do
-        before do
-          allow(subject).to receive(:checkable?).and_return(true)
-        end
-
-        it "will not work without pseudonyms" do
-          expect(subject).to receive(:locked_out?)
-          expect(subject.call).to be_falsy
-        end
-
-        context "with regular pseudonym" do
+        context "no attendance root" do
           before do
-            subject.instance_variable_set(:@pseudonym, regular_pseudonym)
+            allow(subject).to receive(:attendance_root).and_return(nil)
           end
 
-          it "Still returns falsy" do
+          it "will not work without a partner name" do
+            expect(subject).not_to receive(:locked_out?)
+            expect(subject.call).to be false
+          end
+        end
+
+        context "Checkable passes" do
+          before do
+            allow(subject).to receive(:checkable?).and_return(true)
+          end
+
+          it "will not work without pseudonyms" do
             expect(subject).to receive(:locked_out?)
             expect(subject.call).to be_falsy
           end
-        end
+
+          context "with regular pseudonym" do
+            before do
+              subject.instance_variable_set(:@pseudonym, regular_pseudonym)
+            end
+
+            it "Still returns falsy" do
+              expect(subject).to receive(:locked_out?)
+              expect(subject.call).to be_falsy
+            end
+          end
 
         context "with identity pseudonym" do
           before do
@@ -104,8 +104,9 @@ describe AttendanceService::Commands::CheckLockout do
             allow(HTTParty).to receive(:get).and_return(response)
           end
 
-          it "returns truthy" do
-            expect(subject.call).to be_truthy
+            it "returns truthy" do
+              expect(subject.call).to be_truthy
+            end
           end
         end
 
@@ -172,6 +173,13 @@ describe AttendanceService::Commands::CheckLockout do
             )
           end
         end
+      end
+    end
+  end
+  context 'without ATTENDANCE_LOCKOUT_ENABLED' do
+    describe '#call' do
+      it 'is always falsy' do
+        expect(subject.call).to be_falsy
       end
     end
   end
