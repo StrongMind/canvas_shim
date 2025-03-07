@@ -13,14 +13,21 @@ describe Course do
     let(:user_1) { User.create }
     let(:user_2) { User.create }
     let(:user_3) { User.create }
-    let(:enrollent_1) { Enrollment.create(course: course, user: user_1, workflow_state: 'active', type: 'StudentEnrollment') }
-    let(:enrollent_2) { Enrollment.create(course: course, user: user_2, workflow_state: 'inactive', type: 'StudentEnrollment') }
-    let(:enrollent_3) { Enrollment.create(course: course, user: user_3, workflow_state: 'active', type: 'TeacherEnrollment') }
-    it "returns the count of 2 users online in the last 5 minutes of" do
-      allow_any_instance_of(User).to receive(:is_online?).and_return(true)
-      allow(enrollent_1).to receive(:workflow_state).and_return('active')
-      allow(enrollent_2).to receive(:workflow_state).and_return('inactive')
-      allow(enrollent_3).to receive(:workflow_state).and_return('active')
+    let!(:enrollment_1) { Enrollment.create(course: course, user: user_1, workflow_state: 'active', type: 'StudentEnrollment') }
+    let!(:enrollment_2) { Enrollment.create(course: course, user: user_2, workflow_state: 'inactive', type: 'StudentEnrollment') }
+    let!(:enrollment_3) { Enrollment.create(course: course, user: user_3, workflow_state: 'active', type: 'TeacherEnrollment') }
+    
+    it "returns the count of 2 users online in the last 5 minutes" do
+      current_time = Time.now.utc
+      allow(Time).to receive(:now).and_return(current_time)
+      allow(Rails.cache).to receive(:fetch).and_yield
+      allow(Rails.cache).to receive(:read_multi) do |*keys|
+        {
+          "#{user_1.id}/last_access_time" => current_time - 2.minutes,  # Active and recent
+          "#{user_2.id}/last_access_time" => current_time - 10.minutes, # Inactive and old
+          "#{user_3.id}/last_access_time" => current_time - 1.minute    # Active and recent
+        }
+      end
       expect(course.online_user_count).to eq(2)
     end
   end

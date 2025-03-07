@@ -22,11 +22,27 @@ module AttendanceService
 
       def locked_out?
         return false unless ENV.fetch('ATTENDANCE_LOCKOUT_ENABLED', false)
-        HTTParty.get(full_url, headers: { "CanvasAuth" => auth }).try(:fetch, "isLockedOut", false)
+        response = HTTParty.get(full_url, headers: { "CanvasAuth" => auth }).try(:fetch, "isLockedOut", false)
+        case response.code
+        when 200..299
+          response.try(:fetch, "isLockedOut", false)
+        when 401, 403
+          raise UnauthorizedError, "Unauthorized access to attendance service"
+        when 404
+          raise NotFoundError, "Resource not found in attendance service"
+        when 500..599
+          raise ServiceError, "Attendance service error: #{response.code}"
+        else
+          raise UnknownError, "Unexpected response from attendance service: #{response.code}"
+        end
       end
 
       def partner_name
-        @partner_name ||= SettingsService.get_settings(object: 'user', id: user.id)["partner_name"]
+        @partner_name ||= begin
+          name = SettingsService.get_settings(object: 'user', id: user.id)["partner_name"] || ENV['PARTNER_NAME']
+          raise MissingPartnerError, "No partner name found for user #{user.id}" unless name
+          name
+        end
       end
 
       def integration_id
@@ -38,4 +54,10 @@ module AttendanceService
       end
     end
   end
+
+  class UnauthorizedError < StandardError; end
+  class NotFoundError < StandardError; end
+  class ServiceError < StandardError; end
+  class UnknownError < StandardError; end
+  class MissingPartnerError < StandardError; end
 end

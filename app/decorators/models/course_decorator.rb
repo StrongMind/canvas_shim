@@ -154,13 +154,22 @@ Course.class_eval do
   end
 
   def online_user_count
-    count = 0
-    self.enrollments.where(workflow_state: 'active').each do |en|
-      count = count + 1 if en.user.is_online?
-    end
-    count
-  end
+    Rails.cache.fetch("course_#{self.id}/online_users", expires_in: 5.minutes) do
+      online_count = 0
 
+      enrollments.active.pluck(:user_id).each_slice(1000) do |id_batch|
+        keys = id_batch.map { |id| "#{id}/last_access_time" }
+        access_times = Rails.cache.read_multi(*keys)
+
+        current_time = Time.now.utc
+        cutoff_time = current_time - 5.minutes
+
+        online_count += access_times.values.count { |time| time && time > cutoff_time }
+      end
+
+      online_count
+    end
+  end
   def expired_announcements
     filtered_announcements(expired_announcements_array)
   end

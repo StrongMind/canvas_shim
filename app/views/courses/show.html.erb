@@ -154,7 +154,11 @@
   <% else %>
     <% locals = {:title => t("Coming Up"), :contexts_to_link_to => @context, :upcoming => true, :period => :one_week} %>
     <% if @current_user %>
-      <% cache(safe_cache_key([@current_user, @contexts, 'course_upcoming_events' ])) do %>
+      <% cache_key = safe_cache_key([@current_user, @contexts, 'course_upcoming_events']) %>
+      <% Rails.logger.info("Upcoming Events Locals: #{locals.inspect}") %>
+      <% Rails.logger.info("Contexts for upcoming events: #{@contexts.inspect}") %>
+      <% Rails.logger.info("Cache key: #{cache_key}") %>
+      <% cache(cache_key) do %>
         <%= render :partial => "shared/event_list", :object => @current_user.upcoming_events(:contexts => @contexts), :locals => locals %>
       <% end %>
     <% else %>
