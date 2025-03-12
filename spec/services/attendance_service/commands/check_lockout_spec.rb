@@ -178,7 +178,7 @@ describe AttendanceService::Commands::CheckLockout do
   end
   context 'with ATTENDANCE_LOCKOUT_DISABLED' do
     before do
-      allow(ENV).to receive(:[]).with("ATTENDANCE_LOCKOUT_DISABLED").and_return("1")
+      ENV["ATTENDANCE_LOCKOUT_DISABLED"] = "1"
     end
     describe '#call' do
       it 'is always falsy' do
