@@ -21,7 +21,7 @@ module AttendanceService
       end
 
       def locked_out?
-        return false unless ENV.fetch('ATTENDANCE_LOCKOUT_DISABLED', true)
+        return false unless ENV.fetch('ATTENDANCE_LOCKOUT_DISABLED', false)
         response = HTTParty.get(full_url, headers: { "CanvasAuth" => auth })
 
         case response.code
