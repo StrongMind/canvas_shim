@@ -115,18 +115,13 @@ describe AttendanceService::Commands::CheckLockout do
           let(:headers) { { "CanvasAuth" => subject.send(:auth) } }
 
           it "is truthy with locked out status" do
-            response = double(code: 200, fetch: {
-              "isLockedOut" => "true"
-            })
+            response = double(code: 200, "isLockedOut" => true)
             allow(HTTParty).to receive(:get).with(url, headers: headers).and_return(response)
             expect(subject.call).to be_truthy
           end
 
           it "is falsy with not locked out status" do
-            response = double(code: 200, fetch: {
-              "isLockedOut" => "false"
-            })
-            allow(response).to receive(:try).with(:fetch, "isLockedOut", false).and_return(false)
+            response = double(code: 200, "isLockedOut" => false)
             allow(HTTParty).to receive(:get).with(url, headers: headers).and_return(response)
             expect(subject.call).to be_falsy
           end

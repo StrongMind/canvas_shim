@@ -23,9 +23,10 @@ module AttendanceService
       def locked_out?
         return false unless ENV.fetch('ATTENDANCE_LOCKOUT_DISABLED', true)
         response = HTTParty.get(full_url, headers: { "CanvasAuth" => auth })
+
         case response.code
         when 200..299
-          response.try(:fetch, "isLockedOut", false)
+          response['isLockedOut']
         when 401, 403
           raise UnauthorizedError, "Unauthorized access to attendance service"
         when 404
