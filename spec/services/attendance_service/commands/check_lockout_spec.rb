@@ -113,6 +113,9 @@ describe AttendanceService::Commands::CheckLockout do
         context "HTTP response handling" do
           let(:url) { subject.send(:full_url) }
           let(:headers) { { "CanvasAuth" => subject.send(:auth) } }
+          before do
+            allow(subject).to receive(:checkable?).and_return(true)
+          end
 
           it "is truthy with locked out status" do
             response = double(code: 200)

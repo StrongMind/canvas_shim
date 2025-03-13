@@ -26,7 +26,7 @@ module AttendanceService
 
         case response.code
         when 200..299
-          response['isLockedOut']
+          return response['isLockedOut']
         when 401, 403
           raise UnauthorizedError, "Unauthorized access to attendance service"
         when 404
