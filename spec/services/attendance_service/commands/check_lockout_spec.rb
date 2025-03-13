@@ -189,4 +189,50 @@ describe AttendanceService::Commands::CheckLockout do
       end
     end
   end
+
+  context "checkable?" do
+    subject { described_class.new(pseudonym: identity_pseudonym) }
+
+    before do
+      allow(subject).to receive(:auth).and_return("test_api_key")
+      allow(subject).to receive(:attendance_root).and_return("https://test.com")
+      allow(SettingsService).to receive(:get_settings).and_return({ "partner_name" => "test_partner" })
+    end
+
+    it "returns true when all required attributes are present" do
+      expect(subject.send(:checkable?)).to be true
+    end
+
+    it "returns false when auth is missing" do
+      allow(subject).to receive(:auth).and_return(nil)
+      expect(subject.send(:checkable?)).to be false
+    end
+
+    it "returns false when attendance_root is missing" do
+      allow(subject).to receive(:attendance_root).and_return(nil)
+      expect(subject.send(:checkable?)).to be false
+    end
+
+    it "returns false when pseudonym is nil" do
+      subject = described_class.new(pseudonym: nil)
+      expect(subject.send(:checkable?)).to be false
+    end
+
+    it "returns false when user is nil" do
+      allow(identity_pseudonym).to receive(:user).and_return(nil)
+      expect(subject.send(:checkable?)).to be false
+    end
+
+    it "returns false when partner_name is missing" do
+      allow(SettingsService).to receive(:get_settings).and_return({})
+      allow(ENV).to receive(:[]).with('PARTNER_NAME').and_return(nil)
+      expect(subject.send(:checkable?)).to be false
+    end
+
+    it "returns true when partner_name is in ENV but not in settings" do
+      allow(SettingsService).to receive(:get_settings).and_return({})
+      allow(ENV).to receive(:[]).with('PARTNER_NAME').and_return("env_partner")
+      expect(subject.send(:checkable?)).to be true
+    end
+  end
 end
