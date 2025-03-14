@@ -183,6 +183,9 @@ describe AttendanceService::Commands::CheckLockout do
     before do
       ENV["ATTENDANCE_LOCKOUT_DISABLED"] = "1"
     end
+    after do
+      ENV["ATTENDANCE_LOCKOUT_DISABLED"] = nil
+    end
     describe '#call' do
       it 'is always falsy' do
         expect(subject.call).to be_falsy
@@ -200,39 +203,39 @@ describe AttendanceService::Commands::CheckLockout do
     end
 
     it "returns true when all required attributes are present" do
-      expect(subject.send(:checkable?)).to be true
+      expect(subject.send(:checkable?)).to be_truthy
     end
 
     it "returns false when auth is missing" do
       allow(subject).to receive(:auth).and_return(nil)
-      expect(subject.send(:checkable?)).to be false
+      expect(subject.send(:checkable?)).to be_falsy
     end
 
     it "returns false when attendance_root is missing" do
       allow(subject).to receive(:attendance_root).and_return(nil)
-      expect(subject.send(:checkable?)).to be false
+      expect(subject.send(:checkable?)).to be_falsy
     end
 
     it "returns false when pseudonym is nil" do
       subject = described_class.new(pseudonym: nil)
-      expect(subject.send(:checkable?)).to be false
+      expect(subject.send(:checkable?)).to be_falsy
     end
 
     it "returns false when user is nil" do
       allow(identity_pseudonym).to receive(:user).and_return(nil)
-      expect(subject.send(:checkable?)).to be false
+      expect(subject.send(:checkable?)).to be_falsy
     end
 
-    it "returns false when partner_name is missing" do
+    it "raises MissingPartner Error when partner_name is missing" do
       allow(SettingsService).to receive(:get_settings).and_return({})
       allow(ENV).to receive(:[]).with('PARTNER_NAME').and_return(nil)
-      expect(subject.send(:checkable?)).to be false
+      expect { subject.send(:checkable?) }.to raise_error(AttendanceService::MissingPartnerError)
     end
 
     it "returns true when partner_name is in ENV but not in settings" do
       allow(SettingsService).to receive(:get_settings).and_return({})
       allow(ENV).to receive(:[]).with('PARTNER_NAME').and_return("env_partner")
-      expect(subject.send(:checkable?)).to be true
+      expect(subject.send(:checkable?)).to be_truthy
     end
   end
 end
