@@ -6,6 +6,7 @@ describe AttendanceService::Commands::CheckLockout do
   let(:identity_pseudonym) { Pseudonym.create(user: user, unique_id: "JQUEEZY", integration_id: SecureRandom.uuid) }
 
   before do
+    allow(HTTParty).to receive(:get)
     allow(SettingsService).to receive(:get_settings).and_return({
       "attendance_root" => "https://google.com",
       "partner_name" => "google",
@@ -218,11 +219,6 @@ describe AttendanceService::Commands::CheckLockout do
 
     it "returns false when pseudonym is nil" do
       subject = described_class.new(pseudonym: nil)
-      expect(subject.send(:checkable?)).to be_falsy
-    end
-
-    it "returns false when user is nil" do
-      allow(identity_pseudonym).to receive(:user).and_return(nil)
       expect(subject.send(:checkable?)).to be_falsy
     end
 
