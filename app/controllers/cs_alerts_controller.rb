@@ -5,7 +5,15 @@ class CsAlertsController < ShimController
   end
 
   def teacher_alerts
-    render :json => mapped_teacher_alerts
+    alerts_response = AlertsService::Client.teacher_alerts(@current_user.id, params[:page], params[:per_page])
+    
+    # Format the alerts while preserving the pagination metadata
+    formatted_response = {
+      alerts: mapped_alerts(alerts_response.alerts),
+      pagination: alerts_response.pagination
+    }
+    
+    render json: formatted_response
   end
 
   def destroy
@@ -17,8 +25,8 @@ class CsAlertsController < ShimController
   end
 
   private
-  def mapped_teacher_alerts
-    AlertsService::Client.teacher_alerts(@current_user.id).payload.map do |alert|
+  def mapped_alerts(alerts)
+    alerts.map do |alert|
       assignment = alert.assignment
 
       alert.as_json(include_root: false).merge(
