@@ -22,6 +22,11 @@ module AttendanceService
 
       def locked_out?
         return false if ENV.fetch('ATTENDANCE_LOCKOUT_DISABLED', false)
+        # this is the trans.check user (https://login.strongmind.com/Profiles/86d3b246-4296-4507-b56f-7c7fe0431cc9)
+        # we don't need to check this user's lockout status and make unnecessary API calls
+        # it causes too much noise in Sentry https://strongmind-4j.sentry.io/issues/6360033685/
+        return false if integration_id == "86d3b246-4296-4507-b56f-7c7fe0431cc9"
+
         response = HTTParty.get(full_url, headers: { "CanvasAuth" => auth })
 
         case response.code
