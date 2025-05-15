@@ -110,7 +110,8 @@ Course.class_eval do
   end
 
   def save_with_account_times
-    set_course_start_end_time_from_school.save
+    set_course_start_end_time_from_school
+    save
   end
 
   def course_start_time_from_school
