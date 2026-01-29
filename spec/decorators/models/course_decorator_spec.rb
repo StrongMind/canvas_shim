@@ -1,6 +1,14 @@
+# Stub Redis classes if not already defined (redis gem may not be loaded in test env)
+unless defined?(Redis)
+  class Redis
+    class BaseError < StandardError; end
+    class CannotConnectError < BaseError; end
+  end
+end
+
 describe "CourseDecorator" do
   describe ".touch_courses" do
-    let(:redis) { instance_double(Redis) }
+    let(:redis) { instance_double("Redis") }
     let(:course) { double("course", id: 123) }
 
     before do
