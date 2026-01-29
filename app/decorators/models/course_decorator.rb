@@ -206,10 +206,22 @@ Course.class_eval do
   def self.touch_courses
     courses_to_touch = "courses_to_touch"
 
-    redis = Redis.new(url: ENV['REDIS_SERVER'])
-    redis.smembers(courses_to_touch).each do |member|
-      Course.find_by_id(member).touch
-      redis.srem(courses_to_touch, member)
+    begin
+      redis = Redis.new(url: ENV['REDIS_SERVER'])
+      members = redis.smembers(courses_to_touch) || []
+
+      members.each do |member|
+        course = Course.find_by_id(member)
+        if course
+          course.touch
+        else
+          Rails.logger.warn("[touch_courses] Course #{member} not found, removing stale reference")
+        end
+        redis.srem(courses_to_touch, member)
+      end
+    rescue Redis::BaseError => e
+      Rails.logger.error("[touch_courses] Redis error: #{e.message}")
+      Sentry.capture_exception(e) if defined?(Sentry)
     end
   end
 
