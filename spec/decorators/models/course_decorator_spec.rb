@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 # Stub Redis classes if not already defined (redis gem may not be loaded in test env)
 unless defined?(Redis)
   class Redis
