@@ -6,6 +6,6 @@
   "author": "Chris Irish <supairish@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "jquery": "^3.3.1"
+    "jquery": "^3.5.0"
   }
 }
