@@ -3,7 +3,7 @@ DiscussionTopic::MaterializedView.class_eval do
     graded_discussion = self.discussion_topic.graded_discussion?
     opts[:show_other_users_submissions] = false
     entry_ids = nil
-    if graded_discussion && launch_darkly_render_discussion_entries(opts[:launch_darkly_user])
+    if graded_discussion && render_discussion_entries_for_graded_submissions?(opts[:feature_flag_data])
       student_submission_graded = self.discussion_topic.assignment.submissions.graded.where(user_id: opts[:user_id]).any?
       if student_submission_graded
         opts[:show_other_users_submissions] = true
@@ -24,7 +24,7 @@ DiscussionTopic::MaterializedView.class_eval do
   alias_method :instructure_materialized_view_json, :materialized_view_json
   alias_method :materialized_view_json, :strongmind_materialized_view_json
 
-  def launch_darkly_render_discussion_entries(ld_user)
-    Rails.configuration.launch_darkly_client.variation("expose-discussion-entries-only-if-graded-submission-exists", ld_user, false)
+  def render_discussion_entries_for_graded_submissions?(feature_flag_data)
+    GrowthbookService.enabled?("expose-discussion-entries-only-if-graded-submission-exists", attributes: { id: feature_flag_data&.dig(:key) })
   end
 end

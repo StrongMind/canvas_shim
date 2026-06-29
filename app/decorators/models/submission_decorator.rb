@@ -114,7 +114,9 @@ Submission.class_eval do
   end
 
   def expose_guided_practice_submission_alerts
-    return true if Rails.env.development? || Rails.env.test?
-    Rails.configuration.launch_darkly_client.variation("expose-guided-practice-submitted-alerts", @launch_darkly_user, false)
+    return true if Rails.env.test?
+    domain = ENV['SETTINGS_TABLE_PREFIX']
+    key = "#{domain.to_s.split('.')[0]}-#{user_id}"
+    GrowthbookService.enabled?("expose-guided-practice-submitted-alerts", attributes: { id: key })
   end
 end
