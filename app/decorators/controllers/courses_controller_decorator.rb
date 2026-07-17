@@ -115,7 +115,7 @@ CoursesController.class_eval do
 
 
   def strongmind_settings
-    @expose_course_level_passing_threshold_fields = GrowthbookService.enabled?("expose-course-level-passing-threshold-fields", attributes: { id: @feature_flag_data[:key] })
+    @expose_course_level_passing_threshold_fields = GrowthbookService.enabled?("expose-course-level-passing-threshold-fields", attributes: { id: @feature_flag_data&.dig(:key) })
     @assignment_group_thresholds = get_course_thresholds(passing_threshold_group_names)
     get_course_dates
     hide_destructive_course_options?
