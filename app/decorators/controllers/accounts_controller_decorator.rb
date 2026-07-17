@@ -34,7 +34,7 @@ AccountsController.class_eval do
 
     @module_editing_disabled = RequirementsService.disable_module_editing_on?
 
-    @expose_discussion_and_project_threshold_field = GrowthbookService.enabled?("expose-discussion-and-project-threshold-field", attributes: { id: @feature_flag_data[:key] })
+    @expose_discussion_and_project_threshold_field = GrowthbookService.enabled?("expose-discussion-and-project-threshold-field", attributes: { id: @feature_flag_data&.dig(:key) })
 
     js_env({
       HOLIDAYS: @holidays,
