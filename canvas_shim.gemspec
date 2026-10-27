@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'aws-sdk-secretsmanager'
 
   s.add_dependency "pipeline_publisher_ruby"
-  s.add_dependency "business"
+  s.add_dependency "business", "~> 2.3"
   s.add_dependency 'httparty'
   s.add_dependency "loofah", "2.19.1"
   s.add_dependency 'pandarus', '0.7.0'
